@@ -64,13 +64,13 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/inventory-service/(?<segment>.*), /inventory-service/$\{segment}
-        - id: exercise-setting-service
-          uri: lb://EXERCISE-SETTING-SERVICE
+        - id: program-service
+          uri: lb://PROGRAM-SERVICE
           predicates:
-            - Path=/api/exercise-setting-service/**
+            - Path=/api/program-service/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/exercise-setting-service/(?<segment>.*), /exercise-setting-service/$\{segment}
+            - RewritePath=/api/program-service/(?<segment>.*), /program-service/$\{segment}
         - id: exercise-record-service
           uri: lb://EXERCISE-RECORD-SERVICE
           predicates:
