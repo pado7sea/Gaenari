@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/exercise-setting-service")
+@RequestMapping("/program-service")
 public class Health {
     Environment env;
     @Autowired
@@ -17,7 +17,7 @@ public class Health {
 
     @GetMapping("/health_check")
     public String status() {
-        return String.format("It's Working in Exercise Setting service on PORT %s",
+        return String.format("It's Working in Program service on PORT %s",
                 env.getProperty("local.server.port"));
     }
 }
