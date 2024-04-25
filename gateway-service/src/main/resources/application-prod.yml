@@ -72,7 +72,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/program-service/(?<segment>.*), /program-service/$\{segment}
         - id: exercise-record-service
-          uri: http://exercise-record-service.exerciseRecord.svc.cluster.local
+          uri: http://exercise-record-service.exercise-record.svc.cluster.local
           predicates:
             - Path=/api/exercise-record-service/**
           filters:
