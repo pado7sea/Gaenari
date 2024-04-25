@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/program-service")
+@RequestMapping("/member-service")
 public class MemberController {
     Environment env;
     MemberService memberService;
