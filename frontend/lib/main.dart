@@ -47,7 +47,8 @@ class _ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
     // 이미지의 초기 위치를 설정
     _position = Offset(0.0, 0.0);
     // 초기 이미지를 설정
-    _currentImage = _isMoving == true ? 'assets/Crouched.gif' : 'assets/Sitting.gif';
+    _currentImage =
+        _isMoving == true ? 'assets/Crouched.gif' : 'assets/Sitting.gif';
   }
 
   @override
