@@ -1,18 +1,16 @@
 package com.gaenari.backend.domain.member.controller;
 
 import com.gaenari.backend.domain.member.service.MemberService;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member-service")
 public class MemberController {
-    Environment env;
-    MemberService memberService;
+    private final Environment env;
+    private final MemberService memberService;
 
     @GetMapping("/health_check") // 연결 확인
     public String status() {
