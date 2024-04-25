@@ -49,7 +49,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/member-service/(?<segment>.*), /member-service/$\{segment}
-        - id: user-service
+        - id: member-service
           uri: http://member-service.member.svc.cluster.local
           predicates:
             - Path=/api/member-service/**
