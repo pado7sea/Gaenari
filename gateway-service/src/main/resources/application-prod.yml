@@ -33,30 +33,30 @@ spring:
               - DELETE
               - OPTIONS
       routes:
-        - id: user-service
-          uri: http://user-service.user.svc.cluster.local
+        - id: member-service
+          uri: http://member-service.member.svc.cluster.local
           predicates:
-            - Path=/api/user-service/login
+            - Path=/api/member-service/login
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
-        - id: user-service
-          uri: http://user-service.user.svc.cluster.local
+            - RewritePath=/api/member-service/(?<segment>.*), /member-service/$\{segment}
+        - id: member-service
+          uri: http://member-service.member.svc.cluster.local
           predicates:
-            - Path=/api/user-service/users
+            - Path=/api/member-service/members
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
+            - RewritePath=/api/member-service/(?<segment>.*), /member-service/$\{segment}
         - id: user-service
-          uri: http://user-service.user.svc.cluster.local
+          uri: http://member-service.member.svc.cluster.local
           predicates:
-            - Path=/api/user-service/**
+            - Path=/api/member-service/**
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
+            - RewritePath=/api/member-service/(?<segment>.*), /member-service/$\{segment}
         - id: inventory-service
           uri: http://inventory-service.inventory.svc.cluster.local
           predicates:
