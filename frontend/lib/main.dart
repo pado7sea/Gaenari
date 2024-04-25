@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:forsythia/widgets/largeAppBar.dart';
 
 import 'widgets/button.dart';
 
@@ -21,8 +22,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('개집'),
+        appBar: largeAppBar(
+          title: "메인화면",
+          sentence: "이 편지는 영국으로부터 시작되어 일주일 안에 7명에게 보내지 않을 시 굉장한 불행이 어쩌구",
         ),
         body: SmallButton(
           text: !active ? '눌러보셈ㅋㅋ' : '눌러서 색바뀜',
