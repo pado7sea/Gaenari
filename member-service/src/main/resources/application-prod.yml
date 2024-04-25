@@ -9,7 +9,6 @@ spring:
     url: jdbc:mysql://${DATABASE_URL}:${DATABASE_PORT}/${DATABASE_USER_DB_NAME}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
