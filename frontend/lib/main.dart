@@ -2,11 +2,20 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'widgets/button.dart';
+
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool active = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +24,16 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('개집'),
         ),
-        body: ImageMove(),
+        body: SmallButton(
+          text: !active ? '눌러보셈ㅋㅋ' : '눌러서 색바뀜',
+          onPressed: () {
+            // 버튼을 눌렀을 때 실행할 동작 작성
+            setState(() {
+              active = !active;
+            });
+          },
+          active: active,
+        ),
       ),
     );
   }
