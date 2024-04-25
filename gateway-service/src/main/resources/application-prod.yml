@@ -34,7 +34,7 @@ spring:
               - OPTIONS
       routes:
         - id: user-service
-          uri: lb://USER-SERVICE
+          uri: http://user-service.user.svc.cluster.local
           predicates:
             - Path=/api/user-service/login
             - Method=POST
@@ -42,7 +42,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
         - id: user-service
-          uri: lb://USER-SERVICE
+          uri: http://user-service.user.svc.cluster.local
           predicates:
             - Path=/api/user-service/users
             - Method=POST
@@ -50,7 +50,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
         - id: user-service
-          uri: lb://USER-SERVICE
+          uri: http://user-service.user.svc.cluster.local
           predicates:
             - Path=/api/user-service/**
             - Method=GET
@@ -58,28 +58,28 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
         - id: inventory-service
-          uri: lb://INVENTORY-SERVICE
+          uri: http://inventory-service.inventory.svc.cluster.local
           predicates:
             - Path=/api/inventory-service/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/inventory-service/(?<segment>.*), /inventory-service/$\{segment}
         - id: program-service
-          uri: lb://PROGRAM-SERVICE
+          uri: http://program-service.program.svc.cluster.local
           predicates:
             - Path=/api/program-service/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/program-service/(?<segment>.*), /program-service/$\{segment}
         - id: exercise-record-service
-          uri: lb://EXERCISE-RECORD-SERVICE
+          uri: http://exercise-record-service.exerciseRecord.svc.cluster.local
           predicates:
             - Path=/api/exercise-record-service/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/exercise-record-service/(?<segment>.*), /exercise-record-service/$\{segment}
         - id: challenge-service
-          uri: lb://CHALLENGE-SERVICE
+          uri: http://challenge-service.challenge.svc.cluster.local
           predicates:
             - Path=/api/challenge-service/**
           filters:
