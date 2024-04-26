@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/theme/color.dart';
 
 class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -17,6 +18,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: myBackground,
       // 뒤로가기 버튼
       // leading: Padding(
       //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -35,7 +37,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/appbarImage.png"),
+                image: AssetImage("assets/images/appbarImage.png"),
                 fit: BoxFit.fill,
               ),
             ),
