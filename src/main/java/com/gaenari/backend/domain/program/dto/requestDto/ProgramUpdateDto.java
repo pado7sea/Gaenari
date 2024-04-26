@@ -9,7 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProgramCreateDto {
+public class ProgramUpdateDto {
+    private Long programId;
     private String programTitle;
     private String programType; // enum: D(거리목표), T(시간목표), I(인터벌)
     private int programTargetValue; // 거리목표/시간목표 수치. type이 I인 경우 -1

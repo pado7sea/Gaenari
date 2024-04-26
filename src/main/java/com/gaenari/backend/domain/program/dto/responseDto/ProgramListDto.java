@@ -12,6 +12,9 @@ import java.util.List;
 public class ProgramListDto {
     private List<ProgramDto> data;
 
+    public ProgramListDto(Long id, String title, Boolean favorite, ProgramType type, ProgramDto.ProgramInfo programInfo, int usageCount) {
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -19,53 +22,40 @@ public class ProgramListDto {
     public static class ProgramDto {
         private Long programId;
         private String programTitle;
-        private boolean isFavorite; // 즐겨찾기 등록여부
+        private Boolean isFavorite; // 즐겨찾기 등록여부
+        private int usageCount; // 운동 프로그램 총 사용횟수
+//        private int finishedCount = 0; // 운동 프로그램 완주 횟수
 
         private ProgramType type; // enum: D(거리목표), T(시간목표), I(인터벌)
-        private ProgramDetail program;
+        private ProgramInfo program;
 
-        private int usageCount; // 운동 프로그램 총 사용횟수
-        private int finishedCount; // 운동 프로그램 완주 횟수
-        public interface ProgramDetail {}
+        public interface ProgramInfo {}
 
         @Getter
         @Setter
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class DistanceTargetProgramDetail implements ProgramDetail {
-            private int targetValue;
+        public static class DistanceTargetProgramInfo implements ProgramInfo {
+            private int targetValue; // 거리 목표
         }
 
         @Getter
         @Setter
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class IntervalProgramDetail implements ProgramDetail {
-            @Getter
-            @Setter
-            @NoArgsConstructor
-            @AllArgsConstructor
-            public static class Interval {
-                private int duration; // 인터벌 총 소요 시간
-                private int setCount; // 세트 수
-                private int rangeCount; // 세트 당 구간 수
-                private List<Range> ranges;
+        public static class TimeTargetProgramInfo implements ProgramInfo {
+            private int targetValue; // 시간 목표
+        }
+        @Getter
+        @Setter
+        @NoArgsConstructor
+        public static class IntervalProgramInfo implements ProgramInfo {
+            private IntervalInfo intervalInfo;
 
-                @Getter
-                @Setter
-                @NoArgsConstructor
-                @AllArgsConstructor
-                public static class Range { // 구간
-                    private int rangeId;
-                    private boolean isRunning;
-                    private int time;
-                    private int speed;
-                }
-
+            public IntervalProgramInfo(int duration, int setCount, List<IntervalInfo.IntervalRange> ranges) {
+                this.intervalInfo = new IntervalInfo(duration, setCount, ranges);
             }
+
         }
-
     }
-
-
 }
