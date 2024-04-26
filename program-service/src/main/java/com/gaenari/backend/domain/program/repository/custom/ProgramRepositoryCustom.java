@@ -4,6 +4,7 @@ import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
 import com.gaenari.backend.domain.program.dto.requestDto.ProgramCreateDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramDetailDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramListDto;
+import com.gaenari.backend.domain.program.entity.Program;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface ProgramRepositoryCustom {
     Optional<Integer> countFinish(Long programId);
     
     // 특정 회원이 등록한 프로그램 리스트 조회
-    Optional<List<ProgramListDto.ProgramDto>> getProgramList(Long memberId);
+    Optional<List<Program>> getProgramList(Long memberId);
     
     // 특정 프로그램 상세정보 조회
     Optional<ProgramDetailDto> getProgramDetail(Long programId);

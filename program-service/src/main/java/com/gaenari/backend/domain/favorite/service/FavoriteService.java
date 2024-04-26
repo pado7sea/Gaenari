@@ -1,16 +1,14 @@
 package com.gaenari.backend.domain.favorite.service;
 
-import com.gaenari.backend.domain.favorite.repository.FavoriteRepository;
+import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteListDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class FavoriteService {
+public interface FavoriteService {
 
-    private final FavoriteRepository favoriteRepository;
+    List<FavoriteListDto> getFavoriteList(Long memberId);
 
-    public FavoriteService(FavoriteRepository favoriteRepository) {
-        this.favoriteRepository = favoriteRepository;
-    }
-
-    // 즐겨찾기 목록 조회, 등록, 해제 기능 구현
 }
