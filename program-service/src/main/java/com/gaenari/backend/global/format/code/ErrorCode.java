@@ -16,7 +16,11 @@ public enum ErrorCode {
     PROGRAM_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "운동 프로그램을 수정할 수 없습니다."),
     PROGRAM_NOT_FOUND(HttpStatus.NOT_FOUND, "운동 프로그램을 찾을 수 없습니다."),
     PROGRAM_DELETE_FAILED(HttpStatus.BAD_REQUEST, "운동 프로그램을 삭제할 수 없습니다."),
-    PROGRAM_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "운동 프로그램에 접근할 수 없습니다.");
+    PROGRAM_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "운동 프로그램에 접근할 수 없습니다."),
+
+    // 즐겨찾기 관련 예외 처리
+    FAVORITE_CREATE_FAILED(HttpStatus.BAD_REQUEST, "이미 즐겨찾기에 등록되어 있습니다."),
+    FAVORITE_DELETE_FAILED(HttpStatus.BAD_REQUEST, "이미 즐겨찾기가 해제되어 있습니다.");
 
     private final HttpStatus status;
     private final String message;
