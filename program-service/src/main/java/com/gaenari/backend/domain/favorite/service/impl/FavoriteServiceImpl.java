@@ -40,7 +40,6 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .collect(Collectors.toList());
     }
 
-
     private FavoriteListDto.ProgramDto convertToProgramDto(Program program) {
         FavoriteListDto.ProgramDto.ProgramInfo programInfo = convertToProgramInfo(program);
 
@@ -66,8 +65,13 @@ public class FavoriteServiceImpl implements FavoriteService {
                         .map(range -> new IntervalInfo.IntervalRange(
                                 range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
                         .collect(Collectors.toList());
-                return new  FavoriteListDto.ProgramDto.IntervalProgramInfo(
-                        program.getDuration(), program.getSetCount(), ranges);
+
+                int setCount = program.getSetCount();
+                int rangeCount = ranges.size();
+                int setDuration = ranges.stream().mapToInt(IntervalInfo.IntervalRange::getTime).sum(); // 각 range의 시간의 합
+
+                return new FavoriteListDto.ProgramDto.IntervalProgramInfo(
+                        setDuration * setCount, setCount, rangeCount, ranges);
 
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());

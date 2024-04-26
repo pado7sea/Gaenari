@@ -2,6 +2,7 @@ package com.gaenari.backend.domain.program.entity;
 
 import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -18,55 +19,50 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE program SET is_deleted = TRUE WHERE program_id = ?")
 public class Program {
 
+    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_id")
     private Long id;
 
-    // TODO: MSA에서는 연관관계 처리를 어떻게 해야할지 알아봐야 함
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-
-    @Setter
+    @NotNull
     @Column(name = "member_id")
     private Long memberId;
 
-    @Setter
-    @Column(name = "program_title")
+    @NotNull
+    @Column(name = "program_title", length = 8)
     private String title;
 
-    @Setter
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "program_type")
     private ProgramType type;
 
-    @Setter
     @Column(name = "program_target_value")
-    private int targetValue;
+    private Integer targetValue;
 
-    @Setter
     @Column(name = "program_set_count")
-    private int setCount;
+    private Integer setCount;
 
-    @Setter
     @Column(name = "program_duration")
-    private int duration;
+    private Integer duration;
 
-    @Setter
+    @NotNull
     @Column(name = "is_favorite")
-    private boolean isFavorite;
+    private boolean isFavorite = false;
 
-    @Setter
+    @NotNull
+    @Builder.Default
     @Column(name = "program_usage_count")
-    private int usageCount;
+    private Integer usageCount = 0;
 
-    @Setter
+    @NotNull
+    @Builder.Default
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
-    public static Program of(Long memberId, String title, ProgramType type, int targetValue,
-                             int setCount, int duration, boolean isFavorite, int usageCount, boolean isDeleted) {
+    public static Program of(Long memberId, String title, ProgramType type, Integer targetValue,
+                             Integer setCount, Integer duration, boolean isFavorite, Integer usageCount, boolean isDeleted) {
         return Program.builder()
                 .memberId(memberId)
                 .title(title)
@@ -80,19 +76,33 @@ public class Program {
                 .build();
     }
 
-    public void updateTitle(String title) { this.title = title; }
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 
-    public void updateType(ProgramType type) { this.type = type; }
+    public void updateType(ProgramType type) {
+        this.type = type;
+    }
 
-    public void updateTargetValue(int targetValue) { this.targetValue = targetValue; }
+    public void updateTargetValue(Integer targetValue) {
+        this.targetValue = targetValue;
+    }
 
-    public void updateSetCount(int setCount) { this.setCount = setCount; }
+    public void updateSetCount(Integer setCount) {
+        this.setCount = setCount;
+    }
 
-    public void updateDuration(int duration) { this.duration = duration; }
+    public void updateDuration(Integer duration) {
+        this.duration = duration;
+    }
 
-    public void updateIsFavorite(boolean isFavorite) { this.isFavorite = isFavorite; }
+    public void updateIsFavorite(Boolean isFavorite) {
+        this.isFavorite = isFavorite;
+    }
 
-    public void updateUsageCount(int usageCount) { this.usageCount = usageCount; }
+    public void updateUsageCount(Integer usageCount) {
+        this.usageCount = usageCount;
+    }
 
     /* program - range 양방향 매핑 */
     @Builder.Default

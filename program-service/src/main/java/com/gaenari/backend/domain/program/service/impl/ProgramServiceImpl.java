@@ -9,6 +9,7 @@ import com.gaenari.backend.domain.program.entity.IntervalRange;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.domain.program.repository.ProgramRepository;
 import com.gaenari.backend.domain.program.service.ProgramService;
+import com.gaenari.backend.global.exception.program.ProgramDeleteException;
 import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,8 @@ import java.util.stream.Collectors;
 public class ProgramServiceImpl implements ProgramService {
 
     private final ProgramRepository programRepository;
-    //    private final MemberRepository memberRepository;  // TODO:이메일로 멤버를 찾기 위해 필요
 
-    public Long createProgram(ProgramCreateDto programDto) {
-        // TODO:여기는 member랑 연결한 다음에 처리
-//        Member member = memberRepository.searchByEmail(email).orElseThrow(MemberNotFoundException::new);
-
+    public Long createProgram(Long memberId, ProgramCreateDto programDto) {
         ProgramType type = ProgramType.valueOf(programDto.getProgramType());
         List<IntervalRange> ranges = new ArrayList<>();
 
@@ -47,7 +44,7 @@ public class ProgramServiceImpl implements ProgramService {
 
         // DTO -> Entity 변환
         Program program = Program.builder()
-//                .memberId(memberId)
+                .memberId(memberId)
                 .title(programDto.getProgramTitle())
                 .type(type)
                 .targetValue(programDto.getProgramTargetValue())
@@ -69,80 +66,49 @@ public class ProgramServiceImpl implements ProgramService {
         return savedProgram.getId();
     }
 
-//    public Long updateProgram(ProgramUpdateDto programDto) {
-////        Member member = memberRepository.searchByEmail(email).orElseThrow(MemberNotFoundException::new);
-//        ProgramEntity programEntity = programRepository.findById(programDto.getProgramId()).orElseThrow(ProgramNotFoundException::new);
-//        // TODO: 프로그램의 소유자아이디랑 회원 아이디 일치하는지도 판단해서 예외처리 할 것
-////        if (!programEntity.getMember().getId().equals(member.getId())) {
-////            throw new ProgramUpdateException();
-////        }
-//
-//        // DTO 데이터로 Entity 필드 업데이트
-//        programEntity.setTitle(programDto.getProgramTitle());
-//        programEntity.setType(ProgramType.valueOf(programDto.getProgramType())); // 문자열을 Enum으로 변환
-//        programEntity.setTargetValue(programDto.getProgramTargetValue());
-//        programEntity.setSetCount(programDto.getInterval().getSetCount());
-//        programEntity.setDuration(programDto.getInterval().getDuration());
-//        // 범위 정보 업데이트
-//        programEntity.getRangeList().clear(); // 기존 범위 정보를 클리어
-//        if (programDto.getInterval().getRanges() != null) {
-//            for (ProgramUpdateDto.RangeDto rangeDto : programDto.getInterval().getRanges()) {
-//                RangeEntity range = RangeEntity.builder()
-//                        .isRunning(rangeDto.isRunning())
-//                        .time(rangeDto.getTime())
-//                        .speed(rangeDto.getSpeed())
-//                        .program(programEntity)
-//                        .build();
-//                programEntity.getRangeList().add(range);
-//            }
-//        }
-//
-//        // Entity 저장
-//        ProgramEntity updatedProgramEntity = programRepository.save(programEntity);
-//
-//        // Id 반환
-//        return updatedProgramEntity.getId();
-//    }
-
-    public void deleteProgram(Long programId) {
-        //        Member member = memberRepository.searchByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public void deleteProgram(Long memberId, Long programId) {
         Program program = programRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
 
-        // TODO: 프로그램 생성자 ID와 요청한 사용자 ID를 확인
-//        if (!programEntity.getMember().getId().equals(member.getId())) {
-//            throw new ProgramDeleteException();
-//        }
+        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
+        if (!program.getMemberId().equals(memberId)) {
+            throw new ProgramDeleteException();
+        }
 
         programRepository.deleteById(programId);
     }
 
     @Override
-    public Optional<List<ProgramListDto>> getProgramList() {
-        List<Program> programs = programRepository.findAll(); // 모든 프로그램 조회
-        if (programs.isEmpty()) {
-            return Optional.empty(); // 목록이 비어있다면 빈 Optional 반환
-        }
+    public List<ProgramListDto> getProgramList(Long memberId) {
+        List<ProgramListDto.ProgramDto> programDtos = convertToProgramDto(programRepository.getProgramList(memberId));
 
-        // 개별 ProgramEntity를 ProgramDto로 변환 후, 이를 ProgramListDto로 감싸서 반환
-        List<ProgramListDto.ProgramDto> programDtos = programs.stream()
-                .map(this::convertToProgramDto) // ProgramEntity를 ProgramDto로 변환하는 메서드 호출
-                .collect(Collectors.toList());
+        if (programDtos.isEmpty()) {
+            return Collections.emptyList(); // 목록이 비어있다면 빈 리스트 반환
+        }
 
         // 모든 ProgramDto를 담은 하나의 ProgramListDto 생성
         ProgramListDto programListDto = new ProgramListDto(programDtos);
 
         // 리스트에 ProgramListDto를 담아서 반환
-        return Optional.of(Collections.singletonList(programListDto));
+        return Collections.singletonList(programListDto);
+    }
+
+    private List<ProgramListDto.ProgramDto> convertToProgramDto(List<Program> programs) {
+        return programs.stream()
+                .map(this::convertToProgramDto)
+                .collect(Collectors.toList());
     }
 
     private ProgramListDto.ProgramDto convertToProgramDto(Program program) {
         ProgramListDto.ProgramDto.ProgramInfo programInfo = convertToProgramInfo(program);
+
+        int finishedCount = programRepository.countFinish(program.getId());
 
         return new ProgramListDto.ProgramDto(
                 program.getId(),
                 program.getTitle(),
                 program.isFavorite(),
                 program.getUsageCount(),
+                finishedCount,
                 program.getType(),
                 programInfo
         );
@@ -161,33 +127,34 @@ public class ProgramServiceImpl implements ProgramService {
                         .map(range -> new IntervalInfo.IntervalRange(
                                 range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
                         .collect(Collectors.toList());
-                return new  ProgramListDto.ProgramDto.IntervalProgramInfo(
-                        program.getDuration(), program.getSetCount(), ranges);
+
+                int setCount = program.getSetCount();
+                int rangeCount = ranges.size();
+                int setDuration = ranges.stream().mapToInt(IntervalInfo.IntervalRange::getTime).sum(); // 각 range의 시간의 합
+
+                return new ProgramListDto.ProgramDto.IntervalProgramInfo(
+                        setDuration*setCount, setCount, rangeCount, ranges);
 
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());
         }
     }
 
+    public ProgramDetailDto getProgramDetail(Long memberId, Long programId) {
+        Optional<Program> program = programRepository.findById(programId);
 
-//    public Optional<List<ProgramListDto>> getProgramList(Long memberId) {
-//        return programRepository.getProgramList(memberId);
-//    }
-
-    public Optional<ProgramDetailDto> getProgramDetail(Long programId) {
-        Optional<Program> programOptional = programRepository.findById(programId);
-        if (!programOptional.isPresent()) {
-            return Optional.empty();
+        if (program.isEmpty()) {
+           throw new ProgramDeleteException();
         }
 
-        Program program = programOptional.get();
+        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
+        if (!program.get().getMemberId().equals(memberId)) {
+            throw new ProgramDeleteException();
+        }
 
-        ProgramDetailDto programDetailDto = convertToProgramDetailDto(program);
+        ProgramDetailDto programDetailDto = convertToProgramDetailDto(program.get());
 
-        // TotalRecordDto, UsageLogDto 등 추가 정보가 필요하면 여기서 조회 및 설정
-
-        // programDto 반환
-        return Optional.of(programDetailDto);
+        return programDetailDto;
     }
 
     private ProgramDetailDto convertToProgramDetailDto(Program program) {
@@ -200,8 +167,8 @@ public class ProgramServiceImpl implements ProgramService {
                 program.getTitle(),
                 program.isFavorite(),
                 program.getType(),
-                programInfo
-//                program.getUsageCount(),
+                programInfo,
+                program.getUsageCount()
         );
     }
 
@@ -216,19 +183,15 @@ public class ProgramServiceImpl implements ProgramService {
                         .map(range -> new IntervalInfo.IntervalRange(
                                 range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
                         .collect(Collectors.toList());
-                return new  ProgramDetailDto.IntervalProgramInfo(
-                        program.getDuration(), program.getSetCount(), ranges);
 
+                int setCount = program.getSetCount();
+                int rangeCount = ranges.size();
+                int setDuration = ranges.stream().mapToInt(IntervalInfo.IntervalRange::getTime).sum(); // 각 range의 시간의 합
+
+                return new ProgramDetailDto.IntervalProgramInfo(
+                        setDuration*setCount, setCount, rangeCount, ranges);
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());
         }
     }
-
-//    public Optional<List<ProgramListDto>> getPopularPrograms(int limit) {
-//        return programRepository.getPopularPrograms(limit);
-//    }
-//
-//    public Optional<List<ProgramListDto>> searchPrograms(String keyword, ProgramType type) {
-//        return programRepository.searchPrograms(keyword, type);
-//    }
 }

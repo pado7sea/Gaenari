@@ -6,7 +6,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class FavoriteRepositoryCustomImpl implements FavoriteRepositoryCustom {
@@ -21,6 +20,7 @@ public class FavoriteRepositoryCustomImpl implements FavoriteRepositoryCustom {
         return query.selectFrom(qProgram)
                 .where(qProgram.memberId.eq(memberId)
                         .and(qProgram.isFavorite.isTrue()))
+                .orderBy(qProgram.usageCount.desc())  // 사용 횟수 기준으로 내림차순 정렬
                 .fetch();
     }
 

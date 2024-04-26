@@ -21,11 +21,11 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
-#  sql:
-#    init:
-#      data-locations: classpath*:db/data.sql
-#      mode: always
-#      platform: mysql
+  sql:
+    init:
+      data-locations: classpath*:db/data.sql
+      mode: never # 스키마 초기화하려면 always로 바꿔야 함
+      platform: mysql
 
 eureka:
   client:

@@ -52,8 +52,8 @@ public class FavoriteListDto {
         public static class IntervalProgramInfo implements ProgramInfo {
             private IntervalInfo intervalInfo;
 
-            public IntervalProgramInfo(int duration, int setCount, List<IntervalInfo.IntervalRange> ranges) {
-                this.intervalInfo = new IntervalInfo(duration, setCount, ranges);
+            public IntervalProgramInfo(int duration, int setCount, int rangeCount, List<IntervalInfo.IntervalRange> ranges) {
+                this.intervalInfo = new IntervalInfo(duration, setCount, rangeCount, ranges);
             }
 
         }

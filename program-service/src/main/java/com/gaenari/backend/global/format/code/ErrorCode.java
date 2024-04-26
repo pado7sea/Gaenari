@@ -1,4 +1,4 @@
-package com.gaenari.backend.global.format.response;
+package com.gaenari.backend.global.format.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

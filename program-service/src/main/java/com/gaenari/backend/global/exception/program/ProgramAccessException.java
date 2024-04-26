@@ -1,6 +1,6 @@
 package com.gaenari.backend.global.exception.program;
 
-import com.gaenari.backend.global.format.response.ErrorCode;
+import com.gaenari.backend.global.format.code.ErrorCode;
 import lombok.Getter;
 
 @Getter

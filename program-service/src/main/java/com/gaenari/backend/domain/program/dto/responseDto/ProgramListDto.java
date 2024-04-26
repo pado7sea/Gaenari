@@ -24,7 +24,7 @@ public class ProgramListDto {
         private String programTitle;
         private Boolean isFavorite; // 즐겨찾기 등록여부
         private int usageCount; // 운동 프로그램 총 사용횟수
-//        private int finishedCount = 0; // 운동 프로그램 완주 횟수
+        private int finishedCount; // 운동 프로그램 완주 횟수
 
         private ProgramType type; // enum: D(거리목표), T(시간목표), I(인터벌)
         private ProgramInfo program;
@@ -52,8 +52,8 @@ public class ProgramListDto {
         public static class IntervalProgramInfo implements ProgramInfo {
             private IntervalInfo intervalInfo;
 
-            public IntervalProgramInfo(int duration, int setCount, List<IntervalInfo.IntervalRange> ranges) {
-                this.intervalInfo = new IntervalInfo(duration, setCount, ranges);
+            public IntervalProgramInfo(int duration, int setCount, int rangeCount, List<IntervalInfo.IntervalRange> ranges) {
+                this.intervalInfo = new IntervalInfo(duration, setCount, rangeCount, ranges);
             }
 
         }

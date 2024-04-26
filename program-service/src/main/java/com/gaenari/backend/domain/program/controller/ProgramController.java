@@ -1,10 +1,11 @@
 package com.gaenari.backend.domain.program.controller;
 
 import com.gaenari.backend.domain.program.dto.requestDto.ProgramCreateDto;
-import com.gaenari.backend.domain.program.dto.requestDto.ProgramUpdateDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramDetailDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramListDto;
 import com.gaenari.backend.domain.program.service.impl.ProgramServiceImpl;
+import com.gaenari.backend.global.format.code.ResponseCode;
+import com.gaenari.backend.global.format.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Tag(name = "Program Controller", description = "Program Controller API")
 @RestController
@@ -20,58 +20,43 @@ import java.util.Optional;
 @RequestMapping("/program-service/program")
 public class ProgramController {
 
+    private final ApiResponse response;
     private final ProgramServiceImpl programService;
 
     @Operation(summary = "운동 프로그램 목록 조회", description = "운동 프로그램 목록 조회")
     @GetMapping
-    public ResponseEntity<List<ProgramListDto>> getAllPrograms() {
-        Optional<List<ProgramListDto>> programList = programService.getProgramList();
-        return programList
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> getAllPrograms() {
+        Long memberId = 1L;
+        List<ProgramListDto> programList = programService.getProgramList(memberId);
+
+        return response.success(ResponseCode.PROGRAM_LIST_FETCHED, programList);
     }
 
     @Operation(summary = "운동 프로그램 상세 조회", description = "운동 프로그램 상세 조회")
     @GetMapping("/{programId}")
-    public ResponseEntity<ProgramDetailDto> getProgramDetail(@PathVariable(name="programId") Long programId) {
-        Optional<ProgramDetailDto> programDetail = programService.getProgramDetail(programId);
-        return programDetail
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> getProgramDetail(@PathVariable(name = "programId") Long programId) {
+        Long memberId = 1L;
+        ProgramDetailDto programDetail = programService.getProgramDetail(memberId, programId);
+
+        return response.success(ResponseCode.PROGRAM_INFO_FETCHED, programDetail);
     }
 
     @Operation(summary = "운동 프로그램 생성", description = "운동 프로그램 생성")
     @PostMapping
-    public ResponseEntity<Long> createProgram(@RequestBody ProgramCreateDto programDto) {
-        Long programId = programService.createProgram(programDto);
-        return ResponseEntity.ok(programId);
-    }
+    public ResponseEntity<?> createProgram(@RequestBody ProgramCreateDto programDto) {
+        Long memberId = 1L;
+        Long programId = programService.createProgram(memberId, programDto);
 
-//    @Operation(summary = "운동 프로그램 수정", description = "운동 프로그램 수정")
-//    @PutMapping
-//    public ResponseEntity<Long> updateProgram(@RequestBody ProgramUpdateDto programDto) {
-//        Long updatedProgramId = programService.updateProgram(programDto);
-//        return ResponseEntity.ok(updatedProgramId);
-//    }
+        return response.success(ResponseCode.PROGRAM_CREATED, programId);
+    }
 
     @Operation(summary = "운동 프로그램 삭제", description = "운동 프로그램 삭제")
     @DeleteMapping("/{programId}")
-    public ResponseEntity<Void> deleteProgram(@PathVariable(name="programId") Long programId) {
-        programService.deleteProgram(programId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteProgram(@PathVariable(name = "programId") Long programId) {
+        Long memberId = 1L;
+        programService.deleteProgram(memberId, programId);
+
+        return response.success(ResponseCode.PROGRAM_DELETED);
     }
 
-//    @GetMapping("/popular")
-//    public ResponseEntity<List<ProgramListDto>> getPopularPrograms(@RequestParam int limit) {
-//        return programService.getPopularPrograms(limit)
-//                .map(ResponseEntity::ok)
-//                .orElseGet(() -> ResponseEntity.notFound().build());
-//    }
-//
-//    @GetMapping("/search")
-//    public ResponseEntity<List<ProgramListDto>> searchPrograms(@RequestParam String keyword, @RequestParam ProgramType type) {
-//        return programService.searchPrograms(keyword, type)
-//                .map(ResponseEntity::ok)
-//                .orElseGet(() -> ResponseEntity.notFound().build());
-//    }
 }
