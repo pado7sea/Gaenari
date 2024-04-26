@@ -1,5 +1,6 @@
 package com.gaenari.backend.domain.program.entity;
 
+import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -29,26 +30,23 @@ public class Program {
 
     @Setter
     @Column(name = "member_id")
-    private String memberId;
+    private Long memberId;
 
     @Setter
     @Column(name = "program_title")
     private String title;
 
     @Setter
-    @Column(name = "program_distance")
-    private int distance;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "program_type")
+    private ProgramType type;
 
     @Setter
-    @Column(name = "program_time")
-    private int time;
+    @Column(name = "program_target_value")
+    private int targetValue;
 
     @Setter
-    @Column(name = "is_interval")
-    private boolean isInterval;
-
-    @Setter
-    @Column(name = "program_setCount")
+    @Column(name = "program_set_count")
     private int setCount;
 
     @Setter
@@ -60,31 +58,33 @@ public class Program {
     private boolean isFavorite;
 
     @Setter
-    @Column(name = "program_usageCount")
+    @Column(name = "program_usage_count")
     private int usageCount;
 
-    public static Program of(String memberId, String title, int distance, int time, boolean isInterval,
-                             int setCount, int duration, boolean isFavorite, int usageCount) {
+    @Setter
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
+    public static Program of(Long memberId, String title, ProgramType type, int targetValue,
+                             int setCount, int duration, boolean isFavorite, int usageCount, boolean isDeleted) {
         return Program.builder()
                 .memberId(memberId)
                 .title(title)
-                .distance(distance)
-                .time(time)
-                .isInterval(isInterval)
+                .type(type)
+                .targetValue(targetValue)
                 .setCount(setCount)
                 .duration(duration)
                 .isFavorite(isFavorite)
                 .usageCount(usageCount)
+                .isDeleted(isDeleted)
                 .build();
     }
 
     public void updateTitle(String title) { this.title = title; }
 
-    public void updateDistance(int distance) { this.distance = distance; }
+    public void updateType(ProgramType type) { this.type = type; }
 
-    public void updateTime(int time) { this.time = time; }
-
-    public void updateIsInterval(boolean isInterval) { this.isInterval = isInterval; }
+    public void updateTargetValue(int targetValue) { this.targetValue = targetValue; }
 
     public void updateSetCount(int setCount) { this.setCount = setCount; }
 
@@ -97,8 +97,7 @@ public class Program {
     /* program - range 양방향 매핑 */
     @Builder.Default
     @OneToMany(mappedBy = "program", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private List<Range> rangeList = new ArrayList<>();
-
+    private List<IntervalRange> ranges = new ArrayList<>();
 
 }
 

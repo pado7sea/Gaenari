@@ -1,7 +1,6 @@
 package com.gaenari.backend.domain.program.dto.responseDto;
 
 import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
-import com.gaenari.backend.domain.program.entity.Range;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,58 +14,46 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProgramDetailDto {
-    private int programId;
+    private Long programId;
     private String programTitle;
-    private boolean isFavorite;
+    private Boolean isFavorite;
 
     private ProgramType type;
-    private ProgramDetail program;
+    private ProgramInfo program;
 
-    private TotalRecordDto totalRecord;
-    private int usageCount; // 운동 프로그램 총 사용횟수
-    private int finishedCount; // 운동 프로그램 완주 횟수
-    private List<UsageLogDto> usageLog;
+//    private TotalRecordDto totalRecord;
+//    private int usageCount; // 운동 프로그램 총 사용횟수
+//    private int finishedCount; // 운동 프로그램 완주 횟수
+//    private List<UsageLogDto> usageLog;
 
-
-    public interface ProgramDetail {}
+    public interface ProgramInfo {}
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DistanceTargetProgramDetail implements ProgramDetail {
-        private int targetValue;
+    public static class DistanceTargetProgramInfo implements ProgramInfo {
+        private int targetValue; // 거리 목표
     }
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class IntervalProgramDetail implements ProgramDetail {
-        @Getter
-        @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class Interval {
-            private int duration; // 인터벌 총 소요 시간
-            private int setCount; // 세트 수
-            private int rangeCount; // 세트 당 구간 수
-            private List<Range> ranges;
+    public static class TimeTargetProgramInfo implements ProgramInfo {
+        private int targetValue; // 시간 목표
+    }
 
-            @Getter
-            @Setter
-            @NoArgsConstructor
-            @AllArgsConstructor
-            public static class Range { // 구간
-                private int rangeId;
-                private boolean isRunning;
-                private int time;
-                private int speed;
-            }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class IntervalProgramInfo implements ProgramInfo {
+        private IntervalInfo intervalInfo;
 
+        public IntervalProgramInfo(int duration, int setCount, List<IntervalInfo.IntervalRange> ranges) {
+            this.intervalInfo = new IntervalInfo(duration, setCount, ranges);
         }
     }
-
     @Getter
     @Setter
     @NoArgsConstructor
@@ -88,7 +75,7 @@ public class ProgramDetailDto {
         private long time;
         private Date date;
         private int cal;
-        private boolean isFinished;
+        private Boolean isFinished;
     }
 
 }
