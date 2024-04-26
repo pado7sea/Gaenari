@@ -5,6 +5,12 @@ import com.gaenari.backend.domain.favorite.repository.FavoriteRepository;
 import com.gaenari.backend.domain.favorite.service.FavoriteService;
 import com.gaenari.backend.domain.program.dto.responseDto.IntervalInfo;
 import com.gaenari.backend.domain.program.entity.Program;
+import com.gaenari.backend.domain.program.repository.ProgramRepository;
+import com.gaenari.backend.global.exception.favorite.FavoriteCreateException;
+import com.gaenari.backend.global.exception.favorite.FavoriteDeleteException;
+import com.gaenari.backend.global.exception.program.ProgramDeleteException;
+import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
+import com.gaenari.backend.global.format.code.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +24,7 @@ import java.util.stream.Collectors;
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
+    private final ProgramRepository programRepository;
 
     @Override
     public List<FavoriteListDto> getFavoriteList(Long memberId) {
@@ -76,5 +83,25 @@ public class FavoriteServiceImpl implements FavoriteService {
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());
         }
+    }
+
+    @Override
+    public Boolean registerFavorite(Long programId) {
+        Program program = programRepository.findById(programId).orElseThrow(FavoriteCreateException::new);
+
+        program.updateIsFavorite(true);
+        programRepository.save(program);
+
+        return true;
+    }
+
+    @Override
+    public Boolean clearFavorite(Long programId) {
+        Program program = programRepository.findById(programId).orElseThrow(FavoriteDeleteException::new);
+
+        program.updateIsFavorite(false);
+        programRepository.save(program);
+
+        return true;
     }
 }
