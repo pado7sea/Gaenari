@@ -1,6 +1,7 @@
-package com.gaenari.backend.domain.program.dto.responseDto;
+package com.gaenari.backend.domain.favorite.dto.responseDto;
 
 import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
+import com.gaenari.backend.domain.program.dto.responseDto.IntervalInfo;
 import lombok.*;
 
 import java.util.List;
@@ -9,10 +10,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProgramListDto {
+public class FavoriteListDto {
     private List<ProgramDto> data;
 
-    public ProgramListDto(Long id, String title, Boolean isFavorite, ProgramType type, ProgramDto.ProgramInfo programInfo, int usageCount) {
+    public FavoriteListDto(Long id, String title, ProgramType type, ProgramDto.ProgramInfo programInfo, int usageCount) {
     }
 
     @Getter
@@ -22,7 +23,6 @@ public class ProgramListDto {
     public static class ProgramDto {
         private Long programId;
         private String programTitle;
-        private Boolean isFavorite; // 즐겨찾기 등록여부
         private int usageCount; // 운동 프로그램 총 사용횟수
 //        private int finishedCount = 0; // 운동 프로그램 완주 횟수
 

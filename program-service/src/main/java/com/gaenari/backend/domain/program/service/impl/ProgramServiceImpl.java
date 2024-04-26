@@ -118,13 +118,13 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Override
     public Optional<List<ProgramListDto>> getProgramList() {
-        List<Program> programEntities = programRepository.findAll(); // 모든 프로그램 조회
-        if (programEntities.isEmpty()) {
+        List<Program> programs = programRepository.findAll(); // 모든 프로그램 조회
+        if (programs.isEmpty()) {
             return Optional.empty(); // 목록이 비어있다면 빈 Optional 반환
         }
 
         // 개별 ProgramEntity를 ProgramDto로 변환 후, 이를 ProgramListDto로 감싸서 반환
-        List<ProgramListDto.ProgramDto> programDtos = programEntities.stream()
+        List<ProgramListDto.ProgramDto> programDtos = programs.stream()
                 .map(this::convertToProgramDto) // ProgramEntity를 ProgramDto로 변환하는 메서드 호출
                 .collect(Collectors.toList());
 
