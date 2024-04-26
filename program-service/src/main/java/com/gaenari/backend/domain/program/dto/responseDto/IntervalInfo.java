@@ -1,7 +1,9 @@
 package com.gaenari.backend.domain.program.dto.responseDto;
 
-import com.gaenari.backend.domain.program.entity.IntervalRange;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 

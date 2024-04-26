@@ -25,11 +25,8 @@ public class FavoriteController {
     public ResponseEntity<List<FavoriteListDto>> getAllPrograms() {
         Long memberId = 1L;
         List<FavoriteListDto> favoriteList = favoriteService.getFavoriteList(memberId);
-        if (!favoriteList.isEmpty()) {
-            return ResponseEntity.ok(favoriteList);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
+        return ResponseEntity.ok(favoriteList);
     }
 
 }
