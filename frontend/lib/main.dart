@@ -1,46 +1,13 @@
-// import 'package:flutter/material.dart';
-
-// import 'package:forsythia/screens/homescreen.dart';
-// import 'package:forsythia/theme/color.dart';
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진과 위젯 트리 바인딩
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatefulWidget {
-//   @override
-//   State<MyApp> createState() => _MyAppState();
-// }
-
-// class _MyAppState extends State<MyApp> {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(scaffoldBackgroundColor: myBackground),
-//       home: const HomeScreen(),
-//     );
-//   }
-// }
-
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:forsythia/provider/footer_provider.dart';
 import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
 import 'package:forsythia/screens/doghouse/doghouse_screen.dart';
-// import 'package:forsythia/screens/homescreen.dart';
 import 'package:forsythia/screens/program/program_screen.dart';
 import 'package:forsythia/screens/record/record_screen.dart';
 import 'package:forsythia/screens/setting/setting_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/widgets/footer.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-// import 'package:stad/constant/animated_indexed_stack.dart';
-// import 'package:stad/firebase_options.dart';
-// import 'package:stad/providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진과 위젯 트리 바인딩
@@ -85,6 +52,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: '개나리',
         theme: ThemeData(
+          fontFamily: 'TheJamsil', // 사용할 폰트 패밀리 지정
           scaffoldBackgroundColor: myBackground,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
