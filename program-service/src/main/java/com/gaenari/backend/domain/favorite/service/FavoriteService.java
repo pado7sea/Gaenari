@@ -11,4 +11,7 @@ public interface FavoriteService {
 
     List<FavoriteListDto> getFavoriteList(Long memberId);
 
+    Boolean registerFavorite(Long programId);
+
+    Boolean clearFavorite(Long programId);
 }
