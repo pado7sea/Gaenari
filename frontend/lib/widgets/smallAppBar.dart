@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
+import 'package:forsythia/theme/shadowImg.dart';
+import 'package:forsythia/theme/text.dart';
 
 class smallAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool back;
 
   const smallAppBar({
     super.key,
     required this.title,
+    this.back = false,
   });
 
   // 앱바 높이 지정
@@ -18,25 +22,38 @@ class smallAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: myBackground,
       // 뒤로가기 버튼
-      // leading: Padding(
-      //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      //   child: IconButton(
-      //     icon: Icon(Icons.arrow_back),
-      //     onPressed: () {
-      //       Navigator.of(context).pop(); // 이전 화면으로 이동
-      //     },
-      //   ),
-      // ),
+
+      leading: Padding(
+        padding: const EdgeInsets.all(15),
+        child: back ?  GestureDetector(
+          onTap: () {
+            Navigator.pop(context); // 이미지 클릭 시 뒤로 가기
+          },
+          child: Image.asset(
+            "assets/icons/common_back.png",
+            filterQuality: FilterQuality.none,
+            fit: BoxFit.cover,
+            width: 10,
+            height: 10,
+          ),
+        ) : null,
+      ),
 
       // 앱바 이미지
       centerTitle: true,
       flexibleSpace: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/smallappbar.png"),
-                fit: BoxFit.fill,
+          ShadowImg(
+            color: myBlack,
+            sigma: 10,
+            offset: Offset(0, 5),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/smallappbar.png"),
+                  filterQuality: FilterQuality.none,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
           ),
@@ -50,14 +67,7 @@ class smallAppBar extends StatelessWidget implements PreferredSizeWidget {
                 SizedBox(
                   height: 40,
                 ),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text20(text: title, bold: true,)
               ],
             ),
           ),

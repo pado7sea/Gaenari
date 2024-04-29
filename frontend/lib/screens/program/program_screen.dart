@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/widgets/largeAppBar.dart';
+import 'package:forsythia/widgets/smallAppBar.dart';
 
 class ProgramScreen extends StatefulWidget {
   const ProgramScreen({super.key});
@@ -12,7 +13,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: largeAppBar(
-            title: '운동프로그램', sentence: '즐겨찾기를 해두면 \n 워치에서 바로 선택가능!'));
+        appBar: smallAppBar(
+            title: '운동프로그램'));
   }
 }

@@ -14,7 +14,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   // 앱바 높이 지정
   @override
-  Size get preferredSize => Size.fromHeight(190);
+  Size get preferredSize => Size.fromHeight(178);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,8 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
       flexibleSpace: Stack(
         children: [
           ShadowImg(
-            sigma: 5,
+            color: myBlack,
+            sigma: 10,
             offset: Offset(0, 5),
             child: Container(
               decoration: BoxDecoration(
@@ -65,19 +66,26 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   title,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 36,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(0, 5),
+                        blurRadius: 20.0,
+                        color: Color(0X99777777),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 50.0),
+                      vertical: 10.0, horizontal: 40.0),
                   child: Text(
                     sentence,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
