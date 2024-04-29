@@ -17,7 +17,7 @@ import java.util.List;
 @Tag(name = "Program Controller", description = "Program Controller API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/program-service/program")
+@RequestMapping("/program")
 public class ProgramController {
 
     private final ApiResponse response;
@@ -59,4 +59,8 @@ public class ProgramController {
         return response.success(ResponseCode.PROGRAM_DELETED);
     }
 
+    @GetMapping("/health_check")
+    public String healthCheck(){
+        return "It's working now";
+    }
 }
