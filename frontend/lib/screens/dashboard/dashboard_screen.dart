@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/challenge/challenge.dart';
-import 'package:forsythia/screens/mate/mate.dart';
+import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/SlidePageRoute.dart';
 import 'package:forsythia/widgets/box.dart';
 import 'package:forsythia/widgets/button.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
@@ -29,45 +30,43 @@ class DashBoardScreenState extends State<DashBoardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DraggableBottomSheet(
-        minExtent: 100,
+        minExtent: 50,
         useSafeArea: false,
         curve: Curves.easeIn,
         barrierColor: Colors.transparent,
-        previewWidget: _expandedWidget(),
+        previewWidget: _previewWidget(),
         expandedWidget: _expandedWidget(),
         backgroundWidget: _backgroundWidget(),
-        maxExtent: MediaQuery.of(context).size.height * 0.8,
+        maxExtent: MediaQuery.of(context).size.height * 0.77,
         onDragging: (pos) {},
       ),
-      // child: Column(
-      //   children: [
-      //     Text25(text: "네비게이트목록"),
-      //     Row(
-      //       children: [
-      //         SmallButton(
-      //           onPressed: () {
-      //             Navigator.push(
-      //               context,
-      //               CupertinoPageRoute(builder: (context) => MatePage()),
-      //             );
-      //           },
-      //           text: '친구 버튼',
-      //           active: true,
-      //         ),
-      //         SmallButton(
-      //           onPressed: () {
-      //             Navigator.push(
-      //               context,
-      //               MaterialPageRoute(builder: (context) => MatePage()),
-      //             );
-      //           },
-      //           text: '친구 버튼',
-      //           active: true,
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
+    );
+  }
+
+  Widget _previewWidget() {
+    return Container(
+      padding: const EdgeInsets.only(top: 16),
+      decoration: const BoxDecoration(
+        color: myBackground,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      width: double.infinity,
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: 40,
+            height: 6,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 95, 95, 95),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
     );
   }
 
@@ -116,17 +115,9 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          // const Text(
-          //   '대충 패널 올라가고 내려감',
-          //   style: TextStyle(
-          //     color: Color.fromARGB(255, 128, 128, 128),
-          //     fontSize: 16,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
-          // const SizedBox(height: 16),
           Expanded(
             child: GridView(
+              physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.only(top: 0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
@@ -169,12 +160,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChallengePage()),
-                                    );
+                                    Navigator.of(context).push(SlidePageRoute(
+                                        nextPage: ChallengePage()));
                                   },
                                   child: Container(
                                     height: 150,
@@ -189,11 +176,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MatePage()),
-                                    );
+                                    Navigator.of(context).push(
+                                        SlidePageRoute(nextPage: MatePage()));
                                   },
                                   child: Container(
                                     height: 150,

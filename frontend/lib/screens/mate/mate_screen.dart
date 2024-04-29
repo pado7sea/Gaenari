@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/screens/mate/search.dart';
+import 'package:forsythia/widgets/box.dart';
 import 'package:forsythia/widgets/largeAppBar.dart';
 
 class MatePage extends StatefulWidget {
@@ -16,10 +17,10 @@ class ListItem {
 
 class _MatePageState extends State<MatePage> {
   final List<ListItem> _dataList = [
-    ListItem('Item 1'),
-    ListItem('Item 2'),
-    ListItem('Item 3'),
-    ListItem('Item 4'),
+    ListItem('서민지'),
+    ListItem('서민기'),
+    ListItem('서만지'),
+    ListItem('서만기'),
   ];
 
   @override
@@ -55,13 +56,19 @@ class _MatePageState extends State<MatePage> {
                       });
                     },
                     background: Container(
-                      color: Colors.red,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      decoration: myBoxDecoration,
+                      // color: Colors.red,
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.only(right: 20.0),
                       child: Icon(Icons.delete),
                     ),
-                    child: ListTile(
-                      title: Text(_dataList[index].title),
+                    child: Container(
+                      decoration: myBoxDecoration,
+                      margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: ListTile(
+                        title: Text(_dataList[index].title),
+                      ),
                     ),
                   );
                 },
