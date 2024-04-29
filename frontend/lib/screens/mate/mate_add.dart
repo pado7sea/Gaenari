@@ -19,7 +19,7 @@ class _AddMatePageState extends State<AddMatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: smallAppBar(
-        title: "친구검색",
+        title: "친구검색", back: true,
       ),
       body: SingleChildScrollView(
         child: Column(

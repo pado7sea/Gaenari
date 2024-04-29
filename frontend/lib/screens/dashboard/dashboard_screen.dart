@@ -37,7 +37,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
         previewWidget: _previewWidget(),
         expandedWidget: _expandedWidget(),
         backgroundWidget: _backgroundWidget(),
-        maxExtent: MediaQuery.of(context).size.height * 0.77,
+        maxExtent: MediaQuery.of(context).size.height * 0.76,
         onDragging: (pos) {},
       ),
     );
@@ -84,8 +84,9 @@ class DashBoardScreenState extends State<DashBoardScreen> {
           width: double.infinity,
           child: Container(
             margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
-            child: Text25(
-              text: "재신님 방가방가 하이루",
+            child: Text20(
+              text: "재신님 방가방가 하이빵가루",
+              bold: true,
             ),
           ),
         ),
@@ -147,7 +148,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.only(bottom: 16),
                         decoration: myBoxDecoration,
-                        child: Text20(
+                        child: Text16(
                           text: "주간기록",
                         ),
                       ),
@@ -164,12 +165,12 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                         nextPage: ChallengePage()));
                                   },
                                   child: Container(
-                                    height: 150,
+                                    height: 120,
                                     width: double.infinity,
                                     padding: EdgeInsets.all(10),
                                     margin: EdgeInsets.only(bottom: 16),
                                     decoration: myBoxDecoration,
-                                    child: Text20(
+                                    child: Text16(
                                       text: "도전과제",
                                     ),
                                   ),
@@ -180,12 +181,12 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                         SlidePageRoute(nextPage: MatePage()));
                                   },
                                   child: Container(
-                                    height: 150,
+                                    height: 120,
                                     width: double.infinity,
                                     padding: EdgeInsets.all(10),
                                     // margin: EdgeInsets.only(bottom: 10),
                                     decoration: myBoxDecoration,
-                                    child: Text20(
+                                    child: Text16(
                                       text: "친구",
                                     ),
                                   ),
@@ -196,11 +197,11 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                           Expanded(
                             flex: 6,
                             child: Container(
-                              height: 316,
+                              height: 256,
                               padding: EdgeInsets.fromLTRB(10, 10, 10, 40),
                               margin: EdgeInsets.only(left: 16),
                               decoration: myBoxDecoration,
-                              child: Text20(
+                              child: Text16(
                                 text: "워치 or 날씨",
                               ),
                             ),

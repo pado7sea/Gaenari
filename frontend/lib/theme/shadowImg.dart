@@ -11,7 +11,7 @@ class ShadowImg extends StatelessWidget {
 
   ShadowImg({
     required this.child,
-    this.opacity = 1,
+    this.opacity = 0.2,
     this.sigma = 2,
     this.color = myGrey,
     this.offset = const Offset(2, 2),
