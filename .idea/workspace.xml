@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1772ac7e-47dc-4bb8-b329-a45335041743" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/member-service/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/member-service/src/main/resources/application-prod.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/member-service/src/main/java/com/gaenari/backend/global/config/SwaggerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/src/main/java/com/gaenari/backend/domain/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/src/main/java/com/gaenari/backend/domain/member/controller/MemberController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/src/main/resources/application-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/src/main/resources/application-prod.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +40,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -59,9 +60,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.Build member-service.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.MemberServiceApplication.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "dev/be/member",
     "kotlin-language-version-configured": "true",
@@ -76,6 +79,16 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="MemberServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="member-service.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.gaenari.backend.MemberServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -120,5 +133,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
