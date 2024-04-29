@@ -15,7 +15,7 @@ import java.util.List;
 @Tag(name = "Favorite Program Controller", description = "Favorite Program Controller API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/program-service/program/favorite")
+@RequestMapping("/program/favorite")
 public class FavoriteController {
 
     private final ApiResponse response;
