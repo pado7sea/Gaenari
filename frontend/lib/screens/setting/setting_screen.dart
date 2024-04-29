@@ -6,6 +6,7 @@ import 'package:forsythia/screens/setting/bodyinfo_screen.dart';
 import 'package:forsythia/screens/setting/notification_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/SlidePageRoute.dart';
 import 'package:forsythia/widgets/box.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 
@@ -28,10 +29,8 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (context) => accountScreen()),
-              );
+              Navigator.of(context)
+                  .push(SlidePageRoute(nextPage: accountScreen()));
             },
             child: Container(
               child: Row(
@@ -48,17 +47,13 @@ class _SettingScreenState extends State<SettingScreen> {
               decoration: myBoxDecoration,
               width: double.infinity,
               padding: EdgeInsets.all(20),
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
             ),
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    // fullscreenDialog: false,
-                    builder: (context) => norificationScreen()),
-              );
+              Navigator.of(context)
+                  .push(SlidePageRoute(nextPage: norificationScreen()));
             },
             child: Container(
               child: Row(
@@ -75,15 +70,13 @@ class _SettingScreenState extends State<SettingScreen> {
               decoration: myBoxDecoration,
               width: double.infinity,
               padding: EdgeInsets.all(20),
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
             ),
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (context) => bodyinfoScreen()),
-              );
+              Navigator.of(context)
+                  .push(SlidePageRoute(nextPage: bodyinfoScreen()));
             },
             child: Container(
               child: Row(
@@ -100,7 +93,7 @@ class _SettingScreenState extends State<SettingScreen> {
               decoration: myBoxDecoration,
               width: double.infinity,
               padding: EdgeInsets.all(20),
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
             ),
           ),
           Expanded(
