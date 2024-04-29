@@ -46,6 +46,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           ? 'assets/bottom/active_dashboard.png'
                           : 'assets/bottom/none_dashboard.png',
                       fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
                     ),
                   ),
                   label: '',
@@ -59,6 +60,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           ? 'assets/bottom/active_record.png'
                           : 'assets/bottom/none_record.png',
                       fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
                     ),
                   ),
                   label: '',
@@ -72,6 +74,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           ? 'assets/bottom/active_program.png'
                           : 'assets/bottom/none_program.png',
                       fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
                     ),
                   ),
                   label: '',
@@ -85,6 +88,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           ? 'assets/bottom/active_doghouse.png'
                           : 'assets/bottom/none_doghouse.png',
                       fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
                     ),
                   ),
                   label: '',
@@ -98,6 +102,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                           ? 'assets/bottom/active_setting.png'
                           : 'assets/bottom/none_setting.png',
                       fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
                     ),
                   ),
                   label: '',

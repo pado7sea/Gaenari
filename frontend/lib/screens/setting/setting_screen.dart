@@ -1,4 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:forsythia/screens/setting/account_screen.dart';
+import 'package:forsythia/screens/setting/bodyinfo_screen.dart';
+import 'package:forsythia/screens/setting/notification_screen.dart';
+import 'package:forsythia/theme/color.dart';
+import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 
@@ -16,33 +23,111 @@ class _SettingScreenState extends State<SettingScreen> {
       appBar: smallAppBar(title: '설정'),
       body: Column(
         children: [
-          Container(
-            child: Text('hi'),
-            decoration: myBoxDecoration,
-            width: double.infinity,
-            padding: EdgeInsets.all(30),
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+          SizedBox(
+            height: 30,
           ),
-          Container(
-            child: Text('hi'),
-            width: double.infinity,
-            decoration: myBoxDecoration,
-            padding: EdgeInsets.all(30),
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => accountScreen()),
+              );
+            },
+            child: Container(
+              child: Row(
+                children: [
+                  Image(
+                    image: AssetImage('assets/emoji/smilepace.png'),
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                  Text16(text: '  계정')
+                ],
+              ),
+              decoration: myBoxDecoration,
+              width: double.infinity,
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+            ),
           ),
-          Container(
-            child: Text('hi'),
-            decoration: myBoxDecoration,
-            width: double.infinity,
-            padding: EdgeInsets.all(30),
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    // fullscreenDialog: false,
+                    builder: (context) => norificationScreen()),
+              );
+            },
+            child: Container(
+              child: Row(
+                children: [
+                  Image(
+                    image: AssetImage('assets/emoji/bell.png'),
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                  Text16(text: '  알림')
+                ],
+              ),
+              decoration: myBoxDecoration,
+              width: double.infinity,
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+            ),
           ),
-          Container(
-            child: Text('hi'),
-            decoration: myBoxDecoration,
-            width: double.infinity,
-            padding: EdgeInsets.all(30),
-            margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => bodyinfoScreen()),
+              );
+            },
+            child: Container(
+              child: Row(
+                children: [
+                  Image(
+                    image: AssetImage('assets/emoji/ruler.png'),
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                  Text16(text: '  신체정보')
+                ],
+              ),
+              decoration: myBoxDecoration,
+              width: double.infinity,
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text16(
+                  text: 'v 1.0.0',
+                  textColor: myGrey,
+                  bold: true,
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    // 로그아웃 로직 추가
+                  },
+                  child: Text(
+                    '로그아웃',
+                    style: TextStyle(
+                        color: myGrey,
+                        decoration: TextDecoration.underline,
+                        decorationColor: myGrey,
+                        decorationThickness: 2),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
