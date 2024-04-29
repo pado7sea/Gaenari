@@ -63,25 +63,25 @@ spring:
             - Path=/api/inventory-service/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/inventory-service/(?<segment>.*), /inventory-service/$\{segment}
+            - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
         - id: program-service
           uri: http://program-service.program.svc.cluster.local
           predicates:
             - Path=/api/program-service/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/program-service/(?<segment>.*), /program-service/$\{segment}
+            - RewritePath=/api/program-service/(?<path>.*), /$\{path}
         - id: exercise-record-service
           uri: http://exercise-record-service.exercise-record.svc.cluster.local
           predicates:
             - Path=/api/exercise-record-service/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/exercise-record-service/(?<segment>.*), /exercise-record-service/$\{segment}
+            - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
         - id: challenge-service
           uri: http://challenge-service.challenge.svc.cluster.local
           predicates:
             - Path=/api/challenge-service/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/challenge-service/(?<segment>.*), /challenge-service/$\{segment}
+            - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
