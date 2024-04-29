@@ -95,7 +95,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
 
   Widget _expandedWidget() {
     return Container(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 16, bottom: 0),
       decoration: const BoxDecoration(
         color: myBackground,
         borderRadius: BorderRadius.only(
@@ -110,7 +110,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             width: 40,
             height: 6,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 95, 95, 95),
+              color: myGrey,
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -122,11 +122,11 @@ class DashBoardScreenState extends State<DashBoardScreen> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
                 crossAxisSpacing: 10,
-                childAspectRatio: (25 / 350),
+                childAspectRatio: (25 / 360),
               ),
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                   color: myBackground,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +135,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                         height: 60,
                         width: double.infinity,
                         padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: EdgeInsets.only(bottom: 16),
                         decoration: myBoxDecoration,
                         child: Text16(
                           text: "아직 받지않은 보상이 있다요",
@@ -145,7 +145,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                         height: 200,
                         width: double.infinity,
                         padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: EdgeInsets.only(bottom: 16),
                         decoration: myBoxDecoration,
                         child: Text20(
                           text: "주간기록",
@@ -167,7 +167,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                     height: 150,
                                     width: double.infinity,
                                     padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 10),
+                                    margin: EdgeInsets.only(bottom: 16),
                                     decoration: myBoxDecoration,
                                     child: Text20(
                                       text: "도전과제",
@@ -196,9 +196,9 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                           Expanded(
                             flex: 6,
                             child: Container(
-                              height: 310,
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.only(bottom: 10, left: 10),
+                              height: 316,
+                              padding: EdgeInsets.fromLTRB(10, 10, 10, 40),
+                              margin: EdgeInsets.only(left: 16),
                               decoration: myBoxDecoration,
                               child: Text20(
                                 text: "워치 or 날씨",
