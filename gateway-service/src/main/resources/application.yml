@@ -85,3 +85,22 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    urls[0]:
+      name: 멤버 서비스
+      url: http://localhost:8080/api/member-service/v3/api-docs
+    urls[1]:
+      name: 프로그램 서비스
+      url: http://localhost:8080/api/program-service/v3/api-docs
+    urls[2]:
+      name: 운동 기록 서비스
+      url: http://localhost:8080/api/exercise-record-service/v3/api-docs
+    urls[3]:
+      name: 도전과제 서비스
+      url: http://localhost:8080/api/challenge-service/v3/api-docs
+    urls[4]:
+      name: 인벤토리 서비스
+      url: http://localhost:8080/api/inventory-service/v3/api-docs
