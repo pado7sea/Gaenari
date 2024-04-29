@@ -91,16 +91,16 @@ springdoc:
     use-root-path: true
     urls[0]:
       name: 멤버 서비스
-      url: https://api.gateway.kr/api/member-service/v3/api-docs
+      url: https://api.gaenari.kr/api/member-service/v3/api-docs
     urls[1]:
       name: 프로그램 서비스
-      url: https://api.gateway.kr/api/program-service/v3/api-docs
+      url: https://api.gaenari.kr/api/program-service/v3/api-docs
     urls[2]:
       name: 운동 기록 서비스
-      url: https://api.gateway.kr/api/exercise-record-service/v3/api-docs
+      url: https://api.gaenari.kr/api/exercise-record-service/v3/api-docs
     urls[3]:
       name: 도전과제 서비스
-      url: https://api.gateway.kr/api/challenge-service/v3/api-docs
+      url: https://api.gaenari.kr/api/challenge-service/v3/api-docs
     urls[4]:
       name: 인벤토리 서비스
-      url: https://api.gateway.kr/api/inventory-service/v3/api-docs
+      url: https://api.gaenari.kr/api/inventory-service/v3/api-docs
