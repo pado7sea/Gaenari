@@ -58,6 +58,8 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/bottom/
+    - assets/emoji/
+
   fonts:
     - family: TheJamsil
       fonts:

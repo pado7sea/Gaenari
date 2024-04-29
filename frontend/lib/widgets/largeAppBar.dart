@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
-import 'package:forsythia/widgets/shadowImg.dart';
+import 'package:forsythia/theme/shadowImg.dart';
 
 class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -45,7 +45,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/largeappbarImage.png"),
+                  image: AssetImage("assets/images/largeappbar.png"),
                   fit: BoxFit.fill,
                 ),
               ),
