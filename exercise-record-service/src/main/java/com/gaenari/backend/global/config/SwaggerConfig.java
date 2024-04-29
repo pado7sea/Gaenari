@@ -18,7 +18,8 @@ public class SwaggerConfig {
   @Bean
   public OpenAPI openAPI() {
     return new OpenAPI()
-        .addServersItem(new Server().url("/"));
+        .addServersItem(new Server().url("http://localhost:8080/api/exercise-record-service/"))
+        .addServersItem(new Server().url("https://api.gaenari.kr/api/exercise-record-service/"));
   }
 
 }
