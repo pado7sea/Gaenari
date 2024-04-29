@@ -40,7 +40,7 @@ spring:
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<segment>.*), /member-service/$\{segment}
+            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
@@ -48,7 +48,7 @@ spring:
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<segment>.*), /member-service/$\{segment}
+            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
@@ -56,7 +56,7 @@ spring:
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<segment>.*), /member-service/$\{segment}
+            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
         - id: inventory-service
           uri: lb://INVENTORY-SERVICE
           predicates:
