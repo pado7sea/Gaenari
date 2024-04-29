@@ -14,7 +14,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   // 앱바 높이 지정
   @override
-  Size get preferredSize => Size.fromHeight(230);
+  Size get preferredSize => Size.fromHeight(190);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/appbarImage.png"),
+                  image: AssetImage("assets/images/largeappbarImage.png"),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -58,6 +58,9 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 20,
+                ),
                 Text(
                   title,
                   style: TextStyle(
