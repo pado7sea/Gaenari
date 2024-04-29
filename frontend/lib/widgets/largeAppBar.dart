@@ -59,7 +59,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 20,
+                  height: 60,
                 ),
                 Text(
                   title,
@@ -67,13 +67,6 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: Colors.black,
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    shadows: const [
-                      Shadow(
-                        blurRadius: 2.0,
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
                   ),
                 ),
                 Padding(

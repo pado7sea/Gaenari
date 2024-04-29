@@ -48,21 +48,14 @@ class smallAppBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 Text(
                   title,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 2.0,
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
                   ),
                 ),
               ],
