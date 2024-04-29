@@ -26,3 +26,11 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://eureka.gaenari.kr/eureka
+
+springdoc:
+  api-docs:
+    enabled: true
+    version: openapi_3_1
+  enable-spring-security: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json

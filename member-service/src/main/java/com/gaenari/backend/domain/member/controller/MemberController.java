@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member-service")
+@RequestMapping("")
 public class MemberController {
     private final Environment env;
     private final MemberService memberService;
