@@ -2,7 +2,7 @@ package com.gaenari.backend.domain.program.service;
 
 import com.gaenari.backend.domain.program.dto.requestDto.ProgramCreateDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramDetailDto;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramListDto;
+import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface ProgramService {
 
     void deleteProgram(Long memberId, Long programId);
 
-    List<ProgramListDto> getProgramList(Long memberId);
+    List<ProgramDto> getProgramList(Long memberId);
 
     ProgramDetailDto getProgramDetail(Long memberId, Long programId);
 }

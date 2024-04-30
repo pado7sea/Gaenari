@@ -2,12 +2,13 @@ package com.gaenari.backend.domain.program.controller;
 
 import com.gaenari.backend.domain.program.dto.requestDto.ProgramCreateDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramDetailDto;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramListDto;
+import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
 import com.gaenari.backend.domain.program.service.impl.ProgramServiceImpl;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class ProgramController {
     @GetMapping
     public ResponseEntity<?> getAllPrograms() {
         Long memberId = 1L;
-        List<ProgramListDto> programList = programService.getProgramList(memberId);
+        List<ProgramDto> programList = programService.getProgramList(memberId);
 
         return response.success(ResponseCode.PROGRAM_LIST_FETCHED, programList);
     }
@@ -43,7 +44,7 @@ public class ProgramController {
 
     @Operation(summary = "운동 프로그램 생성", description = "운동 프로그램 생성")
     @PostMapping
-    public ResponseEntity<?> createProgram(@RequestBody ProgramCreateDto programDto) {
+    public ResponseEntity<?> createProgram(@Valid @RequestBody ProgramCreateDto programDto) {
         Long memberId = 1L;
         Long programId = programService.createProgram(memberId, programDto);
 
