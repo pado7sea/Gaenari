@@ -4,7 +4,7 @@ import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
 import com.gaenari.backend.domain.program.dto.requestDto.ProgramCreateDto;
 import com.gaenari.backend.domain.program.dto.responseDto.IntervalInfo;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramDetailDto;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramListDto;
+import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
 import com.gaenari.backend.domain.program.entity.IntervalRange;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.domain.program.repository.ProgramRepository;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,32 +77,25 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public List<ProgramListDto> getProgramList(Long memberId) {
-        List<ProgramListDto.ProgramDto> programDtos = convertToProgramDto(programRepository.getProgramList(memberId));
-
-        if (programDtos.isEmpty()) {
-            return Collections.emptyList(); // 목록이 비어있다면 빈 리스트 반환
-        }
-
-        // 모든 ProgramDto를 담은 하나의 ProgramListDto 생성
-        ProgramListDto programListDto = new ProgramListDto(programDtos);
+    public List<ProgramDto> getProgramList(Long memberId) {
+        List<ProgramDto> programDtos = convertToProgramDto(programRepository.getProgramList(memberId));
 
         // 리스트에 ProgramListDto를 담아서 반환
-        return Collections.singletonList(programListDto);
+        return programDtos;
     }
 
-    private List<ProgramListDto.ProgramDto> convertToProgramDto(List<Program> programs) {
+    private List<ProgramDto> convertToProgramDto(List<Program> programs) {
         return programs.stream()
                 .map(this::convertToProgramDto)
                 .collect(Collectors.toList());
     }
 
-    private ProgramListDto.ProgramDto convertToProgramDto(Program program) {
-        ProgramListDto.ProgramDto.ProgramInfo programInfo = convertToProgramInfo(program);
+    private ProgramDto convertToProgramDto(Program program) {
+        ProgramDto.ProgramInfo programInfo = convertToProgramInfo(program);
 
         int finishedCount = programRepository.countFinish(program.getId());
 
-        return new ProgramListDto.ProgramDto(
+        return new ProgramDto(
                 program.getId(),
                 program.getTitle(),
                 program.isFavorite(),
@@ -114,13 +106,13 @@ public class ProgramServiceImpl implements ProgramService {
         );
     }
 
-    private ProgramListDto.ProgramDto.ProgramInfo convertToProgramInfo(Program program) {
+    private ProgramDto.ProgramInfo convertToProgramInfo(Program program) {
         switch (program.getType()) {
             case D:  // 거리 목표 프로그램
-                return new ProgramListDto.ProgramDto.DistanceTargetProgramInfo(program.getTargetValue());
+                return new ProgramDto.DistanceTargetProgramInfo(program.getTargetValue());
 
             case T:  // 시간 목표 프로그램
-                return new ProgramListDto.ProgramDto.TimeTargetProgramInfo(program.getTargetValue());
+                return new ProgramDto.TimeTargetProgramInfo(program.getTargetValue());
 
             case I:  // 인터벌 프로그램
                 List<IntervalInfo.IntervalRange> ranges = program.getRanges().stream()
@@ -132,7 +124,7 @@ public class ProgramServiceImpl implements ProgramService {
                 int rangeCount = ranges.size();
                 int setDuration = ranges.stream().mapToInt(IntervalInfo.IntervalRange::getTime).sum(); // 각 range의 시간의 합
 
-                return new ProgramListDto.ProgramDto.IntervalProgramInfo(
+                return new ProgramDto.IntervalProgramInfo(
                         setDuration*setCount, setCount, rangeCount, ranges);
 
             default:

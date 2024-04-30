@@ -19,7 +19,6 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE program SET is_deleted = TRUE WHERE program_id = ?")
 public class Program {
 
-    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_id")
