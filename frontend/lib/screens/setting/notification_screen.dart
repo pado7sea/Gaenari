@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/screens/signup/signup_screen.dart';
+import 'package:forsythia/theme/color.dart';
+import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 
-class norificationScreen extends StatefulWidget {
-  const norificationScreen({super.key});
+class notificationScreen extends StatefulWidget {
+  const notificationScreen({super.key});
 
   @override
-  State<norificationScreen> createState() => _norificationScreenState();
+  State<notificationScreen> createState() => _notificationScreenState();
 }
 
-class _norificationScreenState extends State<norificationScreen> {
+class _notificationScreenState extends State<notificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
