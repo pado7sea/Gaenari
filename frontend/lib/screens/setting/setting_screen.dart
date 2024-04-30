@@ -53,7 +53,7 @@ class _SettingScreenState extends State<SettingScreen> {
           GestureDetector(
             onTap: () {
               Navigator.of(context)
-                  .push(SlidePageRoute(nextPage: norificationScreen()));
+                  .push(SlidePageRoute(nextPage: notificationScreen()));
             },
             child: Container(
               child: Row(

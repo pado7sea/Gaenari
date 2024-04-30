@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/provider/footer_provider.dart';
 import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
 import 'package:forsythia/screens/doghouse/doghouse_screen.dart';
+import 'package:forsythia/screens/login/wellcome_screen.dart';
 import 'package:forsythia/screens/program/program_screen.dart';
 import 'package:forsythia/screens/record/record_screen.dart';
 import 'package:forsythia/screens/setting/setting_screen.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
+  bool _loginactive = true;
 
   static const List<Widget> _widgetOptions = <Widget>[
     DashBoardScreen(),
@@ -50,33 +52,36 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => FooterProvider()),
       ],
       child: MaterialApp(
-        title: '개나리',
-        theme: ThemeData(
-          fontFamily: 'TheJamsil', // 사용할 폰트 패밀리 지정
-          scaffoldBackgroundColor: myBackground,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          // visualDensity: VisualDensity.adaptivePlatformDensity,
-          // pageTransitionsTheme: PageTransitionsTheme(
-          //   builders: {
-          //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-          //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          //   },
-          // ),
-          // fontFamily: 'MainFont',
-        ),
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: AnimatedIndexedStack(
-            index: _selectedIndex,
-            children: _widgetOptions,
+          title: '개나리',
+          theme: ThemeData(
+            fontFamily: 'TheJamsil', // 사용할 폰트 패밀리 지정
+            scaffoldBackgroundColor: myBackground,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            // visualDensity: VisualDensity.adaptivePlatformDensity,
+            // pageTransitionsTheme: PageTransitionsTheme(
+            //   builders: {
+            //     TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            //   },
+            // ),
+            // fontFamily: 'MainFont',
           ),
-          bottomNavigationBar: CustomBottomNavigationBar(
-            selectedIndex: _selectedIndex,
-            onItemSelected: _onItemTapped,
-          ),
-        ),
-      ),
+          debugShowCheckedModeBanner: false,
+          home: _loginactive
+              ? Scaffold(
+                  body: AnimatedIndexedStack(
+                    index: _selectedIndex,
+                    children: _widgetOptions,
+                  ),
+                  bottomNavigationBar: CustomBottomNavigationBar(
+                    selectedIndex: _selectedIndex,
+                    onItemSelected: _onItemTapped,
+                  ),
+                )
+              : Scaffold(
+                  body: wellcomeScreen(),
+                )),
     );
   }
 }
