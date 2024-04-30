@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 바디 센서에 접근(심박수, 발걸음) -->
+    <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- 기기가 절전 모드에 못 들어가게 하는 권한 -->
+<!--    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> &lt;!&ndash; 기기가 인터넷에 접속이 가능하도록 허용 &ndash;&gt;-->
+<!--    <uses-permission android:name="android.permission.INTERNET" /> &lt;!&ndash; 활동 상태를 감지하는 권한 허용 &ndash;&gt;-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 사용자의 보다 정확한 위치에 접근, 수십 미터 정도의 위치 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/icon_gnr"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/icon_gnr_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Sibal"
+        tools:targetApi="31">
+
+
+        <service
+            android:name=".activity.dactivity.DRunningService"
+            android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
+        </service>
+        <activity
+            android:name=".CountdownActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.iactivity.IActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.tactivity.TActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.dactivity.DActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.main.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RunActivity"
+            android:exported="true" />
+
+        <service android:name=".service.TimerService" />
+        <!--
+액티비티이름
+바깥에서 부를수있다 외부 애플에서 부를수 있음 true면
+인텐트필터는 런처에서 클릭하면 여기로옴
+        -->
+        <activity
+            android:name=".AddTodoActivity"
+            android:exported="true" />
+        <activity
+            android:name=".upgradewatch"
+            android:exported="false" />
+    </application>
+
+</manifest>

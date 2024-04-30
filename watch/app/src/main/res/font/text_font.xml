@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/insungit_cutelively_jisu_regular"/>
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/nps_font_regular"/>
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/lineseedkr_rg"/>
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/oagothic_extrabold"/>
+    <font android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/oagothic_medium"/>
+    <font android:fontStyle="normal"
+        android:fontWeight="200"
+        android:font="@font/notosanskr_medium"/>
+
+</font-family>

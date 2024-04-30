@@ -1,0 +1,9 @@
+<!-- res/drawable/tab_indicator_shape.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/maingreem" /> <!-- 색상 설정 -->
+            <size android:width="4dp" android:height="4dp" />
+        </shape>
+    </item>
+</layer-list>

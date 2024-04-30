@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/custom_progress_bar.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="5dp" />  <!-- 둥근 모서리 -->
+            <solid android:color="#E0F5FF" />  <!-- 프로그레스 바 배경 색상 -->
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="5dp" />  <!-- 둥근 모서리 -->
+                <solid android:color="#1D3D77" />  <!-- 프로그레스 색상 -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>
