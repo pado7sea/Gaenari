@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sibal"
+    namespace = "com.example.gaenari"
     compileSdk = 34
 
 
     defaultConfig {
-        applicationId = "com.example.sibal"
+        applicationId = "com.example.gaenari"
         minSdk = 33
         targetSdk = 34
         versionCode = 1

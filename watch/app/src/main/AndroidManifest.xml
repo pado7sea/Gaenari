@@ -19,7 +19,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/icon_gnr"
-        android:label="@string/app_name"
+        android:label="gaenari"
         android:roundIcon="@mipmap/icon_gnr_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sibal"
