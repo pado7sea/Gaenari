@@ -5,14 +5,11 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 바디 센서에 접근(심박수, 발걸음) -->
-    <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- 기기가 절전 모드에 못 들어가게 하는 권한 -->
-<!--    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> &lt;!&ndash; 기기가 인터넷에 접속이 가능하도록 허용 &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.INTERNET" /> &lt;!&ndash; 활동 상태를 감지하는 권한 허용 &ndash;&gt;-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 사용자의 보다 정확한 위치에 접근, 수십 미터 정도의 위치 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- 바디센서 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 위치정보 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 위치정보 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!--진동센서 -->
 
     <application
         android:allowBackup="true"
