@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:fontFamily="@font/oagothic_extrabold"
+        android:fontFamily="@font/thejamsil_medium"
         android:textSize="12sp"
         android:textColor="@color/mainyellow"
         app:layout_constraintVertical_bias="0.180" />
@@ -37,7 +37,7 @@
         android:text="Second Fragment"
         android:textSize="16sp"
         android:textColor="@color/mainblue"
-        android:fontFamily="@font/oagothic_extrabold"
+        android:fontFamily="@font/thejamsil_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

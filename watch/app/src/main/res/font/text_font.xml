@@ -2,22 +2,16 @@
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
 
     <font android:fontStyle="normal"
-        android:fontWeight="400"
-        android:font="@font/insungit_cutelively_jisu_regular"/>
+        android:font="@font/thejamsil_bold"/>
     <font android:fontStyle="normal"
-        android:fontWeight="400"
-        android:font="@font/nps_font_regular"/>
+        android:font="@font/thejamsil_extrabold"/>
     <font android:fontStyle="normal"
-        android:fontWeight="400"
-        android:font="@font/lineseedkr_rg"/>
+        android:font="@font/thejamsil_light"/>
     <font android:fontStyle="normal"
-        android:fontWeight="400"
-        android:font="@font/oagothic_extrabold"/>
+        android:font="@font/thejamsil_medium"/>
     <font android:fontStyle="normal"
-        android:fontWeight="400"
-        android:font="@font/oagothic_medium"/>
+        android:font="@font/thejamsil_regular"/>
     <font android:fontStyle="normal"
-        android:fontWeight="200"
-        android:font="@font/notosanskr_medium"/>
+        android:font="@font/thejamsil_thin"/>
 
 </font-family>
