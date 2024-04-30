@@ -14,6 +14,7 @@ class _norificationScreenState extends State<norificationScreen> {
     return Scaffold(
       appBar: smallAppBar(
         title: '알림',
+        back: true,
       ),
     );
   }

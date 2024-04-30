@@ -17,7 +17,10 @@ class _accountScreenState extends State<accountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: smallAppBar(title: '계정'),
+      appBar: smallAppBar(
+        title: '계정',
+        back: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -120,6 +123,7 @@ class _accountScreenState extends State<accountScreen> {
                   ),
                   SizedBox(height: 10),
                   TextField(
+                    // 숫자만 입력 가능하게
                     keyboardType: TextInputType.number,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -184,10 +188,34 @@ class _accountScreenState extends State<accountScreen> {
                         ],
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: myLightGreen,
+                    elevation: 0,
+                    minimumSize:
+                        Size(MediaQuery.of(context).size.width - 50, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text16(
+                    text: '완료',
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
