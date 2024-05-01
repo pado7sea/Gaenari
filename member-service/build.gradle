@@ -43,6 +43,26 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+	// ModelMapper
+	implementation 'org.modelmapper:modelmapper:2.4.4'
+	// JWT
+	implementation 'io.jsonwebtoken:jjwt:0.12.3'
+	// Config
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	// Bootstrap
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+	// Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	// Bus
+	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+	// Feign Client
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-config:6.2.4'
+	// Validation
+	implementation 'javax.validation:validation-api:2.0.1.Final'
+	
 }
 
 dependencyManagement {
