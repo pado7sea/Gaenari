@@ -1,6 +1,6 @@
 package com.gaenari.backend.domain.favorite.controller;
 
-import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteListDto;
+import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteDto;
 import com.gaenari.backend.domain.favorite.service.FavoriteService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
@@ -25,7 +25,7 @@ public class FavoriteController {
     @GetMapping
     public ResponseEntity<?> getAllPrograms() {
         Long memberId = 1L;
-        List<FavoriteListDto> favoriteList = favoriteService.getFavoriteList(memberId);
+        List<FavoriteDto> favoriteList = favoriteService.getFavoriteList(memberId);
 
         return response.success(ResponseCode.FAVORITE_PROGRAM_LIST_FETCHED, favoriteList);
     }
