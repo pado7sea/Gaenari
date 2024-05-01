@@ -36,7 +36,7 @@ fun createMockData(): List<Program> {
             usageCount = 10,
             finishedCount = 5,
             program = ProgramDetail(
-                intervalInfo = IntervalInfo(targetValue = 5) // 목표 거리
+                intervalInfo = IntervalInfo(targetValue = 1) // 목표 거리
             )
         ),
         Program(

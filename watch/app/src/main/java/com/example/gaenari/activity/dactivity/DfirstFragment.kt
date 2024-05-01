@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.gaenari.R
-import android.util.Log
+import com.example.gaenari.activity.result.ResultActivity
+
 
 class DFirstFragment : Fragment() {
 
@@ -21,15 +23,26 @@ class DFirstFragment : Fragment() {
     private lateinit var timeView: TextView
     private lateinit var heartRateView: TextView
     private lateinit var speedView: TextView
+    private lateinit var circleProgress: DCircleProgress
     private lateinit var updateReceiver: BroadcastReceiver
 
+    private var totalDistance: Double = 0.0
+    private var totalHeartRate: Float = 0f
+    private var heartRateCount: Int = 0
+    private var totalTime: Long = 0
+
     companion object {
-        fun newInstance(): DFirstFragment {
-            return DFirstFragment()
+        fun newInstance(programTarget: Int): DFirstFragment {
+            val args = Bundle()
+            args.putInt("programTarget", programTarget)
+
+            val fragment = DFirstFragment()
+            fragment.arguments = args
+            Log.d("first", "newInstance: ${args}")
+            return fragment
         }
     }
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,38 +52,52 @@ class DFirstFragment : Fragment() {
         timeView = view.findViewById(R.id.달린시간)
         heartRateView = view.findViewById(R.id.심박수)
         speedView = view.findViewById(R.id.속력)
+        circleProgress = view.findViewById(R.id.circleProgress)
 
-        setupUpdateReceiver()
+        val programTarget = arguments?.getInt("programTarget") ?: 0
+        Log.d("first", "onCreateView: ${programTarget}")
+        setupUpdateReceiver(programTarget)
         return view
     }
 
-    // 업데이트 수신기 설정
-    private fun setupUpdateReceiver() {
+    private fun setupUpdateReceiver(programTarget: Int) {
         updateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                Log.d("DFirstFragment", "Broadcast received")
                 if (intent.action == "com.example.sibal.UPDATE_INFO") {
-                    Log.d("DFirstFragment", "Data received: Distance ${intent.getDoubleExtra("distance", 0.0)}")
                     val distance = intent.getDoubleExtra("distance", 0.0)
                     val time = intent.getLongExtra("time", 0)
                     val heartRate = intent.getFloatExtra("heartRate", 0f)
                     val speed = intent.getFloatExtra("speed", 0f)
-                    Log.d("DFirstFragment", "Received: Distance $distance, Time $time, Heart Rate $heartRate, Speed $speed")
 
-                    // UI 요소 업데이트
-                    distanceView.text = String.format("%.2f", distance)
-                    timeView.text = formatTime(time)
-                    heartRateView.text = String.format("%d", heartRate.toInt())
-                    speedView.text = String.format("%.2f km/h", (speed*3.6))
+                    // 총계 및 횟수 업데이트
+                    //ㄴㄴ이미 나는 총 뛴거리를 보내주고있어
+                    totalDistance = distance
+                    totalHeartRate += heartRate
+                    heartRateCount++
+                    totalTime += time
+
+                    val remainingDistance =(programTarget * 1000).toDouble() - distance
+
+                    if (remainingDistance <= 0) {
+                        sendResultsAndFinish(context)
+                    } else {
+                        updateUI(remainingDistance, programTarget,time, heartRate, speed)
+                    }
                 }
             }
         }
-        val filter = IntentFilter("com.example.sibal.UPDATE_INFO")
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, filter)
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, IntentFilter("com.example.sibal.UPDATE_INFO"))
     }
 
+    private fun updateUI(remainingDistance: Double, programTarget: Int, time: Long, heartRate: Float, speed: Float) {
+        val progress = (100 - (remainingDistance / (programTarget * 1000) * 100)).toFloat()
+        circleProgress.setProgress(progress) // 원형 프로그레스 업데이트
 
-    // 밀리초를 시간 형식으로 포맷
+        distanceView.text = String.format("%.2f", remainingDistance/1000)
+        timeView.text = formatTime(time)
+        heartRateView.text = String.format("%d", heartRate.toInt())
+        speedView.text = String.format("%.2f km/h", speed * 3.6)
+    }
     private fun formatTime(millis: Long): String {
         val hours = (millis / 3600000) % 24
         val minutes = (millis / 60000) % 60
@@ -78,9 +105,28 @@ class DFirstFragment : Fragment() {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 
+    private fun sendResultsAndFinish(context: Context) {
+        val averageHeartRate = if (heartRateCount > 0) totalHeartRate / heartRateCount else 0f
+        val averageSpeed = if (totalTime > 0) (totalDistance / totalTime) * 3600 else 0.0
+
+        val intent = Intent(context, ResultActivity::class.java).apply {
+            putExtra("totalDistance", totalDistance)
+            putExtra("averageHeartRate", averageHeartRate)
+            putExtra("averageSpeed", averageSpeed)
+            putExtra("totalTime", totalTime)
+        }
+
+        startActivity(intent)
+        activity?.finish()
+
+        // 서비스 중지
+        Intent(context, DRunningService::class.java).also { serviceIntent ->
+            context.stopService(serviceIntent)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        // 브로드캐스트 리시버 등록 해제
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateReceiver)
     }
 }

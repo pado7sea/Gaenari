@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- 바디센서 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 위치정보 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 위치정보 -->
-    <uses-permission android:name="android.permission.VIBRATE" /> <!--진동센서 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -21,12 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sibal"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activity.result.ResultActivity"
+            android:exported="false" />
 
         <service
             android:name=".activity.dactivity.DRunningService"
             android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
         </service>
+
         <activity
             android:name=".CountdownActivity"
             android:exported="false" />

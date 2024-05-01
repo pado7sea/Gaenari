@@ -9,11 +9,13 @@ import android.util.Log
 
 class DActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager2
+    private var programTarget: Int = 0 // 초기값 설정
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dactivity)
 
+        programTarget = intent.getIntExtra("programTarget", 0) // Intent에서 programTarget 가져오기
         setupViewPager()
         Log.d("jinzza", "onCreate: 서비스시작은됨?")
         startRunningService()
@@ -25,9 +27,9 @@ class DActivity : AppCompatActivity() {
 
     private fun setupViewPager() {
         viewPager = findViewById(R.id.viewPager2)
-        val adapter = DFragmentStateAdapter(this)
+        val adapter = DFragmentStateAdapter(this, programTarget)
         viewPager.adapter = adapter
-        viewPager.setCurrentItem(1, false) // 초기 위치 설정
+        viewPager.setCurrentItem(1, false)
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
