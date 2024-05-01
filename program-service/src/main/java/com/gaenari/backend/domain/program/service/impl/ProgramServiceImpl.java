@@ -9,6 +9,7 @@ import com.gaenari.backend.domain.program.entity.IntervalRange;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.domain.program.repository.ProgramRepository;
 import com.gaenari.backend.domain.program.service.ProgramService;
+import com.gaenari.backend.global.exception.program.ProgramAccessException;
 import com.gaenari.backend.global.exception.program.ProgramDeleteException;
 import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -109,38 +110,52 @@ public class ProgramServiceImpl implements ProgramService {
     private ProgramDto.ProgramInfo convertToProgramInfo(Program program) {
         switch (program.getType()) {
             case D:  // 거리 목표 프로그램
-                return new ProgramDto.DistanceTargetProgramInfo(program.getTargetValue());
+                return new ProgramDto.ProgramInfo(program.getTargetValue(), null);
 
             case T:  // 시간 목표 프로그램
-                return new ProgramDto.TimeTargetProgramInfo(program.getTargetValue());
+                return new ProgramDto.ProgramInfo(program.getTargetValue(), null);
 
             case I:  // 인터벌 프로그램
-                List<IntervalInfo.IntervalRange> ranges = program.getRanges().stream()
-                        .map(range -> new IntervalInfo.IntervalRange(
+                List<ProgramDto.RangeDto> ranges = program.getRanges().stream()
+                        .map(range -> new ProgramDto.RangeDto(
                                 range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
                         .collect(Collectors.toList());
 
                 int setCount = program.getSetCount();
                 int rangeCount = ranges.size();
-                int setDuration = ranges.stream().mapToInt(IntervalInfo.IntervalRange::getTime).sum(); // 각 range의 시간의 합
+                int setDuration = ranges.stream().mapToInt(ProgramDto.RangeDto::getTime).sum(); // 각 range의 시간의 합
 
-                return new ProgramDto.IntervalProgramInfo(
-                        setDuration*setCount, setCount, rangeCount, ranges);
+                ProgramDto.IntervalDto intervalDto = new ProgramDto.IntervalDto(setDuration, setCount, rangeCount, ranges);
+                return new ProgramDto.ProgramInfo(null, intervalDto);
 
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());
         }
     }
 
+
     public ProgramDetailDto getProgramDetail(Long memberId, Long programId) {
         Optional<Program> program = programRepository.findById(programId);
 
         if (program.isEmpty()) {
-           throw new ProgramDeleteException();
+            throw new ProgramNotFoundException();
         }
 
         // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
         if (!program.get().getMemberId().equals(memberId)) {
+            throw new ProgramAccessException();
+        }
+
+        ProgramDetailDto programDetailDto = convertToProgramDetailDto(program.get());
+
+        return programDetailDto;
+    }
+
+    @Override
+    public ProgramDetailDto getProgramInfo(Long programId) {
+        Optional<Program> program = programRepository.findById(programId);
+
+        if (program.isEmpty()) {
             throw new ProgramDeleteException();
         }
 
@@ -150,40 +165,57 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     private ProgramDetailDto convertToProgramDetailDto(Program program) {
-        ProgramDetailDto.ProgramInfo programInfo = convertToProgramDetailInfo(program);
-//        ProgramDetailDto.UsageLogDto usageLog = convertToProgramDetailInfo(program);
 
+        // ProgramDto, IntervalDto, RangeDto는 programType에 따라 설정
+        ProgramDetailDto.ProgramDto programDto = ProgramDetailDto.ProgramDto.builder()
+                .targetValue(determineTargetValue(program))
+                .intervalInfo(constructIntervalDto(program))
+                .build();
+
+//        ProgramDetailDto.UsageLogDto usageLog = convertToProgramDetailInfo(program);
 
         return new ProgramDetailDto(
                 program.getId(),
                 program.getTitle(),
                 program.isFavorite(),
                 program.getType(),
-                programInfo,
+                programDto,
                 program.getUsageCount()
         );
     }
 
-    private ProgramDetailDto.ProgramInfo convertToProgramDetailInfo(Program program) {
+    private Double determineTargetValue(Program program) {
+        // 타겟 값 설정 로직
         switch (program.getType()) {
             case D:
-                return new ProgramDetailDto.DistanceTargetProgramInfo(program.getTargetValue());
+                return program.getTargetValue();
             case T:
-                return new ProgramDetailDto.TimeTargetProgramInfo(program.getTargetValue());
-            case I:
-                List<IntervalInfo.IntervalRange> ranges = program.getRanges().stream()
-                        .map(range -> new IntervalInfo.IntervalRange(
-                                range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
-                        .collect(Collectors.toList());
-
-                int setCount = program.getSetCount();
-                int rangeCount = ranges.size();
-                int setDuration = ranges.stream().mapToInt(IntervalInfo.IntervalRange::getTime).sum(); // 각 range의 시간의 합
-
-                return new ProgramDetailDto.IntervalProgramInfo(
-                        setDuration*setCount, setCount, rangeCount, ranges);
+                return program.getTargetValue();
             default:
-                throw new IllegalStateException("Unexpected value: " + program.getType());
+                return null; // I 타입은 IntervalDto에서 처리
         }
     }
+
+    private ProgramDetailDto.IntervalDto constructIntervalDto(Program program) {
+        // Interval 정보 구성 로직
+        if (program.getType() == ProgramType.I) {
+            List<ProgramDetailDto.RangeDto> ranges = program.getRanges().stream()
+                    .map(range -> new ProgramDetailDto.RangeDto(
+                            range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
+                    .toList();
+
+            int totalDuration = ranges.stream().mapToInt(ProgramDetailDto.RangeDto::getTime).sum();
+
+            return ProgramDetailDto.IntervalDto.builder()
+                    .duration(totalDuration)
+                    .setCount(program.getSetCount())
+                    .rangeCount(program.getRanges().size())
+                    .ranges(ranges)
+                    .build();
+        }
+        return null;
+    }
+
+
+
 }

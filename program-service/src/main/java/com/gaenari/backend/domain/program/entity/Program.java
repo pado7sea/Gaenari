@@ -38,7 +38,7 @@ public class Program {
     private ProgramType type;
 
     @Column(name = "program_target_value")
-    private Integer targetValue;
+    private Double targetValue;
 
     @Column(name = "program_set_count")
     private Integer setCount;
@@ -60,7 +60,7 @@ public class Program {
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
-    public static Program of(Long memberId, String title, ProgramType type, Integer targetValue,
+    public static Program of(Long memberId, String title, ProgramType type, Double targetValue,
                              Integer setCount, Integer duration, boolean isFavorite, Integer usageCount, boolean isDeleted) {
         return Program.builder()
                 .memberId(memberId)
@@ -83,7 +83,7 @@ public class Program {
         this.type = type;
     }
 
-    public void updateTargetValue(Integer targetValue) {
+    public void updateTargetValue(Double targetValue) {
         this.targetValue = targetValue;
     }
 

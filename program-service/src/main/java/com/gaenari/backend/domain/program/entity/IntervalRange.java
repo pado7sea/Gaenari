@@ -22,17 +22,14 @@ public class IntervalRange {
     private Program program;
 
     @NotNull
-    @Setter
     @Builder.Default
     @Column(name = "is_running")
     private boolean isRunning = true;
 
     @NotNull
-    @Setter
     @Column(name = "range_time")
     private int time;
 
-    @Setter
     @Column(name = "range_speed")
     private int speed;
 
