@@ -15,4 +15,6 @@ public interface ProgramService {
     List<ProgramDto> getProgramList(Long memberId);
 
     ProgramDetailDto getProgramDetail(Long memberId, Long programId);
+
+    ProgramDetailDto getProgramInfo(Long programId);
 }

@@ -1,16 +1,14 @@
 package com.gaenari.backend.domain.program.dto.responseDto;
 
 import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProgramDetailDto {
@@ -19,43 +17,50 @@ public class ProgramDetailDto {
     private Boolean isFavorite;
 
     private ProgramType type;
-    private ProgramInfo program;
+    private ProgramDto program;
 
-//    private TotalRecordDto totalRecord;
+    //    private TotalRecordDto totalRecord;
     private int usageCount; // 운동 프로그램 총 사용횟수
 //    private int finishedCount; // 운동 프로그램 완주 횟수
 //    private List<UsageLogDto> usageLog;
 
-    public interface ProgramInfo {}
-
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DistanceTargetProgramInfo implements ProgramInfo {
-        private int targetValue; // 거리 목표
+    public static class ProgramDto {
+        private Double targetValue;
+        private IntervalDto intervalInfo;
     }
 
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class TimeTargetProgramInfo implements ProgramInfo {
-        private int targetValue; // 시간 목표
+    public static class IntervalDto {
+        private Integer duration;   // 인터벌 총 소요 시간
+        private Integer setCount;   // 세트 수
+        private Integer rangeCount;  // 세트 당 구간 수
+        private List<RangeDto> ranges; // 구간 리스트
     }
 
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
-    public static class IntervalProgramInfo implements ProgramInfo {
-        private IntervalInfo intervalInfo;
-
-        public IntervalProgramInfo(int duration, int setCount, int rangeCount, List<IntervalInfo.IntervalRange> ranges) {
-            this.intervalInfo = new IntervalInfo(duration, setCount, rangeCount, ranges);
-        }
+    @AllArgsConstructor
+    public static class RangeDto {  // 구간 정보
+        private Long id;
+        private Boolean isRunning;
+        private Integer time;
+        private Integer speed;
     }
+
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TotalRecordDto {
@@ -66,6 +71,7 @@ public class ProgramDetailDto {
 
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UsageLogDto {
@@ -73,7 +79,7 @@ public class ProgramDetailDto {
         private double distance;
         private int averagePace;
         private long time;
-        private Date date;
+        private LocalDateTime date;
         private int cal;
         private Boolean isFinished;
     }
