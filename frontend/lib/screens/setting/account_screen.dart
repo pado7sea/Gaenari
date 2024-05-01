@@ -11,8 +11,6 @@ class accountScreen extends StatefulWidget {
   State<accountScreen> createState() => _accountScreenState();
 }
 
-List<bool> isSelected = [false, false, false];
-
 class _accountScreenState extends State<accountScreen> {
   @override
   Widget build(BuildContext context) {
@@ -134,60 +132,6 @@ class _accountScreenState extends State<accountScreen> {
                         // tap 시 borderline 색상 지정
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: myBlack))),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 50, 30, 50),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Image(
-                        image: AssetImage('assets/emoji/pensil.png'),
-                        width: 20,
-                        height: 20,
-                        fit: BoxFit.cover,
-                      ),
-                      Text16(text: '  성별')
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ToggleButtons(
-                        isSelected: isSelected,
-                        onPressed: (int index) {
-                          setState(() {
-                            for (int buttonIndex = 0;
-                                buttonIndex < isSelected.length;
-                                buttonIndex++) {
-                              if (buttonIndex == index) {
-                                isSelected[buttonIndex] = true;
-                              } else {
-                                isSelected[buttonIndex] = false;
-                              }
-                            }
-                          });
-                        },
-                        color: myBlack, // 선택되지 않은 버튼의 텍스트 색상
-                        selectedColor: Colors.white, // 선택된 버튼의 텍스트 색상
-                        fillColor: myMainGreen, // 선택된 버튼의 배경 색상
-                        borderColor: myMainGreen, // 버튼의 테두리 색상
-                        selectedBorderColor: myMainGreen, // 선택된 버튼의 테두리 색상
-                        borderRadius: BorderRadius.circular(10),
-                        borderWidth: 2,
-                        constraints:
-                            BoxConstraints.expand(width: 110), // 버튼의 가로 길이를 지정
-                        children: <Widget>[
-                          Text('남자'),
-                          Text('여자'),
-                          Text('선택안함'),
-                        ],
-                      ),
-                    ],
                   ),
                 ],
               ),
