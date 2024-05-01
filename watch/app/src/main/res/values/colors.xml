@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#121212</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="btn_start">#8ACA3F</color>
+    <color name="btn_restart">#E46B5B</color>
+    <color name="btn_pause">#E39D12</color>
+<color name="gray">#CACACA</color>
+
+    <color name="blue">#0D3A7D</color>
+    <color name="mainblue">#38A2DF</color>
+    <color name="dd1">#6EA8FF</color>
+
+    <color name="mainyellow">#FFCE22</color>
+    <color name="maingreem">#5DC76C</color>
+    <color name="orange">#DD6813</color>
+    <color name="green">#20720B</color>
+    <color name="whitegreen">#F2FFF2</color>
+    <color name="lightyellow">#FFF7CC</color>
+    <color name="lightgreen">#7CDA89</color>
+
+    <color name="resultgreen">#16F01F</color>
+    <color name="resultred">#F61E1E</color>
+    <color name="dd2">#FFC979</color>
+
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Sibal" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 테마 속성 정의 -->
+        <item name="android:scrollbarThumbVertical">@drawable/custom_scrollbar_thumb</item>  <!-- 커스텀 스크롤바 -->
+    </style>
+
+    <style name="CustomProgressBarStyle" parent="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal">
+        <!-- 프로그레스 바의 기본 속성 정의 -->
+        <item name="android:progressDrawable">@drawable/custom_progress_bar</item>  <!-- 커스텀 드로어블 -->
+        <item name="android:minHeight">10dp</item>  <!-- 최소 높이 -->
+        <item name="android:maxHeight">20dp</item>  <!-- 최대 높이 -->
+    </style>
+</resources>
