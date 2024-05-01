@@ -19,4 +19,7 @@
     <color name="lightyellow">#FFF7CC</color>
     <color name="lightgreen">#7CDA89</color>
 
+    <color name="resultgreen">#16F01F</color>
+    <color name="resultred">#F61E1E</color>
+
 </resources>

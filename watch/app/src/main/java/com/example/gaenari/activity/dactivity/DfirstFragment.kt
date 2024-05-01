@@ -32,13 +32,15 @@ class DFirstFragment : Fragment() {
     private var totalTime: Long = 0
 
     companion object {
-        fun newInstance(programTarget: Int): DFirstFragment {
+        fun newInstance(programTarget: Int, programType: String, programTitle: String, programId: Long): DFirstFragment {
             val args = Bundle()
             args.putInt("programTarget", programTarget)
+            args.putString("programType", programType)
+            args.putString("programTitle", programTitle)
+            args.putLong("programId", programId)
 
             val fragment = DFirstFragment()
             fragment.arguments = args
-            Log.d("first", "newInstance: ${args}")
             return fragment
         }
     }
@@ -73,10 +75,13 @@ class DFirstFragment : Fragment() {
                     //ㄴㄴ이미 나는 총 뛴거리를 보내주고있어
                     totalDistance = distance
                     totalHeartRate += heartRate
-                    heartRateCount++
-                    totalTime += time
+                    if (heartRate > 40) {
+                        heartRateCount++
+                    }
+                    totalTime = time
 
-                    val remainingDistance =(programTarget * 1000).toDouble() - distance
+                    val remainingDistance =(programTarget * 10).toDouble() - distance
+//                   이거로바꿔야한다!!!!!! val remainingDistance =(programTarget * 1000).toDouble() - distance
 
                     if (remainingDistance <= 0) {
                         sendResultsAndFinish(context)
@@ -90,7 +95,8 @@ class DFirstFragment : Fragment() {
     }
 
     private fun updateUI(remainingDistance: Double, programTarget: Int, time: Long, heartRate: Float, speed: Float) {
-        val progress = (100 - (remainingDistance / (programTarget * 1000) * 100)).toFloat()
+//       이거로바꿔야힌디!!! val progress = (100 - (remainingDistance / (programTarget * 1000) * 100)).toFloat()
+        val progress = (100 - (remainingDistance / (programTarget * 10) * 100)).toFloat()
         circleProgress.setProgress(progress) // 원형 프로그레스 업데이트
 
         distanceView.text = String.format("%.2f", remainingDistance/1000)
@@ -106,10 +112,20 @@ class DFirstFragment : Fragment() {
     }
 
     private fun sendResultsAndFinish(context: Context) {
+        val programTarget = arguments?.getInt("programTarget") ?: 0
+        val programType = arguments?.getString("programType") ?: ""
+        val programTitle = arguments?.getString("programTitle") ?: ""
+        val programId = arguments?.getLong("programId") ?: 0L
+
         val averageHeartRate = if (heartRateCount > 0) totalHeartRate / heartRateCount else 0f
         val averageSpeed = if (totalTime > 0) (totalDistance / totalTime) * 3600 else 0.0
 
         val intent = Intent(context, ResultActivity::class.java).apply {
+
+            putExtra("programTarget", programTarget)
+            putExtra("programType", programType)
+            putExtra("programTitle", programTitle)
+            putExtra("programId", programId)
             putExtra("totalDistance", totalDistance)
             putExtra("averageHeartRate", averageHeartRate)
             putExtra("averageSpeed", averageSpeed)

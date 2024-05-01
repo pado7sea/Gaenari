@@ -131,9 +131,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
+        clearIntent()
         stepCounterSensor?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)  // 센서 리스너 등록
         }
+    }
+    private fun clearIntent() {
+        intent = null  // Intent를 비움
     }
 
     override fun onPause() {

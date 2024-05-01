@@ -62,6 +62,7 @@ class ProgramAdapter(private val programs: List<Program>) : RecyclerView.Adapter
 
             if (intent != null) {
                 Log.d("ProgramAdapter", "Sending program: $program")  // 전달되는 프로그램 정보
+                intent.putExtra("programId", program.programId)
                 intent.putExtra("programTitle", program.programTitle)
                 intent.putExtra("programType", program.type)
                 intent.putExtra("programTarget", program.program.intervalInfo.targetValue)
