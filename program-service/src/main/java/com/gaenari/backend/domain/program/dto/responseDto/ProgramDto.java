@@ -19,35 +19,38 @@ public class ProgramDto {
     private ProgramType type; // enum: D(거리목표), T(시간목표), I(인터벌)
     private ProgramInfo program;
 
-    public interface ProgramInfo {
-    }
-
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class DistanceTargetProgramInfo implements ProgramInfo {
-        private int targetValue; // 거리 목표
+    public static class ProgramInfo {
+        private Double targetValue;
+        private IntervalDto intervalInfo;
     }
 
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class TimeTargetProgramInfo implements ProgramInfo {
-        private int targetValue; // 시간 목표
+    public static class IntervalDto {
+        private Integer duration;   // 인터벌 총 소요 시간
+        private Integer setCount;   // 세트 수
+        private Integer rangeCount;  // 세트 당 구간 수
+        private List<RangeDto> ranges; // 구간 리스트
     }
 
     @Getter
     @Setter
+    @Builder
     @NoArgsConstructor
-    public static class IntervalProgramInfo implements ProgramInfo {
-        private IntervalInfo intervalInfo;
-
-        public IntervalProgramInfo(int duration, int setCount, int rangeCount, List<IntervalInfo.IntervalRange> ranges) {
-            this.intervalInfo = new IntervalInfo(duration, setCount, rangeCount, ranges);
-        }
-
+    @AllArgsConstructor
+    public static class RangeDto {  // 구간 정보
+        private Long id;
+        private Boolean isRunning;
+        private Integer time;
+        private Integer speed;
     }
 }
 

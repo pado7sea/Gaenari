@@ -4,6 +4,7 @@ import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteDto;
 import com.gaenari.backend.domain.favorite.repository.FavoriteRepository;
 import com.gaenari.backend.domain.favorite.service.FavoriteService;
 import com.gaenari.backend.domain.program.dto.responseDto.IntervalInfo;
+import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.global.exception.favorite.FavoriteCreateException;
 import com.gaenari.backend.global.exception.favorite.FavoriteDeleteException;
@@ -34,7 +35,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     private FavoriteDto convertToProgramDto(Program program) {
-        FavoriteDto.ProgramInfo programInfo = (FavoriteDto.ProgramInfo) convertToProgramInfo(program);
+        FavoriteDto.ProgramInfo programInfo = convertToProgramInfo(program);
 
         return new FavoriteDto(
                 program.getId(),
@@ -48,23 +49,23 @@ public class FavoriteServiceImpl implements FavoriteService {
     private FavoriteDto.ProgramInfo convertToProgramInfo(Program program) {
         switch (program.getType()) {
             case D:  // 거리 목표 프로그램
-                return new FavoriteDto.DistanceTargetProgramInfo(program.getTargetValue());
+                return new FavoriteDto.ProgramInfo(program.getTargetValue(), null);
 
             case T:  // 시간 목표 프로그램
-                return new FavoriteDto.TimeTargetProgramInfo(program.getTargetValue());
+                return new FavoriteDto.ProgramInfo(program.getTargetValue(), null);
 
             case I:  // 인터벌 프로그램
-                List<IntervalInfo.IntervalRange> ranges = program.getRanges().stream()
-                        .map(range -> new IntervalInfo.IntervalRange(
+                List<ProgramDto.RangeDto> ranges = program.getRanges().stream()
+                        .map(range -> new ProgramDto.RangeDto(
                                 range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
                         .collect(Collectors.toList());
 
                 int setCount = program.getSetCount();
                 int rangeCount = ranges.size();
-                int setDuration = ranges.stream().mapToInt(IntervalInfo.IntervalRange::getTime).sum(); // 각 range의 시간의 합
+                int setDuration = ranges.stream().mapToInt(ProgramDto.RangeDto::getTime).sum(); // 각 range의 시간의 합
 
-                return new FavoriteDto.IntervalProgramInfo(
-                        setDuration * setCount, setCount, rangeCount, ranges);
+                ProgramDto.IntervalDto intervalDto = new ProgramDto.IntervalDto(setDuration, setCount, rangeCount, ranges);
+                return new FavoriteDto.ProgramInfo(null, intervalDto);
 
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());
