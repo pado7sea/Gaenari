@@ -46,7 +46,7 @@ fun createMockData(): List<Program> {
             usageCount = 12,
             finishedCount = 7,
             program = ProgramDetail(
-                intervalInfo = IntervalInfo(targetValue = 160) // 목표 시간
+                intervalInfo = IntervalInfo(targetValue = 1) // 목표 시간
             )
         ),
         Program(
@@ -92,7 +92,7 @@ fun createMockData(): List<Program> {
             usageCount = 5,
             finishedCount = 2,
             program = ProgramDetail(
-                intervalInfo = IntervalInfo(targetValue = 60)
+                intervalInfo = IntervalInfo(targetValue = 3)
             )
         ),
         Program(

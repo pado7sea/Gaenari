@@ -1,126 +1,64 @@
 package com.example.gaenari.activity.tactivity
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.example.gaenari.R
-import com.example.gaenari.viewmodel.RunViewModel
-import java.util.concurrent.TimeUnit
 import android.util.Log
+import com.example.gaenari.activity.dactivity.DFragmentStateAdapter
+import com.example.gaenari.activity.dactivity.DRunningService
 
 class TActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager2
-    private lateinit var tabLayout: TabLayout
-    private lateinit var viewModel: RunViewModel
-    private var running = true // 달리기 상태
-    private var distance = 0.0 // 달린 거리
-    private val handler = Handler(Looper.getMainLooper())
+    private var programTarget: Int = 0 // 초기값 설정
+    private var programType: String = "0" // 초기값 설정
+    private var programId: Long = 0 // 초기값 설정
+    private var programTitle: String = "" // 초기값 설정
 
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedCreateState: Bundle?) {
-        super.onCreate(savedCreateState)
-        setContentView(R.layout.activity_tactivity) // D 액티비티 레이아웃
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_tactivity)
 
+        programId = intent.getLongExtra("programId",0)
+        programTitle = intent.getStringExtra("programTitle") ?: "기본값"
+        programType = intent.getStringExtra("programType") ?: "기본값"
+        programTarget = intent.getIntExtra("programTarget", 0) // Intent에서 programTarget 가져오기
+        setupViewPager()
+        Log.d("jinzza", "onCreate: 서비스시작은됨?")
+        startRunningService()
+    }
+    override fun onDestroy() {
+        stopRunningService() // 액티비티가 파괴될 때 서비스 종료
+        super.onDestroy()
+    }
+
+    private fun setupViewPager() {
         viewPager = findViewById(R.id.viewPager2)
-        tabLayout = findViewById(R.id.tabLayout2)
-        val targetDistanceInt = intent.getIntExtra("programTarget", 0)
-        val targetDistance = targetDistanceInt.toDouble()
-        Log.d("TActivity", "Received targetDistance: $targetDistance")
-
-        // 인텐트의 extras 내용 확인
-        val extras = intent.extras
-        if (extras != null) {
-            for (key in extras.keySet()) {
-                val value = extras.get(key)
-                Log.d("TActivity", "Key: $key, Value: $value")
-            }
-        } else {
-            Log.d("TActivity", "No extras found in the intent.")
-        }
-
-        // ViewModel 설정
-        viewModel = ViewModelProvider(this).get(RunViewModel::class.java)
-        viewModel.updateTargetDistance(targetDistance)
-
-        // 프래그먼트 연결
-        val adapter = TFragmentStateAdapter(this)
+        val adapter = TFragmentStateAdapter(this, programTarget,programType,programTitle,programId)
         viewPager.adapter = adapter
-
-        // 탭 레이아웃 연결
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = "Control"
-                1 -> tab.text = "Running Info"
-                2 -> tab.text = "Control"
-                3 -> tab.text = "Running Info"
-            }
-        }.attach()
         viewPager.setCurrentItem(1, false)
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    val currentItem = viewPager.currentItem
-                    val itemCount = viewPager.adapter?.itemCount ?: 0
-
-                    if (currentItem == itemCount - 1) {
-                        viewPager.setCurrentItem(1, false) // 마지막에서 첫 번째로 이동
-                    }
-
-                    if (currentItem == 0) {
-                        viewPager.setCurrentItem(itemCount - 2, false) // 첫 번째에서 마지막으로 이동
-                    }
-                }
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                handlePageChange(position)
             }
         })
-
-        startRunning() // 달리기 시작
     }
-
-    private fun startRunning() {
-        val runnable = object : Runnable {
-            override fun run() {
-                if (running) {
-                    // 시간 업데이트
-                    viewModel.incrementTime(1, TimeUnit.SECONDS)
-
-                    // 달린 거리 업데이트
-                    distance += 0.01 // 예: 0.01km
-
-                    viewModel.updateDistance(distance)
-
-                    handler.postDelayed(this, 1000) // 1초 간격으로 반복
-                }
-            }
+    private fun handlePageChange(position: Int) {
+        when (position) {
+            1 -> viewPager.setCurrentItem(3, false)
         }
-
-        handler.post(runnable)
     }
 
-    fun pauseRunning() {
-        running = false
+    private fun startRunningService() {
+        val serviceIntent = Intent(this, DRunningService::class.java)
+        startForegroundService(serviceIntent)
     }
-
-    fun resumeRunning() {
-        running = true
-    }
-
-    fun stopRunning() {
-        running = false
-        Toast.makeText(this, "Running stopped", Toast.LENGTH_SHORT).show()
-        finish() // 액티비티 종료
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacksAndMessages(null) // 모든 핸들러 콜백 제거
+    private fun stopRunningService() {
+        val serviceIntent = Intent(this, DRunningService::class.java)
+        stopService(serviceIntent)
     }
 }
 
