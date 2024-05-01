@@ -130,5 +130,45 @@ public class MemberController {
         return response.success(ResponseCode.COIN_FETCH_SUCCESS, Coin);
     }
 
+    @Operation(summary = "닉네임 중복체크", description = "닉네임 중복체크")
+    @GetMapping("/member/dupl/nickname")
+    public ResponseEntity<?> duplNickName(@RequestParam String nickName){
+        // 헤더에서 memberEmail 추출
+//        String memberEmail = authentication.getName();
+        String memberEmail = "ssafy123@naver.com";
+        // memberId가 null이면 인증 실패
+        if (memberEmail == null) {
+            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
+        }
+        Boolean isDuplNickName = memberService.duplNickNameCheck(nickName);
+        if(isDuplNickName){
+            // 사용중
+            return response.success(ResponseCode.ALREADY_USE_NICKNAME, isDuplNickName);
+        }else{
+            // 사용가능한
+            return response.success(ResponseCode.AVAILABLE_NICKNAME, isDuplNickName);
+        }
+    }
+
+    @Operation(summary = "이메일 중복체크", description = "이메일 중복체크")
+    @GetMapping("/member/dupl/email")
+    public ResponseEntity<?> duplEmail(@RequestParam String email){
+        // 헤더에서 memberEmail 추출
+//        String memberEmail = authentication.getName();
+        String memberEmail = "ssafy123@naver.com";
+        // memberId가 null이면 인증 실패
+        if (memberEmail == null) {
+            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
+        }
+        Boolean isDuplEmail = memberService.duplEmailCheck(email);
+        if(isDuplEmail){
+            // true : 사용중
+            return response.success(ResponseCode.ALREADY_USE_EMAIL, isDuplEmail);
+        }else{
+            // false : 사용가능한
+            return response.success(ResponseCode.AVAILABLE_EMAIL, isDuplEmail);
+        }
+    }
+
 
 }

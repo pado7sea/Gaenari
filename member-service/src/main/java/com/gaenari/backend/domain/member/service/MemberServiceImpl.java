@@ -234,6 +234,26 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.save(updateMember);
     }
 
+    @Override // 닉네임 중복확인
+    public Boolean duplNickNameCheck(String nickName) {
+        Member member = memberRepository.findByNickname(nickName);
+        if(member == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    @Override // 이메일 중복확인
+    public Boolean duplEmailCheck(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if(member == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(username);

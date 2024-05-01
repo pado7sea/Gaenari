@@ -20,4 +20,7 @@ public interface MemberService extends UserDetailsService {
     void updateNick(String memberEmail, String nickName); // 회원 닉네임 변경
     void updatePwd(String memberEmail, String newPassword); // 회원 비밀번호 변경
     void updateInfo(String memberEmail, MemberUpdate memberUpdate); // 회원 정보 변경(키,몸무게)
+    Boolean duplNickNameCheck(String nickName); // 닉네임 중복체크
+    Boolean duplEmailCheck(String email); // 이메일 중복체크
+
 }
