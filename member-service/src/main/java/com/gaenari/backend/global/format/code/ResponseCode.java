@@ -12,6 +12,10 @@ public enum ResponseCode {
     // 회원(Member)
     MEMBER_SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입이 정상적으로 완료되었습니다."),
     NICKNAME_CHECK_SUCCESS(HttpStatus.OK, "닉네임 검사가 성공적으로 이루어졌습니다."),
+    ALREADY_USE_NICKNAME(HttpStatus.OK, "이미 사용중인 닉네임입니다."),
+    AVAILABLE_NICKNAME(HttpStatus.OK, "사용가능한 닉네임입니다."),
+    ALREADY_USE_EMAIL(HttpStatus.OK, "이미 사용중인 이메일입니다."),
+    AVAILABLE_EMAIL(HttpStatus.OK, "사용가능한 이메일입니다."),
     LOGIN_SUCCESS(HttpStatus.OK, "로그인이 성공적으로 이루어졌습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃이 성공적으로 이루어졌습니다."),
     PASSWORD_RESET_SUCCESS(HttpStatus.OK, "비밀번호 재설정이 성공적으로 이루어졌습니다."),
