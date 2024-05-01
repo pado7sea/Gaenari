@@ -6,20 +6,25 @@ spring:
     name: exercise-record-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/gaenari?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://gaenari.kr:30036/my_database?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
     username: root
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: Ssafy123!@
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     generate-ddl: true
     properties:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+
+  sql:
+    init:
+      data-locations: classpath*:db/data.sql
+      mode: never # 스키마 초기화하려면 always로 바꿔야 함
+      platform: mysql
 
 eureka:
   client:
