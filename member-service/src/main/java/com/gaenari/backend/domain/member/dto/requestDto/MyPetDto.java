@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyPetDto {
-    private int id;
+    private Long id;
     private String name;
 }

@@ -6,9 +6,9 @@ spring:
     name: member-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/gaenari?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://gaenari.kr:30036/my_database?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
     username: root
-    password: 1234
+    password: Ssafy123!@
 
   jpa:
     hibernate:
@@ -19,6 +19,10 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
 
 eureka:
   client:
@@ -34,3 +38,8 @@ springdoc:
   enable-spring-security: true
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+token:
+  expiration_time: 86400000 # 60*60*24*1000
+  secret: member_token_dskjlhfahgiuohauiorheoaihishsodjsafpofjdoadspdoiajfsoisajfdio # 임의의 값
+
