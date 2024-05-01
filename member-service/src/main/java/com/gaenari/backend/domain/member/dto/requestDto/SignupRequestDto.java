@@ -18,18 +18,14 @@ public class SignupRequestDto {
     @Schema(description = "이메일", example = "user1@ssafy.com")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\\d).{8,20}$",
-            message = "비밀번호는 영문 대소문자, 숫자, 특수문자(!, @, #, $, %, ^, &, *)를 조합하여 3~20자 이내여야 합니다.")
-    @Schema(description = "비밀번호", example = "Ssafy123!@")
-    private String passsword;
-
-    @NotEmpty(message = "비밀번호 확인란을 반드시 입력해 주셔야 합니다.")
-    @Schema(description = "비밀번호 확인", example = "Ssafy123!@")
-    private String passwordConfirm;
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\\d).{8,20}$",
+//            message = "비밀번호는 영문 대소문자, 숫자, 특수문자(!, @, #, $, %, ^, &, *)를 조합하여 3~20자 이내여야 합니다.")
+    @Schema(description = "비밀번호", example = "ssafy123")
+    private String password;
 
     @Pattern(regexp = "^[a-zA-Z0-9_]{3,10}$",
             message = "닉네임은 영문자, 숫자 및 언더바(_)를 포함할 수 있으며 3~10자 이내여야 합니다.")
-    @Schema(description = "닉네임", example = "Gaenary_2024")
+    @Schema(description = "닉네임", example = "개나리")
     private String nickName;
 
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$",
@@ -38,7 +34,7 @@ public class SignupRequestDto {
     private String birth;
 
     @NotEmpty(message = "성별을 반드시 입력해 주셔야 합니다.")
-    @Schema(description = "성별", example = "Male")
+    @Schema(description = "성별", example = "MALE")
     private Gender gender;
 
     @Schema(description = "신장", example = "160")
@@ -48,6 +44,6 @@ public class SignupRequestDto {
     private int weight;
 
     @NotEmpty(message = "반려견은 반드시 선택해 주셔야 합니다.")
-    @Schema(description = "반려견 종류&이름", example = "id : 1, name : 초코")
+    @Schema(description = "반려견 종류&이름", example = "{\"id\": 1, \"name\": \"초코\"}")
     private MyPetDto myPet;
 }
