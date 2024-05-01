@@ -52,11 +52,28 @@ spring:
         - id: member-service
           uri: http://member-service.member.svc.cluster.local
           predicates:
-            - Path=/api/member-service/**
+            - Path=/api/member-service/logout
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+        - id: member-service
+          uri: http://member-service.member.svc.cluster.local
+          predicates:
+            - Path=/api/member-service/v3/api-docs
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+        - id: member-service
+          uri: http://member-service.member.svc.cluster.local
+          predicates:
+            - Path=/api/member-service/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
         - id: inventory-service
           uri: http://inventory-service.inventory.svc.cluster.local
           predicates:
@@ -104,3 +121,7 @@ springdoc:
     urls[4]:
       name: 인벤토리 서비스
       url: https://api.gaenari.kr/api/inventory-service/v3/api-docs
+
+token:
+  expiration_time: 86400000 # 60*60*24*1000
+  secret: member_token_dskjlhfahgiuohauiorheoaihishsodjsafpofjdoadspdoiajfsoisajfdio # 임의의 값
