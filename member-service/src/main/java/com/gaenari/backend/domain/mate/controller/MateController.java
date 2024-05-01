@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member-service")
+@RequestMapping("/mate")
 public class MateController {
     private final ApiResponse response;
     private final Environment env;
@@ -36,7 +36,7 @@ public class MateController {
     }
 
     @Operation(summary = "친구신청", description = "친구신청")
-    @PostMapping("/mate/add/{id}")
+    @PostMapping("/add/{id}")
     public ResponseEntity<?> addMate(@PathVariable(name = "id") Long friendId) {
         // memberEmail 추출
 //        String memberEmail = authentication.getName();
@@ -50,7 +50,7 @@ public class MateController {
     }
 
     @Operation(summary = "친구신청 발신/수신목록", description = "type : sent(발신), received(수신)")
-    @GetMapping("/mate/list/{type}")
+    @GetMapping("/list/{type}")
     public ResponseEntity<?> getSentMate(@PathVariable(name = "type") String type) {
         // memberEmail 추출
 //        String memberEmail = authentication.getName();
@@ -73,7 +73,7 @@ public class MateController {
     }
 
     @Operation(summary = "친구신청 수락/거부", description = "친구신청 수락/거부")
-    @PostMapping("/mate/check")
+    @PostMapping("/check")
     public ResponseEntity<?> checkMate(@RequestBody MateCheck mateCheck) {
         // memberEmail 추출
 //        String memberEmail = authentication.getName();
@@ -92,7 +92,7 @@ public class MateController {
 
     }
     @Operation(summary = "친구목록조회", description = "친구목록조회")
-    @GetMapping("/mate")
+    @GetMapping("")
     public ResponseEntity<?> getMates(){
         // memberEmail 추출
 //        String memberEmail = authentication.getName();
@@ -111,7 +111,7 @@ public class MateController {
     }
 
     @Operation(summary = "친구삭제", description = "친구삭제")
-    @PutMapping("/mate/delete/{id}")
+    @PutMapping("/delete/{id}")
     public ResponseEntity<?> deleteMate(@PathVariable(name = "id") Long friendId){
         // memberEmail 추출
 //        String memberEmail = authentication.getName();
@@ -130,7 +130,7 @@ public class MateController {
     }
 
     @Operation(summary = "친구검색", description = "친구 닉네임으로 검색")
-    @GetMapping("/mate/search")
+    @GetMapping("/search")
     public ResponseEntity<?> searchMember(@RequestParam String nickName){
         // memberEmail 추출
 //        String memberEmail = authentication.getName();
