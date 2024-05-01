@@ -52,11 +52,20 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/api/member-service/**
-            - Method=GET
+            - Path=/api/member-service/logout
+            - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/api/member-service/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
         - id: inventory-service
           uri: lb://INVENTORY-SERVICE
           predicates:
@@ -85,6 +94,10 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
+
+token:
+  expiration_time: 86400000 # 60*60*24*1000
+  secret: member_token_dskjlhfahgiuohauiorheoaihishsodjsafpofjdoadspdoiajfsoisajfdio # 임의의 값
 
 springdoc:
   swagger-ui:
