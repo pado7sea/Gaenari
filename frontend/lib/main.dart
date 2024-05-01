@@ -29,7 +29,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
-  bool _loginactive = true;
+  bool _loginactive = false;
 
   static const List<Widget> _widgetOptions = <Widget>[
     DashBoardScreen(),

@@ -37,6 +37,8 @@ dependencies:
   provider: ^6.1.2
   draggable_bottom_sheet: ^1.0.2 # 대시보드에서 쓰는 드래그되는 시트 라이브러리
   http: ^0.13.3
+  smooth_page_indicator: ^1.1.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
