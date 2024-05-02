@@ -54,7 +54,7 @@ dependencies {
 	// Actuator
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	// Bus
-	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	// Feign Client
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	// Spring Security
