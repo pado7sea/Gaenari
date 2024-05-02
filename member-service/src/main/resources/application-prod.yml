@@ -25,7 +25,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://eureka.gaenari.kr/eureka
+      defaultZone: https://eureka.gaenari.kr/eureka
 
 springdoc:
   api-docs:
@@ -34,3 +34,7 @@ springdoc:
   enable-spring-security: true
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+token:
+  expiration_time: 86400000 # 60*60*24*1000
+  secret: member_token_dskjlhfahgiuohauiorheoaihishsodjsafpofjdoadspdoiajfsoisajfdio # 임의의 값
