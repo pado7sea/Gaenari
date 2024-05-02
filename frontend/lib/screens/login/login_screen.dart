@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/models/users/loginForm.dart';
+import 'package:forsythia/models/users/login_form.dart';
 import 'package:forsythia/screens/signup/signup_screen.dart';
 import 'package:forsythia/service/member_service.dart';
 import 'package:forsythia/theme/color.dart';

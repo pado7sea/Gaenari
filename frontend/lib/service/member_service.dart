@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:forsythia/models/users/login_user.dart';
-import 'package:forsythia/models/users/loginForm.dart';
+import 'package:forsythia/models/users/login_form.dart';
 import 'package:http/http.dart' as http;
 
 class MemberService {
