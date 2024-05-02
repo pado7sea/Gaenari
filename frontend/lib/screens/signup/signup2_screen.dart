@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/signup/signup3_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/SlidePageRoute.dart';
-import 'package:forsythia/widgets/SmallAppBar.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
+import 'package:forsythia/widgets/small_app_bar.dart';
 
 class signup2Screen extends StatefulWidget {
   const signup2Screen({super.key});

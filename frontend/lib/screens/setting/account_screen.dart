@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/SmallAppBar.dart';
+import 'package:forsythia/widgets/small_app_bar.dart';
 import 'package:flutter/services.dart';
 
 class AccountScreen extends StatefulWidget {

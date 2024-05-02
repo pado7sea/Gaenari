@@ -3,8 +3,8 @@ import 'package:forsythia/screens/challenge/challenge.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/SlidePageRoute.dart';
-import 'package:forsythia/widgets/Box.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
+import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 
 const List<IconData> icons = [
@@ -82,7 +82,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
           child: Container(
             margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
             child: Text20(
-              text: "재신님 방가방가 하이빵가루",
+              text: "재신님 방가방가 하이빵dd가루",
               bold: true,
             ),
           ),

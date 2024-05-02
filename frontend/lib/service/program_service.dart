@@ -1,8 +1,8 @@
 //예시임 똑같이 쓰면 조짐
 
 import 'dart:convert';
-import 'package:forsythia/models/programs/ProgramDetail.dart';
-import 'package:forsythia/models/programs/ProgramList.dart';
+import 'package:forsythia/models/programs/program_detail.dart';
+import 'package:forsythia/models/programs/program_list.dart';
 import 'package:http/http.dart' as http;
 
 class ProgramService {

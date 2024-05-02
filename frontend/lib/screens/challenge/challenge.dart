@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/LargeAppBar.dart';
+import 'package:forsythia/widgets/large_app_bar.dart';
 
 class ChallengePage extends StatefulWidget {
   const ChallengePage({super.key});
