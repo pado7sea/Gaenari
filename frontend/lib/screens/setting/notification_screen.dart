@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/widgets/SmallAppBar.dart';
+import 'package:forsythia/widgets/small_app_bar.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

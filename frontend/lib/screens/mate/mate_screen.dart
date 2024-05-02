@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/screens/mate/mate_add.dart';
 import 'package:forsythia/screens/mate/mate_new.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/SlidePageRoute.dart';
-import 'package:forsythia/widgets/Box.dart';
-import 'package:forsythia/widgets/LargeAppBar.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
+import 'package:forsythia/widgets/box_dacoration.dart';
+import 'package:forsythia/widgets/large_app_bar.dart';
 
 class MatePage extends StatefulWidget {
   const MatePage({super.key});

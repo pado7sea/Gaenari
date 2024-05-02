@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/Box.dart';
-import 'package:forsythia/widgets/SmallAppBar.dart';
+import 'package:forsythia/widgets/box_dacoration.dart';
+import 'package:forsythia/widgets/small_app_bar.dart';
 
 class NewMatePage extends StatefulWidget {
   const NewMatePage({super.key});

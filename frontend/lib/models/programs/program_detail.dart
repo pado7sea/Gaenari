@@ -8,13 +8,13 @@ class ProgramDetail {
   ProgramDetail.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -44,26 +44,26 @@ class Data {
     isFavorite = json['isFavorite'];
     type = json['type'];
     program =
-        json['program'] != null ? new Program.fromJson(json['program']) : null;
+        json['program'] != null ? Program.fromJson(json['program']) : null;
     usageCount = json['usageCount'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['programId'] = this.programId;
-    data['programTitle'] = this.programTitle;
-    data['isFavorite'] = this.isFavorite;
-    data['type'] = this.type;
-    if (this.program != null) {
-      data['program'] = this.program!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['programId'] = programId;
+    data['programTitle'] = programTitle;
+    data['isFavorite'] = isFavorite;
+    data['type'] = type;
+    if (program != null) {
+      data['program'] = program!.toJson();
     }
-    data['usageCount'] = this.usageCount;
+    data['usageCount'] = usageCount;
     return data;
   }
 }
 
 class Program {
-  Null? targetValue;
+  String? targetValue;
   IntervalInfo? intervalInfo;
 
   Program({this.targetValue, this.intervalInfo});
@@ -71,15 +71,15 @@ class Program {
   Program.fromJson(Map<String, dynamic> json) {
     targetValue = json['targetValue'];
     intervalInfo = json['intervalInfo'] != null
-        ? new IntervalInfo.fromJson(json['intervalInfo'])
+        ? IntervalInfo.fromJson(json['intervalInfo'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['targetValue'] = this.targetValue;
-    if (this.intervalInfo != null) {
-      data['intervalInfo'] = this.intervalInfo!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['targetValue'] = targetValue;
+    if (intervalInfo != null) {
+      data['intervalInfo'] = intervalInfo!.toJson();
     }
     return data;
   }
@@ -100,18 +100,18 @@ class IntervalInfo {
     if (json['ranges'] != null) {
       ranges = <Ranges>[];
       json['ranges'].forEach((v) {
-        ranges!.add(new Ranges.fromJson(v));
+        ranges!.add(Ranges.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['duration'] = this.duration;
-    data['setCount'] = this.setCount;
-    data['rangeCount'] = this.rangeCount;
-    if (this.ranges != null) {
-      data['ranges'] = this.ranges!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['duration'] = duration;
+    data['setCount'] = setCount;
+    data['rangeCount'] = rangeCount;
+    if (ranges != null) {
+      data['ranges'] = ranges!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -133,11 +133,11 @@ class Ranges {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['isRunning'] = this.isRunning;
-    data['time'] = this.time;
-    data['speed'] = this.speed;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['isRunning'] = isRunning;
+    data['time'] = time;
+    data['speed'] = speed;
     return data;
   }
 }

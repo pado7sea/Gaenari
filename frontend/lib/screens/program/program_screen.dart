@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/models/programs/ProgramDetail.dart';
+import 'package:forsythia/models/programs/program_detail.dart';
 import 'package:forsythia/service/program_service.dart';
-import 'package:forsythia/widgets/SmallAppBar.dart';
+import 'package:forsythia/widgets/small_app_bar.dart';
 
 class ProgramScreen extends StatefulWidget {
   const ProgramScreen({super.key});
