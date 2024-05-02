@@ -1,21 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/models/users/LoginForm.dart';
+import 'package:forsythia/models/users/LoginUser.dart';
 import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
 import 'package:forsythia/screens/signup/signup_screen.dart';
+import 'package:forsythia/service/user_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:go_router/go_router.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<loginScreen> createState() => loginScreenState();
+  State<LoginScreen> createState() => LoginScreenState();
 }
 
-class loginScreenState extends State<loginScreen> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+class LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String _loginStatus = ''; // 로그인 상태를 나타내는 변수
+
+  void _fetchLogin() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    // login 모델 객체 생성
+    LoginForm loginInfo = LoginForm(email: email, password: password);
+    await UserService.fetchLogin(loginInfo).then((loginUser) {
+      print(loginUser);
+      setState(() {
+        _loginStatus = '로그인 성공!';
+      });
+      context.go('/home');
+    }).catchError((error) {
+      print(error);
+      setState(() {
+        _loginStatus = '로그인 실패!';
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +58,7 @@ class loginScreenState extends State<loginScreen> {
               child: Column(
                 children: [
                   Row(
-                    children: [
+                    children: const [
                       Image(
                         image: AssetImage('assets/emoji/pensil.png'),
                         width: 20,
@@ -55,7 +78,7 @@ class loginScreenState extends State<loginScreen> {
                   ),
                   SizedBox(height: 30),
                   Row(
-                    children: [
+                    children: const [
                       Image(
                         image: AssetImage('assets/emoji/pensil.png'),
                         width: 20,
@@ -84,22 +107,10 @@ class loginScreenState extends State<loginScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                // 여기에 로그인 검사 로직을 추가하세요.
-                String email = _emailController.text;
-                String password = _passwordController.text;
-                // 예시로 간단한 비교를 하지만, 실제로는 서버로 전송하여 검사해야 합니다.
-                if (email == 'example@example.com' && password == 'password') {
-                  // 로그인 성공 시 처리
-                  setState(() {
-                    _loginStatus = '로그인 성공!';
-                  });
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => DashBoardScreen()),
-                  // );
-                  context.go('/home');
-                } else {
+              onPressed: () async {
+                try {
+                  _fetchLogin();
+                } catch (e) {
                   // 로그인 실패 시 처리
                   setState(() {
                     _loginStatus = '로그인 실패!';
