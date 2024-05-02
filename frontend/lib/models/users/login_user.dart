@@ -8,13 +8,13 @@ class LoginUser {
   LoginUser.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -59,24 +59,24 @@ class Data {
     if (json['myPetDto'] != null) {
       myPetDto = <MyPetDto>[];
       json['myPetDto'].forEach((v) {
-        myPetDto!.add(new MyPetDto.fromJson(v));
+        myPetDto!.add(MyPetDto.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['memberId'] = this.memberId;
-    data['email'] = this.email;
-    data['nickname'] = this.nickname;
-    data['birthday'] = this.birthday;
-    data['gender'] = this.gender;
-    data['height'] = this.height;
-    data['weight'] = this.weight;
-    data['coin'] = this.coin;
-    data['lastTime'] = this.lastTime;
-    if (this.myPetDto != null) {
-      data['myPetDto'] = this.myPetDto!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['memberId'] = memberId;
+    data['email'] = email;
+    data['nickname'] = nickname;
+    data['birthday'] = birthday;
+    data['gender'] = gender;
+    data['height'] = height;
+    data['weight'] = weight;
+    data['coin'] = coin;
+    data['lastTime'] = lastTime;
+    if (myPetDto != null) {
+      data['myPetDto'] = myPetDto!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -94,9 +94,9 @@ class MyPetDto {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }

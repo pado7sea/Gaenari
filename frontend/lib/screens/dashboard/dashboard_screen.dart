@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/screens/challenge/challenge_screen.dart';
+import 'package:forsythia/provider/token_provider.dart';
+import 'package:forsythia/screens/challenge/challenge.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 const List<IconData> icons = [
   Icons.message,
@@ -70,24 +72,23 @@ class DashBoardScreenState extends State<DashBoardScreen> {
   Widget _backgroundWidget() {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/dashBoardImg.png'),
-            fit: BoxFit.cover, // 이미지를 화면에 맞게 확장
-          ),
-        ),
-        child: SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: Container(
-            margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
-            child: Text20(
-              text: "재신님 방가방가 하이빵가루",
-              bold: true,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/dashBoardImg.png'),
+              fit: BoxFit.cover, // 이미지를 화면에 맞게 확장
             ),
           ),
-        ),
-      ),
+          child: SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: Container(
+              margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
+              child: Text20(
+                text: ' ${Provider.of<TokenProvider>(context).token}',
+                bold: true,
+              ),
+            ),
+          )),
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/provider/footer_provider.dart';
+import 'package:forsythia/provider/signup_provider.dart';
+import 'package:forsythia/provider/token_provider.dart';
 import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
 import 'package:forsythia/screens/doghouse/doghouse_screen.dart';
 import 'package:forsythia/screens/login/login_screen.dart';
@@ -38,7 +40,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _router = GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: '/home',
+      initialLocation: '/welcome',
       navigatorKey: navigatorKey,
       routes: [
         GoRoute(
@@ -62,6 +64,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => FooterProvider()),
+          ChangeNotifierProvider(create: (context) => TokenProvider()),
+          ChangeNotifierProvider(create: (context) => SignupProvider()),
         ],
         child: MaterialApp.router(
           routerDelegate: _router.routerDelegate,

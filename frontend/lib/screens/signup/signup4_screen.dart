@@ -1,22 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:forsythia/models/users/signup_user.dart';
 import 'package:forsythia/screens/signup/signupend_screen.dart';
+import 'package:forsythia/service/member_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:forsythia/provider/signup_provider.dart';
+import 'package:provider/provider.dart';
 
-class signup4Screen extends StatefulWidget {
-  const signup4Screen({super.key});
+class Signup4Screen extends StatefulWidget {
+  const Signup4Screen({super.key});
 
   @override
-  State<signup4Screen> createState() => _signup4ScreenState();
+  State<Signup4Screen> createState() => _Signup4ScreenState();
 }
 
-class _signup4ScreenState extends State<signup4Screen> {
+class _Signup4ScreenState extends State<Signup4Screen> {
+  final TextEditingController _petnamecontroller = TextEditingController();
   int activeIndex = 0;
 
   List<String> images = [
@@ -47,6 +50,60 @@ class _signup4ScreenState extends State<signup4Screen> {
 
   @override
   Widget build(BuildContext context) {
+    var nickName = Provider.of<SignupProvider>(context).user.nickName;
+
+    var maintext = Padding(
+      padding: const EdgeInsets.fromLTRB(20, 50, 0, 1),
+      child: RichText(
+        // textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '$nickName',
+              style: TextStyle(
+                  color: myBlack,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'TheJamsil'),
+            ),
+            TextSpan(
+              text: '님의 ',
+              style: TextStyle(
+                  color: myBlack,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'TheJamsil'),
+            ),
+            TextSpan(
+              text: '강아지',
+              style: TextStyle(
+                  color: myMainGreen,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'TheJamsil'),
+            ),
+            TextSpan(
+              text: '를 선택해주세요 ',
+              style: TextStyle(
+                  color: myBlack,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  height: 1.5,
+                  fontFamily: 'TheJamsil'),
+            ),
+            WidgetSpan(
+              child: Image(
+                image: AssetImage('assets/emoji/dogface.png'),
+                width: 25,
+                height: 25,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: SmallAppBar(
         title: '회원가입',
@@ -69,48 +126,18 @@ class _signup4ScreenState extends State<signup4Screen> {
     );
   }
 
-  var maintext = Padding(
-    padding: const EdgeInsets.fromLTRB(20, 50, 0, 1),
-    child: RichText(
-      // textAlign: TextAlign.center,
-      text: TextSpan(
-        children: const [
-          TextSpan(
-            text: '이재신님의 ',
-            style: TextStyle(
-                color: myBlack,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'TheJamsil'),
-          ),
-          TextSpan(
-            text: '강아지',
-            style: TextStyle(
-                color: myMainGreen,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'TheJamsil'),
-          ),
-          TextSpan(
-            text: '를 선택해주세요 ',
-            style: TextStyle(
-                color: myBlack,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                height: 1.5,
-                fontFamily: 'TheJamsil'),
-          ),
-          WidgetSpan(
-              child: Image(
-            image: AssetImage('assets/emoji/dogface.png'),
-            width: 25,
-            height: 25,
-            fit: BoxFit.cover,
-          )),
-        ],
-      ),
-    ),
-  );
+  _fetchsignup() async {
+    Provider.of<SignupProvider>(context, listen: false)
+        .setPet((activeIndex + 1), _petnamecontroller.text);
+    SignupUser signupUser =
+        Provider.of<SignupProvider>(context, listen: false).user;
+    print(signupUser.toJson());
+    await MemberService.fetchSignup(signupUser).then((data) {
+      Navigator.of(context).push(SlidePageRoute(nextPage: SignupEndScreen()));
+    }).catchError((error) {
+      print(error);
+    });
+  }
 
   var subtext = Padding(
     padding: const EdgeInsets.fromLTRB(20, 10, 100, 50),
@@ -185,11 +212,9 @@ class _signup4ScreenState extends State<signup4Screen> {
   Widget _dogbreed(int index) {
     // 현재 이미지 슬라이더의 인덱스에 해당하는 breed를 가져옴
     String breed = dogbreeds[index];
-    return Container(
-      child: Text20(
-        text: breed,
-        bold: true,
-      ),
+    return Text20(
+      text: breed,
+      bold: true,
     );
   }
 
@@ -200,7 +225,7 @@ class _signup4ScreenState extends State<signup4Screen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
@@ -218,6 +243,7 @@ class _signup4ScreenState extends State<signup4Screen> {
                 // tap 시 borderline 색상 지정
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: myBlack))),
+            controller: _petnamecontroller,
           ),
         ],
       ),
@@ -233,8 +259,7 @@ class _signup4ScreenState extends State<signup4Screen> {
         children: [
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context)
-                  .push(SlidePageRoute(nextPage: signupEndScreen()));
+              _fetchsignup();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: myLightGreen,

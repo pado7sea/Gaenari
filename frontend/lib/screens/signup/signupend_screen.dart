@@ -1,20 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/provider/signup_provider.dart';
 import 'package:forsythia/screens/login/login_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
+import 'package:provider/provider.dart';
 
-class signupEndScreen extends StatefulWidget {
-  const signupEndScreen({super.key});
+class SignupEndScreen extends StatefulWidget {
+  const SignupEndScreen({super.key});
 
   @override
-  State<signupEndScreen> createState() => _signupEndScreenState();
+  State<SignupEndScreen> createState() => _SignupEndScreenState();
 }
 
-class _signupEndScreenState extends State<signupEndScreen> {
+class _SignupEndScreenState extends State<SignupEndScreen> {
   @override
   Widget build(BuildContext context) {
+    var nickName = Provider.of<SignupProvider>(context).user.nickName;
+
+    var maintext = Center(
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '회원가입 완료  ',
+              style: TextStyle(
+                  color: myMainGreen,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'TheJamsil'),
+            ),
+            WidgetSpan(
+              child: Image(
+                image: AssetImage('assets/emoji/party.png'),
+                width: 25,
+                height: 25,
+                fit: BoxFit.cover,
+              ),
+            ),
+            TextSpan(
+              text: '\n$nickName님에게\n딱맞는 강아지를\n찾았어요~!',
+              style: TextStyle(
+                  color: myBlack,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  height: 1.5,
+                  fontFamily: 'TheJamsil'),
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: SmallAppBar(
         title: '회원가입',
@@ -32,40 +71,6 @@ class _signupEndScreenState extends State<signupEndScreen> {
       ),
     );
   }
-
-  var maintext = Center(
-    child: RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        children: const [
-          TextSpan(
-            text: '회원가입 완료  ',
-            style: TextStyle(
-                color: myMainGreen,
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'TheJamsil'),
-          ),
-          WidgetSpan(
-              child: Image(
-            image: AssetImage('assets/emoji/party.png'),
-            width: 25,
-            height: 25,
-            fit: BoxFit.cover,
-          )),
-          TextSpan(
-            text: '\n이재신님에게\n딱맞는 강아지를\n찾았어요~!',
-            style: TextStyle(
-                color: myBlack,
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                height: 1.5,
-                fontFamily: 'TheJamsil'),
-          ),
-        ],
-      ),
-    ),
-  );
 
   // 완료 버튼
   Widget _button() {

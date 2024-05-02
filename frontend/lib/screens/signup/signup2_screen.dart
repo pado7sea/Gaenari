@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/signup/signup3_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
+import 'package:forsythia/provider/signup_provider.dart';
+import 'package:provider/provider.dart';
 
-class signup2Screen extends StatefulWidget {
-  const signup2Screen({super.key});
+class Signup2Screen extends StatefulWidget {
+  const Signup2Screen({super.key});
 
   @override
-  State<signup2Screen> createState() => _signup2ScreenState();
+  State<Signup2Screen> createState() => _Signup2ScreenState();
 }
 
 List<bool> isSelected = [false, false, false];
 
-class _signup2ScreenState extends State<signup2Screen> {
-  final GenderController _genderController = GenderController(Gender.OTHER);
+class _Signup2ScreenState extends State<Signup2Screen> {
+  String _gender = "OTHER";
 
   TextEditingController _nicknamecontroller = TextEditingController();
   TextEditingController _birthcontroller = TextEditingController();
+  final List<String> _genders = ['MALE', 'FEMALE', 'OTHER']; // 도메인 리스트
 
   bool _showErrorMessage = false;
   // String _errorText = '';
@@ -38,7 +40,7 @@ class _signup2ScreenState extends State<signup2Screen> {
             maintext,
             _nickname(),
             _birth(),
-            GenderWidget(controller: _genderController),
+            _genderwidget(),
           ],
         ),
       ),
@@ -82,14 +84,14 @@ class _signup2ScreenState extends State<signup2Screen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
                 height: 20,
                 fit: BoxFit.cover,
               ),
-              Text16(text: '  닉네임')
+              Text16(text: '  닉네임'),
             ],
           ),
           Row(
@@ -146,7 +148,7 @@ class _signup2ScreenState extends State<signup2Screen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
@@ -201,8 +203,14 @@ class _signup2ScreenState extends State<signup2Screen> {
               if (_nicknamecontroller.text.isNotEmpty &&
                   _birthcontroller.text.isNotEmpty &&
                   _nicknamecontroller.text.length >= 3) {
+                Provider.of<SignupProvider>(context, listen: false)
+                    .setNickName(_nicknamecontroller.text);
+                Provider.of<SignupProvider>(context, listen: false)
+                    .setBirth(_birthcontroller.text);
+                Provider.of<SignupProvider>(context, listen: false)
+                    .setGender(_gender);
                 Navigator.of(context)
-                    .push(SlidePageRoute(nextPage: signup3Screen()));
+                    .push(SlidePageRoute(nextPage: Signup3Screen()));
               } else {
                 print('정보를 모두 입력해주세요!');
                 setState(() {
@@ -226,40 +234,14 @@ class _signup2ScreenState extends State<signup2Screen> {
       ),
     );
   }
-}
 
-enum Gender {
-  MALE,
-  FEMALE,
-  OTHER,
-}
-
-class GenderController extends ValueNotifier<Gender> {
-  GenderController(Gender value) : super(value);
-
-  void setGender(Gender gender) {
-    value = gender;
-  }
-}
-
-class GenderWidget extends StatefulWidget {
-  final GenderController controller; // GenderController를 매개변수로 받음
-
-  const GenderWidget({Key? key, required this.controller}) : super(key: key);
-
-  @override
-  _GenderWidgetState createState() => _GenderWidgetState();
-}
-
-class _GenderWidgetState extends State<GenderWidget> {
-  @override
-  Widget build(BuildContext context) {
+  Widget _genderwidget() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 50, 30, 50),
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
@@ -275,21 +257,21 @@ class _GenderWidgetState extends State<GenderWidget> {
             children: [
               ToggleButtons(
                 isSelected: [
-                  widget.controller.value == Gender.MALE,
-                  widget.controller.value == Gender.FEMALE,
-                  widget.controller.value == Gender.OTHER,
+                  _gender == _genders[0],
+                  _gender == _genders[1],
+                  _gender == _genders[2],
                 ],
                 onPressed: (int index) {
                   setState(() {
                     switch (index) {
                       case 0:
-                        widget.controller.setGender(Gender.MALE);
+                        _gender = _genders[0];
                         break;
                       case 1:
-                        widget.controller.setGender(Gender.FEMALE);
+                        _gender = _genders[1];
                         break;
                       case 2:
-                        widget.controller.setGender(Gender.OTHER);
+                        _gender = _genders[2];
                         break;
                     }
                   });
@@ -302,7 +284,7 @@ class _GenderWidgetState extends State<GenderWidget> {
                 borderRadius: BorderRadius.circular(10),
                 borderWidth: 2,
                 constraints: BoxConstraints.expand(width: 110),
-                children: <Widget>[
+                children: const <Widget>[
                   Text('남자'),
                   Text('여자'),
                   Text('선택안함'),
