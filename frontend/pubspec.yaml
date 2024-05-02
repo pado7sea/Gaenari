@@ -63,6 +63,7 @@ flutter:
     - assets/icons/
     - assets/bottom/
     - assets/emoji/
+    - assets/gif/
 
   fonts:
     - family: TheJamsil
