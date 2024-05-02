@@ -1,11 +1,16 @@
-class programDetail {
+import 'dart:convert';
+
+ProgramDetail ProgramDetailFromJson(String str) =>
+    ProgramDetail.fromJson(json.decode(str));
+
+class ProgramDetail {
   String? status;
   String? message;
   Data? data;
 
-  programDetail({this.status, this.message, this.data});
+  ProgramDetail({this.status, this.message, this.data});
 
-  programDetail.fromJson(Map<String, dynamic> json) {
+  ProgramDetail.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
@@ -63,11 +68,13 @@ class Data {
 }
 
 class Program {
+  Null? targetValue;
   IntervalInfo? intervalInfo;
 
-  Program({this.intervalInfo});
+  Program({this.targetValue, this.intervalInfo});
 
   Program.fromJson(Map<String, dynamic> json) {
+    targetValue = json['targetValue'];
     intervalInfo = json['intervalInfo'] != null
         ? new IntervalInfo.fromJson(json['intervalInfo'])
         : null;
@@ -75,6 +82,7 @@ class Program {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['targetValue'] = this.targetValue;
     if (this.intervalInfo != null) {
       data['intervalInfo'] = this.intervalInfo!.toJson();
     }

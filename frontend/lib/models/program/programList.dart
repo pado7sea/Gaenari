@@ -1,11 +1,16 @@
-class programList {
+import 'dart:convert';
+
+ProgramList ProgramListFromJson(String str) =>
+    ProgramList.fromJson(json.decode(str));
+
+class ProgramList {
   String? status;
   String? message;
   List<Data>? data;
 
-  programList({this.status, this.message, this.data});
+  ProgramList({this.status, this.message, this.data});
 
-  programList.fromJson(Map<String, dynamic> json) {
+  ProgramList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
@@ -28,29 +33,6 @@ class programList {
 }
 
 class Data {
-  List<Data>? data;
-
-  Data({this.data});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Data2 {
   int? programId;
   String? programTitle;
   bool? isFavorite;
@@ -59,7 +41,7 @@ class Data2 {
   String? type;
   Program? program;
 
-  Data2(
+  Data(
       {this.programId,
       this.programTitle,
       this.isFavorite,
@@ -68,7 +50,7 @@ class Data2 {
       this.type,
       this.program});
 
-  Data2.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     programId = json['programId'];
     programTitle = json['programTitle'];
     isFavorite = json['isFavorite'];
@@ -95,24 +77,24 @@ class Data2 {
 }
 
 class Program {
-  IntervalInfo? intervalInfo;
   int? targetValue;
+  IntervalInfo? intervalInfo;
 
-  Program({this.intervalInfo, this.targetValue});
+  Program({this.targetValue, this.intervalInfo});
 
   Program.fromJson(Map<String, dynamic> json) {
+    targetValue = json['targetValue'];
     intervalInfo = json['intervalInfo'] != null
         ? new IntervalInfo.fromJson(json['intervalInfo'])
         : null;
-    targetValue = json['targetValue'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['targetValue'] = this.targetValue;
     if (this.intervalInfo != null) {
       data['intervalInfo'] = this.intervalInfo!.toJson();
     }
-    data['targetValue'] = this.targetValue;
     return data;
   }
 }
