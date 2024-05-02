@@ -5,7 +5,7 @@ import 'package:forsythia/screens/signup/signup3_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/SlidePageRoute.dart';
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 
 class signup2Screen extends StatefulWidget {
   const signup2Screen({super.key});
@@ -28,7 +28,7 @@ class _signup2ScreenState extends State<signup2Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: smallAppBar(
+      appBar: SmallAppBar(
         title: '회원가입',
         back: true,
       ),

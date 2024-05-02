@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 import 'package:flutter/services.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -15,7 +15,7 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: smallAppBar(
+      appBar: SmallAppBar(
         title: '계정',
         back: true,
       ),

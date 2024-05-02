@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _router = GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: '/welcome',
+      initialLocation: '/home',
       navigatorKey: navigatorKey,
       routes: [
         GoRoute(

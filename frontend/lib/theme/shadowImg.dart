@@ -10,6 +10,7 @@ class ShadowImg extends StatelessWidget {
   final Offset offset;
 
   ShadowImg({
+    super.key,
     required this.child,
     this.opacity = 0.2,
     this.sigma = 2,

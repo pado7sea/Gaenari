@@ -3,8 +3,8 @@ import 'package:forsythia/screens/mate/mate_add.dart';
 import 'package:forsythia/screens/mate/mate_new.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/SlidePageRoute.dart';
-import 'package:forsythia/widgets/box.dart';
-import 'package:forsythia/widgets/largeAppBar.dart';
+import 'package:forsythia/widgets/Box.dart';
+import 'package:forsythia/widgets/LargeAppBar.dart';
 
 class MatePage extends StatefulWidget {
   const MatePage({super.key});
@@ -29,7 +29,7 @@ class _MatePageState extends State<MatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: largeAppBar(
+      appBar: LargeAppBar(
         title: "친구",
         sentence: "당신의 친구 목록이 보이는 공간입니다. \n친구집에 놀러가보세요",
       ),

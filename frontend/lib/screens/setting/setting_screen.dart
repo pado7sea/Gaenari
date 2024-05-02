@@ -5,8 +5,8 @@ import 'package:forsythia/screens/setting/notification_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/SlidePageRoute.dart';
-import 'package:forsythia/widgets/box.dart';
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/Box.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -19,7 +19,7 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: smallAppBar(title: '설정'),
+      appBar: SmallAppBar(title: '설정'),
       body: Column(
         children: [
           SizedBox(
@@ -40,8 +40,12 @@ class _SettingScreenState extends State<SettingScreen> {
         Navigator.of(context).push(SlidePageRoute(nextPage: AccountScreen()));
       },
       child: Container(
+        decoration: myBoxDecoration,
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
         child: Row(
-          children: [
+          children: const [
             Image(
               image: AssetImage('assets/emoji/smilepace.png'),
               width: 20,
@@ -51,10 +55,6 @@ class _SettingScreenState extends State<SettingScreen> {
             Text16(text: '  계정')
           ],
         ),
-        decoration: myBoxDecoration,
-        width: double.infinity,
-        padding: EdgeInsets.all(20),
-        margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
       ),
     );
   }

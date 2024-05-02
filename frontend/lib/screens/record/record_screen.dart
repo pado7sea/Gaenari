@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 
 class RecodScreen extends StatefulWidget {
   const RecodScreen({super.key});
@@ -12,7 +12,7 @@ class _RecodScreenState extends State<RecodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: smallAppBar(
+        appBar: SmallAppBar(
       title: '기록',
     ));
   }
