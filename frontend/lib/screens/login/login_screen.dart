@@ -3,6 +3,7 @@ import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
 import 'package:forsythia/screens/signup/signup_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:go_router/go_router.dart';
 
 class loginScreen extends StatefulWidget {
   const loginScreen({super.key});
@@ -93,10 +94,11 @@ class loginScreenState extends State<loginScreen> {
                   setState(() {
                     _loginStatus = '로그인 성공!';
                   });
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DashBoardScreen()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => DashBoardScreen()),
+                  // );
+                  context.go('/home');
                 } else {
                   // 로그인 실패 시 처리
                   setState(() {

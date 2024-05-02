@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/theme/color.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -13,7 +14,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20.0),
+      margin: EdgeInsets.fromLTRB(15, 0, 15, 20),
       decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.7),
           borderRadius: BorderRadius.circular(100.0),
@@ -24,97 +25,91 @@ class CustomBottomNavigationBar extends StatelessWidget {
               offset: Offset(0, 10),
             ),
           ]),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: SizedBox(
-          height: 70.0,
-          width: double.infinity,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100.0),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.transparent,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Container(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset(
-                      selectedIndex == 0
-                          ? 'assets/bottom/active_dashboard.png'
-                          : 'assets/bottom/none_dashboard.png',
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                    ),
-                  ),
-                  label: '',
+      height: 70.0,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100.0),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.transparent,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset(
+                  selectedIndex == 0
+                      ? 'assets/bottom/active_dashboard.png'
+                      : 'assets/bottom/none_dashboard.png',
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.none,
                 ),
-                BottomNavigationBarItem(
-                  icon: Container(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset(
-                      selectedIndex == 1
-                          ? 'assets/bottom/active_record.png'
-                          : 'assets/bottom/none_record.png',
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                    ),
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Container(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset(
-                      selectedIndex == 2
-                          ? 'assets/bottom/active_program.png'
-                          : 'assets/bottom/none_program.png',
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                    ),
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Container(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset(
-                      selectedIndex == 3
-                          ? 'assets/bottom/active_doghouse.png'
-                          : 'assets/bottom/none_doghouse.png',
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                    ),
-                  ),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Container(
-                    width: 30,
-                    height: 30,
-                    child: Image.asset(
-                      selectedIndex == 4
-                          ? 'assets/bottom/active_setting.png'
-                          : 'assets/bottom/none_setting.png',
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                    ),
-                  ),
-                  label: '',
-                ),
-              ],
-              currentIndex: selectedIndex,
-              // selectedItemColor: mainWhite,
-              // unselectedItemColor: mainWhite,
-              onTap: onItemSelected,
-              elevation: 0,
+              ),
+              label: '',
             ),
-          ),
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset(
+                  selectedIndex == 1
+                      ? 'assets/bottom/active_record.png'
+                      : 'assets/bottom/none_record.png',
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.none,
+                ),
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset(
+                  selectedIndex == 2
+                      ? 'assets/bottom/active_program.png'
+                      : 'assets/bottom/none_program.png',
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.none,
+                ),
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset(
+                  selectedIndex == 3
+                      ? 'assets/bottom/active_doghouse.png'
+                      : 'assets/bottom/none_doghouse.png',
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.none,
+                ),
+              ),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset(
+                  selectedIndex == 4
+                      ? 'assets/bottom/active_setting.png'
+                      : 'assets/bottom/none_setting.png',
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.none,
+                ),
+              ),
+              label: '',
+            ),
+          ],
+          currentIndex: selectedIndex,
+          // selectedItemColor: mainWhite,
+          // unselectedItemColor: mainWhite,
+          onTap: onItemSelected,
+          elevation: 0,
         ),
       ),
     );
