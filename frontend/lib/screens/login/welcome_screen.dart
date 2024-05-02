@@ -4,14 +4,14 @@ import 'package:forsythia/screens/signup/signup_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 
-class wellcomeScreen extends StatefulWidget {
-  const wellcomeScreen({super.key});
+class welcomeScreen extends StatefulWidget {
+  const welcomeScreen({super.key});
 
   @override
-  State<wellcomeScreen> createState() => loginScreenState();
+  State<welcomeScreen> createState() => loginScreenState();
 }
 
-class loginScreenState extends State<wellcomeScreen> {
+class loginScreenState extends State<welcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

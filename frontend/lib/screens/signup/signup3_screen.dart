@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/signup/signup4_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/SlidePageRoute.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 
 class signup3Screen extends StatefulWidget {
@@ -72,7 +73,7 @@ class _signup3ScreenState extends State<signup3Screen> {
                   color: myBlack,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  height: 1.3,
+                  height: 1.5,
                   fontFamily: 'TheJamsil'),
             ),
           ],
@@ -158,10 +159,8 @@ class _signup3ScreenState extends State<signup3Screen> {
         children: [
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => signup4Screen()),
-              );
+              Navigator.of(context)
+                  .push(SlidePageRoute(nextPage: signup4Screen()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: myLightGreen,

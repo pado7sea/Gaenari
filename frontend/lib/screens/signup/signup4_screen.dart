@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:forsythia/screens/signup/signupend_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/SlidePageRoute.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -31,7 +33,12 @@ class _signup4ScreenState extends State<signup4Screen> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [maintext, subtext, _carousel(), _name()],
+          children: [
+            Container(alignment: Alignment.topLeft, child: maintext),
+            subtext,
+            _carousel(),
+            _name()
+          ],
         ),
       ),
       bottomNavigationBar: _button(),
@@ -39,7 +46,7 @@ class _signup4ScreenState extends State<signup4Screen> {
   }
 
   var maintext = Padding(
-    padding: const EdgeInsets.fromLTRB(20, 50, 100, 50),
+    padding: const EdgeInsets.fromLTRB(20, 50, 100, 0),
     child: RichText(
       // textAlign: TextAlign.center,
       text: TextSpan(
@@ -66,7 +73,7 @@ class _signup4ScreenState extends State<signup4Screen> {
                 color: myBlack,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                height: 1.3,
+                height: 1.5,
                 fontFamily: 'TheJamsil'),
           ),
           WidgetSpan(
@@ -82,7 +89,7 @@ class _signup4ScreenState extends State<signup4Screen> {
   );
 
   var subtext = Padding(
-    padding: const EdgeInsets.fromLTRB(20, 50, 100, 50),
+    padding: const EdgeInsets.fromLTRB(20, 10, 100, 50),
     child: Text16(
       text: '대표강아지는 바꾸기 어려우니 신중하게 선택해주세요.',
       textColor: myGrey,
@@ -136,7 +143,7 @@ class _signup4ScreenState extends State<signup4Screen> {
   // 인풋
   Widget _name() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 20),
+      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
       child: Column(
         children: [
           Row(
@@ -173,10 +180,8 @@ class _signup4ScreenState extends State<signup4Screen> {
         children: [
           ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => signup4Screen()),
-              );
+              Navigator.of(context)
+                  .push(SlidePageRoute(nextPage: signupEndScreen()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: myLightGreen,

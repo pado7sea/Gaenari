@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/signup/signup3_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/SlidePageRoute.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 
 class signup2Screen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _signup2ScreenState extends State<signup2Screen> {
                   color: myBlack,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  height: 1.3,
+                  height: 1.5,
                   fontFamily: 'TheJamsil'),
             ),
           ],
@@ -186,10 +187,8 @@ class _signup2ScreenState extends State<signup2Screen> {
             onPressed: () {
               if (_nicknamecontroller.text.isNotEmpty &&
                   _birthcontroller.text.isNotEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => signup3Screen()),
-                );
+                Navigator.of(context)
+                    .push(SlidePageRoute(nextPage: signup3Screen()));
               } else {
                 print('정보를 모두 입력해주세요!');
                 setState(() {

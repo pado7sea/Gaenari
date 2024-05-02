@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/screens/signup/signup2_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/SlidePageRoute.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 
 class singupScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _singupScreenState extends State<singupScreen> {
         text: TextSpan(
           children: const [
             TextSpan(
-              text: '아이디',
+              text: '이메일',
               style: TextStyle(
                   color: myMainGreen,
                   fontSize: 22,
@@ -84,7 +85,7 @@ class _singupScreenState extends State<singupScreen> {
                   color: myBlack,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  height: 1.3,
+                  height: 1.5,
                   fontFamily: 'TheJamsil'),
             ),
           ],
@@ -284,10 +285,8 @@ class _singupScreenState extends State<singupScreen> {
                 String email = _idcontroller.text + '@' + _selectedDomain;
                 print(email); // 여기서는 저장하지 않고 콘솔에 출력
                 // 저장하려면 따로 데이터베이스나 파일에 저장하는 등의 작업이 필요해
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => signup2Screen()),
-                );
+                Navigator.of(context)
+                    .push(SlidePageRoute(nextPage: signup2Screen()));
               } else {
                 print('정보를 모두 입력해주세요!');
                 setState(() {
