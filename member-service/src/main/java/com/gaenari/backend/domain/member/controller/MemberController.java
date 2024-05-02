@@ -52,10 +52,10 @@ public class MemberController {
         }
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody RequestLogin requestLogin) {
-//        return ResponseEntity.status(HttpStatus.OK).body(requestLogin);
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody RequestLogin requestLogin) {
+        return ResponseEntity.status(HttpStatus.OK).body(requestLogin);
+    }
 
 //    @PostMapping("/logout")
 //    public ResponseEntity<?> logout() {
