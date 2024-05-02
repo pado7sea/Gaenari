@@ -77,7 +77,7 @@ class _signupEndScreenState extends State<signupEndScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context)
-                  .push(SlidePageRoute(nextPage: loginScreen()));
+                  .push(SlidePageRoute(nextPage: LoginScreen()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: myLightGreen,

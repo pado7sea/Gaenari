@@ -32,7 +32,7 @@ class loginScreenState extends State<welcomeScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => loginScreen()),
+                MaterialPageRoute(builder: (context) => LoginScreen()),
               );
             },
             style: ElevatedButton.styleFrom(

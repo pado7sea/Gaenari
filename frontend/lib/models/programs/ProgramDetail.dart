@@ -1,8 +1,3 @@
-import 'dart:convert';
-
-ProgramDetail ProgramDetailFromJson(String str) =>
-    ProgramDetail.fromJson(json.decode(str));
-
 class ProgramDetail {
   String? status;
   String? message;

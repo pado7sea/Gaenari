@@ -33,23 +33,6 @@ class _MyAppState extends State<MyApp> {
   late final GoRouter _router;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  // int _selectedIndex = 0;
-  // bool _loginactive = false;
-
-  // static const List<Widget> _widgetOptions = <Widget>[
-  //   DashBoardScreen(),
-  //   RecodScreen(),
-  //   ProgramScreen(),
-  //   DogHouseScreen(),
-  //   SettingScreen(),
-  // ];
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -64,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         ),
         GoRoute(
           path: '/login',
-          builder: (context, state) => const loginScreen(),
+          builder: (context, state) => const LoginScreen(),
         ),
         GoRoute(
           path: '/home',
@@ -97,24 +80,8 @@ class _MyAppState extends State<MyApp> {
             //     TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             //   },
             // ),
-            // fontFamily: 'MainFont',
           ),
           debugShowCheckedModeBanner: false,
-
-          // home: _loginactive
-          //     ? Scaffold(
-          //         body: AnimatedIndexedStack(
-          //           index: _selectedIndex,
-          //           children: _widgetOptions,
-          //         ),
-          //         bottomNavigationBar: CustomBottomNavigationBar(
-          //           selectedIndex: _selectedIndex,
-          //           onItemSelected: _onItemTapped,
-          //         ),
-          //       )
-          //     : Scaffold(
-          //         body: wellcomeScreen(),
-          //       )),
         ));
   }
 }
@@ -153,9 +120,7 @@ class _MainNavigationState extends State<MainNavigation> {
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,
         onItemSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+          _onItemTapped(index);
         },
       ),
     );
