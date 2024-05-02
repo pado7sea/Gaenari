@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:forsythia/screens/signup/signup2_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -123,6 +124,10 @@ class _singupScreenState extends State<singupScreen> {
                       // tap 시 borderline 색상 지정
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: myBlack))),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'[a-zA-Z0-9]')), // 영어 대소문자와 숫자만 허용
+                  ],
                 ),
               ),
               Text(' @ '),
@@ -196,11 +201,16 @@ class _singupScreenState extends State<singupScreen> {
             obscureText: true, // 비밀번호 입력을 숨깁니다.
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(left: 5),
-                hintText: '대소문자, 숫자포함 16자 까지 가능합니다.',
+                hintText: '대소문자, 숫자포함 6자에서 16자까지 가능.',
                 hintStyle: TextStyle(color: Colors.grey),
                 // tap 시 borderline 색상 지정
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: myBlack))),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'[a-zA-Z0-9]')), // 영어 대소문자와 숫자만 허용
+            ],
+            maxLength: 16,
           ),
         ],
       ),
@@ -250,6 +260,7 @@ class _singupScreenState extends State<singupScreen> {
               errorText:
                   _errorText.isNotEmpty ? _errorText : null, // 에러 메시지를 표시합니다.
             ),
+            maxLength: 16,
           ),
         ],
       ),
@@ -264,7 +275,7 @@ class _singupScreenState extends State<singupScreen> {
         children: [
           if (_showErrorMessage) // 상태에 따라 텍스트를 표시하거나 숨김
             Text(
-              '정보를 모두 입력해주세요!',
+              '모든 입력이 올바른지 확인해주세요.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'TheJamsil',
@@ -281,14 +292,15 @@ class _singupScreenState extends State<singupScreen> {
                   _selectedDomain.isNotEmpty &&
                   _passwordcontroller.text.isNotEmpty &&
                   _confirmPasswordcontroller.text.isNotEmpty &&
-                  _passwordcontroller.text == _confirmPasswordcontroller.text) {
+                  _passwordcontroller.text == _confirmPasswordcontroller.text &&
+                  _passwordcontroller.text.length >= 6) {
                 String email = _idcontroller.text + '@' + _selectedDomain;
                 print(email); // 여기서는 저장하지 않고 콘솔에 출력
                 // 저장하려면 따로 데이터베이스나 파일에 저장하는 등의 작업이 필요해
                 Navigator.of(context)
                     .push(SlidePageRoute(nextPage: signup2Screen()));
               } else {
-                print('정보를 모두 입력해주세요!');
+                print('모든 입력이 올바른지 확인해주세요.');
                 setState(() {
                   _showErrorMessage = true; // 에러 메시지 표시
                 });
