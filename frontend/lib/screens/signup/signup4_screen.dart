@@ -18,10 +18,31 @@ class signup4Screen extends StatefulWidget {
 
 class _signup4ScreenState extends State<signup4Screen> {
   int activeIndex = 0;
+
   List<String> images = [
-    'assets/emoji/pensil.png',
-    'assets/emoji/pensil.png',
-    'assets/emoji/pensil.png'
+    'assets/gif/shepherd_standandlook.gif',
+    'assets/gif/grayhound_standandlook.gif',
+    'assets/gif/husky_standandlook.gif',
+    'assets/gif/pomeranian1_standandlook.gif',
+    'assets/gif/pomeranian2_standandlook.gif',
+    'assets/gif/shiba_standandlook.gif',
+    'assets/gif/pug_standandlook.gif',
+    'assets/gif/retriever1_standandlook.gif',
+    'assets/gif/retriever2_standandlook.gif',
+    'assets/gif/wolf_standandlook.gif',
+  ];
+
+  List<String> dogbreeds = [
+    '셰퍼드',
+    '그레이하운드',
+    '허스키',
+    '갈색 포메라니안',
+    '흰색 포메라니안',
+    '시바',
+    '퍼그',
+    '갈색 리트리버',
+    '흰색 리트리버',
+    '늑대',
   ];
 
   @override
@@ -35,8 +56,11 @@ class _signup4ScreenState extends State<signup4Screen> {
         child: Column(
           children: [
             Container(alignment: Alignment.topLeft, child: maintext),
-            subtext,
+            Container(alignment: Alignment.topLeft, child: subtext),
             _carousel(),
+            SizedBox(
+              height: 20,
+            ),
             _name()
           ],
         ),
@@ -46,7 +70,7 @@ class _signup4ScreenState extends State<signup4Screen> {
   }
 
   var maintext = Padding(
-    padding: const EdgeInsets.fromLTRB(20, 50, 100, 0),
+    padding: const EdgeInsets.fromLTRB(20, 50, 0, 1),
     child: RichText(
       // textAlign: TextAlign.center,
       text: TextSpan(
@@ -68,7 +92,7 @@ class _signup4ScreenState extends State<signup4Screen> {
                 fontFamily: 'TheJamsil'),
           ),
           TextSpan(
-            text: '를 \n선택해주세요 ',
+            text: '를 선택해주세요 ',
             style: TextStyle(
                 color: myBlack,
                 fontSize: 22,
@@ -91,8 +115,9 @@ class _signup4ScreenState extends State<signup4Screen> {
   var subtext = Padding(
     padding: const EdgeInsets.fromLTRB(20, 10, 100, 50),
     child: Text16(
-      text: '대표강아지는 바꾸기 어려우니 신중하게 선택해주세요.',
+      text: '대표강아지는 바꾸기 어려우니 \n신중하게 선택해주세요.',
       textColor: myGrey,
+      bold: true,
     ),
   );
 
@@ -115,16 +140,33 @@ class _signup4ScreenState extends State<signup4Screen> {
             }),
           ),
         ),
-        indicator()
+        indicator(),
+        SizedBox(
+          height: 10,
+        ),
+        _dogbreed(activeIndex),
       ],
     );
   }
 
   Widget imageSlider(path, index) => Container(
         width: double.infinity,
-        height: 240,
-        color: Colors.grey,
-        child: Image.asset(path, fit: BoxFit.cover),
+        height: 300,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: myLightYellow, // 배경색을 투명하게 설정
+          shape: BoxShape.circle, // 원형 모양으로 설정
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 10, 40),
+          child: Image(
+            image: AssetImage(path),
+            height: 140,
+            width: 140,
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.none,
+          ),
+        ),
       );
 
   Widget indicator() => Container(
@@ -139,6 +181,17 @@ class _signup4ScreenState extends State<signup4Screen> {
             activeDotColor: myMainGreen,
             dotColor: myGrey),
       ));
+
+  Widget _dogbreed(int index) {
+    // 현재 이미지 슬라이더의 인덱스에 해당하는 breed를 가져옴
+    String breed = dogbreeds[index];
+    return Container(
+      child: Text20(
+        text: breed,
+        bold: true,
+      ),
+    );
+  }
 
   // 인풋
   Widget _name() {

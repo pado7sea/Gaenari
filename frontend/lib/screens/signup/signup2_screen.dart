@@ -17,11 +17,13 @@ class signup2Screen extends StatefulWidget {
 List<bool> isSelected = [false, false, false];
 
 class _signup2ScreenState extends State<signup2Screen> {
+  final GenderController _genderController = GenderController(Gender.OTHER);
+
   TextEditingController _nicknamecontroller = TextEditingController();
   TextEditingController _birthcontroller = TextEditingController();
 
   bool _showErrorMessage = false;
-  String _errorText = '';
+  // String _errorText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,12 @@ class _signup2ScreenState extends State<signup2Screen> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [maintext, _nickname(), _birth(), gender()],
+          children: [
+            maintext,
+            _nickname(),
+            _birth(),
+            GenderWidget(controller: _genderController),
+          ],
         ),
       ),
       bottomNavigationBar: _button(),
@@ -92,12 +99,18 @@ class _signup2ScreenState extends State<signup2Screen> {
                 child: TextField(
                   controller: _nicknamecontroller,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 5),
-                      hintText: '닉네임을 입력해주세요.',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      // tap 시 borderline 색상 지정
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: myBlack))),
+                    contentPadding: EdgeInsets.only(left: 5),
+                    hintText: '대소문자, 숫자, 언더바 포함 3자에서 10자까지 가능.',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    // tap 시 borderline 색상 지정
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: myBlack)),
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(
+                        r'[a-zA-Z0-9_]')), // 영어 대소문자, 숫자, 언더바만 허용 // 최대 10자까지 입력 허용
+                  ],
+                  maxLength: 10,
                 ),
               ),
             ],
@@ -172,7 +185,7 @@ class _signup2ScreenState extends State<signup2Screen> {
         children: [
           if (_showErrorMessage) // 상태에 따라 텍스트를 표시하거나 숨김
             Text(
-              '정보를 모두 입력해주세요!',
+              '모든 입력이 올바른지 확인해주세요.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'TheJamsil',
@@ -186,7 +199,8 @@ class _signup2ScreenState extends State<signup2Screen> {
           ElevatedButton(
             onPressed: () {
               if (_nicknamecontroller.text.isNotEmpty &&
-                  _birthcontroller.text.isNotEmpty) {
+                  _birthcontroller.text.isNotEmpty &&
+                  _nicknamecontroller.text.length >= 3) {
                 Navigator.of(context)
                     .push(SlidePageRoute(nextPage: signup3Screen()));
               } else {
@@ -214,14 +228,30 @@ class _signup2ScreenState extends State<signup2Screen> {
   }
 }
 
-class gender extends StatefulWidget {
-  const gender({super.key});
-
-  @override
-  State<gender> createState() => _genderState();
+enum Gender {
+  MALE,
+  FEMALE,
+  OTHER,
 }
 
-class _genderState extends State<gender> {
+class GenderController extends ValueNotifier<Gender> {
+  GenderController(Gender value) : super(value);
+
+  void setGender(Gender gender) {
+    value = gender;
+  }
+}
+
+class GenderWidget extends StatefulWidget {
+  final GenderController controller; // GenderController를 매개변수로 받음
+
+  const GenderWidget({Key? key, required this.controller}) : super(key: key);
+
+  @override
+  _GenderWidgetState createState() => _GenderWidgetState();
+}
+
+class _GenderWidgetState extends State<GenderWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -244,28 +274,34 @@ class _genderState extends State<gender> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ToggleButtons(
-                isSelected: isSelected,
+                isSelected: [
+                  widget.controller.value == Gender.MALE,
+                  widget.controller.value == Gender.FEMALE,
+                  widget.controller.value == Gender.OTHER,
+                ],
                 onPressed: (int index) {
                   setState(() {
-                    for (int buttonIndex = 0;
-                        buttonIndex < isSelected.length;
-                        buttonIndex++) {
-                      if (buttonIndex == index) {
-                        isSelected[buttonIndex] = true;
-                      } else {
-                        isSelected[buttonIndex] = false;
-                      }
+                    switch (index) {
+                      case 0:
+                        widget.controller.setGender(Gender.MALE);
+                        break;
+                      case 1:
+                        widget.controller.setGender(Gender.FEMALE);
+                        break;
+                      case 2:
+                        widget.controller.setGender(Gender.OTHER);
+                        break;
                     }
                   });
                 },
-                color: myBlack, // 선택되지 않은 버튼의 텍스트 색상
-                selectedColor: Colors.white, // 선택된 버튼의 텍스트 색상
-                fillColor: myMainGreen, // 선택된 버튼의 배경 색상
-                borderColor: myMainGreen, // 버튼의 테두리 색상
-                selectedBorderColor: myMainGreen, // 선택된 버튼의 테두리 색상
+                color: myBlack,
+                selectedColor: Colors.white,
+                fillColor: myMainGreen,
+                borderColor: myMainGreen,
+                selectedBorderColor: myMainGreen,
                 borderRadius: BorderRadius.circular(10),
                 borderWidth: 2,
-                constraints: BoxConstraints.expand(width: 110), // 버튼의 가로 길이를 지정
+                constraints: BoxConstraints.expand(width: 110),
                 children: <Widget>[
                   Text('남자'),
                   Text('여자'),

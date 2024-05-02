@@ -16,6 +16,11 @@ class signup3Screen extends StatefulWidget {
 }
 
 class _signup3ScreenState extends State<signup3Screen> {
+  TextEditingController _heightcontroller = TextEditingController();
+  TextEditingController _weightcontroller = TextEditingController();
+
+  bool _showErrorMessage = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +105,7 @@ class _signup3ScreenState extends State<signup3Screen> {
           ),
           SizedBox(height: 10),
           TextField(
+            controller: _heightcontroller,
             // 숫자만 입력 가능하게
             keyboardType: TextInputType.number,
             inputFormatters: [
@@ -135,6 +141,7 @@ class _signup3ScreenState extends State<signup3Screen> {
           ),
           SizedBox(height: 10),
           TextField(
+            controller: _weightcontroller,
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
@@ -157,10 +164,31 @@ class _signup3ScreenState extends State<signup3Screen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (_showErrorMessage) // 상태에 따라 텍스트를 표시하거나 숨김
+            Text(
+              '모든 입력이 올바른지 확인해주세요.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'TheJamsil',
+                color: myRed,
+                fontSize: 16,
+              ),
+            ),
+          SizedBox(
+            height: 10,
+          ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context)
-                  .push(SlidePageRoute(nextPage: signup4Screen()));
+              if (_heightcontroller.text.isNotEmpty &&
+                  _weightcontroller.text.isNotEmpty) {
+                Navigator.of(context)
+                    .push(SlidePageRoute(nextPage: signup4Screen()));
+              } else {
+                print('정보를 모두 입력해주세요!');
+                setState(() {
+                  _showErrorMessage = true; // 에러 메시지 표시
+                });
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: myLightGreen,
