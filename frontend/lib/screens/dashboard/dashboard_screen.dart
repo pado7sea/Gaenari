@@ -82,7 +82,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
           child: Container(
             margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
             child: Text20(
-              text: "재신님 방가방가 하이빵dd가루",
+              text: "재신님 방가방가 하이빵가루",
               bold: true,
             ),
           ),
