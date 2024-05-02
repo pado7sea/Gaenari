@@ -3,17 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:forsythia/screens/signup/signup2_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
+import 'package:forsythia/provider/signup_provider.dart';
+import 'package:provider/provider.dart';
 
-class singupScreen extends StatefulWidget {
-  const singupScreen({super.key});
+class SingupScreen extends StatefulWidget {
+  const SingupScreen({Key? key}) : super(key: key);
 
   @override
-  State<singupScreen> createState() => _singupScreenState();
+  _SingupScreenState createState() => _SingupScreenState();
 }
 
-class _singupScreenState extends State<singupScreen> {
+class _SingupScreenState extends State<SingupScreen> {
   TextEditingController _idcontroller = TextEditingController();
   TextEditingController _passwordcontroller = TextEditingController();
   TextEditingController _confirmPasswordcontroller =
@@ -101,7 +103,7 @@ class _singupScreenState extends State<singupScreen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
@@ -186,7 +188,7 @@ class _singupScreenState extends State<singupScreen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
@@ -223,7 +225,7 @@ class _singupScreenState extends State<singupScreen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
@@ -294,11 +296,15 @@ class _singupScreenState extends State<singupScreen> {
                   _confirmPasswordcontroller.text.isNotEmpty &&
                   _passwordcontroller.text == _confirmPasswordcontroller.text &&
                   _passwordcontroller.text.length >= 6) {
-                String email = _idcontroller.text + '@' + _selectedDomain;
-                print(email); // 여기서는 저장하지 않고 콘솔에 출력
-                // 저장하려면 따로 데이터베이스나 파일에 저장하는 등의 작업이 필요해
+                String email = '${_idcontroller.text}@$_selectedDomain';
+                print(email);
+                Provider.of<SignupProvider>(context, listen: false)
+                    .setPassword(_passwordcontroller.text);
+                Provider.of<SignupProvider>(context, listen: false)
+                    .setEmail(email);
+
                 Navigator.of(context)
-                    .push(SlidePageRoute(nextPage: signup2Screen()));
+                    .push(SlidePageRoute(nextPage: Signup2Screen()));
               } else {
                 print('모든 입력이 올바른지 확인해주세요.');
                 setState(() {

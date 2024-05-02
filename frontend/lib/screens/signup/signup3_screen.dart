@@ -1,21 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/signup/signup4_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
+import 'package:forsythia/provider/signup_provider.dart';
+import 'package:provider/provider.dart';
 
-class signup3Screen extends StatefulWidget {
-  const signup3Screen({super.key});
+class Signup3Screen extends StatefulWidget {
+  const Signup3Screen({super.key});
 
   @override
-  State<signup3Screen> createState() => _signup3ScreenState();
+  State<Signup3Screen> createState() => _Signup3ScreenState();
 }
 
-class _signup3ScreenState extends State<signup3Screen> {
+class _Signup3ScreenState extends State<Signup3Screen> {
   TextEditingController _heightcontroller = TextEditingController();
   TextEditingController _weightcontroller = TextEditingController();
 
@@ -93,7 +93,7 @@ class _signup3ScreenState extends State<signup3Screen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/ruler.png'),
                 width: 20,
@@ -129,7 +129,7 @@ class _signup3ScreenState extends State<signup3Screen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/eggchicken.png'),
                 width: 20,
@@ -181,8 +181,12 @@ class _signup3ScreenState extends State<signup3Screen> {
             onPressed: () {
               if (_heightcontroller.text.isNotEmpty &&
                   _weightcontroller.text.isNotEmpty) {
+                Provider.of<SignupProvider>(context, listen: false)
+                    .setWeight(int.parse(_weightcontroller.text));
+                Provider.of<SignupProvider>(context, listen: false)
+                    .setHeight(int.parse(_heightcontroller.text));
                 Navigator.of(context)
-                    .push(SlidePageRoute(nextPage: signup4Screen()));
+                    .push(SlidePageRoute(nextPage: Signup4Screen()));
               } else {
                 print('정보를 모두 입력해주세요!');
                 setState(() {
