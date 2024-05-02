@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/models/users/LoginForm.dart';
-import 'package:forsythia/models/users/LoginUser.dart';
-import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
+import 'package:forsythia/models/users/loginForm.dart';
 import 'package:forsythia/screens/signup/signup_screen.dart';
-import 'package:forsythia/service/user_service.dart';
+import 'package:forsythia/service/member_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:go_router/go_router.dart';
@@ -26,7 +24,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     // login 모델 객체 생성
     LoginForm loginInfo = LoginForm(email: email, password: password);
-    await UserService.fetchLogin(loginInfo).then((loginUser) {
+    await MemberService.fetchLogin(loginInfo).then((loginUser) {
       print(loginUser);
       setState(() {
         _loginStatus = '로그인 성공!';

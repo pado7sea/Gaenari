@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
       routes: [
         GoRoute(
           path: '/welcome',
-          builder: (context, state) => const welcomeScreen(),
+          builder: (context, state) => const WelcomeScreen(),
         ),
         GoRoute(
           path: '/login',

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/widgets/box.dart';
 
 class MateSearchBar extends StatelessWidget {
+  const MateSearchBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

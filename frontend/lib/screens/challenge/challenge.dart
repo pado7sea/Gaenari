@@ -3,6 +3,8 @@ import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/largeAppBar.dart';
 
 class ChallengePage extends StatefulWidget {
+  const ChallengePage({super.key});
+
   @override
   State<ChallengePage> createState() => _ChallengePageState();
 }

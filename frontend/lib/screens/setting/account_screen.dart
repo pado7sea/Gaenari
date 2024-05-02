@@ -4,14 +4,14 @@ import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 import 'package:flutter/services.dart';
 
-class accountScreen extends StatefulWidget {
-  const accountScreen({super.key});
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
   @override
-  State<accountScreen> createState() => _accountScreenState();
+  State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _accountScreenState extends State<accountScreen> {
+class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +64,7 @@ class _accountScreenState extends State<accountScreen> {
               child: Column(
                 children: [
                   Row(
-                    children: [
+                    children: const [
                       Image(
                         image: AssetImage('assets/emoji/pensil.png'),
                         width: 20,
@@ -109,7 +109,7 @@ class _accountScreenState extends State<accountScreen> {
               child: Column(
                 children: [
                   Row(
-                    children: [
+                    children: const [
                       Image(
                         image: AssetImage('assets/emoji/pensil.png'),
                         width: 20,

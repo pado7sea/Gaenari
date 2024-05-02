@@ -50,6 +50,7 @@ class _NewMatePageState extends State<NewMatePage> {
   }
 
   // 리스트부분 - 해당하는 리스트를 파라미터로 받음
+  // 아직 쓰지 않아서 파란줄 뜸!!
   Widget _mates(list) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
