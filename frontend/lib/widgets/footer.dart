@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/theme/color.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -35,7 +34,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           showUnselectedLabels: false,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Container(
+              icon: SizedBox(
                 width: 30,
                 height: 30,
                 child: Image.asset(
@@ -49,7 +48,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Container(
+              icon: SizedBox(
                 width: 30,
                 height: 30,
                 child: Image.asset(
@@ -63,7 +62,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Container(
+              icon: SizedBox(
                 width: 30,
                 height: 30,
                 child: Image.asset(
@@ -77,7 +76,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Container(
+              icon: SizedBox(
                 width: 30,
                 height: 30,
                 child: Image.asset(
@@ -91,7 +90,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Container(
+              icon: SizedBox(
                 width: 30,
                 height: 30,
                 child: Image.asset(
@@ -118,6 +117,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
 // animated_indexed_stack.dart 파일 내용
 
+// ignore: constant_identifier_names
 const double INIT_POSITION = 1.0;
 
 class AnimatedIndexedStack extends StatefulWidget {
@@ -133,6 +133,7 @@ class AnimatedIndexedStack extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _AnimatedIndexedStackState createState() => _AnimatedIndexedStackState();
 }
 

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/programs/ProgramDetail.dart';
 import 'package:forsythia/service/program_service.dart';
-import 'package:forsythia/theme/text.dart';
-// import 'package:forsythia/widgets/largeAppBar.dart'; 빨리 여기 고쳐야함
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 
 class ProgramScreen extends StatefulWidget {
   const ProgramScreen({super.key});
@@ -28,21 +26,24 @@ class _ProgramScreenState extends State<ProgramScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ProgramDetail>(
-      future: _programDetailFuture, // Future 변수를 사용하여 FutureBuilder를 설정해.
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // 데이터를 가져오는 중에는 로딩 표시기를 보여줘.
-        } else if (snapshot.hasError) {
-          return Text(
-              'Error: ${snapshot.error}'); // 데이터를 가져오는 도중 에러가 발생하면 에러를 표시해.
-        } else {
-          // 데이터를 성공적으로 가져왔을 때는 가져온 데이터를 활용하여 위젯을 구성해.
-          final programDetail = snapshot.data;
-          return _buildProgramDetailWidget(
-              programDetail); // 가져온 데이터를 표시하는 함수를 호출해.
-        }
-      },
+    return Scaffold(
+      appBar: SmallAppBar(title: '운동프로그램'),
+      body: FutureBuilder<ProgramDetail>(
+        future: _programDetailFuture, // Future 변수를 사용하여 FutureBuilder를 설정해.
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // 데이터를 가져오는 중에는 로딩 표시기를 보여줘.
+          } else if (snapshot.hasError) {
+            return Text(
+                'Error: ${snapshot.error}'); // 데이터를 가져오는 도중 에러가 발생하면 에러를 표시해.
+          } else {
+            // 데이터를 성공적으로 가져왔을 때는 가져온 데이터를 활용하여 위젯을 구성해.
+            final programDetail = snapshot.data;
+            return _buildProgramDetailWidget(
+                programDetail); // 가져온 데이터를 표시하는 함수를 호출해.
+          }
+        },
+      ),
     );
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/largeAppBar.dart';
+import 'package:forsythia/widgets/LargeAppBar.dart';
 
 class ChallengePage extends StatefulWidget {
   const ChallengePage({super.key});
@@ -18,7 +18,7 @@ class _ChallengePageState extends State<ChallengePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: largeAppBar(
+      appBar: LargeAppBar(
         title: "도전과제",
         sentence: "도전과제를 달성하고 \n많은 보상과 강아지를 레벨업",
       ),

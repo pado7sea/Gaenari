@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/shadowImg.dart';
 
-class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String sentence;
 
-  const largeAppBar({
+  const LargeAppBar({
     super.key,
     required this.title,
     required this.sentence,
@@ -68,7 +68,7 @@ class largeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     color: Colors.black,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    shadows: <Shadow>[
+                    shadows: const <Shadow>[
                       Shadow(
                         offset: Offset(0, 5),
                         blurRadius: 20.0,

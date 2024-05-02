@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 
 class BodyinfoScreen extends StatefulWidget {
   const BodyinfoScreen({super.key});
@@ -15,7 +15,7 @@ class _BodyinfoScreenState extends State<BodyinfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: smallAppBar(
+      appBar: SmallAppBar(
         title: '신체정보',
         back: true,
       ),

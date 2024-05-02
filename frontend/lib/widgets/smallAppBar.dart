@@ -3,11 +3,11 @@ import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/shadowImg.dart';
 import 'package:forsythia/theme/text.dart';
 
-class smallAppBar extends StatelessWidget implements PreferredSizeWidget {
+class SmallAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool back;
 
-  const smallAppBar({
+  const SmallAppBar({
     super.key,
     required this.title,
     this.back = false,
@@ -25,18 +25,20 @@ class smallAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       leading: Padding(
         padding: const EdgeInsets.all(15),
-        child: back ?  GestureDetector(
-          onTap: () {
-            Navigator.pop(context); // 이미지 클릭 시 뒤로 가기
-          },
-          child: Image.asset(
-            "assets/icons/common_back.png",
-            filterQuality: FilterQuality.none,
-            fit: BoxFit.cover,
-            width: 10,
-            height: 10,
-          ),
-        ) : null,
+        child: back
+            ? GestureDetector(
+                onTap: () {
+                  Navigator.pop(context); // 이미지 클릭 시 뒤로 가기
+                },
+                child: Image.asset(
+                  "assets/icons/common_back.png",
+                  filterQuality: FilterQuality.none,
+                  fit: BoxFit.cover,
+                  width: 10,
+                  height: 10,
+                ),
+              )
+            : null,
       ),
 
       // 앱바 이미지
@@ -67,7 +69,10 @@ class smallAppBar extends StatelessWidget implements PreferredSizeWidget {
                 SizedBox(
                   height: 40,
                 ),
-                Text20(text: title, bold: true,)
+                Text20(
+                  text: title,
+                  bold: true,
+                )
               ],
             ),
           ),

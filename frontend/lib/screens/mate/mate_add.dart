@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/screens/mate/search.dart';
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 
 class AddMatePage extends StatefulWidget {
   const AddMatePage({super.key});
@@ -18,12 +18,13 @@ class _AddMatePageState extends State<AddMatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: smallAppBar(
-        title: "친구검색", back: true,
+      appBar: SmallAppBar(
+        title: "친구검색",
+        back: true,
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [
+          children: const [
             SizedBox(height: 20), // 검색창과 텍스트 사이의 간격
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20), // 검색창 좌우 마진

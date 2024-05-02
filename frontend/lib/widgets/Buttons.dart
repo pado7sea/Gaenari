@@ -8,11 +8,11 @@ class SmallButton extends StatelessWidget {
   final bool active;
 
   const SmallButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.active = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

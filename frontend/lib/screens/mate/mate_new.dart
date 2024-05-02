@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/box.dart';
-import 'package:forsythia/widgets/smallAppBar.dart';
+import 'package:forsythia/widgets/Box.dart';
+import 'package:forsythia/widgets/SmallAppBar.dart';
 
 class NewMatePage extends StatefulWidget {
   const NewMatePage({super.key});
@@ -16,7 +16,7 @@ class _NewMatePageState extends State<NewMatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: smallAppBar(
+        appBar: SmallAppBar(
           title: "친구요청",
           back: true,
         ),
