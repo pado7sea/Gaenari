@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/setting/account_screen.dart';
 import 'package:forsythia/screens/setting/bodyinfo_screen.dart';
 import 'package:forsythia/screens/setting/notification_screen.dart';
@@ -39,7 +37,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget _account() {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(SlidePageRoute(nextPage: accountScreen()));
+        Navigator.of(context).push(SlidePageRoute(nextPage: AccountScreen()));
       },
       child: Container(
         child: Row(
@@ -65,11 +63,15 @@ class _SettingScreenState extends State<SettingScreen> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
-            .push(SlidePageRoute(nextPage: notificationScreen()));
+            .push(SlidePageRoute(nextPage: NotificationScreen()));
       },
       child: Container(
+        decoration: myBoxDecoration,
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
         child: Row(
-          children: [
+          children: const [
             Image(
               image: AssetImage('assets/emoji/bell.png'),
               width: 20,
@@ -79,10 +81,6 @@ class _SettingScreenState extends State<SettingScreen> {
             Text16(text: '  알림')
           ],
         ),
-        decoration: myBoxDecoration,
-        width: double.infinity,
-        padding: EdgeInsets.all(20),
-        margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
       ),
     );
   }
@@ -90,11 +88,15 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget _body() {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(SlidePageRoute(nextPage: bodyinfoScreen()));
+        Navigator.of(context).push(SlidePageRoute(nextPage: BodyinfoScreen()));
       },
       child: Container(
+        decoration: myBoxDecoration,
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
         child: Row(
-          children: [
+          children: const [
             Image(
               image: AssetImage('assets/emoji/ruler.png'),
               width: 20,
@@ -104,10 +106,6 @@ class _SettingScreenState extends State<SettingScreen> {
             Text16(text: '  신체정보')
           ],
         ),
-        decoration: myBoxDecoration,
-        width: double.infinity,
-        padding: EdgeInsets.all(20),
-        margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
       ),
     );
   }

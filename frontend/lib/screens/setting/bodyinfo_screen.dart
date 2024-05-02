@@ -4,14 +4,14 @@ import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
 
-class bodyinfoScreen extends StatefulWidget {
-  const bodyinfoScreen({super.key});
+class BodyinfoScreen extends StatefulWidget {
+  const BodyinfoScreen({super.key});
 
   @override
-  State<bodyinfoScreen> createState() => _bodyinfoScreenState();
+  State<BodyinfoScreen> createState() => _BodyinfoScreenState();
 }
 
-class _bodyinfoScreenState extends State<bodyinfoScreen> {
+class _BodyinfoScreenState extends State<BodyinfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +64,7 @@ class _bodyinfoScreenState extends State<bodyinfoScreen> {
               child: Column(
                 children: [
                   Row(
-                    children: [
+                    children: const [
                       Image(
                         image: AssetImage('assets/emoji/ruler.png'),
                         width: 20,
@@ -96,7 +96,7 @@ class _bodyinfoScreenState extends State<bodyinfoScreen> {
               child: Column(
                 children: [
                   Row(
-                    children: [
+                    children: const [
                       Image(
                         image: AssetImage('assets/emoji/eggchicken.png'),
                         width: 20,

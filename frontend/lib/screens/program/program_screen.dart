@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/models/programs/ProgramDetail.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/text.dart';
-// import 'package:forsythia/widgets/largeAppBar.dart';
+// import 'package:forsythia/widgets/largeAppBar.dart'; 빨리 여기 고쳐야함
 import 'package:forsythia/widgets/smallAppBar.dart';
 
 class ProgramScreen extends StatefulWidget {

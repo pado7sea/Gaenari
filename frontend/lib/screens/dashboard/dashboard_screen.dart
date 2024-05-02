@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/challenge/challenge.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/SlidePageRoute.dart';
 import 'package:forsythia/widgets/box.dart';
-import 'package:forsythia/widgets/button.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
 
 const List<IconData> icons = [

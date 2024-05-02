@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:forsythia/models/users/LoginForm.dart';
 import 'package:forsythia/models/users/LoginUser.dart';
+import 'package:forsythia/models/users/loginForm.dart';
 import 'package:http/http.dart' as http;
 
-class UserService {
-  static const String baseUrl = 'https://api.gaenari.kr/api/member-service/';
+class MemberService {
+  static const String baseUrl = 'https://api.gaenari.kr/api/member-service';
 
   // 중복된 부분을 함수로 빼서 재사용하도록 함.
   static Future<dynamic> fetchData(String endpoint, LoginForm loginForm) async {
@@ -19,6 +19,7 @@ class UserService {
       if (data['status'] == "SUCCESS") {
         return data;
       } else {
+        print(data);
         throw Exception('없음');
       }
     } else {
