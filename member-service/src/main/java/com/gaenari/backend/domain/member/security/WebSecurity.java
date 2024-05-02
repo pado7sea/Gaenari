@@ -52,12 +52,8 @@ public class WebSecurity {
         // http 요청에 대한 권한 설정
         http.authorizeHttpRequests((authz) -> authz
                         // requestMatchers : 특정 요청 경로에 대한 접근 설정, access : 접근 권한 지정
-                        .requestMatchers("/actuator/**").access(
-                                // 특정 ip주소 접근 허용
-                                new WebExpressionAuthorizationManager("hasIpAddress('127.0.0.1')"))
-                        .requestMatchers("/**").access(
-                                // 특정 ip주소 접근 허용
-                                new WebExpressionAuthorizationManager("hasIpAddress('127.0.0.1')"))
+                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // 인증 관리자 설정
