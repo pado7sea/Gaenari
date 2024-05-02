@@ -36,43 +36,17 @@ spring:
         - id: member-service
           uri: http://member-service.member.svc.cluster.local
           predicates:
-            - Path=/api/member-service/login
-            - Method=POST
+            - Path=/api/member-service/login/**, /api/member-service/members/**, /api/member-service/logout/**, /api/member-service/v3/api-docs/**, /api/member-service/health_check
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
-        - id: member-service
-          uri: http://member-service.member.svc.cluster.local
-          predicates:
-            - Path=/api/member-service/members
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
-        - id: member-service
-          uri: http://member-service.member.svc.cluster.local
-          predicates:
-            - Path=/api/member-service/logout
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
-        - id: member-service
-          uri: http://member-service.member.svc.cluster.local
-          predicates:
-            - Path=/api/member-service/v3/api-docs
-            - Method=GET
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
         - id: member-service
           uri: http://member-service.member.svc.cluster.local
           predicates:
             - Path=/api/member-service/**
-            - Method=GET,POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
         - id: inventory-service
           uri: http://inventory-service.inventory.svc.cluster.local
@@ -81,6 +55,13 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
+        - id: program-service
+          uri: http://program-service.program.svc.cluster.local
+          predicates:
+            - Path=/api/program-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/program-service/(?<segment>.*), /$\{segment}
         - id: program-service
           uri: http://program-service.program.svc.cluster.local
           predicates:
