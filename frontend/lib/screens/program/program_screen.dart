@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/program/programDetail.dart';
-import 'package:forsythia/service/program_servise.dart';
+import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/text.dart';
 // import 'package:forsythia/widgets/largeAppBar.dart';
 import 'package:forsythia/widgets/smallAppBar.dart';
@@ -13,44 +13,46 @@ class ProgramScreen extends StatefulWidget {
 }
 
 class _ProgramScreenState extends State<ProgramScreen> {
+  Future<ProgramDetail>? _programDetailFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProgramDetail(); // 위젯이 생성될 때 프로그램 디테일을 가져오는 함수를 호출해.
+  }
+
+  void _fetchProgramDetail() {
+    _programDetailFuture = ProgramService.fetchProgramDetail(
+        1); // 프로그램 디테일을 가져오는 함수 호출. number는 여기에 들어갈 값이야.
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: smallAppBar(title: '운동프로그램'),
-      body: TextButton(
-          onPressed: () {
-            fetchAndPrintProgramDetail();
-          },
-          child: Text16(
-            text: "눌러",
-          )),
+    return FutureBuilder<ProgramDetail>(
+      future: _programDetailFuture, // Future 변수를 사용하여 FutureBuilder를 설정해.
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // 데이터를 가져오는 중에는 로딩 표시기를 보여줘.
+        } else if (snapshot.hasError) {
+          return Text(
+              'Error: ${snapshot.error}'); // 데이터를 가져오는 도중 에러가 발생하면 에러를 표시해.
+        } else {
+          // 데이터를 성공적으로 가져왔을 때는 가져온 데이터를 활용하여 위젯을 구성해.
+          final programDetail = snapshot.data;
+          return _buildProgramDetailWidget(
+              programDetail); // 가져온 데이터를 표시하는 함수를 호출해.
+        }
+      },
     );
   }
 
-  void fetchAndPrintProgramDetail() async {
-    try {
-      // 프로그램 번호를 넘겨서 세부 정보를 가져옴
-      programDetail detail = await ProgramServise.fetchProgramDetail(1);
-
-      // 가져온 프로그램 세부 정보를 출력
-      print('Status: ${detail.status}');
-      print('Message: ${detail.message}');
-
-      if (detail.data != null) {
-        print('Program ID: ${detail.data!.programId}');
-        print('Program Title: ${detail.data!.programTitle}');
-        // 세부 정보 출력 계속...
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              '프로그램 ID: ${detail.data!.programId}\n프로그램 제목: ${detail.data!.programTitle}'), // 여기에 표시할 정보 추가
-          duration: Duration(seconds: 3), // SnackBar가 표시될 시간 설정
-        ),
-      );
-    } catch (e) {
-      // 에러 처리
-      print('Error: $e');
+  Widget _buildProgramDetailWidget(ProgramDetail? programDetail) {
+    // 가져온 프로그램 디테일 데이터를 사용하여 위젯을 만들어.
+    if (programDetail != null) {
+      return Text('Program Name: ${programDetail.status}');
+    } else {
+      return Text(
+          'No program detail available'); // 만약 가져온 데이터가 없으면 해당 메시지를 표시해.
     }
   }
 }
