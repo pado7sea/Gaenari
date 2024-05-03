@@ -1,13 +1,20 @@
 insert into dog(dog_breed, dog_price)
-values ('말티즈', 1500);
+values ('셰퍼드', 20000);
 insert into dog(dog_breed, dog_price)
-values ('푸들', 2000);
+values ('그레이하운드', 20000);
 insert into dog(dog_breed, dog_price)
-values ('퍼그', 2500);
-
+values ('허스키', 20000);
 insert into dog(dog_breed, dog_price)
-values ('리트리버', 2500);
+values ('갈색 포메라니안', 20000);
 insert into dog(dog_breed, dog_price)
-values ('허스키', 3000);
+values ('흰색 포메라니안', 20000);
 insert into dog(dog_breed, dog_price)
-values ('도베르만', 4000);
+values ('시바', 20000);
+insert into dog(dog_breed, dog_price)
+values ('퍼그', 20000);
+insert into dog(dog_breed, dog_price)
+values ('갈색 리트리버', 20000);
+insert into dog(dog_breed, dog_price)
+values ('흰색 리트리버', 20000);
+insert into dog(dog_breed, dog_price)
+values ('늑대', 20000);

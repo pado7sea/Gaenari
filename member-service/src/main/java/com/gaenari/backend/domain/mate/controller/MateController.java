@@ -11,11 +11,9 @@ import com.gaenari.backend.global.format.code.ErrorCode;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,10 +35,7 @@ public class MateController {
 
     @Operation(summary = "친구신청", description = "친구신청")
     @PostMapping("/add/{id}")
-    public ResponseEntity<?> addMate(@PathVariable(name = "id") Long friendId) {
-        // memberEmail 추출
-//        String memberEmail = authentication.getName();
-        String memberEmail = "ssafy123@naver.com";
+    public ResponseEntity<?> addMate(@RequestHeader("User-Info") String memberEmail, @PathVariable(name = "id") Long friendId) {
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
@@ -51,10 +46,7 @@ public class MateController {
 
     @Operation(summary = "친구신청 발신/수신목록", description = "type : sent(발신), received(수신)")
     @GetMapping("/list/{type}")
-    public ResponseEntity<?> getSentMate(@PathVariable(name = "type") String type) {
-        // memberEmail 추출
-//        String memberEmail = authentication.getName();
-        String memberEmail = "ssafy123@naver.com";
+    public ResponseEntity<?> getSentMate(@RequestHeader("User-Info") String memberEmail, @PathVariable(name = "type") String type) {
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
@@ -72,12 +64,9 @@ public class MateController {
         }
     }
 
-    @Operation(summary = "친구신청 수락/거부", description = "친구신청 수락/거부")
+    @Operation(summary = "친구신청 수락/거부", description = "true : 수락, false : 거부")
     @PostMapping("/check")
-    public ResponseEntity<?> checkMate(@RequestBody MateCheck mateCheck) {
-        // memberEmail 추출
-//        String memberEmail = authentication.getName();
-        String memberEmail = "ssafy123@naver.com";
+    public ResponseEntity<?> checkMate(@RequestHeader("User-Info") String memberEmail, @RequestBody MateCheck mateCheck) {
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
@@ -93,10 +82,7 @@ public class MateController {
     }
     @Operation(summary = "친구목록조회", description = "친구목록조회")
     @GetMapping("")
-    public ResponseEntity<?> getMates(){
-        // memberEmail 추출
-//        String memberEmail = authentication.getName();
-        String memberEmail = "ssafy123@naver.com";
+    public ResponseEntity<?> getMates(@RequestHeader("User-Info") String memberEmail){
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
@@ -112,10 +98,7 @@ public class MateController {
 
     @Operation(summary = "친구삭제", description = "친구삭제")
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> deleteMate(@PathVariable(name = "id") Long friendId){
-        // memberEmail 추출
-//        String memberEmail = authentication.getName();
-        String memberEmail = "ssafy123@naver.com";
+    public ResponseEntity<?> deleteMate(@RequestHeader("User-Info") String memberEmail, @PathVariable(name = "id") Long friendId){
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
@@ -131,10 +114,7 @@ public class MateController {
 
     @Operation(summary = "친구검색", description = "친구 닉네임으로 검색")
     @GetMapping("/search")
-    public ResponseEntity<?> searchMember(@RequestParam String nickName){
-        // memberEmail 추출
-//        String memberEmail = authentication.getName();
-        String memberEmail = "ssafy123@naver.com";
+    public ResponseEntity<?> searchMember(@RequestHeader("User-Info") String memberEmail, @RequestParam String nickName){
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
