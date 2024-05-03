@@ -11,7 +11,7 @@ public interface MateService {
     void addMate(String memberEmail, Long mateId); // 친구신청
     List<ApplyMate> getSentMate(Long memberId, String type); // 친구신청 발신/수신 목록 조회
     void checkMate(MateCheck mateCheck); // 친구신청 수락/거부
-    List<Mates> getMates(Long memberId); // 친구목록 조회
+    List<ApplyMate> getMates(Long memberId); // 친구목록 조회
     void deleteMate(Long memberId, Long friendId); // 친구삭제
     List<SearchMates> getMembers(Long memId, String nickName); // 친구검색
 

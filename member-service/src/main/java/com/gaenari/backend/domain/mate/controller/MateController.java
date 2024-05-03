@@ -91,7 +91,7 @@ public class MateController {
         MemberDto mem = memberService.getMemberDetailsByEmail(memberEmail);
         Long memId = mem.getMemberId();
         // memId와 친구인 목록 조회
-        List<Mates> mates = mateService.getMates(memId);
+        List<ApplyMate> mates = mateService.getMates(memId);
 
         return response.success(ResponseCode.MATES_SUCCESS, mates);
     }

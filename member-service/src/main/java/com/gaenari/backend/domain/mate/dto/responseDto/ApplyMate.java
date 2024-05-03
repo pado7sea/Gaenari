@@ -11,9 +11,8 @@ import lombok.Getter;
 public class ApplyMate {
     private Long mateId;      // 친구목록 아이디
     private Long memberId;    // 친구 아이디
-    private String nickname;  // 친구 닉네임
-    private String email;     // 친구 이메일
-    private String petname;   // 친구 펫이름
-    private Long breed;        // 친구 펫 품종
-    private Tier tier;      // 친구 펫 티어
+    private String nickName;  // 친구 닉네임
+    private Long petId;        // 친구 펫 품종
+    private String petName;   // 친구 펫이름
+    private Tier petTier;      // 친구 펫 티어
 }
