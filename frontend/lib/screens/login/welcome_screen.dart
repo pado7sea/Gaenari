@@ -56,7 +56,7 @@ class LoginScreenState extends State<WelcomeScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SingupScreen()),
+                MaterialPageRoute(builder: (context) => SignupScreen()),
               );
             },
             child: Text(

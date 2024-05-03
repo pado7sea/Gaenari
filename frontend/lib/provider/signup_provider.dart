@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/signup_user.dart';
 
 class SignupProvider with ChangeNotifier {
-  SignupUser _user = SignupUser();
-  MyPet _pet = MyPet();
+  final SignupUser _user = SignupUser();
+  final MyPet _pet = MyPet();
 
   SignupUser get user => _user;
   MyPet get pet => _pet;
