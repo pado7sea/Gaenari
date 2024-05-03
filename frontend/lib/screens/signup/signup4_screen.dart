@@ -244,6 +244,7 @@ class _Signup4ScreenState extends State<Signup4Screen> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: myBlack))),
             controller: _petnamecontroller,
+            maxLength: 20,
           ),
         ],
       ),

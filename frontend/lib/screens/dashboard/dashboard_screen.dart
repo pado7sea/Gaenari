@@ -84,7 +84,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             child: Container(
               margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
               child: Text20(
-                text: ' ${Provider.of<TokenProvider>(context).token}',
+                // text: ' ${Provider.of<TokenProvider>(context).token}',
+                text: '반가워요! 운동시작해볼까요?',
                 bold: true,
               ),
             ),

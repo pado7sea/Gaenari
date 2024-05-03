@@ -99,6 +99,7 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   TextField(
                     controller: _passwordController,
+                    obscureText: true, // 비밀번호 입력을 숨깁니다.
                     decoration: InputDecoration(
                         hintText: '비밀번호를 입력해주세요.',
                         hintStyle: TextStyle(color: Colors.grey),
