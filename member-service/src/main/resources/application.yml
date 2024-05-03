@@ -12,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     generate-ddl: true
     properties:
@@ -20,9 +20,9 @@ spring:
         format_sql: true
     defer-datasource-initialization: true
 
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
 
 eureka:
   client:
