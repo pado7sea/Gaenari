@@ -5,23 +5,20 @@ import com.gaenari.backend.domain.member.service.MemberService;
 import com.gaenari.backend.global.format.code.ErrorCode;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
-import com.gaenari.backend.global.handler.LogoutHandler;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -36,7 +33,7 @@ public class WebSecurity {
     private final Environment env;
 
     @Bean
-    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         // AuthenticationManagerBuilder 가져오기
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
@@ -47,11 +44,12 @@ public class WebSecurity {
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         // csrf 비활성화
-        http.csrf( (csrf) -> csrf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
 
         // http 요청에 대한 권한 설정
         http.authorizeHttpRequests((authz) -> authz
                         // requestMatchers : 특정 요청 경로에 대한 접근 설정, access : 접근 권한 지정
+
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
@@ -65,7 +63,7 @@ public class WebSecurity {
         // addFilter : 사용자 정의 인증 필터 추가
         http.addFilter(getAuthenticationFilter(authenticationManager));
         // headers : 응답 헤더 설정 지정
-        http.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.sameOrigin()));
+//        http.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.sameOrigin()));
 
         // 로그아웃 설정
         http.logout(logout -> {
