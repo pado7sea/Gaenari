@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.gaenari.R
 import android.util.Log
-import com.example.gaenari.CountdownActivity
+import com.example.gaenari.activity.CountdownActivity
 
 class ProgramAdapter(private val programs: List<Program>) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
 
@@ -44,32 +44,25 @@ class ProgramAdapter(private val programs: List<Program>) : RecyclerView.Adapter
         // 아이콘 클릭 이벤트 추가
         holder.icon.setOnClickListener {
             val context = holder.itemView.context
-            val intent = when (program.type) {
-                "D" -> {
-                    Log.d("ProgramAdapter", "Navigating to DActivity")  // 디버깅 메시지
-                    Intent(context, CountdownActivity::class.java)
-                }
-                "T" -> {
-                    Log.d("ProgramAdapter", "Navigating to TActivity")
-                    Intent(context, CountdownActivity::class.java)
-                }
-                "I" -> {
-                    Log.d("ProgramAdapter", "Navigating to IActivity")
-                    Intent(context, CountdownActivity::class.java)
-                }
-                else -> null
-            }
+            val intent = Intent(context, CountdownActivity::class.java).apply {
 
-            if (intent != null) {
-                Log.d("ProgramAdapter", "Sending program: $program")  // 전달되는 프로그램 정보
-                intent.putExtra("programId", program.programId)
-                intent.putExtra("programTitle", program.programTitle)
-                intent.putExtra("programType", program.type)
-                intent.putExtra("programTarget", program.program.intervalInfo.targetValue)
+
+                    putExtra("programId", program.programId)
+                    putExtra("programTitle", program.programTitle)
+                    putExtra("programType", program.type)
+                    putExtra("programTarget", program.program.intervalInfo.targetValue)
+                // `I` 타입의 프로그램에 대해서만 전체 객체를 넘김
+                if (program.type == "I") {
+                    putExtra("programData", program)
+                }
+
+                Log.d("ProgramAdapter", "Sending program: $program")
                 Log.d("ProgramAdapter", "Sending program12: ${program.programTitle}")
                 Log.d("ProgramAdapter", "Sending program23: ${program.type}")
                 Log.d("ProgramAdapter", "Sending program34: ${program.program.intervalInfo.targetValue}")
+            }
 
+            if (intent.resolveActivity(context.packageManager) != null) {
                 context.startActivity(intent)
             }
         }

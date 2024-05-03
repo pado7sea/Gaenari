@@ -17,16 +17,17 @@ class DActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dactivity)
-
+//        startDRunningService()
         programId = intent.getLongExtra("programId",0)
         programTitle = intent.getStringExtra("programTitle") ?: "기본값"
         programType = intent.getStringExtra("programType") ?: "기본값"
         programTarget = intent.getIntExtra("programTarget", 0) // Intent에서 programTarget 가져오기
         setupViewPager()
         Log.d("jinzza", "onCreate: 서비스시작은됨?")
-        startRunningService()
+
     }
     override fun onDestroy() {
+        Log.d("jinzza", "onDestroy: 파괴됨??")
         stopRunningService() // 액티비티가 파괴될 때 서비스 종료
         super.onDestroy()
     }
@@ -47,12 +48,11 @@ class DActivity : AppCompatActivity() {
 
     private fun handlePageChange(position: Int) {
         when (position) {
-            1 -> viewPager.setCurrentItem(3, false)
-            4 -> viewPager.setCurrentItem(2, false)
+            0 -> viewPager.setCurrentItem(2, false)
         }
     }
 
-    private fun startRunningService() {
+    private fun startDRunningService() {
         val serviceIntent = Intent(this, DRunningService::class.java)
         startForegroundService(serviceIntent)
     }

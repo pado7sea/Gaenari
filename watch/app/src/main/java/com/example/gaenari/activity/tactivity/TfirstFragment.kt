@@ -5,7 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +17,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.gaenari.R
-import com.example.gaenari.activity.dactivity.DCircleProgress
-import com.example.gaenari.activity.dactivity.DFirstFragment
-import com.example.gaenari.activity.dactivity.DRunningService
 import com.example.gaenari.activity.result.ResultActivity
 
 class TFirstFragment : Fragment() {
@@ -81,13 +81,17 @@ class TFirstFragment : Fragment() {
                     //ㄴㄴ이미 나는 총 뛴거리를 보내주고있어
                     totalDistance = distance
                     totalHeartRate += heartRate
+                    //심장박동수가 너무작을때는 잘못된거여서 이렇게 처리함 나중에 평균낼때를위해
                     if (heartRate > 40) {
                         heartRateCount++
                     }
-                    totalTime = time
-
-                    //여기서는 남은시간이야
-                    val remainingTime =(programTarget*3600000/60 ) - time
+                    totalTime = time-6000
+//
+//
+                    //여기서는 남은시간이야 지금은 분단위야 나중에 60빼~
+//
+//
+                    val remainingTime =(programTarget*3600000/60 ) - totalTime
 
                     if (remainingTime <= 0) {
                         sendResultsAndFinish(context)
@@ -100,6 +104,10 @@ class TFirstFragment : Fragment() {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, IntentFilter("com.example.sibal.UPDATE_INFO"))
     }
     private fun updateUI(distance: Double, programTarget: Int, remainingTime: Long, heartRate: Float, speed: Float) {
+//
+//
+        //지금분단위니깐 나중에 60빼~~~~
+//
         val totalMillis = programTarget * 3600000/60  // programTarget을 밀리초로 변환
         val progress = 100 * (1 - (remainingTime.toFloat() / totalMillis))
         circleProgress.setProgress(progress)
@@ -117,6 +125,22 @@ class TFirstFragment : Fragment() {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
     private fun sendResultsAndFinish(context: Context) {
+
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+        // SDK 버전에 따른 조건 처리
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Android O 이상에서는 VibrationEffect를 사용
+            val vibrationEffect = VibrationEffect.createOneShot(
+                500, // 500 밀리초 동안 진동
+                VibrationEffect.DEFAULT_AMPLITUDE // 진동 강도
+            )
+            vibrator.vibrate(vibrationEffect)
+        } else {
+            // Android O 미만은 기본 진동 함수 사용
+            vibrator.vibrate(500) // 500 밀리초 동안 진동
+        }
+
         val programTarget = arguments?.getInt("programTarget") ?: 0
         val programType = arguments?.getString("programType") ?: ""
         val programTitle = arguments?.getString("programTitle") ?: ""

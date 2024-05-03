@@ -1,5 +1,9 @@
 package com.example.gaenari.activity.main
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Program(
     val programId: Long,
     val programTitle: String,
@@ -7,25 +11,28 @@ data class Program(
     val usageCount: Int,
     val finishedCount: Int,
     val program: ProgramDetail
-)
+) : Parcelable
 
+@Parcelize
 data class ProgramDetail(
     val intervalInfo: IntervalInfo
-)
+) : Parcelable
 
+@Parcelize
 data class IntervalInfo(
     val targetValue: Int? = null,
     val duration: Int? = null,
     val setCount: Int? = null,
     val rangeCount: Int? = null,
     val ranges: List<Range>? = null
-)
+) : Parcelable
 
+@Parcelize
 data class Range(
     val isRunning: Boolean,
     val time: Int,
     val speed: Int = -1
-)
+) : Parcelable
 
 fun createMockData(): List<Program> {
     return listOf(
@@ -57,12 +64,17 @@ fun createMockData(): List<Program> {
             finishedCount = 9,
             program = ProgramDetail(
                 intervalInfo = IntervalInfo(
-                    duration = 120,
+                    duration = 420,
                     setCount = 3,
-                    rangeCount = 2,
+                    rangeCount = 7,
                     ranges = listOf(
-                        Range(isRunning = true, time = 60, speed = 10),
-                        Range(isRunning = false, time = 60, speed = 5)
+                        Range(isRunning = true, time = 10, speed = 10),
+                        Range(isRunning = false, time = 20, speed = 5),
+                        Range(isRunning = true, time = 10, speed = 5),
+                        Range(isRunning = false, time = 15, speed = 5),
+                        Range(isRunning = false, time = 7, speed = 5),
+                        Range(isRunning = true, time = 12, speed = 5),
+                        Range(isRunning = false, time = 7, speed = 5),
                     )
                 )
             )
@@ -81,6 +93,7 @@ fun createMockData(): List<Program> {
                     ranges = listOf(
                         Range(isRunning = true, time = 50, speed = 8),
                         Range(isRunning = false, time = 50, speed = 6)
+                        //이거 time 초단위임
                     )
                 )
             )

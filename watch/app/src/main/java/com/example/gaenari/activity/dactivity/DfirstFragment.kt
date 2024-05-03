@@ -5,7 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -78,7 +81,7 @@ class DFirstFragment : Fragment() {
                     if (heartRate > 40) {
                         heartRateCount++
                     }
-                    totalTime = time
+                    totalTime = time-5000
 
                     val remainingDistance =(programTarget * 10).toDouble() - distance
 //                   이거로바꿔야한다!!!!!! val remainingDistance =(programTarget * 1000).toDouble() - distance
@@ -86,7 +89,7 @@ class DFirstFragment : Fragment() {
                     if (remainingDistance <= 0) {
                         sendResultsAndFinish(context)
                     } else {
-                        updateUI(remainingDistance, programTarget,time, heartRate, speed)
+                        updateUI(remainingDistance, programTarget,totalTime, heartRate, speed)
                     }
                 }
             }
@@ -94,13 +97,13 @@ class DFirstFragment : Fragment() {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, IntentFilter("com.example.sibal.UPDATE_INFO"))
     }
 
-    private fun updateUI(remainingDistance: Double, programTarget: Int, time: Long, heartRate: Float, speed: Float) {
+    private fun updateUI(remainingDistance: Double, programTarget: Int, totalTime: Long, heartRate: Float, speed: Float) {
 //       이거로바꿔야힌디!!! val progress = (100 - (remainingDistance / (programTarget * 1000) * 100)).toFloat()
         val progress = (100 - (remainingDistance / (programTarget * 10) * 100)).toFloat()
         circleProgress.setProgress(progress) // 원형 프로그레스 업데이트
 
         distanceView.text = String.format("%.2f", remainingDistance/1000)
-        timeView.text = formatTime(time)
+        timeView.text = formatTime(totalTime)
         heartRateView.text = String.format("%d", heartRate.toInt())
         speedView.text = String.format("%.2f km/h", speed * 3.6)
     }
@@ -112,6 +115,22 @@ class DFirstFragment : Fragment() {
     }
 
     private fun sendResultsAndFinish(context: Context) {
+
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+        // SDK 버전에 따른 조건 처리
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Android O 이상에서는 VibrationEffect를 사용
+            val vibrationEffect = VibrationEffect.createOneShot(
+                500, // 500 밀리초 동안 진동
+                VibrationEffect.DEFAULT_AMPLITUDE // 진동 강도
+            )
+            vibrator.vibrate(vibrationEffect)
+        } else {
+            // Android O 미만은 기본 진동 함수 사용
+            vibrator.vibrate(500) // 500 밀리초 동안 진동
+        }
+
         val programTarget = arguments?.getInt("programTarget") ?: 0
         val programType = arguments?.getString("programType") ?: ""
         val programTitle = arguments?.getString("programTitle") ?: ""
