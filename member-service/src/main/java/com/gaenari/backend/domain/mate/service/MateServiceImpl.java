@@ -4,6 +4,7 @@ import com.gaenari.backend.domain.mate.dto.requestDto.MateCheck;
 import com.gaenari.backend.domain.mate.dto.responseDto.ApplyMate;
 import com.gaenari.backend.domain.mate.dto.responseDto.Mates;
 import com.gaenari.backend.domain.mate.dto.responseDto.SearchMates;
+import com.gaenari.backend.domain.mate.entity.Call;
 import com.gaenari.backend.domain.mate.entity.Mate;
 import com.gaenari.backend.domain.mate.entity.State;
 import com.gaenari.backend.domain.mate.repository.MateRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.gaenari.backend.domain.mate.entity.State.*;
@@ -40,45 +42,31 @@ public class MateServiceImpl implements MateService{
         if(existMember.getId().equals(mateId)) {
             throw new TomeMateException();
         }
-        Mate sentMate = mateRepository.findByFriend1AndFriend2(existMember, receiveMember);
-        Mate receivedMate = mateRepository.findByFriend2AndFriend1(existMember, receiveMember);
-        // 친구신청을 한 상태 확인
-        if(sentMate != null && sentMate.getState() == WAITTING){
-            throw new WaittingMateException();
-        }
-        // 친구신청을 받은 상태 확인
-        if(receivedMate != null && receivedMate.getState() == WAITTING){
-            throw new WaittingMateException();
-        }
-        // 친구 상태 확인
-        if((sentMate != null && sentMate.getState() == FRIEND) || (receivedMate != null && receivedMate.getState() == FRIEND)){
-            throw new AlreadyMateException();
+
+        // 친구였던적이 있는지 조회하기
+        Mate mate = null;
+        mate = mateRepository.findByFriend1AndFriend2(existMember, receiveMember);
+        if(mate == null){
+            mate = mateRepository.findByFriend2AndFriend1(existMember, receiveMember);
         }
 
-        // 친구 거절 당했었으면 이미 mateId가 있음
-        if(sentMate != null && sentMate.getState() == NOTFRIEND){
-            Mate mate = Mate.builder()
-                    .Id(sentMate.getId())
-                    .friend1(sentMate.getFriend1())
-                    .friend2(sentMate.getFriend2())
+        Mate saveMate = null;
+        // 친구였던적이 없으면
+        if(mate == null){
+            saveMate = Mate.builder()
+                    .friend1(existMember)
+                    .friend2(receiveMember)
                     .state(WAITTING)
                     .build();
-            mateRepository.save(mate);
-        } else if (sentMate != null && receivedMate.getState() == NOTFRIEND){
-            Mate mate = Mate.builder()
-                    .Id(receivedMate.getId())
-                    .friend1(receivedMate.getFriend1())
-                    .friend2(receivedMate.getFriend2())
+            mateRepository.save(saveMate);
+        }else{
+            saveMate = Mate.builder()
+                    .Id(mate.getId())
+                    .friend1(existMember)
+                    .friend2(receiveMember)
                     .state(WAITTING)
                     .build();
-            mateRepository.save(mate);
-        } else {
-            Mate mate = Mate.builder()
-                 .friend1(existMember)
-                 .friend2(receiveMember)
-                 .state(WAITTING)
-                 .build();
-            mateRepository.save(mate);
+            mateRepository.save(saveMate);
         }
 
     }
@@ -128,11 +116,10 @@ public class MateServiceImpl implements MateService{
             ApplyMate applyMate = ApplyMate.builder()
                     .mateId(mate.getId())
                     .memberId(friend.getId())
-                    .nickname(friend.getNickname())
-                    .email(friend.getEmail())
-                    .petname(partnerPet.getName())
-                    .breed(partnerPet.getDog().getId())
-                    .tier(partnerPet.getTier())
+                    .nickName(friend.getNickname())
+                    .petId(partnerPet.getDog().getId())
+                    .petName(partnerPet.getName())
+                    .petTier(partnerPet.getTier())
                     .build();
 
             applyMateList.add(applyMate);
@@ -152,7 +139,7 @@ public class MateServiceImpl implements MateService{
             // true(친구 수락)
             updateState = FRIEND;
         }else {
-            // 이미 친구가 아니라면 예외처리
+            // 친구신청을 한 상태가 아니라면 예외처리
             if(getMate.getState() == NOTFRIEND){
                 throw new AlreadyUnMateException();
             }
@@ -169,16 +156,15 @@ public class MateServiceImpl implements MateService{
     }
 
     @Override // 친구목록 조회
-    public List<Mates> getMates(Long memberId) {
+    public List<ApplyMate> getMates(Long memberId) {
         // 멤버 엔티티 조회
         Member me = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
-        List<Mates> matesList = new ArrayList<>();
+        List<ApplyMate> matesList = new ArrayList<>();
         // memberId가 friend1인 경우
         for(int i=1; i<=2; i++) {
             List<Mate> mates = new ArrayList<>();
             if(i==1){
-//                List<Mate> myMateList = mateRepository.findByFriend1(me);
                 List<Mate> myMateList = mateRepository.findByFriend1(me.getId());
                 for(Mate myMate : myMateList){
                     // 친구인 사람들만 담기
@@ -212,20 +198,16 @@ public class MateServiceImpl implements MateService{
                 // 친구의 대표 반려견 조회
                 MyPet friendPartnerPet = myPetRepository.findByMemberIdAndIsPartner(friend.getId(), true)
                         .orElseThrow(PartnerPetNotFoundException::new);
-                // FriendPet response 형태로 변환
-                FriendPet friendPet = FriendPet.builder()
-                        .id(friendPartnerPet.getDog().getId())
-                        .name(friendPartnerPet.getName())
-                        .tier(friendPartnerPet.getTier())
-                        .build();
-                // Mates response 형태로 변환
-                Mates resMates = Mates.builder()
+                // ApplyMate response 형태로 변환
+                ApplyMate resMate = ApplyMate.builder()
                         .mateId(mate.getId())
                         .memberId(friend.getId())
                         .nickName(friend.getNickname())
-                        .mypet(friendPet)
+                        .petId(friendPartnerPet.getDog().getId())
+                        .petName(friendPartnerPet.getName())
+                        .petTier(friendPartnerPet.getTier())
                         .build();
-                matesList.add(resMates);
+                matesList.add(resMate);
             }
 
         }
@@ -279,36 +261,73 @@ public class MateServiceImpl implements MateService{
             return Collections.emptyList();
         }
 
+        Iterator<Member> iterator = searchMembers.iterator();
+
         List<SearchMates> members = new ArrayList<>();
-        for(Member member : searchMembers){
+        while (iterator.hasNext()) {
+            Member member = iterator.next();
+
+            // 나는 제외
+            if (member.getId().equals(memId)) {
+                iterator.remove();
+                continue;
+            }
+
             // 친구관계인지 확인
+            Long mateId = null;
             State isFriend = null;
+            Call call = null;
             Mate mate = null;
             mate = mateRepository.findByFriend1AndFriend2(me, member);
             if(mate == null){
                 mate = mateRepository.findByFriend2AndFriend1(me, member);
             }
-            if(mate == null){
-                isFriend = NOTFRIEND;
-            }else {
-                isFriend = mate.getState();
-            }
 
-            // 친구의 대표 반려견 조회
+            // 검색 회원의 대표 반려견 조회
             MyPet friendPartnerPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
                     .orElseThrow(PartnerPetNotFoundException::new);
-            // FriendPet response 형태로 변환
-            FriendPet friendPet = FriendPet.builder()
-                    .id(friendPartnerPet.getDog().getId())
-                    .name(friendPartnerPet.getName())
-                    .tier(friendPartnerPet.getTier())
-                    .build();
+
+            // 1. 친구테이블에 정보가 없을 때
+            if(mate == null){
+                mateId = (long) -1;
+                isFriend = NOTFRIEND;
+                call = Call.NO;
+            }
+            // 2. 친구테이블에 정보는 있지만 친구가 아닐 때
+            else if(mate.getState() == NOTFRIEND){
+                mateId = mate.getId();
+                isFriend = NOTFRIEND;
+                call = Call.NO;
+            }
+            // 3. 친구 요청중일 때
+            else if(mate.getState() == WAITTING){ // 2. 친구요청중
+                mateId = mate.getId();
+                isFriend = WAITTING;
+
+                // 친구신청을 받았는지 했는지 조회
+                // 친구 테이블에서 조회한 객체의 friend1과 내 Id와 같으면 내가 발신자임
+                if(mate.getFriend1().getId().equals(me.getId())){
+                    call = Call.SENT;
+                }else{
+                    call = Call.RECEIVED;
+                }
+            }
+            // 4. 친구일 때
+            else{
+                mateId = mate.getId();
+                isFriend = FRIEND;
+                call = Call.NO;
+            }
 
             SearchMates searchMate = SearchMates.builder()
+                    .mateId(mateId)
                     .memberId(member.getId())
                     .nickName(member.getNickname())
                     .state(isFriend)
-                    .mypet(friendPet)
+                    .call(call)
+                    .petId(friendPartnerPet.getDog().getId())
+                    .petName(friendPartnerPet.getName())
+                    .petTier(friendPartnerPet.getTier())
                     .build();
 
             members.add(searchMate);

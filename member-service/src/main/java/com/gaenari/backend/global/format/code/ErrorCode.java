@@ -52,6 +52,7 @@ public enum ErrorCode {
     ALREADY_MATE(HttpStatus.CONFLICT, "현재 친구 상태입니다."),
     ALREADY_UNMATE(HttpStatus.CONFLICT, "현재 친구 상태가 아닙니다."),
     TOME_MATE(HttpStatus.CONFLICT, "본인에게 친구 요청할 수 없습니다."),
+    ALREADY_RECEIVED_CALL(HttpStatus.CONFLICT, "상대방이 이미 친구 요청을 보낸 상태이기에, 자동으로 친구 요청을 수락함으로써 친구 관계가 맺어졌습니다."),
     NOT_FOUND_MATE(HttpStatus.NOT_FOUND, "해당하는 메이트 내역이 존재하지 않습니다."),
 
     // 반려견 관련 예외 처리
