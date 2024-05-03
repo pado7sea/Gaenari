@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/provider/token_provider.dart';
-import 'package:forsythia/screens/challenge/challenge.dart';
+import 'package:forsythia/screens/challenge/challenge_screen.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';

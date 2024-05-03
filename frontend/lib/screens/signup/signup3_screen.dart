@@ -16,8 +16,8 @@ class Signup3Screen extends StatefulWidget {
 }
 
 class _Signup3ScreenState extends State<Signup3Screen> {
-  TextEditingController _heightcontroller = TextEditingController();
-  TextEditingController _weightcontroller = TextEditingController();
+  final TextEditingController _heightcontroller = TextEditingController();
+  final TextEditingController _weightcontroller = TextEditingController();
 
   bool _showErrorMessage = false;
 

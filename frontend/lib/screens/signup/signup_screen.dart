@@ -8,19 +8,23 @@ import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/provider/signup_provider.dart';
 import 'package:provider/provider.dart';
 
-class SingupScreen extends StatefulWidget {
-  const SingupScreen({Key? key}) : super(key: key);
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  _SingupScreenState createState() => _SingupScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SingupScreenState extends State<SingupScreen> {
-  TextEditingController _idcontroller = TextEditingController();
-  TextEditingController _passwordcontroller = TextEditingController();
-  TextEditingController _confirmPasswordcontroller =
+class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController _idcontroller = TextEditingController();
+  final TextEditingController _passwordcontroller = TextEditingController();
+  final TextEditingController _confirmPasswordcontroller =
       TextEditingController(); // 비밀번호 확인용
-  List<String> _domains = ['naver.com', 'gmail.com', 'hotmail.com']; // 도메인 리스트
+  final List<String> _domains = [
+    'naver.com',
+    'gmail.com',
+    'hotmail.com'
+  ]; // 도메인 리스트
   String _selectedDomain = ''; // 선택된 도메인
   bool _showErrorMessage = false;
   String _errorText = '';

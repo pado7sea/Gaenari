@@ -20,8 +20,8 @@ List<bool> isSelected = [false, false, false];
 class _Signup2ScreenState extends State<Signup2Screen> {
   String _gender = "OTHER";
 
-  TextEditingController _nicknamecontroller = TextEditingController();
-  TextEditingController _birthcontroller = TextEditingController();
+  final TextEditingController _nicknamecontroller = TextEditingController();
+  final TextEditingController _birthcontroller = TextEditingController();
   final List<String> _genders = ['MALE', 'FEMALE', 'OTHER']; // 도메인 리스트
 
   bool _showErrorMessage = false;
@@ -102,7 +102,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                   controller: _nicknamecontroller,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 5),
-                    hintText: '대소문자, 숫자, 언더바 포함 3자에서 10자까지 가능.',
+                    hintText: '한/영문자, 숫자, 언더바 포함 3-10자까지 가능.',
                     hintStyle: TextStyle(color: Colors.grey),
                     // tap 시 borderline 색상 지정
                     focusedBorder: UnderlineInputBorder(
@@ -110,7 +110,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(
-                        r'[a-zA-Z0-9_]')), // 영어 대소문자, 숫자, 언더바만 허용 // 최대 10자까지 입력 허용
+                        r'[a-zA-Z0-9_ㄱ-힣]')), // 영어 대소문자, 숫자, 언더바, 한글 허용 // 최대 10자까지 입력 허용
                   ],
                   maxLength: 10,
                 ),
