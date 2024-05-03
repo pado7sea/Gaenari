@@ -15,6 +15,7 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.os.Binder
 import android.os.IBinder
+import android.os.PowerManager
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -36,9 +37,45 @@ class TRunningService : Service(), SensorEventListener {
     private var lastLocation: Location? = null
     private var startTime: Long = 0
     private var heartRate = 0f // Current heart rate
+
+    // 일시정지에 대한 처리를 해주기위함
+    private var totalPausedTime: Long = 0
+    private var lastPauseTime: Long = 0
+
+    private var wakeLock: PowerManager.WakeLock? = null
+    //일시정지일때 데이터를 안보내는 방식을 택함
+    private var isPaused = false
+
+    @SuppressLint("ForegroundServiceType")
+    override fun onCreate() {
+        super.onCreate()
+        if (!isServiceRunning) {
+            isServiceRunning = true
+            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
+            wakeLock?.acquire() // WakeLock 활성화
+            try {
+                Log.d("TRunningService", "Service started")
+                startTime = SystemClock.elapsedRealtime()
+                createNotificationChannel()
+                startForeground(1, notification)
+                setupLocationTracking()
+                setupHeartRateSensor()
+            } catch (e: Exception) {
+                Log.e("TRunningService", "Error in onCreate: ${e.message}")
+            }
+        }
+    }
+
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            locationResult ?: return
+            if (isPaused) return
+            val currentTime = SystemClock.elapsedRealtime()
+            val activeTime = currentTime - startTime - totalPausedTime  // 실제 활동 시간 계산
+
+            if (activeTime < 4555) {  // 첫 5초 동안의 위치 업데이트는 무시
+                return
+            }
             try {
                 locationResult.locations.forEach { location ->
                     lastLocation?.let {
@@ -46,7 +83,7 @@ class TRunningService : Service(), SensorEventListener {
 //                        val speed = it.distanceTo(location) * 1000 / (location.time - it.time)
                         val intent = Intent("com.example.sibal.UPDATE_INFO").apply {
                             putExtra("distance", totalDistance)
-                            putExtra("time", SystemClock.elapsedRealtime() - startTime)
+                            putExtra("time", activeTime)
                             putExtra("heartRate", heartRate)
                             putExtra("speed", location.speed)
                         }
@@ -63,23 +100,7 @@ class TRunningService : Service(), SensorEventListener {
     inner class LocalBinder : Binder() {
         fun getService(): TRunningService = this@TRunningService
     }
-    @SuppressLint("ForegroundServiceType")
-    override fun onCreate() {
-        super.onCreate()
-        if (!isServiceRunning) {
-            isServiceRunning = true
-            try {
-                Log.d("TRunningService", "Service started")
-                startTime = SystemClock.elapsedRealtime()
-                createNotificationChannel()
-                startForeground(1, notification)
-                setupLocationTracking()
-                setupHeartRateSensor()
-            } catch (e: Exception) {
-                Log.e("TRunningService", "Error in onCreate: ${e.message}")
-            }
-        }
-    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent == null) {
             Log.d("TRunningService", "Restarted by the system.")
@@ -96,6 +117,7 @@ class TRunningService : Service(), SensorEventListener {
     }
     override fun onDestroy() {
         super.onDestroy()
+        wakeLock?.release()
         isServiceRunning = false
         sensorManager?.unregisterListener(this)
         fusedLocationClient?.removeLocationUpdates(locationCallback)
@@ -144,7 +166,7 @@ class TRunningService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
+        if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
             heartRate = event.values[0]
         }
     }
@@ -158,17 +180,18 @@ class TRunningService : Service(), SensorEventListener {
     }
 
     fun pauseService() {
-        // 위치 및 센서 업데이트 일시정지
-        fusedLocationClient?.removeLocationUpdates(locationCallback)
-        sensorManager?.unregisterListener(this)
-        stopForeground(true) // 포그라운드 서비스 중지
-        isServiceRunning = false // 서비스 실행 중지
+        lastPauseTime = SystemClock.elapsedRealtime()  // 일시 정지 시작 시간 기록
+        isPaused = true
+        stopForeground(true)
     }
 
+    @SuppressLint("ForegroundServiceType")
     fun resumeService() {
-        // 위치 및 센서 업데이트 재개
-        setupLocationTracking()
-        setupHeartRateSensor()
+        val currentResumeTime = SystemClock.elapsedRealtime()
+        totalPausedTime += currentResumeTime - lastPauseTime  // 누적 일시 정지 시간 갱신
+        isPaused = false
+        isServiceRunning = true
+        startForeground(1, notification)
     }
 
     private fun createNotificationChannel() {

@@ -36,7 +36,7 @@ class ResultActivity : AppCompatActivity() {
         // TextViews에 값 설정
         titleTextView.text = programTitle
         timeTextView.text = formattedTime
-        distanceTextView.text = String.format("%.2f km", totalDistance)
+        distanceTextView.text = String.format("%.2f km", totalDistance/1000)
         heartRateTextView.text = String.format("%.0f bpm", averageHeartRate)
         speedTextView.text = String.format("%.2f km/h", averageSpeed)
     }

@@ -1,4 +1,4 @@
-package com.example.gaenari
+package com.example.gaenari.activity
 
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -14,6 +14,10 @@ import com.example.gaenari.activity.dactivity.DActivity
 import com.example.gaenari.activity.iactivity.IActivity
 import com.example.gaenari.activity.tactivity.TActivity
 import android.util.Log
+import com.example.gaenari.R
+import com.example.gaenari.activity.dactivity.DRunningService
+import com.example.gaenari.activity.iactivity.IRunningService
+import com.example.gaenari.activity.tactivity.TRunningService
 
 class CountdownActivity : AppCompatActivity() {
     override fun onCreate(savedCreateState: Bundle?) {
@@ -37,7 +41,18 @@ class CountdownActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = (millisUntilFinished / 1000).toInt()
                 countdownTextView.text = secondsRemaining.toString()
-
+                if(secondsRemaining==5 && programType=="D") {
+                    Log.d("countdown", "onTick: DDDDDㅎㅇㅎㅇ")
+                    startDRunningService()
+                }
+                if(secondsRemaining==5 && programType=="T") {
+                    Log.d("countdown", "onTick: TTTTㅎㅇㅎㅇ")
+                    startTRunningService()
+                }
+                if(secondsRemaining==5 && programType=="I") {
+                    Log.d("countdown", "onTick: IIIIㅎㅇㅎㅇ")
+                    startIRunningService()
+                }
                 // 텍스트 크기 애니메이션
                 val textSizeAnimator = ObjectAnimator.ofFloat(
                     countdownTextView, "textSize", textSizeStart, textSizeEnd
@@ -86,5 +101,21 @@ class CountdownActivity : AppCompatActivity() {
                 finish()
             }
         }.start()
+    }
+
+    private fun startDRunningService() {
+        val serviceIntent = Intent(this, DRunningService::class.java)
+        Log.d("countdown", "startDRunningService: DDDD시작?")
+        startForegroundService(serviceIntent)
+    }
+    private fun startTRunningService() {
+        val serviceIntent = Intent(this, TRunningService::class.java)
+        Log.d("countdown", "startTRunningService: TTT시작?")
+        startForegroundService(serviceIntent)
+    }
+    private fun startIRunningService() {
+        val serviceIntent = Intent(this, IRunningService::class.java)
+
+        startForegroundService(serviceIntent)
     }
 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-kapt") // Kotlin Annotation Processing Tool 플러그인
+    id("kotlin-parcelize") // 데이터
 }
 
 android {
@@ -79,6 +80,10 @@ dependencies {
 
     //위치정보
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+
+    //room데이터베이스
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
 
 
     implementation(libs.androidx.core.ktx)

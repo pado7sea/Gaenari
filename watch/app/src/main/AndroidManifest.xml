@@ -9,7 +9,10 @@
     <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- 바디센서 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 위치정보 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 위치정보 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!--항상허용-->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" /><!--화면을 항상 보이게 설정-->
+
 
     <application
         android:allowBackup="true"
@@ -17,7 +20,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/icon_gnr"
         android:label="gaenari"
-        android:roundIcon="@mipmap/icon_gnr_round"
+        android:roundIcon="@mipmap/icon_gnr"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sibal"
         tools:targetApi="31">
@@ -30,8 +33,17 @@
             android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
         </service>
 
+        <service
+            android:name=".activity.tactivity.TRunningService"
+            android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
+        </service>
+        <service
+            android:name=".activity.iactivity.IRunningService"
+            android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
+        </service>
+
         <activity
-            android:name=".CountdownActivity"
+            android:name=".activity.CountdownActivity"
             android:exported="false" />
         <activity
             android:name=".activity.iactivity.IActivity"
@@ -56,11 +68,10 @@
             android:exported="true" />
 
         <service android:name=".service.TimerService" />
-        <!--
-액티비티이름
-바깥에서 부를수있다 외부 애플에서 부를수 있음 true면
-인텐트필터는 런처에서 클릭하면 여기로옴
-        -->
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="true" />
+
         <activity
             android:name=".AddTodoActivity"
             android:exported="true" />

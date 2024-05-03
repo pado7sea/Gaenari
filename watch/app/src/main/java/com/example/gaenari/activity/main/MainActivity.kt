@@ -12,6 +12,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.Manifest
+import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
 import android.widget.Toast
@@ -90,6 +91,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         if (ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        //백그라운드에서 동작할수있게 권환 확인
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         }
 
         if (permissionsToRequest.isNotEmpty()) {
