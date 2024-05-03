@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:forsythia/models/users/signup_user.dart';
 import 'package:forsythia/screens/signup/signupend_screen.dart';
 import 'package:forsythia/service/member_service.dart';
@@ -21,6 +22,16 @@ class Signup4Screen extends StatefulWidget {
 class _Signup4ScreenState extends State<Signup4Screen> {
   final TextEditingController _petnamecontroller = TextEditingController();
   int activeIndex = 0;
+
+  bool _showErrorMessage = false;
+
+  String _errorText = '';
+  @override
+  void initState() {
+    super.initState();
+    _errorText = '';
+    _showErrorMessage = false;
+  }
 
   List<String> images = [
     'assets/gif/shepherd_standandlook.gif',
@@ -53,7 +64,7 @@ class _Signup4ScreenState extends State<Signup4Screen> {
     var nickName = Provider.of<SignupProvider>(context).user.nickName;
 
     var maintext = Padding(
-      padding: const EdgeInsets.fromLTRB(20, 50, 0, 1),
+      padding: const EdgeInsets.fromLTRB(20, 30, 0, 1),
       child: RichText(
         // textAlign: TextAlign.center,
         text: TextSpan(
@@ -244,6 +255,10 @@ class _Signup4ScreenState extends State<Signup4Screen> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: myBlack))),
             controller: _petnamecontroller,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(
+                  "[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣!@#<>?\":_`~;[\\]\\|=+)(*&^%£€.{}'`-s/]")),
+            ],
             maxLength: 20,
           ),
         ],
@@ -258,10 +273,36 @@ class _Signup4ScreenState extends State<Signup4Screen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (_showErrorMessage) // 상태에 따라 텍스트를 표시하거나 숨김
+            Text(
+              '강아지 이름을 두글자 이상 입력해주세요.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'TheJamsil',
+                color: myRed,
+                fontSize: 16,
+              ),
+            ),
+          SizedBox(
+            height: 10,
+          ),
           ElevatedButton(
             onPressed: () {
-              _fetchsignup();
+              if (_petnamecontroller.text.length >= 2) {
+                _fetchsignup();
+                setState(() {
+                  _showErrorMessage = false; // 에러 메시지 표시
+                });
+              } else {
+                print('정보를 모두 입력해주세요!');
+                setState(() {
+                  _showErrorMessage = true; // 에러 메시지 표시
+                });
+              }
             },
+            // onPressed: () {
+            //   _fetchsignup();
+            // },
             style: ElevatedButton.styleFrom(
               backgroundColor: myLightGreen,
               elevation: 0,

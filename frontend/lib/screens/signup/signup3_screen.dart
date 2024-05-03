@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/signup/signup4_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -19,6 +21,27 @@ class _Signup3ScreenState extends State<Signup3Screen> {
   final TextEditingController _heightcontroller = TextEditingController();
   final TextEditingController _weightcontroller = TextEditingController();
 
+  List<String> heightlist = [];
+  List<String> weightlist = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initializeLists();
+  }
+
+  void initializeLists() {
+    // Adding "선택 안함" at the 0th position
+    heightlist = ["선택 안함"];
+    weightlist = ["선택 안함"];
+
+    heightlist.addAll([for (int i = 120; i <= 230; i++) i.toString()]);
+    weightlist.addAll([for (int i = 30; i <= 180; i++) i.toString()]);
+  }
+
+  int heightIndex = 0;
+  int weightIndex = 0;
+
   bool _showErrorMessage = false;
 
   @override
@@ -31,7 +54,9 @@ class _Signup3ScreenState extends State<Signup3Screen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 30),
             maintext,
+            SizedBox(height: 30),
             _height(),
             _weight(),
           ],
@@ -42,47 +67,44 @@ class _Signup3ScreenState extends State<Signup3Screen> {
   }
 
   var maintext = Center(
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(100, 50, 100, 50),
-      child: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          children: const [
-            TextSpan(
-              text: '키',
-              style: TextStyle(
-                  color: myMainGreen,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'TheJamsil'),
-            ),
-            TextSpan(
-              text: '와 ',
-              style: TextStyle(
-                  color: myBlack,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'TheJamsil'),
-            ),
-            TextSpan(
-              text: '몸무게',
-              style: TextStyle(
-                  color: myMainGreen,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'TheJamsil'),
-            ),
-            TextSpan(
-              text: '를 \n입력해주세요.',
-              style: TextStyle(
-                  color: myBlack,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  height: 1.5,
-                  fontFamily: 'TheJamsil'),
-            ),
-          ],
-        ),
+    child: RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        children: const [
+          TextSpan(
+            text: '키',
+            style: TextStyle(
+                color: myMainGreen,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'TheJamsil'),
+          ),
+          TextSpan(
+            text: '와 ',
+            style: TextStyle(
+                color: myBlack,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'TheJamsil'),
+          ),
+          TextSpan(
+            text: '몸무게',
+            style: TextStyle(
+                color: myMainGreen,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'TheJamsil'),
+          ),
+          TextSpan(
+            text: '를 \n입력해주세요.',
+            style: TextStyle(
+                color: myBlack,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+                fontFamily: 'TheJamsil'),
+          ),
+        ],
       ),
     ),
   );
@@ -104,21 +126,88 @@ class _Signup3ScreenState extends State<Signup3Screen> {
             ],
           ),
           SizedBox(height: 10),
-          TextField(
-            controller: _heightcontroller,
-            // 숫자만 입력 가능하게
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(width: 200, child: _heightPicker()),
+              Text20(text: 'cm')
             ],
-            decoration: InputDecoration(
-                hintText: '키를 입력해주세요. (소수점 입력불가)',
-                hintStyle: TextStyle(color: Colors.grey),
-                // tap 시 borderline 색상 지정
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: myBlack))),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _heightPicker() {
+    return CupertinoPageScaffold(
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 115,
+                  child: CupertinoPicker(
+                    itemExtent: 32.0,
+                    onSelectedItemChanged: (int index) {
+                      setState(() {
+                        heightIndex = index;
+                        _heightcontroller.text = heightlist[heightIndex];
+                        print(_heightcontroller.text);
+                      });
+                    },
+                    children:
+                        List<Widget>.generate(heightlist.length, (int index) {
+                      return Center(child: Text('${heightlist[index]}'));
+                    }),
+                  ),
+                ),
+              ],
+            ),
+            // Container(
+            //   padding: EdgeInsets.all(16),
+            //   // 사용자가 선택한 과일과 색상을 텍스트로 표시
+            //   child: Text(
+            //     '선택한 과일: ${heightlist[heightIndex]}, 선택한 색상: ${weightlist[weightIndex]}',
+            //     style: TextStyle(fontSize: 16),
+            //   ),
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _weightPicker() {
+    return CupertinoPageScaffold(
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 115,
+                  child: CupertinoPicker(
+                    itemExtent: 32.0,
+                    onSelectedItemChanged: (int index) {
+                      setState(() {
+                        weightIndex = index;
+                        _weightcontroller.text = weightlist[weightIndex];
+                      });
+                    },
+                    children:
+                        List<Widget>.generate(weightlist.length, (int index) {
+                      return Center(child: Text('${weightlist[index]}'));
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -140,18 +229,13 @@ class _Signup3ScreenState extends State<Signup3Screen> {
             ],
           ),
           SizedBox(height: 10),
-          TextField(
-            controller: _weightcontroller,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(width: 200, child: _weightPicker()),
+              Text20(text: 'kg')
             ],
-            decoration: InputDecoration(
-                hintText: '몸무게를 입력해주세요. (소수점 입력불가)',
-                hintStyle: TextStyle(color: Colors.grey),
-                // tap 시 borderline 색상 지정
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: myBlack))),
           ),
         ],
       ),
@@ -166,7 +250,7 @@ class _Signup3ScreenState extends State<Signup3Screen> {
         children: [
           if (_showErrorMessage) // 상태에 따라 텍스트를 표시하거나 숨김
             Text(
-              '모든 입력이 올바른지 확인해주세요.',
+              '키와 몸무게를 선택해주세요.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'TheJamsil',
@@ -179,16 +263,15 @@ class _Signup3ScreenState extends State<Signup3Screen> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_heightcontroller.text.isNotEmpty &&
-                  _weightcontroller.text.isNotEmpty) {
+              if (heightIndex != 0 && weightIndex != 0) {
                 Provider.of<SignupProvider>(context, listen: false)
                     .setWeight(int.parse(_weightcontroller.text));
                 Provider.of<SignupProvider>(context, listen: false)
                     .setHeight(int.parse(_heightcontroller.text));
                 Navigator.of(context)
                     .push(SlidePageRoute(nextPage: Signup4Screen()));
+                _showErrorMessage = false;
               } else {
-                print('정보를 모두 입력해주세요!');
                 setState(() {
                   _showErrorMessage = true; // 에러 메시지 표시
                 });

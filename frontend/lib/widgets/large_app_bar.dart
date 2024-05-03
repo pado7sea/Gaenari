@@ -39,16 +39,11 @@ class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       flexibleSpace: Stack(
         children: [
-          ShadowImg(
-            color: myBlack,
-            sigma: 10,
-            offset: Offset(0, 5),
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/largeappbar.png"),
-                  fit: BoxFit.fill,
-                ),
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/largeappbar.png"),
+                fit: BoxFit.fill,
               ),
             ),
           ),
