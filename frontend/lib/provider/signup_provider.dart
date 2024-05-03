@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/signup_user.dart';
 
+// 회원가입시에 작성한 정보를 저장해두는 프로바이더 입니다.
 class SignupProvider with ChangeNotifier {
   final SignupUser _user = SignupUser();
   final MyPet _pet = MyPet();

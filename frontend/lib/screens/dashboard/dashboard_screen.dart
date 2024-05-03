@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/provider/token_provider.dart';
+import 'package:forsythia/provider/login_info_provider.dart';
 import 'package:forsythia/screens/challenge/challenge_screen.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/theme/color.dart';
@@ -27,6 +27,7 @@ class DashBoardScreen extends StatefulWidget {
 class DashBoardScreenState extends State<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
+    var nickName = Provider.of<LoginInfoProvider>(context).loginInfo?.nickname;
     return Scaffold(
       body: DraggableBottomSheet(
         minExtent: 50,
@@ -35,7 +36,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
         barrierColor: Colors.transparent,
         previewWidget: _previewWidget(),
         expandedWidget: _expandedWidget(),
-        backgroundWidget: _backgroundWidget(),
+        backgroundWidget: _backgroundWidget(nickName),
         maxExtent: MediaQuery.of(context).size.height * 0.76,
         onDragging: (pos) {},
       ),
@@ -69,7 +70,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-  Widget _backgroundWidget() {
+  Widget _backgroundWidget(String? nickName) {
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -85,7 +86,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
               margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
               child: Text20(
                 // text: ' ${Provider.of<TokenProvider>(context).token}',
-                text: '반가워요! 운동시작해볼까요?',
+                text: '$nickName님! 반가워요! 운동시작해볼까요?',
                 bold: true,
               ),
             ),
