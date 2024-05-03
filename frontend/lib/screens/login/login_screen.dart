@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/login_form.dart';
+import 'package:forsythia/models/users/login_user.dart';
+import 'package:forsythia/provider/login_info_provider.dart';
 import 'package:forsythia/provider/token_provider.dart';
 import 'package:forsythia/screens/signup/signup_screen.dart';
 import 'package:forsythia/service/member_service.dart';
@@ -37,6 +39,10 @@ class LoginScreenState extends State<LoginScreen> {
     LoginForm loginInfo = LoginForm(email: email, password: password);
     await MemberService.fetchLogin(loginInfo, _tokenProvider).then((loginUser) {
       print(_tokenProvider);
+      LoginUser response = loginUser;
+      LoginInfo info = response.data!;
+      Provider.of<LoginInfoProvider>(context, listen: false)
+          .updateLoginInfo(info);
       setState(() {
         _loginStatus = '로그인 성공!';
       });
@@ -74,13 +80,13 @@ class LoginScreenState extends State<LoginScreen> {
                         height: 20,
                         fit: BoxFit.cover,
                       ),
-                      Text16(text: '  이메일')
+                      Text16(text: '  아이디')
                     ],
                   ),
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                        hintText: '이메일을 입력해주세요.',
+                        hintText: '아이디를 입력해주세요.',
                         hintStyle: TextStyle(color: Colors.grey),
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: myBlack))),

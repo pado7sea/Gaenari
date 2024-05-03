@@ -1,14 +1,14 @@
 class LoginUser {
   String? status;
   String? message;
-  Data? data;
+  LoginInfo? data;
 
   LoginUser({this.status, this.message, this.data});
 
   LoginUser.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? LoginInfo.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -22,7 +22,7 @@ class LoginUser {
   }
 }
 
-class Data {
+class LoginInfo {
   int? memberId;
   String? email;
   String? nickname;
@@ -34,7 +34,7 @@ class Data {
   String? lastTime;
   List<MyPetDto>? myPetDto;
 
-  Data(
+  LoginInfo(
       {this.memberId,
       this.email,
       this.nickname,
@@ -46,7 +46,7 @@ class Data {
       this.lastTime,
       this.myPetDto});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  LoginInfo.fromJson(Map<String, dynamic> json) {
     memberId = json['memberId'];
     email = json['email'];
     nickname = json['nickname'];
