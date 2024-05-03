@@ -60,70 +60,62 @@ class _ChallengePageState extends State<ChallengePage> {
   }
 
   Widget _togglebutton() {
-    return Row(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              mission = false;
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.zero,
-            foregroundColor:
-                mission ? Colors.green : Colors.grey, // 토글 상태에 따른 버튼 색상 변경
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                mission = false;
+              });
+            },
+            child: Row(
+              children: [
+                Image(
+                  image: AssetImage('assets/emoji/trophy.png'),
+                  width: 25,
+                  height: 25,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(width: 10),
+                Text20(
+                  text: '업적',
+                  bold: true,
+                )
+              ],
+            ),
           ),
-          child: Row(
-            children: [
-              Image(
-                image: AssetImage('assets/emoji/trophy.png'),
-                width: 25,
-                height: 25,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(width: 10),
-              Text20(
-                text: '업적',
-                bold: true,
-              )
-            ],
+          Image(
+            image: AssetImage('assets/emoji/bar.png'),
+            width: 25,
+            height: 25,
+            fit: BoxFit.cover,
           ),
-        ),
-        Image(
-          image: AssetImage('assets/emoji/bar.png'),
-          width: 25,
-          height: 25,
-          fit: BoxFit.cover,
-        ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              mission = true;
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.zero,
-
-            foregroundColor:
-                mission ? Colors.green : Colors.grey, // 토글 상태에 따른 버튼 색상 변경
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                mission = true;
+              });
+            },
+            child: Row(
+              children: [
+                Image(
+                  image: AssetImage('assets/emoji/v.png'),
+                  width: 25,
+                  height: 25,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(width: 10),
+                Text20(
+                  text: '미션',
+                  bold: true,
+                )
+              ],
+            ),
           ),
-          child: Row(
-            children: [
-              Image(
-                image: AssetImage('assets/emoji/v.png'),
-                width: 25,
-                height: 25,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(width: 10),
-              Text20(
-                text: '미션',
-                bold: true,
-              )
-            ],
-          ),
-        )
-      ],
+        ],
+      ),
     );
   }
 
