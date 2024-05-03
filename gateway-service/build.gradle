@@ -50,6 +50,10 @@ dependencies {
 	// Bus
 //	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
 }
 
 dependencyManagement {
