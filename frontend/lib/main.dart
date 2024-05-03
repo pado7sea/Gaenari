@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:forsythia/provider/footer_provider.dart';
 import 'package:forsythia/provider/signup_provider.dart';
 import 'package:forsythia/provider/token_provider.dart';
@@ -72,6 +73,14 @@ class _MyAppState extends State<MyApp> {
           routeInformationParser: _router.routeInformationParser,
           routeInformationProvider: _router.routeInformationProvider,
           title: '개나리',
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''), // English, no country code
+            Locale('ko', ''), // Korean, no country code
+          ],
           theme: ThemeData(
             fontFamily: 'TheJamsil', // 사용할 폰트 패밀리 지정
             scaffoldBackgroundColor: myBackground,

@@ -20,14 +20,26 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordcontroller = TextEditingController();
   final TextEditingController _confirmPasswordcontroller =
       TextEditingController(); // 비밀번호 확인용
+
   final List<String> _domains = [
     'naver.com',
     'gmail.com',
     'hotmail.com'
   ]; // 도메인 리스트
   String _selectedDomain = ''; // 선택된 도메인
+
   bool _showErrorMessage = false;
-  String _errorText = '';
+
+  List<String> errors = []; // 비밀번호 에러텍스트
+  String _checkerrorText = ''; // 비밀번호 확인 에러텍스트
+
+  String _errorText = ''; // 다음 버튼 에러텍스트
+  @override
+  void initState() {
+    super.initState();
+    _errorText = '';
+    _showErrorMessage = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +51,9 @@ class _SignupScreenState extends State<SignupScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 30),
             maintext,
+            SizedBox(height: 30),
             _id(),
             _password(),
             SizedBox(height: 10),
@@ -56,8 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   // 상단 메인텍스트
   var maintext = Center(
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(100, 50, 100, 50),
+    child: Center(
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -205,18 +218,49 @@ class _SignupScreenState extends State<SignupScreen> {
           TextField(
             controller: _passwordcontroller,
             obscureText: true, // 비밀번호 입력을 숨깁니다.
+            onChanged: (value) {
+              // 비밀번호가 형식에 맞는지 체크합니다.
+              if (value.length < 6 && value.length <= 12) {
+                if (!errors.contains('6자 이상 12자 이하')) {
+                  errors.add('6자 이상 12자 이하');
+                }
+              } else {
+                errors.remove('6자 이상 12자 이하');
+              }
+
+              if (!RegExp(
+                      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#\$%^&*])[A-Za-z\d!@#\$%^&*]+$')
+                  .hasMatch(value)) {
+                if (!errors.contains('영문 대/소문자, 숫자, 특수문자 필수')) {
+                  errors.add('영문 대/소문자, 숫자, 특수문자 필수');
+                }
+              } else {
+                errors.remove('영문 대/소문자, 숫자, 특수문자 필수');
+              }
+
+              if (errors.isNotEmpty) {
+                setState(() {
+                  _errorText = errors.join(', ');
+                });
+              } else {
+                setState(() {
+                  _errorText = '';
+                });
+              }
+            },
             decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 5),
-                hintText: '대소문자, 숫자포함 6자에서 16자까지 가능.',
-                hintStyle: TextStyle(color: Colors.grey),
-                // tap 시 borderline 색상 지정
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: myBlack))),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                  RegExp(r'[a-zA-Z0-9]')), // 영어 대소문자와 숫자만 허용
-            ],
-            maxLength: 16,
+              contentPadding: EdgeInsets.only(left: 5),
+              hintText: '비밀번호를 입력해주세요.',
+              hintStyle: TextStyle(color: Colors.grey),
+              errorStyle: TextStyle(color: myRed, fontSize: 12),
+              // tap 시 borderline 색상 지정
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: myBlack),
+              ),
+              errorText:
+                  _errorText.isNotEmpty ? _errorText : null, // 에러 메시지를 표시합니다.
+            ),
+            maxLength: 12,
           ),
         ],
       ),
@@ -224,6 +268,19 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _checkpassword() {
+    _passwordcontroller.addListener(() {
+      // 입력된 비밀번호와 비밀번호 확인이 일치하는지 확인합니다.
+      if (_confirmPasswordcontroller.text != _passwordcontroller.text) {
+        setState(() {
+          _checkerrorText = '비밀번호가 일치하지 않습니다.';
+        });
+      } else {
+        setState(() {
+          _checkerrorText = '';
+        });
+      }
+    });
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
       child: Column(
@@ -246,11 +303,11 @@ class _SignupScreenState extends State<SignupScreen> {
               // 입력된 비밀번호와 비밀번호 확인이 일치하는지 확인합니다.
               if (_passwordcontroller.text != value) {
                 setState(() {
-                  _errorText = '비밀번호가 일치하지 않습니다.';
+                  _checkerrorText = '비밀번호가 일치하지 않습니다.';
                 });
               } else {
                 setState(() {
-                  _errorText = '';
+                  _checkerrorText = '';
                 });
               }
             },
@@ -258,15 +315,16 @@ class _SignupScreenState extends State<SignupScreen> {
               contentPadding: EdgeInsets.only(left: 5),
               hintText: '비밀번호를 위와 동일하게 입력해주세요.',
               hintStyle: TextStyle(color: Colors.grey),
-              errorStyle: TextStyle(color: myRed, fontSize: 16),
+              errorStyle: TextStyle(color: myRed, fontSize: 12),
               // tap 시 borderline 색상 지정
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: myBlack),
               ),
-              errorText:
-                  _errorText.isNotEmpty ? _errorText : null, // 에러 메시지를 표시합니다.
+              errorText: _checkerrorText.isNotEmpty
+                  ? _checkerrorText
+                  : null, // 에러 메시지를 표시합니다.
             ),
-            maxLength: 16,
+            maxLength: 12,
           ),
         ],
       ),
@@ -296,21 +354,20 @@ class _SignupScreenState extends State<SignupScreen> {
             onPressed: () {
               if (_idcontroller.text.isNotEmpty &&
                   _selectedDomain.isNotEmpty &&
-                  _passwordcontroller.text.isNotEmpty &&
-                  _confirmPasswordcontroller.text.isNotEmpty &&
-                  _passwordcontroller.text == _confirmPasswordcontroller.text &&
-                  _passwordcontroller.text.length >= 6) {
+                  errors.isEmpty &&
+                  _checkerrorText.isEmpty) {
+                setState(() {
+                  _showErrorMessage = false; // 에러 메시지 표시
+                });
                 String email = '${_idcontroller.text}@$_selectedDomain';
                 print(email);
                 Provider.of<SignupProvider>(context, listen: false)
                     .setPassword(_passwordcontroller.text);
                 Provider.of<SignupProvider>(context, listen: false)
                     .setEmail(email);
-
                 Navigator.of(context)
                     .push(SlidePageRoute(nextPage: Signup2Screen()));
               } else {
-                print('모든 입력이 올바른지 확인해주세요.');
                 setState(() {
                   _showErrorMessage = true; // 에러 메시지 표시
                 });
