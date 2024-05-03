@@ -1,6 +1,7 @@
 package com.gaenari.backend.domain.member.controller;
 
 import com.gaenari.backend.domain.member.dto.requestDto.MemberUpdate;
+import com.gaenari.backend.domain.member.dto.requestDto.RequestLogin;
 import com.gaenari.backend.domain.member.dto.requestDto.SignupRequestDto;
 import com.gaenari.backend.domain.member.dto.responseDto.SignupResponse;
 import com.gaenari.backend.domain.member.service.MemberService;
@@ -39,6 +40,12 @@ public class MemberController {
         } catch (Exception e) {
             return ApiResponse.getInstance().error(ErrorCode.GLOBAL_UNEXPECTED_ERROR);
         }
+    }
+
+    @Operation(summary = "로그인", description = "옛다 로그인")
+    @PostMapping("/login") // 로그인
+    public ResponseEntity<?> login(@RequestBody RequestLogin login){
+        return ApiResponse.getInstance().success(ResponseCode.MEMBER_SIGNUP_SUCCESS);
     }
 
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 (삭제처리)")
