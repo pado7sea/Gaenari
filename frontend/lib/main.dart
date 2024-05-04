@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:forsythia/provider/footer_provider.dart';
-import 'package:forsythia/provider/login_info_provider.dart';
 import 'package:forsythia/provider/signup_provider.dart';
-import 'package:forsythia/provider/token_provider.dart';
 import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
 import 'package:forsythia/screens/doghouse/doghouse_screen.dart';
 import 'package:forsythia/screens/login/login_screen.dart';
@@ -11,6 +9,7 @@ import 'package:forsythia/screens/login/welcome_screen.dart';
 import 'package:forsythia/screens/program/program_screen.dart';
 import 'package:forsythia/screens/record/record_screen.dart';
 import 'package:forsythia/screens/setting/setting_screen.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/widgets/footer.dart';
 import 'package:go_router/go_router.dart';
@@ -23,26 +22,39 @@ void main() async {
   // );
   // await dotenv.load(fileName: ".env"); // .env 파일 로드
 
-  runApp(const MyApp());
+  // 로그인 정보 가져오기
+  final SecureStorageService secureStorageService = SecureStorageService();
+  final loginInfo = await secureStorageService.getLoginInfo();
+
+  // 초기 위치 설정
+  String initialLocation = loginInfo != null ? '/home' : '/welcome';
+
+  runApp(MyApp(initialLocation: initialLocation));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final String initialLocation;
+
+  const MyApp({required this.initialLocation, super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  // ignore: no_logic_in_create_state
+  State<MyApp> createState() => _MyAppState(initialLocation: initialLocation);
 }
 
 class _MyAppState extends State<MyApp> {
   late final GoRouter _router;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final String initialLocation;
+
+  _MyAppState({required this.initialLocation});
 
   @override
   void initState() {
     super.initState();
     _router = GoRouter(
       debugLogDiagnostics: true,
-      initialLocation: '/welcome',
+      initialLocation: initialLocation, // 초기 위치 설정
       navigatorKey: navigatorKey,
       routes: [
         GoRoute(
@@ -66,9 +78,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => FooterProvider()),
-          ChangeNotifierProvider(create: (context) => TokenProvider()),
           ChangeNotifierProvider(create: (context) => SignupProvider()),
-          ChangeNotifierProvider(create: (context) => LoginInfoProvider()),
         ],
         child: MaterialApp.router(
           routerDelegate: _router.routerDelegate,
@@ -80,7 +90,7 @@ class _MyAppState extends State<MyApp> {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [
-            Locale('en', ''), // English, no country code
+            // Locale('en', ''), // 이거 없어야 한글날짜 나옴
             Locale('ko', ''), // Korean, no country code
           ],
           theme: ThemeData(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:forsythia/models/users/nickname_check.dart';
 import 'package:forsythia/screens/signup/signup3_screen.dart';
+import 'package:forsythia/service/member_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
@@ -25,6 +27,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
   final TextEditingController _nicknamecontroller = TextEditingController();
   final TextEditingController _birthcontroller = TextEditingController();
   final List<String> _genders = ['MALE', 'FEMALE', 'OTHER']; // 도메인 리스트
+  String check = "";
 
   bool _showErrorMessage = false;
 
@@ -118,6 +121,9 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                         _errorText = '';
                       });
                     }
+                    setState(() {
+                      check = ""; // 값이 변경될 때마다 check 변수를 초기화해줘
+                    });
                   },
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(left: 5),
@@ -144,8 +150,17 @@ class _Signup2ScreenState extends State<Signup2Screen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                  onPressed: () {
-                    //
+                  onPressed: () async {
+                    final Check idCheck =
+                        await MemberService.fetchNickNameCheck(
+                            _nicknamecontroller.text);
+                    setState(() {
+                      if (idCheck.data != null && idCheck.data == false) {
+                        check = "사용 가능한 닉네임";
+                      } else {
+                        check = "중복된 닉네임";
+                      }
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: myLightYellow,
@@ -154,7 +169,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: Text12(text: '닉네임 중복검사'))
+                  child: Text12(text: check == "" ? '닉네임 중복검사' : check))
             ],
           )
         ],
@@ -168,7 +183,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
       child: Column(
         children: [
           Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/pensil.png'),
                 width: 20,
@@ -181,6 +196,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
           SizedBox(height: 20),
           CustomDatePicker(
             onDateChange: (String newDate) {
+              print(_birthcontroller.text);
               _birthcontroller.text = newDate;
             },
           ),
@@ -274,6 +290,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
             onPressed: () {
               if (_nicknamecontroller.text.isNotEmpty &&
                   _birthcontroller.text.isNotEmpty &&
+                  check != "" && //닉네임 체크
                   _nicknamecontroller.text.length >= 3) {
                 Provider.of<SignupProvider>(context, listen: false)
                     .setNickName(_nicknamecontroller.text);
@@ -339,7 +356,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(
+            SizedBox(
               height: 67,
               // 날짜 및 시간을 선택할 수 있는 CupertinoDatePicker 위젯.
               child: CupertinoDatePicker(
@@ -356,6 +373,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 minimumYear: 1910,
                 // 선택 가능한 최대 연도를 현재 연도로 설정.
                 maximumYear: DateTime.now().year,
+                maximumDate: DateTime.now(),
               ),
             ),
             // TextField(

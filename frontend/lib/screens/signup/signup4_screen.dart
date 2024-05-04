@@ -25,11 +25,11 @@ class _Signup4ScreenState extends State<Signup4Screen> {
 
   bool _showErrorMessage = false;
 
-  String _errorText = '';
+  // String _errorText = '';
   @override
   void initState() {
     super.initState();
-    _errorText = '';
+    // _errorText = '';
     _showErrorMessage = false;
   }
 

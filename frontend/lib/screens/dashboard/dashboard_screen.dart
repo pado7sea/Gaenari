@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/provider/login_info_provider.dart';
+import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/challenge/challenge_screen.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:draggable_bottom_sheet/draggable_bottom_sheet.dart';
-import 'package:provider/provider.dart';
 
 const List<IconData> icons = [
   Icons.message,
@@ -27,19 +27,30 @@ class DashBoardScreen extends StatefulWidget {
 class DashBoardScreenState extends State<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
-    var nickName = Provider.of<LoginInfoProvider>(context).loginInfo?.nickname;
-    return Scaffold(
-      body: DraggableBottomSheet(
-        minExtent: 50,
-        useSafeArea: false,
-        curve: Curves.easeIn,
-        barrierColor: Colors.transparent,
-        previewWidget: _previewWidget(),
-        expandedWidget: _expandedWidget(),
-        backgroundWidget: _backgroundWidget(nickName),
-        maxExtent: MediaQuery.of(context).size.height * 0.76,
-        onDragging: (pos) {},
-      ),
+    return FutureBuilder<LoginInfo?>(
+      future: SecureStorageService().getLoginInfo(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            var nickName = snapshot.data?.nickname ?? 'Unknown';
+            return DraggableBottomSheet(
+              minExtent: 50,
+              useSafeArea: false,
+              curve: Curves.easeIn,
+              barrierColor: Colors.transparent,
+              previewWidget: _previewWidget(),
+              expandedWidget: _expandedWidget(),
+              backgroundWidget: _backgroundWidget(nickName),
+              maxExtent: MediaQuery.of(context).size.height * 0.76,
+              onDragging: (pos) {},
+            );
+          }
+        }
+      },
     );
   }
 
