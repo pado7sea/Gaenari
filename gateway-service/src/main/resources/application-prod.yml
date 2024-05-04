@@ -36,7 +36,7 @@ spring:
         - id: member-service
           uri: http://member-service.member.svc.cluster.local
           predicates:
-            - Path=/api/member-service/login/**, /api/member-service/members/**, /api/member-service/logout/**, /api/member-service/v3/api-docs/**, /api/member-service/health_check
+            - Path=/api/member-service/login/**, /api/member-service/members/**, /api/member-service/logout/**, /api/member-service/v3/api-docs/**, /api/member-service/health_check, /api/member-service/dupl/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
