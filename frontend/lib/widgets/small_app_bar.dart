@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
-import 'package:forsythia/theme/shadow_img.dart';
 import 'package:forsythia/theme/text.dart';
 
 class SmallAppBar extends StatelessWidget implements PreferredSizeWidget {
