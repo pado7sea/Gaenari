@@ -12,12 +12,13 @@ class ChallengePage extends StatefulWidget {
 }
 
 class _ChallengePageState extends State<ChallengePage> {
-  int? CompleteRunIndex = null;
-  int? CompleteTimeIndex = null;
+  // int? CompleteRunIndex = null;
+  // int? CompleteTimeIndex = null;
 
   bool mission = false;
 
   List<String> run = [
+    '1km',
     '4km',
     '16km',
     '64km',
@@ -29,7 +30,8 @@ class _ChallengePageState extends State<ChallengePage> {
     '1시간',
     '4시간',
     '16시간',
-    '246시간',
+    '64시간',
+    '256시간',
     '1024시간',
   ];
 
@@ -71,7 +73,7 @@ class _ChallengePageState extends State<ChallengePage> {
               });
             },
             child: Row(
-              children: [
+              children: const [
                 Image(
                   image: AssetImage('assets/emoji/trophy.png'),
                   width: 25,
@@ -99,7 +101,7 @@ class _ChallengePageState extends State<ChallengePage> {
               });
             },
             child: Row(
-              children: [
+              children: const [
                 Image(
                   image: AssetImage('assets/emoji/v.png'),
                   width: 25,
