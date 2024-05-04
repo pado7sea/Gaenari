@@ -140,7 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: _idcontroller,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 5),
-                      hintText: '아이디를 입력해주세요',
+                      hintText: '대/소문자와 숫자만 입력가능합니다.',
                       hintStyle: TextStyle(color: Colors.grey),
                       // tap 시 borderline 색상 지정
                       focusedBorder: UnderlineInputBorder(
@@ -369,7 +369,8 @@ class _SignupScreenState extends State<SignupScreen> {
             onPressed: () {
               if (_idcontroller.text.isNotEmpty &&
                   errors.isEmpty &&
-                  check != "" && //아이디 체크
+                  check == "사용 가능한 아이디" &&
+                  _passwordcontroller.text.isNotEmpty &&
                   _checkerrorText.isEmpty) {
                 setState(() {
                   _showErrorMessage = false; // 에러 메시지 표시
