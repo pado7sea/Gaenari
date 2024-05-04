@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/screens/setting/account_screen.dart';
 import 'package:forsythia/screens/setting/bodyinfo_screen.dart';
 import 'package:forsythia/screens/setting/notification_screen.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -28,7 +30,7 @@ class _SettingScreenState extends State<SettingScreen> {
           _account(),
           _notification(),
           _body(),
-          _logout(),
+          _logout(context),
         ],
       ),
     );
@@ -110,7 +112,8 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Widget _logout() {
+  Widget _logout(context) {
+    final SecureStorageService secureStorageService = SecureStorageService();
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -122,21 +125,24 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           SizedBox(height: 10),
           GestureDetector(
-            onTap: () {
-              // 로그아웃 로직 추가
+            onTap: () async {
+              // 1. 로컬 스토리지에서 로그인 정보 삭제
+              await secureStorageService.deleteToken();
+
+              // 2. 로그인 화면으로 이동
+              GoRouter.of(context).go('/welcome');
             },
             child: Text(
               '로그아웃',
               style: TextStyle(
-                  color: myGrey,
-                  decoration: TextDecoration.underline,
-                  decorationColor: myGrey,
-                  decorationThickness: 2),
+                color: myGrey,
+                decoration: TextDecoration.underline,
+                decorationColor: myGrey,
+                decorationThickness: 2,
+              ),
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
         ],
       ),
     );

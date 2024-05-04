@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/login_form.dart';
 import 'package:forsythia/models/users/login_user.dart';
-import 'package:forsythia/provider/login_info_provider.dart';
-import 'package:forsythia/provider/token_provider.dart';
 import 'package:forsythia/screens/signup/signup_screen.dart';
 import 'package:forsythia/service/member_service.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.addInfo2});
@@ -22,27 +20,18 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _loginStatus = ''; // 로그인 상태를 나타내는 변수
-  late TokenProvider _tokenProvider; // TokenProvider 객체 선언
-
-  @override
-  void initState() {
-    super.initState();
-    _tokenProvider = Provider.of<TokenProvider>(context,
-        listen: false); // TokenProvider 객체 초기화
-  }
 
   void _fetchLogin() async {
     String email = _emailController.text;
     String password = _passwordController.text;
+    final SecureStorageService secureStorageService = SecureStorageService();
 
     // login 모델 객체 생성
     LoginForm loginInfo = LoginForm(email: email, password: password);
-    await MemberService.fetchLogin(loginInfo, _tokenProvider).then((loginUser) {
-      print(_tokenProvider);
+    await MemberService.fetchLogin(loginInfo).then((loginUser) {
       LoginUser response = loginUser;
       LoginInfo info = response.data!;
-      Provider.of<LoginInfoProvider>(context, listen: false)
-          .updateLoginInfo(info);
+      secureStorageService.saveLoginInfo(info);
       setState(() {
         _loginStatus = '로그인 성공!';
       });
