@@ -39,9 +39,6 @@ public class MyPet {
     @NotNull
     private Tier tier = Tier.BRONZE;
 
-    @Column(name = "mypet_tier_level")
-    private int tierLevel = 0;
-
     @Column(name = "mypet_is_partner")
     private Boolean isPartner = false;
 
