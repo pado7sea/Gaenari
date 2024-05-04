@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forsythia/models/users/nickname_check.dart';
 import 'package:forsythia/screens/signup/signup2_screen.dart';
+import 'package:forsythia/service/member_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
@@ -20,13 +22,13 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordcontroller = TextEditingController();
   final TextEditingController _confirmPasswordcontroller =
       TextEditingController(); // 비밀번호 확인용
-
-  final List<String> _domains = [
-    'naver.com',
-    'gmail.com',
-    'hotmail.com'
-  ]; // 도메인 리스트
-  String _selectedDomain = ''; // 선택된 도메인
+  String check = "";
+  // final List<String> _domains = [
+  //   'naver.com',
+  //   'gmail.com',
+  //   'hotmail.com'
+  // ]; // 도메인 리스트
+  // String _selectedDomain = ''; // 선택된 도메인
 
   bool _showErrorMessage = false;
 
@@ -76,7 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
         text: TextSpan(
           children: const [
             TextSpan(
-              text: '이메일',
+              text: '아이디',
               style: TextStyle(
                   color: myMainGreen,
                   fontSize: 22,
@@ -138,7 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: _idcontroller,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(left: 5),
-                      hintText: 'example',
+                      hintText: '아이디를 입력해주세요',
                       hintStyle: TextStyle(color: Colors.grey),
                       // tap 시 borderline 색상 지정
                       focusedBorder: UnderlineInputBorder(
@@ -147,31 +149,36 @@ class _SignupScreenState extends State<SignupScreen> {
                     FilteringTextInputFormatter.allow(
                         RegExp(r'[a-zA-Z0-9]')), // 영어 대소문자와 숫자만 허용
                   ],
-                ),
-              ),
-              Text(' @ '),
-              Expanded(
-                child: DropdownButtonFormField(
-                  value: _selectedDomain.isNotEmpty ? _selectedDomain : null,
-                  items: _domains.map((domain) {
-                    return DropdownMenuItem(
-                      value: domain,
-                      child: Text(domain),
-                    );
-                  }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      _selectedDomain = value!;
+                      check = ""; // 값이 변경될 때마다 check 변수를 초기화해줘
                     });
                   },
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 5),
-                      hintText: 'example.com',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: myBlack))),
                 ),
-              )
+              ),
+              // Text(' @ '),
+              // Expanded(
+              //   child: DropdownButtonFormField(
+              //     value: _selectedDomain.isNotEmpty ? _selectedDomain : null,
+              //     items: _domains.map((domain) {
+              //       return DropdownMenuItem(
+              //         value: domain,
+              //         child: Text(domain),
+              //       );
+              //     }).toList(),
+              //     onChanged: (value) {
+              //       setState(() {
+              //         _selectedDomain = value!;
+              //       });
+              //     },
+              //     decoration: InputDecoration(
+              //         contentPadding: EdgeInsets.only(left: 5),
+              //         hintText: 'example.com',
+              //         hintStyle: TextStyle(color: Colors.grey),
+              //         focusedBorder: UnderlineInputBorder(
+              //             borderSide: BorderSide(color: myBlack))),
+              //   ),
+              // )
             ],
           ),
           SizedBox(
@@ -181,8 +188,16 @@ class _SignupScreenState extends State<SignupScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                  onPressed: () {
-                    //
+                  onPressed: () async {
+                    final Check idCheck =
+                        await MemberService.fetchIdCheck(_idcontroller.text);
+                    setState(() {
+                      if (idCheck.data != null && idCheck.data == false) {
+                        check = "사용 가능한 아이디";
+                      } else {
+                        check = "중복된 아이디";
+                      }
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: myLightYellow,
@@ -191,7 +206,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: Text12(text: '아이디 중복검사'))
+                  child: Text12(text: check == "" ? '아이디 중복검사' : check))
             ],
           )
         ],
@@ -353,13 +368,13 @@ class _SignupScreenState extends State<SignupScreen> {
           ElevatedButton(
             onPressed: () {
               if (_idcontroller.text.isNotEmpty &&
-                  _selectedDomain.isNotEmpty &&
                   errors.isEmpty &&
+                  check != "" && //아이디 체크
                   _checkerrorText.isEmpty) {
                 setState(() {
                   _showErrorMessage = false; // 에러 메시지 표시
                 });
-                String email = '${_idcontroller.text}@$_selectedDomain';
+                String email = _idcontroller.text;
                 print(email);
                 Provider.of<SignupProvider>(context, listen: false)
                     .setPassword(_passwordcontroller.text);

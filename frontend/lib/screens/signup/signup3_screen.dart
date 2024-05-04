@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/signup/signup4_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -130,7 +128,7 @@ class _Signup3ScreenState extends State<Signup3Screen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(width: 200, child: _heightPicker()),
+              SizedBox(width: 200, child: _heightPicker()),
               Text20(text: 'cm')
             ],
           ),
@@ -147,7 +145,7 @@ class _Signup3ScreenState extends State<Signup3Screen> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
+                SizedBox(
                   height: 115,
                   child: CupertinoPicker(
                     itemExtent: 32.0,
@@ -160,7 +158,7 @@ class _Signup3ScreenState extends State<Signup3Screen> {
                     },
                     children:
                         List<Widget>.generate(heightlist.length, (int index) {
-                      return Center(child: Text('${heightlist[index]}'));
+                      return Center(child: Text(heightlist[index]));
                     }),
                   ),
                 ),
@@ -188,7 +186,7 @@ class _Signup3ScreenState extends State<Signup3Screen> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
+                SizedBox(
                   height: 115,
                   child: CupertinoPicker(
                     itemExtent: 32.0,
@@ -200,7 +198,7 @@ class _Signup3ScreenState extends State<Signup3Screen> {
                     },
                     children:
                         List<Widget>.generate(weightlist.length, (int index) {
-                      return Center(child: Text('${weightlist[index]}'));
+                      return Center(child: Text(weightlist[index]));
                     }),
                   ),
                 ),
@@ -233,7 +231,7 @@ class _Signup3ScreenState extends State<Signup3Screen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(width: 200, child: _weightPicker()),
+              SizedBox(width: 200, child: _weightPicker()),
               Text20(text: 'kg')
             ],
           ),
