@@ -44,11 +44,11 @@ public class Program {
     private Integer setCount;
 
     @Column(name = "program_duration")
-    private Integer duration;
+    private Double duration;
 
     @NotNull
     @Column(name = "is_favorite")
-    private boolean isFavorite = false;
+    private Boolean isFavorite = false;
 
     @NotNull
     @Builder.Default
@@ -58,55 +58,19 @@ public class Program {
     @NotNull
     @Builder.Default
     @Column(name = "is_deleted")
-    private boolean isDeleted = false;
-
-    public static Program of(Long memberId, String title, ProgramType type, Double targetValue,
-                             Integer setCount, Integer duration, boolean isFavorite, Integer usageCount, boolean isDeleted) {
-        return Program.builder()
-                .memberId(memberId)
-                .title(title)
-                .type(type)
-                .targetValue(targetValue)
-                .setCount(setCount)
-                .duration(duration)
-                .isFavorite(isFavorite)
-                .usageCount(usageCount)
-                .isDeleted(isDeleted)
-                .build();
-    }
-
-    public void updateTitle(String title) {
-        this.title = title;
-    }
-
-    public void updateType(ProgramType type) {
-        this.type = type;
-    }
-
-    public void updateTargetValue(Double targetValue) {
-        this.targetValue = targetValue;
-    }
-
-    public void updateSetCount(Integer setCount) {
-        this.setCount = setCount;
-    }
-
-    public void updateDuration(Integer duration) {
-        this.duration = duration;
-    }
+    private Boolean isDeleted = false;
 
     public void updateIsFavorite(Boolean isFavorite) {
         this.isFavorite = isFavorite;
     }
 
-    public void updateUsageCount(Integer usageCount) {
-        this.usageCount = usageCount;
-    }
-
-    /* program - range 양방향 매핑 */
+    /* Program - Range 양방향 매핑 */
     @Builder.Default
     @OneToMany(mappedBy = "program", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<IntervalRange> ranges = new ArrayList<>();
 
+    public Integer updateUsageCount(int i) {
+       return this.usageCount += i;
+    }
 }
 
