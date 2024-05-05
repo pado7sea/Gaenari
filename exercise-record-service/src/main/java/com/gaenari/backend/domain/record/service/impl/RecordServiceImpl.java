@@ -1,5 +1,6 @@
 package com.gaenari.backend.domain.record.service.impl;
 
+import com.gaenari.backend.domain.record.dto.responseDto.DailyRecordDto;
 import com.gaenari.backend.domain.record.dto.responseDto.MonthRecordDto;
 import com.gaenari.backend.domain.record.dto.responseDto.RecordDto;
 import com.gaenari.backend.domain.record.dto.responseDto.WeekRecordDto;
@@ -40,7 +41,7 @@ public class RecordServiceImpl implements RecordService {
     private RecordDto convertToRecordDto(Record record) {
         LocalDateTime localDateTime = record.getDate();
 
-        RecordDto.DailyRecordDto dailyRecord = RecordDto.DailyRecordDto.builder()
+        DailyRecordDto dailyRecord = DailyRecordDto.builder()
                 .recordId(record.getId())
                 .recordDate(record.getDate())
                 .recordTime(record.getTime())
@@ -78,9 +79,9 @@ public class RecordServiceImpl implements RecordService {
         List<RecordDto> recordDtos = new ArrayList<>();
         for (int day = 1; day <= endDay; day++) {
             final int d = day;
-            List<RecordDto.DailyRecordDto> dailyRecords = records.stream()
+            List<DailyRecordDto> dailyRecords = records.stream()
                     .filter(r -> r.getDate().getDayOfMonth() == d)
-                    .map(r -> RecordDto.DailyRecordDto.builder()
+                    .map(r -> DailyRecordDto.builder()
                             .recordId(r.getId())
                             .recordDate(r.getDate())
                             .recordTime(r.getTime())
@@ -125,7 +126,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     private WeekRecordDto buildWeekRecordDto(List<Record> records, LocalDate startDate) {
-        Map<LocalDate, List<RecordDto.DailyRecordDto>> dailyRecords = records.stream()
+        Map<LocalDate, List<DailyRecordDto>> dailyRecords = records.stream()
                 .collect(Collectors.groupingBy(
                         record -> record.getDate().toLocalDate(),
                         Collectors.mapping(this::convertToDailyRecordDto, Collectors.toList())
@@ -147,8 +148,8 @@ public class RecordServiceImpl implements RecordService {
                 .build();
     }
 
-    private RecordDto.DailyRecordDto convertToDailyRecordDto(Record record) {
-        return RecordDto.DailyRecordDto.builder()
+    private DailyRecordDto convertToDailyRecordDto(Record record) {
+        return DailyRecordDto.builder()
                 .recordId(record.getId())
                 .recordDate(record.getDate())
                 .recordTime(record.getTime())
