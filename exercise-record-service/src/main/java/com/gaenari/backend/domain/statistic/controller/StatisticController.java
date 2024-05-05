@@ -24,14 +24,32 @@ public class StatisticController {
     private final ApiResponse response;
     private final StatisticService statisticService;
 
-    @Operation(summary = "전체 통계 조회", description = "전체 통계 조회")
-    @GetMapping
+    @Operation(summary = "전체 통계 조회 1", description = "운동기록 전체 순회돌아서 누적값 계산(아래거랑 값 같은지 비교용)")
+    @GetMapping("/v1")
     public ResponseEntity<?> getAllStatistics() {
         Long memberId = 1L;
         TotalStatisticDto statistics = statisticService.getWholeExerciseStatistics(memberId);
 
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistics);
     }
+
+    @Operation(summary = "전체 통계 조회 2", description = "저장되어있는 누적값 조회")
+    @GetMapping("/v2")
+    public ResponseEntity<?> getTotalStatistics() {
+        Long memberId = 1L;
+        TotalStatisticDto statistics = statisticService.getTotalStatistics(memberId);
+
+        return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistics);
+    }
+
+//    @Operation(summary = "전체 통계 업데이트", description = "회원의 운동 기록을 저장할 때마다 누적 통계를 업데이트하는 방식")
+//    @GetMapping
+//    public ResponseEntity<?> updateExerciseStatistics() {
+//        Long memberId = 1L;
+//        TotalStatisticDto statistics = statisticService.updateExerciseStatistics(memberId,newRecord);
+//
+//        return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistics);
+//    }
 
     @Operation(summary = "월간 통계 조회", description = "월간 통계 조회")
     @GetMapping("/month/{year}/{month}")

@@ -5,21 +5,30 @@ import com.gaenari.backend.domain.record.repository.RecordRepository;
 import com.gaenari.backend.domain.statistic.dto.responseDto.MonthStatisticDto;
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
 import com.gaenari.backend.domain.statistic.dto.responseDto.WeekStatisticDto;
+import com.gaenari.backend.domain.statistic.entity.Statistic;
+import com.gaenari.backend.domain.statistic.repository.StatisticRepository;
 import com.gaenari.backend.domain.statistic.service.StatisticService;
+import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
+import com.gaenari.backend.global.exception.statistic.StatisticNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class StatisticServiceImpl implements StatisticService {
 
     private final RecordRepository recordRepository;
+    private final StatisticRepository statisticRepository;
 
+    // 회원 ID에 해당하는 모든 운동 기록을 조회한 후 그 결과를 이용해 총 합계와 평균을 계산하는 방식(데이터베이스 저장x)
     @Override
     public TotalStatisticDto getWholeExerciseStatistics(Long memberId) {
         List<Record> records = recordRepository.findAllByMemberId(memberId);
@@ -38,11 +47,40 @@ public class StatisticServiceImpl implements StatisticService {
             totalHeartRate += record.getAverageHeartRate();
         }
 
+        LocalDateTime mostRecentDate = getMostRecentDate(records);
+
         return TotalStatisticDto.builder()
                 .time(totalTime)
                 .dist(totalDistance)
                 .cal(totalCalories)
                 .pace(count > 0 ? totalPace / count : 0)
+                .date(mostRecentDate)
+                .count(count)
+                .build();
+    }
+
+    private LocalDateTime getMostRecentDate(List<Record> records) {
+        return records.stream()
+                .map(Record::getDate) // Record 객체에서 날짜를 추출
+                .max(Comparator.naturalOrder())// 날짜 중 가장 최근 날짜를 찾음
+                .orElse(null);
+    }
+
+    @Override
+    public TotalStatisticDto getTotalStatistics(Long memberId) {
+        Optional<Statistic> statistic = statisticRepository.findByMemberId(memberId);
+
+        if (statistic.isEmpty()) {
+            throw new StatisticNotFoundException();
+        }
+
+        return TotalStatisticDto.builder()
+                .time(statistic.get().getTime())
+                .dist(statistic.get().getDist())
+                .cal(statistic.get().getCal())
+                .pace(statistic.get().getPace())
+                .date(statistic.get().getDate())
+                .count(statistic.get().getCount())
                 .build();
     }
 

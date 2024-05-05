@@ -1,6 +1,8 @@
 package com.gaenari.backend.domain.afterExercise.dto.requestDto;
 
-import jakarta.annotation.Nullable;
+import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
+import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
+import com.gaenari.backend.domain.recordDetail.dto.ProgramInfoDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,47 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 public class SaveExerciseRecordDto {
     private LocalDateTime date;
-    private String exerciseType;
-    private String programType;
-    private ProgramDto program;
+    private ExerciseType exerciseType;
+
+    private ProgramType programType;
+    private ProgramInfoDto program;
+
     private RecordDto record;
     private SpeedDto speeds;
     private HeartrateDto heartrates;
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ProgramDto {
-        private Long programId;
-        private Double targetValue;
-        private IntervalDto intervalInfo;
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class IntervalDto {
-        private Double duration;
-        private Integer setCount;
-        private Integer rangeCount;
-        private List<RangeDto> ranges;
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class RangeDto {
-        private Integer rangeId;
-        private Boolean isRunning;
-        private Double time;
-        private Double speed;
-    }
 
     @Getter
     @Setter
