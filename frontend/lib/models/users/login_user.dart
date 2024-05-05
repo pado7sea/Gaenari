@@ -32,7 +32,7 @@ class LoginInfo {
   int? weight;
   int? coin;
   String? lastTime;
-  List<MyPetDto>? myPetDto;
+  MyPetDto? myPetDto;
 
   LoginInfo(
       {this.memberId,
@@ -56,12 +56,8 @@ class LoginInfo {
     weight = json['weight'];
     coin = json['coin'];
     lastTime = json['lastTime'];
-    if (json['myPetDto'] != null) {
-      myPetDto = <MyPetDto>[];
-      json['myPetDto'].forEach((v) {
-        myPetDto!.add(MyPetDto.fromJson(v));
-      });
-    }
+    myPetDto =
+        json['myPetDto'] != null ? MyPetDto.fromJson(json['myPetDto']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -76,7 +72,7 @@ class LoginInfo {
     data['coin'] = coin;
     data['lastTime'] = lastTime;
     if (myPetDto != null) {
-      data['myPetDto'] = myPetDto!.map((v) => v.toJson()).toList();
+      data['myPetDto'] = myPetDto!.toJson();
     }
     return data;
   }
@@ -85,18 +81,27 @@ class LoginInfo {
 class MyPetDto {
   int? id;
   String? name;
+  int? affection;
+  String? tier;
+  String? changeTime;
 
-  MyPetDto({this.id, this.name});
+  MyPetDto({this.id, this.name, this.affection, this.tier, this.changeTime});
 
   MyPetDto.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    affection = json['affection'];
+    tier = json['tier'];
+    changeTime = json['changeTime'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
+    data['affection'] = affection;
+    data['tier'] = tier;
+    data['changeTime'] = changeTime;
     return data;
   }
 }
