@@ -21,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,9 +54,10 @@ public class MemberServiceImpl implements MemberService{
                 .gender(requestDto.getGender())
                 .height(requestDto.getHeight())
                 .weight(requestDto.getWeight())
+
                 .build();
         Member registMember = memberRepository.save(member);
-        // 회원 반려견
+        // 회원 반려견 종류
         Dog dog = dogRepository.findById(requestDto.getMyPet().getId())
                 .orElseThrow(DogNotFoundException::new);
         // 회원 반려견 등록
@@ -64,8 +66,16 @@ public class MemberServiceImpl implements MemberService{
                 .dog(dog)
                 .name(requestDto.getMyPet().getName())
                 .isPartner(true)
+                .changeTime(LocalDateTime.now())
                 .build();
         MyPet registMyPet = myPetRepository.save(myPet);
+
+        // LocalDateTime을 String으로 변경
+        LocalDateTime changeTime = registMyPet.getChangeTime();
+
+        // DateTimeFormatter를 사용하여 LocalDateTime을 문자열로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String stringChangeTime = changeTime.format(formatter);
 
         // 등록된 회원 불러오기
         MyPetDto myPetDto = MyPetDto.builder()
@@ -73,7 +83,7 @@ public class MemberServiceImpl implements MemberService{
                 .name(registMyPet.getName())
                 .affection(registMyPet.getAffection())
                 .tier(registMyPet.getTier())
-                .changeTime(registMyPet.getChangeTime())
+                .changeTime(stringChangeTime)
                 .build();
 
         // response
@@ -91,19 +101,23 @@ public class MemberServiceImpl implements MemberService{
     public MemberDto getMemberDetailsByEmail(String memberEmail) {
         Member member = memberRepository.findByEmail(memberEmail);
 
-        List<MyPet> myPetList = member.getMyPetList();
-        MyPetDto myPetDto = null;
-        for(MyPet myPet : myPetList){
-            if(myPet.getIsPartner()){
-                myPetDto = MyPetDto.builder()
-                        .id(myPet.getDog().getId())
-                        .name(myPet.getName())
-                        .affection(myPet.getAffection())
-                        .tier(myPet.getTier())
-                        .changeTime(myPet.getChangeTime())
-                        .build();
-            }
-        }
+        // 현재 파트너 반려견 조회
+        MyPet myPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
+                .orElseThrow(PartnerPetNotFoundException::new);
+        // LocalDateTime을 String으로 변경
+        LocalDateTime changeTime = myPet.getChangeTime();
+
+        // DateTimeFormatter를 사용하여 LocalDateTime을 문자열로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String stringChangeTime = changeTime.format(formatter);
+
+        MyPetDto myPetDto = MyPetDto.builder()
+                .id(myPet.getDog().getId())
+                .name(myPet.getName())
+                .affection(myPet.getAffection())
+                .tier(myPet.getTier())
+                .changeTime(stringChangeTime)
+                .build();
 
         MemberDto memberDto = MemberDto.builder()
                 .memberId(member.getId())
@@ -274,7 +288,7 @@ public class MemberServiceImpl implements MemberService{
         return String.format("%04d", random.nextInt(10000));
     }
 
-    @Override
+    @Override // 워치 연동
     public MemberDto checkAuthCode(String authCode) {
         // 1. 인증번호랑 확인하는 member를 가지고 오기, 없으면 예외처리
         Member member = memberRepository.findByDevice(authCode);
@@ -292,19 +306,24 @@ public class MemberServiceImpl implements MemberService{
         }
         // 3. MemberDto 변환
         // 4. 파트너 반려견 찾기
-        List<MyPet> myPetList = member.getMyPetList();
-        MyPetDto myPetDto = null;
-        for(MyPet myPet : myPetList){
-            if(myPet.getIsPartner()){
-                myPetDto = MyPetDto.builder()
-                        .id(myPet.getDog().getId())
-                        .name(myPet.getName())
-                        .affection(myPet.getAffection())
-                        .tier(myPet.getTier())
-                        .changeTime(myPet.getChangeTime())
-                        .build();
-            }
-        }
+        MyPet myPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
+                .orElseThrow(PartnerPetNotFoundException::new);
+
+        // LocalDateTime을 String으로 변경
+        LocalDateTime changeTime = myPet.getChangeTime();
+
+        // DateTimeFormatter를 사용하여 LocalDateTime을 문자열로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String stringChangeTime = changeTime.format(formatter);
+
+        MyPetDto myPetDto = MyPetDto.builder()
+                .id(myPet.getDog().getId())
+                .name(myPet.getName())
+                .affection(myPet.getAffection())
+                .tier(myPet.getTier())
+                .changeTime(stringChangeTime)
+                .build();
+
         MemberDto memberDto = MemberDto.builder()
                 .memberId(member.getId())
                 .email(member.getEmail())

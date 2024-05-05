@@ -46,6 +46,7 @@ public enum ErrorCode {
     EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "인증 이메일 전송에 실패했습니다."),
     AUTH_CODE_INVALID(HttpStatus.BAD_REQUEST, "인증 코드가 유효하지 않습니다."),
     OVER_TIME_AUTH_CODE(HttpStatus.BAD_REQUEST, "인증 가능시간을 초과하였습니다."),
+    LACK_COIN(HttpStatus.CONFLICT, "소지하고 있는 코인이 부족합니다."),
 
     // 메이트 관련 예외 처리
     PROFILE_UPDATE_FAILED(HttpStatus.BAD_REQUEST, "회원정보를 수정할 수 없습니다."),
@@ -58,6 +59,8 @@ public enum ErrorCode {
 
     // 반려견 관련 예외 처리
     PARTNERPET_NOT_FOUND(HttpStatus.BAD_REQUEST, "파트너 반려견이 존재하지 않습니다."),
+    ALREADY_HAVE_PET_TYPE(HttpStatus.BAD_REQUEST, "이미 보유중인 종류입니다."),
+    NOT_TIME_CHANGE_PARTNER(HttpStatus.BAD_REQUEST, "파트너 반려견을 변경가능할 수 있는 시간이 아닙니다."),
     DOG_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 개 종류입니다.");
 
 

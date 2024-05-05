@@ -35,8 +35,13 @@ public enum ResponseCode {
     ISSUED_WATCH_AUTH_CODE_SUCCESS(HttpStatus.OK, "워치 연동인증번호가 성공적으로 발급되었습니다."),
     WATCH_CONNECT_SUCCESS(HttpStatus.OK, "워치 연동이 정상적으로 이루어졌습니다."),
     ACCOUNT_SECESSION_SUCCESS(HttpStatus.OK, "계정 탈퇴가 성공적으로 이루어졌습니다."),
-    NOTIFICATION_SETTING_UPDATED(HttpStatus.OK, "알림 설정이 성공적으로 업데이트되었습니다.");
+    NOTIFICATION_SETTING_UPDATED(HttpStatus.OK, "알림 설정이 성공적으로 업데이트되었습니다."),
 
+    // 반려견
+    ADOPT_NEW_PET_SUCCESS(HttpStatus.OK, "새로운 반려견이 성공적으로 입양되었습니다."),
+    PARTNER_PET_CHANGE_SUCCESS(HttpStatus.OK, "파트너 반려견이 성공적으로 변경되었습니다."),
+    PARTNER_PET_GET_SUCCESS(HttpStatus.OK, "파트너 반려견을 성공적으로 불러왔습니다."),
+    PARTNER_PET_AFFECTION_INCREASE_SUCCESS(HttpStatus.OK, "파트너 반려견의 애정도가 성공적으로 증가하였습니다.");
     private final HttpStatus status;
     private final String message;
 }
