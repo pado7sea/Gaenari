@@ -84,23 +84,24 @@ public class WebSecurity {
                             return;
                         }
 
-                        // 현재 시간 가져오기
-                        LocalDateTime logoutTime = LocalDateTime.now();
-
-                        // 사용자의 로그아웃 시간 DB에 저장
-                        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-                        memberService.updateLogoutTime(username, logoutTime);
-
-                        // 저장된 시간 불러오기
-                        LocalDateTime savedTime = memberService.getLastTime(username);
-
-                        // 응답에 추가할 데이터 생성
-                        Map<String, Object> responseBody = new HashMap<>();
-                        responseBody.put("lastTime", savedTime);
+//                        // 현재 시간 가져오기
+//                        LocalDateTime logoutTime = LocalDateTime.now();
+//
+//                        // 사용자의 로그아웃 시간 DB에 저장
+//                        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+//                        memberService.updateLogoutTime(username, logoutTime);
+//
+//                        // 저장된 시간 불러오기
+//                        LocalDateTime savedTime = memberService.getLastTime(username);
+//
+//                        // 응답에 추가할 데이터 생성
+//                        Map<String, Object> responseBody = new HashMap<>();
+//                        responseBody.put("lastTime", savedTime);
 
                         // 로그아웃 성공 응답 생성
                         ApiResponse apiResponse = ApiResponse.getInstance();
-                        ResponseEntity<?> responseEntity = apiResponse.success(ResponseCode.LOGOUT_SUCCESS, responseBody);
+//                        ResponseEntity<?> responseEntity = apiResponse.success(ResponseCode.LOGOUT_SUCCESS, responseBody);
+                        ResponseEntity<?> responseEntity = apiResponse.success(ResponseCode.LOGOUT_SUCCESS);
 
                         // 응답 코드와 메시지 설정
                         response.setCharacterEncoding("UTF-8");
