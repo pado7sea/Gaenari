@@ -43,6 +43,14 @@ spring:
         - id: member-service
           uri: http://member-service.member.svc.cluster.local
           predicates:
+            - Path=/api/member-service/watch/**
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
+        - id: member-service
+          uri: http://member-service.member.svc.cluster.local
+          predicates:
             - Path=/api/member-service/**
           filters:
             - RemoveRequestHeader=Cookie
