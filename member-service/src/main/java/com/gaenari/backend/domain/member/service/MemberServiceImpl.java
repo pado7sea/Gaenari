@@ -18,10 +18,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.time.Duration;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -62,9 +67,13 @@ public class MemberServiceImpl implements MemberService{
                 .build();
         MyPet registMyPet = myPetRepository.save(myPet);
 
+        // 등록된 회원 불러오기
         MyPetDto myPetDto = MyPetDto.builder()
-                .id(registMyPet.getId())
+                .id(registMyPet.getDog().getId())
                 .name(registMyPet.getName())
+                .affection(registMyPet.getAffection())
+                .tier(registMyPet.getTier())
+                .changeTime(registMyPet.getChangeTime())
                 .build();
 
         // response
@@ -78,18 +87,22 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override // 이메일로 회원 찾기
+    @Transactional(readOnly = true)
     public MemberDto getMemberDetailsByEmail(String memberEmail) {
         Member member = memberRepository.findByEmail(memberEmail);
-        List<MyPet> myPetList = myPetRepository.findByMemberId(member.getId()); // 멤버 아이디로 조회
 
-        List<MyPetDto> myPetDtos = new ArrayList<>();
-        for(MyPet pet : myPetList){
-            MyPetDto myPet = MyPetDto.builder()
-                    .id(pet.getId())
-                    .name(pet.getName())
-                    .build();
-
-            myPetDtos.add(myPet);
+        List<MyPet> myPetList = member.getMyPetList();
+        MyPetDto myPetDto = null;
+        for(MyPet myPet : myPetList){
+            if(myPet.getIsPartner()){
+                myPetDto = MyPetDto.builder()
+                        .id(myPet.getDog().getId())
+                        .name(myPet.getName())
+                        .affection(myPet.getAffection())
+                        .tier(myPet.getTier())
+                        .changeTime(myPet.getChangeTime())
+                        .build();
+            }
         }
 
         MemberDto memberDto = MemberDto.builder()
@@ -101,46 +114,10 @@ public class MemberServiceImpl implements MemberService{
                 .height(member.getHeight())
                 .weight(member.getWeight())
                 .coin(member.getCoin())
-                .lastTime(member.getLastTime())
-                .myPetDto(myPetDtos)
+                .myPetDto(myPetDto)
                 .build();
 
         return memberDto;
-    }
-
-    @Override // 마지막 접속시간 갱신
-    public void updateLogoutTime(String memberEmail, LocalDateTime logoutTime) {
-        Member member = memberRepository.findByEmail(memberEmail);
-
-        if(member==null)
-            throw new EmailNotFoundException();
-
-        member = Member.builder()
-                .Id(member.getId())
-                .email(member.getEmail())
-                .password(member.getPassword())
-                .nickname(member.getNickname())
-                .birthday(member.getBirthday())
-                .gender(member.getGender())
-                .height(member.getHeight())
-                .weight(member.getWeight())
-                .coin(member.getCoin())
-                .device(member.getDevice())
-                .lastTime(logoutTime)
-                .build();
-        memberRepository.save(member); // 변경 사항을 저장합니다.
-    }
-
-    @Override // 마지막 접속시간 반환
-    public LocalDateTime getLastTime(String memberEmail) {
-        Member mem = memberRepository.findByEmail(memberEmail);
-
-        if(mem==null)
-            throw new EmailNotFoundException();
-
-        LocalDateTime time = mem.getLastTime();
-
-        return time;
     }
 
     @Override // 회원 탈퇴
@@ -177,7 +154,6 @@ public class MemberServiceImpl implements MemberService{
                 .weight(member.getWeight())
                 .coin(member.getCoin())
                 .device(member.getDevice())
-                .lastTime(member.getLastTime())
                 .myPetList(member.getMyPetList())
                 .build();
         memberRepository.save(updateMember);
@@ -203,7 +179,6 @@ public class MemberServiceImpl implements MemberService{
                 .weight(member.getWeight())
                 .coin(member.getCoin())
                 .device(member.getDevice())
-                .lastTime(member.getLastTime())
                 .myPetList(member.getMyPetList())
                 .build();
         memberRepository.save(updateMember);
@@ -228,7 +203,6 @@ public class MemberServiceImpl implements MemberService{
                 .weight(memberUpdate.getWeight()) // 변경
                 .coin(member.getCoin())
                 .device(member.getDevice())
-                .lastTime(member.getLastTime())
                 .myPetList(member.getMyPetList())
                 .build();
         memberRepository.save(updateMember);
@@ -265,6 +239,87 @@ public class MemberServiceImpl implements MemberService{
                 true, true, true, true,
                 new ArrayList<>());
     }
+    @Override // 워치 인증번호생성
+    public String issuedAuthCode(String memberEmail) {
+        Member member = memberRepository.findByEmail(memberEmail);
+
+        // 인증번호 생성 로직
+        String authCode = generateVerificationCode();
+
+        // 생성된 인증번호와 현재 시간을 멤버 엔티티에 저장
+        Member saveMember = Member.builder()
+                .Id(member.getId())
+                .email(member.getEmail())
+                .password(member.getPassword())
+                .nickname(member.getNickname())
+                .birthday(member.getBirthday())
+                .gender(member.getGender())
+                .height(member.getHeight())
+                .weight(member.getWeight())
+                .coin(member.getCoin())
+                .device(authCode)                 // 생성된 인증번호 저장
+                .deviceTime(LocalDateTime.now())  // 인증번호 생성시간 저장
+                .myPetList(member.getMyPetList())
+                .build();
+
+        // 변경된 내용을 데이터베이스에 저장
+        memberRepository.save(saveMember);
+
+        return authCode;
+    }
+    private String generateVerificationCode() {
+        // 인증번호 생성 로직 구현
+        // 예시로 랜덤한 숫자 4자리로 생성하는 코드 작성
+        Random random = new Random();
+        return String.format("%04d", random.nextInt(10000));
+    }
+
+    @Override
+    public MemberDto checkAuthCode(String authCode) {
+        // 1. 인증번호랑 확인하는 member를 가지고 오기, 없으면 예외처리
+        Member member = memberRepository.findByDevice(authCode);
+        if(member == null){
+            throw new MemberNotFoundException();
+        }
+        // 2. member에서 인증번호 발급시간에서 3분이내인지 확인, 예외처리
+        LocalDateTime deviceTime = member.getDeviceTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+        Duration duration = Duration.between(deviceTime, currentTime);
+        // 차이가 3분 이내인지 확인
+        Boolean timeCheck = duration.getSeconds() > 180; // 3분은 180초
+        if(timeCheck){
+            throw new OverTimeAuthCodeException();
+        }
+        // 3. MemberDto 변환
+        // 4. 파트너 반려견 찾기
+        List<MyPet> myPetList = member.getMyPetList();
+        MyPetDto myPetDto = null;
+        for(MyPet myPet : myPetList){
+            if(myPet.getIsPartner()){
+                myPetDto = MyPetDto.builder()
+                        .id(myPet.getDog().getId())
+                        .name(myPet.getName())
+                        .affection(myPet.getAffection())
+                        .tier(myPet.getTier())
+                        .changeTime(myPet.getChangeTime())
+                        .build();
+            }
+        }
+        MemberDto memberDto = MemberDto.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .birthday(member.getBirthday())
+                .gender(member.getGender())
+                .height(member.getHeight())
+                .weight(member.getWeight())
+                .coin(member.getCoin())
+                .myPetDto(myPetDto)
+                .build();
+
+        return memberDto;
+    }
+
 
 
 

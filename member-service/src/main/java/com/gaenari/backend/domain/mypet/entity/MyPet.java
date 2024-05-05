@@ -17,11 +17,11 @@ public class MyPet {
     @Column(name = "mypet_id")
     private Long Id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memer_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_id")
     private Dog dog;
 

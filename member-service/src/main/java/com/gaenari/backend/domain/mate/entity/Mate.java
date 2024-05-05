@@ -17,12 +17,12 @@ public class Mate {
     @Column(name = "mate_id")
     private Long Id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "friend1_id")
     @NotNull
     private Member friend1;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "friend2_id")
     @NotNull
     private Member friend2;

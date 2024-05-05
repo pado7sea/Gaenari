@@ -22,5 +22,5 @@ public class MemberDto {
     private int weight;
     private int coin;
     private LocalDateTime lastTime;
-    private List<MyPetDto> myPetDto;
+    private MyPetDto myPetDto;
 }

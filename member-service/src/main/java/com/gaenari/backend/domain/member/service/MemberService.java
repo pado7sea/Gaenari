@@ -12,9 +12,6 @@ public interface MemberService extends UserDetailsService {
     SignupResponse createMember(SignupRequestDto requestDto); // 회원가입
 
     MemberDto getMemberDetailsByEmail(String memberEmail); // 이메일로 회원찾기
-    void updateLogoutTime(String memberEmail, LocalDateTime logoutTime); // 로그아웃시 시간저장
-
-    LocalDateTime getLastTime(String memberEmail); // 마지막 접속시간 반환
     void deleteMember(String memberEmail); // 회원 삭제
     int getCoin(String memberEmail); // 보유코인조회
     void updateNick(String memberEmail, String nickName); // 회원 닉네임 변경
@@ -22,5 +19,7 @@ public interface MemberService extends UserDetailsService {
     void updateInfo(String memberEmail, MemberUpdate memberUpdate); // 회원 정보 변경(키,몸무게)
     Boolean duplNickNameCheck(String nickName); // 닉네임 중복체크
     Boolean duplEmailCheck(String email); // 이메일 중복체크
+    String issuedAuthCode(String memberEmail); // 워치 인증번호 발급
+    MemberDto checkAuthCode(String authCode); // 워치 인증번호 확인
 
 }
