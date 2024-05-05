@@ -1,5 +1,6 @@
 package com.gaenari.backend.domain.member.entity;
 
+import com.gaenari.backend.domain.mate.entity.Mate;
 import com.gaenari.backend.domain.mypet.entity.MyPet;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -63,11 +64,17 @@ public class Member {
     @Column(name = "member_device")
     private String device;
 
-    @Column(name = "member_lastTime", length = 30)
-    private LocalDateTime lastTime;
+    @Column(name = "member_device_time")
+    private LocalDateTime deviceTime;
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<MyPet> myPetList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "friend1", cascade = CascadeType.REMOVE)
+    private List<Mate> mateListAsFriend1 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "friend2", cascade = CascadeType.REMOVE)
+    private List<Mate> mateListAsFriend2 = new ArrayList<>();
 
 
 }
