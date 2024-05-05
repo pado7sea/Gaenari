@@ -6,12 +6,16 @@ class SmallButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool active;
+  final double widthPadding;
+  final double heightPadding;
 
   const SmallButton({
     super.key,
     required this.text,
     required this.onPressed,
     this.active = false,
+    this.widthPadding = 20,
+    this.heightPadding = 10,
   });
 
   @override
@@ -20,11 +24,14 @@ class SmallButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: active ? myLightGreen : myLightGrey,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: widthPadding, vertical: heightPadding),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text16(text: text, textColor: active ? Colors.white : myBlack));
+        child: SizedBox(
+            child: Text16(
+                text: text, textColor: active ? Colors.white : myBlack)));
   }
 }

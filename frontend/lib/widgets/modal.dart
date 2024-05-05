@@ -1,93 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('모달 위젯 예제'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return ModalContent();
-              },
-            );
-          },
-          child: Text('모달 열기'),
-        ),
-      ),
-    );
-  }
-}
-
 class ModalContent extends StatelessWidget {
-  const ModalContent({super.key});
+  final Widget customWidget;
+  final double height;
+
+  const ModalContent(
+      {super.key, required this.customWidget, required this.height});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+          color: myLightYellow,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       width: double.infinity,
-      height: 200,
-      padding: EdgeInsets.all(20),
+      height: height,
+      padding: EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Image.asset(
-                        'assets/icons/common_close.png',
-                        width: 20.0,
-                        height: 20.0,
-                      )),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text12(
-                        text: "닫기",
-                      ))
-                ],
+              SizedBox(width: 10),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Image.asset(
+                  'assets/icons/common_close.png',
+                  width: 20.0,
+                  height: 20.0,
+                ),
               ),
-              Text(
-                '여기가 모달 위젯이야!',
-                style: TextStyle(fontSize: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text16(
+                  text: "닫기",
+                  bold: true,
+                ),
               ),
             ],
           ),
-          SizedBox(height: 20),
-          Text('모달 내용'),
-          SizedBox(height: 20),
+          customWidget, // 파라미터로 받은 위젯을 여기에 추가해줘
         ],
       ),
     );
   }
 }
+
+
+//이런식으로 쓰삼
+// showModalBottomSheet(
+//   context: context,
+//   builder: (BuildContext context) {
+//     return BackdropFilter(
+//       filter: ImageFilter.blur(
+//           sigmaX: 3, sigmaY: 3), // 블러 효과 설정
+//       child: ModalContent(
+//         height: 250,
+//         customWidget: Column(
+//           children: [
+//             SizedBox(height: 20),
+//             Text16(
+//                 text: '${list[index].nickName}님에게',
+//                 bold: true),
+//             Text16(text: ' 친구신청을 보낼까요?', bold: true),
+//             SizedBox(height: 20),
+//             Row(
+//               mainAxisAlignment:
+//                   MainAxisAlignment.center,
+//               children: [
+//                 SmallButton(
+//                   onPressed: () {
+//                     Navigator.of(context).pop();
+//                   },
+//                   text: "취소",
+//                   active: false,
+//                   widthPadding: 50,
+//                 ),
+//                 SizedBox(
+//                   width: 16,
+//                 ),
+//                 SmallButton(
+//                   onPressed: () {
+//                     _mateAdd(index);
+//                   },
+//                   text: "신청",
+//                   active: true,
+//                   widthPadding: 50,
+//                 ),
+//               ],
+//             ),
+//             SizedBox(height: 10),
+//             Text12(
+//                 text: "친구신청 후 요청취소가 불가합니다.",
+//                 textColor: myGrey),
+//           ],
+//         ),
+//       ),
+//     );
+//   },
+// )
