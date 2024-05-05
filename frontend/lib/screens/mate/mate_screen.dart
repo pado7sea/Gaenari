@@ -20,9 +20,9 @@ class ListItem {
 
 class _MatePageState extends State<MatePage> {
   final List<ListItem> _dataList = [
-    ListItem('서민지'),
-    ListItem('서민기'),
-    ListItem('서민주'),
+    ListItem('이재신'),
+    ListItem('최준호'),
+    ListItem('서만지'),
     ListItem('서만기'),
   ];
 
