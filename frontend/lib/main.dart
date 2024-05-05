@@ -14,6 +14,7 @@ import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/widgets/footer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진과 위젯 트리 바인딩
@@ -75,6 +76,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => FooterProvider()),
