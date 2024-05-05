@@ -1,10 +1,10 @@
 package com.gaenari.backend.domain.program.service.impl;
 
+import com.gaenari.backend.domain.client.RecordServiceClient;
 import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
 import com.gaenari.backend.domain.program.dto.requestDto.ProgramCreateDto;
-import com.gaenari.backend.domain.program.dto.responseDto.IntervalInfo;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramDetailDto;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
+import com.gaenari.backend.domain.program.dto.requestDto.RangeRequestDto;
+import com.gaenari.backend.domain.program.dto.responseDto.*;
 import com.gaenari.backend.domain.program.entity.IntervalRange;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.domain.program.repository.ProgramRepository;
@@ -16,24 +16,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class ProgramServiceImpl implements ProgramService {
 
     private final ProgramRepository programRepository;
+    private final RecordServiceClient recordServiceClient;
 
+    // 프로그램 생성
+    @Override
     public Long createProgram(Long memberId, ProgramCreateDto programDto) {
-        ProgramType type = ProgramType.valueOf(programDto.getProgramType());
+        ProgramType type = programDto.getProgramType();
         List<IntervalRange> ranges = new ArrayList<>();
 
         if (programDto.getInterval() != null) {
-            for (ProgramCreateDto.RangeDto rangeDto : programDto.getInterval().getRanges()) {
+            for (RangeRequestDto rangeDto : programDto.getInterval().getRanges()) {
                 IntervalRange range = IntervalRange.builder()
-                        .isRunning(rangeDto.isRunning())
+                        .isRunning(rangeDto.getIsRunning())
                         .time(rangeDto.getTime())
                         .speed(rangeDto.getSpeed())
                         .program(null) // ProgramEntity 객체 생성 전 일시적으로 null로 설정
@@ -42,7 +45,7 @@ public class ProgramServiceImpl implements ProgramService {
             }
         }
 
-        // DTO -> Entity 변환
+        // ProgramCreateDto -> Program Entity 변환
         Program program = Program.builder()
                 .memberId(memberId)
                 .title(programDto.getProgramTitle())
@@ -50,15 +53,15 @@ public class ProgramServiceImpl implements ProgramService {
                 .targetValue(programDto.getProgramTargetValue())
                 .setCount(programDto.getInterval() != null ? programDto.getInterval().getSetCount() : 0)
                 .duration(programDto.getInterval() != null ? programDto.getInterval().getDuration() : 0)
-                .isFavorite(false) // Default
-                .usageCount(0)     // Default
+                .isFavorite(false) // 기본값
+                .usageCount(0)     // 기본값
                 .ranges(ranges)
                 .build();
 
         for (IntervalRange range : ranges) {
             range.updateProgram(program); // 프로그램 생성 후 역참조 설정
         }
-
+        
         // Entity 저장
         Program savedProgram = programRepository.save(program);
 
@@ -66,6 +69,8 @@ public class ProgramServiceImpl implements ProgramService {
         return savedProgram.getId();
     }
 
+    // 프로그램 삭제
+    @Override
     public void deleteProgram(Long memberId, Long programId) {
         Program program = programRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
 
@@ -77,145 +82,157 @@ public class ProgramServiceImpl implements ProgramService {
         programRepository.deleteById(programId);
     }
 
+    // 프로그램 목록 조회
     @Override
     public List<ProgramDto> getProgramList(Long memberId) {
-        List<ProgramDto> programDtos = convertToProgramDto(programRepository.getProgramList(memberId));
 
-        // 리스트에 ProgramListDto를 담아서 반환
-        return programDtos;
+        return programRepository.getProgramList(memberId).stream()
+                .map(program -> {
+                    ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
+
+                    // 마이크로 서비스간 통신을 통해 운동 기록 정보 가져오기
+                    List<ProgramDetailDto.UsageLogDto> usageLogDtos = recordServiceClient.getUsageLog(program.getId());
+
+                    int finishedCount = (int) usageLogDtos.stream()
+                            .filter(ProgramDetailDto.UsageLogDto::getIsFinished)
+                            .count();
+
+                    return ProgramDto.builder()
+                            .programId(program.getId())
+                            .programTitle(program.getTitle())
+                            .isFavorite(program.getIsFavorite())
+                            .usageCount(usageLogDtos.size())    // 운동 프로그램 총 사용 횟수
+                            .finishedCount(finishedCount)       // 운동 프로그램 완주 횟수
+                            .type(program.getType())
+                            .program(programTypeInfoDto)
+                            .build();
+                })
+                .toList();
     }
 
-    private List<ProgramDto> convertToProgramDto(List<Program> programs) {
-        return programs.stream()
-                .map(this::convertToProgramDto)
-                .collect(Collectors.toList());
-    }
-
-    private ProgramDto convertToProgramDto(Program program) {
-        ProgramDto.ProgramInfo programInfo = convertToProgramInfo(program);
-
-        int finishedCount = programRepository.countFinish(program.getId());
-
-        return new ProgramDto(
-                program.getId(),
-                program.getTitle(),
-                program.isFavorite(),
-                program.getUsageCount(),
-                finishedCount,
-                program.getType(),
-                programInfo
-        );
-    }
-
-    private ProgramDto.ProgramInfo convertToProgramInfo(Program program) {
+    private ProgramTypeInfoDto convertToProgramTypeInfoDto(Program program) {
         switch (program.getType()) {
             case D:  // 거리 목표 프로그램
-                return new ProgramDto.ProgramInfo(program.getTargetValue(), null);
-
             case T:  // 시간 목표 프로그램
-                return new ProgramDto.ProgramInfo(program.getTargetValue(), null);
+                return ProgramTypeInfoDto.builder()
+                        .targetValue(program.getTargetValue())
+                        .build();
 
             case I:  // 인터벌 프로그램
-                List<ProgramDto.RangeDto> ranges = program.getRanges().stream()
-                        .map(range -> new ProgramDto.RangeDto(
-                                range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
-                        .collect(Collectors.toList());
+                List<RangeDto> ranges = program.getRanges().stream()
+                        .map(range -> RangeDto.builder()
+                                .id(range.getId())
+                                .isRunning(range.getIsRunning())
+                                .time(range.getTime())
+                                .speed(range.getSpeed())
+                                .build())
+                        .toList();
 
                 int setCount = program.getSetCount();
                 int rangeCount = ranges.size();
-                int setDuration = ranges.stream().mapToInt(ProgramDto.RangeDto::getTime).sum(); // 각 range의 시간의 합
+                double setDuration = ranges.stream().mapToDouble(RangeDto::getTime).sum(); // 각 range의 시간의 합
 
-                ProgramDto.IntervalDto intervalDto = new ProgramDto.IntervalDto(setDuration, setCount, rangeCount, ranges);
-                return new ProgramDto.ProgramInfo(null, intervalDto);
+                return ProgramTypeInfoDto.builder()
+                        .intervalInfo(IntervalDto.builder()
+                                .duration(setDuration)
+                                .setCount(setCount)
+                                .rangeCount(rangeCount)
+                                .ranges(ranges)
+                                .build())
+                        .build();
 
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());
         }
     }
 
-
+    // 프로그램 상세 정보 조회
+    @Override
     public ProgramDetailDto getProgramDetail(Long memberId, Long programId) {
-        Optional<Program> program = programRepository.findById(programId);
+        Optional<Program> optionalProgram = programRepository.findById(programId);
 
-        if (program.isEmpty()) {
+        if (optionalProgram.isEmpty()) {
             throw new ProgramNotFoundException();
         }
 
+        Program program = optionalProgram.get();
+
         // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
-        if (!program.get().getMemberId().equals(memberId)) {
+        if (!program.getMemberId().equals(memberId)) {
             throw new ProgramAccessException();
         }
 
-        ProgramDetailDto programDetailDto = convertToProgramDetailDto(program.get());
-
-        return programDetailDto;
-    }
-
-    @Override
-    public ProgramDetailDto getProgramInfo(Long programId) {
-        Optional<Program> program = programRepository.findById(programId);
-
-        if (program.isEmpty()) {
-            throw new ProgramDeleteException();
-        }
-
-        ProgramDetailDto programDetailDto = convertToProgramDetailDto(program.get());
-
-        return programDetailDto;
-    }
-
-    private ProgramDetailDto convertToProgramDetailDto(Program program) {
-
-        // ProgramDto, IntervalDto, RangeDto는 programType에 따라 설정
-        ProgramDetailDto.ProgramDto programDto = ProgramDetailDto.ProgramDto.builder()
+        // ProgramTypeInfoDto, IntervalDto, RangeDto는 programType에 따라 설정
+        ProgramTypeInfoDto programTypeInfoDto = ProgramTypeInfoDto.builder()
                 .targetValue(determineTargetValue(program))
                 .intervalInfo(constructIntervalDto(program))
                 .build();
 
-//        ProgramDetailDto.UsageLogDto usageLog = convertToProgramDetailInfo(program);
+        // 마이크로 서비스간 통신을 통해 운동 기록 정보 가져오기
+        List<ProgramDetailDto.UsageLogDto> usageLogDtos = recordServiceClient.getUsageLog(program.getId());
 
-        return new ProgramDetailDto(
-                program.getId(),
-                program.getTitle(),
-                program.isFavorite(),
-                program.getType(),
-                programDto,
-                program.getUsageCount()
-        );
+        // 운동 프로그램 총 사용 통계
+        DoubleSummaryStatistics summary = usageLogDtos.stream()
+                .mapToDouble(log -> log.getDistance())
+                .summaryStatistics();
+
+        // 운동 프로그램 완주 횟수
+        ProgramDetailDto.TotalRecordDto totalRecordDto = ProgramDetailDto.TotalRecordDto.builder()
+                .distance(summary.getSum())
+                .time(summary.getSum())
+                .cal(summary.getSum())
+                .build();
+
+        int finishedCount = (int) usageLogDtos.stream()
+                .filter(ProgramDetailDto.UsageLogDto::getIsFinished)
+                .count();
+
+        return ProgramDetailDto.builder()
+                .programId(program.getId())
+                .programTitle(program.getTitle())
+                .isFavorite(program.getIsFavorite())
+                .type(program.getType())
+                .program(programTypeInfoDto)
+                .totalRecord(totalRecordDto)            // 운동 프로그램 총 사용 통계
+                .usageCount(usageLogDtos.size())        // 운동 프로그램 총 사용 횟수
+                .finishedCount(finishedCount)           // 운동 프로그램 완주 횟수
+                .usageLog(usageLogDtos)                 // 운동 프로그램 사용 기록
+                .build();
     }
 
+    // 타겟 값 설정
     private Double determineTargetValue(Program program) {
-        // 타겟 값 설정 로직
         switch (program.getType()) {
-            case D:
-                return program.getTargetValue();
-            case T:
+            case D, T:
                 return program.getTargetValue();
             default:
                 return null; // I 타입은 IntervalDto에서 처리
         }
     }
 
-    private ProgramDetailDto.IntervalDto constructIntervalDto(Program program) {
-        // Interval 정보 구성 로직
-        if (program.getType() == ProgramType.I) {
-            List<ProgramDetailDto.RangeDto> ranges = program.getRanges().stream()
-                    .map(range -> new ProgramDetailDto.RangeDto(
-                            range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
-                    .toList();
-
-            int totalDuration = ranges.stream().mapToInt(ProgramDetailDto.RangeDto::getTime).sum();
-
-            return ProgramDetailDto.IntervalDto.builder()
-                    .duration(totalDuration)
-                    .setCount(program.getSetCount())
-                    .rangeCount(program.getRanges().size())
-                    .ranges(ranges)
-                    .build();
+    private IntervalDto constructIntervalDto(Program program) {
+        if (program.getType() != ProgramType.I || program.getRanges() == null) {
+            return null;
         }
-        return null;
-    }
 
+        List<RangeDto> ranges = program.getRanges().stream()
+                .map(range -> RangeDto.builder()
+                        .id(range.getId())
+                        .isRunning(range.getIsRunning())
+                        .time(range.getTime())
+                        .speed(range.getSpeed())
+                        .build())
+                .toList();
+
+        double totalDuration = ranges.stream().mapToDouble(RangeDto::getTime).sum();
+
+        return IntervalDto.builder()
+                .duration(totalDuration)
+                .setCount(program.getSetCount())
+                .rangeCount(program.getRanges().size())
+                .ranges(ranges)
+                .build();
+    }
 
 
 }
