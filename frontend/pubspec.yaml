@@ -45,6 +45,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0 # 로그인유지 및 토큰 저장을 위한 라이브러리
   jwt_decode: ^0.3.1 # 일단 해야함
   intl: ^0.18.1
+  fluttertoast: ^8.0.8 #토스트보여주는 라이브러리
 
 dev_dependencies:
   flutter_test:
