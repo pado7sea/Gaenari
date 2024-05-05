@@ -68,6 +68,14 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
+            - Path=/api/member-service/watch/**
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
             - Path=/api/member-service/v3/api-docs
             - Method=GET
           filters:
