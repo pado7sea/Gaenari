@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
@@ -43,5 +45,5 @@ public class MyPet {
     private Boolean isPartner = false;
 
     @Column(name = "mypet_change_time")
-    private String changeTime;
+    private LocalDateTime changeTime;
 }

@@ -21,6 +21,5 @@ public class MemberDto {
     private int height;
     private int weight;
     private int coin;
-    private LocalDateTime lastTime;
     private MyPetDto myPetDto;
 }

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface MyPetRepository extends JpaRepository<MyPet, Long> {
     List<MyPet> findByMemberId(Long memberId);
     Optional<MyPet> findByMemberIdAndIsPartner(Long memberId, Boolean isPartner);
+    Optional<MyPet> findByMemberIdAndDogId(Long memberId, Long dogId);
 }
