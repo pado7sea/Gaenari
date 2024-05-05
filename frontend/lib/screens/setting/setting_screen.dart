@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:forsythia/screens/setting/account_screen.dart';
 import 'package:forsythia/screens/setting/bodyinfo_screen.dart';
@@ -5,6 +7,8 @@ import 'package:forsythia/screens/setting/notification_screen.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/button_widgets.dart';
+import 'package:forsythia/widgets/modal.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
@@ -125,12 +129,58 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           SizedBox(height: 10),
           GestureDetector(
-            onTap: () async {
-              // 1. 로컬 스토리지에서 로그인 정보 삭제
-              await secureStorageService.deleteToken();
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3), // 블러 효과 설정
+                    child: ModalContent(
+                      height: 230,
+                      customWidget: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Text20(
+                            text: '진짜로 정말로',
+                            bold: true,
+                            textColor: myRed,
+                          ),
+                          Text16(text: '로그아웃 하시겠어요?', bold: true),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SmallButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                text: "잘못누름",
+                                active: true,
+                                widthPadding: 30,
+                              ),
+                              SizedBox(
+                                width: 16,
+                              ),
+                              SmallButton(
+                                onPressed: () async {
+                                  // 1. 로컬 스토리지에서 로그인 정보 삭제
+                                  await secureStorageService.deleteToken();
 
-              // 2. 로그인 화면으로 이동
-              GoRouter.of(context).go('/welcome');
+                                  // 2. 로그인 화면으로 이동
+                                  GoRouter.of(context).go('/welcome');
+                                },
+                                text: "로그아웃",
+                                active: false,
+                                widthPadding: 30,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
             },
             child: Text(
               '로그아웃',
