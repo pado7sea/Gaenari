@@ -31,6 +31,6 @@ public class RecordFeignServiceImpl implements RecordFeignService {
                         .cal(record.getCal())
                         .isFinished(record.getIsFinished())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 }

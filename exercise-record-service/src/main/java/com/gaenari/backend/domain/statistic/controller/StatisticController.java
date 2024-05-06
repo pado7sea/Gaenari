@@ -28,18 +28,18 @@ public class StatisticController {
     @GetMapping("/v1")
     public ResponseEntity<?> getAllStatistics() {
         Long memberId = 1L;
-        TotalStatisticDto statistics = statisticService.getWholeExerciseStatistics(memberId);
+        TotalStatisticDto statistic = statisticService.getWholeExerciseStatistics(memberId);
 
-        return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistics);
+        return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistic);
     }
 
     @Operation(summary = "전체 통계 조회 2", description = "저장되어있는 누적값 조회")
     @GetMapping("/v2")
     public ResponseEntity<?> getTotalStatistics() {
         Long memberId = 1L;
-        TotalStatisticDto statistics = statisticService.getTotalStatistics(memberId);
+        TotalStatisticDto statistic = statisticService.getTotalStatistics(memberId);
 
-        return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistics);
+        return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistic);
     }
 
 //    @Operation(summary = "전체 통계 업데이트", description = "회원의 운동 기록을 저장할 때마다 누적 통계를 업데이트하는 방식")
@@ -55,18 +55,18 @@ public class StatisticController {
     @GetMapping("/month/{year}/{month}")
     public ResponseEntity<?> getMonthlyStatistics(@PathVariable(name = "year") int year, @PathVariable(name = "month") int month) {
         Long memberId = 1L;
-        MonthStatisticDto statistics = statisticService.getMonthlyExerciseStatistics(memberId, year, month);
+        MonthStatisticDto statistic = statisticService.getMonthlyExerciseStatistics(memberId, year, month);
 
-        return response.success(ResponseCode.STATISTIC_MONTH_FETCHED, statistics);
+        return response.success(ResponseCode.STATISTIC_MONTH_FETCHED, statistic);
     }
 
     @Operation(summary = "주간 통계 조회", description = "주간 통계 조회")
     @GetMapping("/week/{year}/{month}/{day}")
     public ResponseEntity<?> getWeeklyStatistics(@PathVariable(name = "year") int year, @PathVariable(name = "month") int month, @PathVariable(name = "day") int day) {
         Long memberId = 1L;
-        WeekStatisticDto statistics = statisticService.getWeeklyExerciseStatistics(memberId, year, month, day);
+        WeekStatisticDto statistic = statisticService.getWeeklyExerciseStatistics(memberId, year, month, day);
 
-        return response.success(ResponseCode.STATISTIC_WEEK_FETCHED, statistics);
+        return response.success(ResponseCode.STATISTIC_WEEK_FETCHED, statistic);
     }
 
 }
