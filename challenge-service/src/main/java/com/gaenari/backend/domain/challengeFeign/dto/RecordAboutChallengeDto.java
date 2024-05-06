@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecordAboutChallengeDto {
+    private Long memberId;
     private Long recordId;
     private Double distance;    // 해당 기록 시간
     private Double time;        // 해당 기록 거리

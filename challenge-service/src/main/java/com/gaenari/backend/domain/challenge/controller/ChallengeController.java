@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,6 +40,18 @@ public class ChallengeController {
         List<ChallengeDto> challengeDtos = challengeService.getAllChallenges();
 
         return response.success(ResponseCode.CHALLENGE_FETCHED, challengeDtos);
+    }
+
+    @Operation(summary = "도전 과제 전체 삭제", description = "모든 도전 과제를 삭제합니다.")
+    @DeleteMapping("/delete-all")
+    public ResponseEntity<?> deleteAllChallenges() {
+        boolean success = challengeService.deleteAllChallenges();
+
+        if (success) {
+            return response.success(ResponseCode.CHALLENGE_DELETED_ALL);
+        } else {
+            return response.error(ErrorCode.CHALLENGE_DELETE_ALL_FAILED);
+        }
     }
 
 }

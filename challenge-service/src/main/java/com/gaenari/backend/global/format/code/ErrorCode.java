@@ -35,6 +35,7 @@ public enum ErrorCode {
     // 도전과제 예외 처리
     CHALLENGE_CREATE_FAILED(HttpStatus.CREATED, "도전과제가 이미 존재합니다. 도전과제를 생성할 수 없습니다."),
     CHALLENGE_NOT_FOUND(HttpStatus.OK, "도전과제를 찾을 수 없습니다."),
+    CHALLENGE_DELETE_ALL_FAILED(HttpStatus.OK, "도전과제를 삭제할 수 없습니다."),
 
     ACHIEVED_TROPHY_NOT_FOUND(HttpStatus.OK, "달성 업적을 찾을 수 없습니다."),
     ACHIEVED_MISSION_NOT_FOUND(HttpStatus.OK, "달성 미션을 찾을 수 없습니다."),
