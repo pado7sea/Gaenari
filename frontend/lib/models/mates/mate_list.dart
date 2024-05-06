@@ -1,7 +1,7 @@
 class MateList {
   String? status;
   String? message;
-  List<Data>? data;
+  List<Mate>? data;
 
   MateList({this.status, this.message, this.data});
 
@@ -9,9 +9,9 @@ class MateList {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <Mate>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(Mate.fromJson(v));
       });
     }
   }
@@ -27,19 +27,29 @@ class MateList {
   }
 }
 
-class Data {
+class Mate {
   int? mateId;
   int? memberId;
   String? nickName;
-  Mypet? mypet;
+  int? petId;
+  String? petName;
+  String? petTier;
 
-  Data({this.mateId, this.memberId, this.nickName, this.mypet});
+  Mate(
+      {this.mateId,
+      this.memberId,
+      this.nickName,
+      this.petId,
+      this.petName,
+      this.petTier});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Mate.fromJson(Map<String, dynamic> json) {
     mateId = json['mateId'];
     memberId = json['memberId'];
     nickName = json['nickName'];
-    mypet = json['mypet'] != null ? Mypet.fromJson(json['mypet']) : null;
+    petId = json['petId'];
+    petName = json['petName'];
+    petTier = json['petTier'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,31 +57,9 @@ class Data {
     data['mateId'] = mateId;
     data['memberId'] = memberId;
     data['nickName'] = nickName;
-    if (mypet != null) {
-      data['mypet'] = mypet!.toJson();
-    }
-    return data;
-  }
-}
-
-class Mypet {
-  int? id;
-  String? name;
-  String? tier;
-
-  Mypet({this.id, this.name, this.tier});
-
-  Mypet.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    tier = json['tier'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['name'] = name;
-    data['tier'] = tier;
+    data['petId'] = petId;
+    data['petName'] = petName;
+    data['petTier'] = petTier;
     return data;
   }
 }
