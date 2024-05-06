@@ -112,9 +112,9 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                 child: TextField(
                   controller: _nicknamecontroller,
                   onChanged: (value) {
-                    if (value.length < 3 && value.length <= 10) {
+                    if (value.length < 2 && value.length <= 10) {
                       setState(() {
-                        _errorText = '3자 이상 10자 이하';
+                        _errorText = '2자 이상 10자 이하';
                       });
                     } else {
                       setState(() {
@@ -291,7 +291,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
               if (_nicknamecontroller.text.isNotEmpty &&
                   _birthcontroller.text.isNotEmpty &&
                   check != "" && //닉네임 체크
-                  _nicknamecontroller.text.length >= 3) {
+                  _nicknamecontroller.text.length >= 2) {
                 Provider.of<SignupProvider>(context, listen: false)
                     .setNickName(_nicknamecontroller.text);
                 Provider.of<SignupProvider>(context, listen: false)

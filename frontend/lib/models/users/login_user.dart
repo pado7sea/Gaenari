@@ -31,7 +31,6 @@ class LoginInfo {
   int? height;
   int? weight;
   int? coin;
-  String? lastTime;
   MyPetDto? myPetDto;
 
   LoginInfo(
@@ -43,7 +42,6 @@ class LoginInfo {
       this.height,
       this.weight,
       this.coin,
-      this.lastTime,
       this.myPetDto});
 
   LoginInfo.fromJson(Map<String, dynamic> json) {
@@ -55,7 +53,6 @@ class LoginInfo {
     height = json['height'];
     weight = json['weight'];
     coin = json['coin'];
-    lastTime = json['lastTime'];
     myPetDto =
         json['myPetDto'] != null ? MyPetDto.fromJson(json['myPetDto']) : null;
   }
@@ -70,7 +67,6 @@ class LoginInfo {
     data['height'] = height;
     data['weight'] = weight;
     data['coin'] = coin;
-    data['lastTime'] = lastTime;
     if (myPetDto != null) {
       data['myPetDto'] = myPetDto!.toJson();
     }

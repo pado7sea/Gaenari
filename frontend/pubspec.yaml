@@ -46,6 +46,7 @@ dependencies:
   jwt_decode: ^0.3.1 # 일단 해야함
   intl: ^0.18.1
   fluttertoast: ^8.0.8 #토스트보여주는 라이브러리
+  flutter_slidable: ^0.6.0 #슬라이드 해서 삭제버튼 띄우는 라이브러리
 
 dev_dependencies:
   flutter_test:

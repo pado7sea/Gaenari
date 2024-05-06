@@ -27,7 +27,7 @@ class SmallAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: back
             ? GestureDetector(
                 onTap: () {
-                  Navigator.pop(context); // 이미지 클릭 시 뒤로 가기
+                  Navigator.pop(context, "update"); // 이미지 클릭 시 뒤로 가기
                 },
                 child: Image.asset(
                   "assets/icons/common_back.png",

@@ -167,6 +167,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                   await secureStorageService.deleteToken();
 
                                   // 2. 로그인 화면으로 이동
+                                  // ignore: use_build_context_synchronously
                                   GoRouter.of(context).go('/welcome');
                                 },
                                 text: "로그아웃",
