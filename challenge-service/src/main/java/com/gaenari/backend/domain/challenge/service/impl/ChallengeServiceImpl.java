@@ -60,4 +60,13 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean deleteAllChallenges() {
+        try {
+            challengeRepository.deleteAll();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

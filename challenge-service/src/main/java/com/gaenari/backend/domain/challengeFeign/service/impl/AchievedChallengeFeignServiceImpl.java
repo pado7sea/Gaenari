@@ -2,100 +2,110 @@ package com.gaenari.backend.domain.challengeFeign.service.impl;
 
 import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeType;
-import com.gaenari.backend.domain.challengeFeign.service.AchievedChallengeFeignService;
-import com.gaenari.backend.domain.challengeFeign.dto.MissionDto;
-import com.gaenari.backend.domain.challengeFeign.dto.RecordAboutChallengeDto;
-import com.gaenari.backend.domain.challengeFeign.dto.TrophyDto;
 import com.gaenari.backend.domain.challenge.dto.responseDto.ChallengeDto;
 import com.gaenari.backend.domain.challenge.entity.Challenge;
 import com.gaenari.backend.domain.challenge.repository.ChallengeRepository;
+import com.gaenari.backend.domain.challengeFeign.dto.RecordAboutChallengeDto;
+import com.gaenari.backend.domain.challengeFeign.service.AchievedChallengeFeignService;
+import com.gaenari.backend.domain.memberChallenge.entity.MemberChallenge;
+import com.gaenari.backend.domain.memberChallenge.repository.MemberChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AchievedChallengeFeignServiceImpl implements AchievedChallengeFeignService {
 
     private final ChallengeRepository challengeRepository;
+    private final MemberChallengeRepository memberChallengeRepository;
 
-    @Override
-    public List<Integer> getAchievedTrophyIds(RecordAboutChallengeDto recordDto) {
-        return getAchievedIds(recordDto.getStatisticDistance(), recordDto.getStatisticTime(), ChallengeCategory.TROPHY);
+    private void createMemberChallege(Long memberId){
+        if (memberChallengeRepository.count() == 0) { // 회원 도전과제가 없을 경우에만 생성
+            for(Challenge challenge: challengeRepository.findAll()){
+
+                MemberChallenge memberChallenge = MemberChallenge.builder()
+                        .memberId(memberId)
+                        .challenge(challenge)
+                        .isAchieved(false)
+                        .count(0)
+                        .obtainable(0)
+                        .build();
+                memberChallengeRepository.save(memberChallenge);
+
+            }
+        }
     }
 
     @Override
-    public List<Integer> getAchievedMissionIds(RecordAboutChallengeDto recordDto) {
-        return getAchievedIds(recordDto.getDistance(), recordDto.getTime(), ChallengeCategory.MISSION);
-    }
+    public List<Integer> getNewlyAchievedChallengeIds(RecordAboutChallengeDto recordDto) {
+        // 회원이 기존에 달성한 도전과제 아이디 리스트 조회
+        List<MemberChallenge> achievedChallenges = memberChallengeRepository.findByMemberIdAndIsAchievedIsTrue(recordDto.getMemberId());
+        List<Integer> achievedChallengeIds = achievedChallenges.stream()
+                .map(memberChallenge -> memberChallenge.getChallenge().getId())
+                .toList();
 
-    private List<Integer> getAchievedIds(Double distance, Double time, ChallengeCategory category) {
-        List<Integer> achievedIds = new ArrayList<>();
-        List<ChallengeDto> challenges = getChallengesByCategory(category);
+        // 해당 도전과제 아이디 리스트를 제외한 도전 과제 엔티티 조회
+        List<Challenge> challenges;
+        if (achievedChallengeIds.isEmpty()) {
+            // 만약 achievedChallengeIds가 비어 있다면, 모든 도전 과제를 조회한다.
+            challenges = challengeRepository.findAll();
+        } else {
+            // achievedChallengeIds가 비어 있지 않다면, 해당 도전 과제 아이디를 제외한 도전 과제를 조회한다.
+            challenges = challengeRepository.findByIdNotIn(achievedChallengeIds);
+        }
 
-        for (ChallengeDto challenge : challenges) {
+        // 새로 달성한 도전과제 아이디 리스트
+        List<Integer> newlyAchievedIds = new ArrayList<>();
+
+        // 도전과제 달성 여부 판단
+        for (Challenge challenge : challenges) {
             boolean achieved = false;
             if (challenge.getType() == ChallengeType.T) {
-                achieved = time >= challenge.getValue();
+                achieved = recordDto.getTime() >= challenge.getValue();
             } else if (challenge.getType() == ChallengeType.D) {
-                achieved = distance >= challenge.getValue();
+                achieved = recordDto.getDistance() >= challenge.getValue();
             }
             if (achieved) {
-                achievedIds.add(challenge.getId());
-                System.out.println(challenge.getType());
+                // 새로 달성한 도전과제 아이디 리스트에 추가
+                newlyAchievedIds.add(challenge.getId());
             }
         }
 
-        return achievedIds;
-    }
-
-    private List<ChallengeDto> getChallengesByCategory(ChallengeCategory category) {
-        return challengeRepository.findByCategory(category).stream()
-                .map(challenge -> ChallengeDto.builder()
-                        .id(challenge.getId())
-                        .category(challenge.getCategory())
-                        .type(challenge.getType())
-                        .value(challenge.getValue())
-                        .coin(challenge.getCoin())
-                        .heart(challenge.getHeart())
-                        .build())
-                .collect(Collectors.toList());
+        return newlyAchievedIds;
     }
 
     @Override
-    public TrophyDto getTrophy(Integer challengeId) {
-        Optional<Challenge> optionalChallenge = challengeRepository.findById(Long.valueOf(challengeId));
-        if (optionalChallenge.isPresent()) {
-            Challenge challenge = optionalChallenge.get();
-            return TrophyDto.builder()
-                    .id(challenge.getId())
-                    .type(challenge.getType())
-                    .coin(challenge.getCoin())
-                    .build();
-        } else {
-            return null;
-        }
-    }
+    public List<ChallengeDto> getChallenges(List<Integer> challengeIds) {
+        return challengeIds.stream()
+                .map(challengeId -> {
+                    Challenge challenge = challengeRepository.findById(challengeId);
+                    if (challenge.getCategory() == ChallengeCategory.MISSION) {
 
-    @Override
-    public MissionDto getMission(Integer challengeId) {
-        Optional<Challenge> optionalChallenge = challengeRepository.findById(Long.valueOf(challengeId));
-        if (optionalChallenge.isPresent()) {
-            Challenge challenge = optionalChallenge.get();
-            return MissionDto.builder()
-                    .id(challenge.getId())
-                    .type(challenge.getType())
-                    .value(challenge.getValue())
-                    .coin(challenge.getCoin())
-                    .heart(challenge.getHeart())
-                    .build();
-        } else {
-            return null;
-        }
+                        return ChallengeDto.builder()
+                                .id(challenge.getId())
+                                .category(challenge.getCategory())
+                                .type(challenge.getType())
+                                .value(challenge.getValue())
+                                .coin(challenge.getCoin())
+                                .heart(challenge.getHeart())
+                                .build();
+
+                    } else if (challenge.getCategory() == ChallengeCategory.TROPHY) {
+
+                        return ChallengeDto.builder()
+                                .id(challenge.getId())
+                                .category(challenge.getCategory())
+                                .type(challenge.getType())
+                                .value(0)
+                                .coin(challenge.getCoin())
+                                .heart(0)
+                                .build();
+                    }
+
+                    return null;
+                }).toList();
     }
 }
-

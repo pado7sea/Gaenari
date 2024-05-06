@@ -26,8 +26,10 @@ public enum ResponseCode {
     /* 도전과제 */
     CHALLENGE_CREATED(HttpStatus.CREATED, "도전과제가 정상적으로 생성되었습니다."),
     CHALLENGE_FETCHED(HttpStatus.OK, "도전과제가 성공적으로 조회되었습니다."),
+    CHALLENGE_DELETED_ALL(HttpStatus.OK,"도전과제를 모두 삭제하였습니다." ),
     ACHIEVED_TROPHY_FETCHED(HttpStatus.OK, "달성 업적이 성공적으로 조회되었습니다."),
     ACHIEVED_MISSION_FETCHED(HttpStatus.OK, "달성 미션이 성공적으로 조회되었습니다.");
+
 
     private final HttpStatus status;
     private final String message;
