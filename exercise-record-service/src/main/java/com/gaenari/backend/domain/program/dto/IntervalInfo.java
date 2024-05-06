@@ -27,12 +27,5 @@ public class IntervalInfo {
         private int time;
         private int speed;
     }
-
-    // 추가 생성자: rangeCount는 리스트 사이즈로 자동 계산
-    public IntervalInfo(int duration, int setCount, List<IntervalRange> ranges) {
-        this.duration = duration;
-        this.setCount = setCount;
-        this.ranges = ranges;
-        this.rangeCount = ranges != null ? ranges.size() : 0;
-    }
+    
 }
