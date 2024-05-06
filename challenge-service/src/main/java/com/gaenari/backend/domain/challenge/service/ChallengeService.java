@@ -10,4 +10,5 @@ public interface ChallengeService {
 
     List<ChallengeDto> getAllChallenges();
 
+    boolean deleteAllChallenges();
 }
