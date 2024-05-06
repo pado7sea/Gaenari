@@ -35,7 +35,7 @@ public class RecordServiceImpl implements RecordService {
 
         return records.stream()
                 .map(this::convertToRecordDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private RecordDto convertToRecordDto(Record record) {
