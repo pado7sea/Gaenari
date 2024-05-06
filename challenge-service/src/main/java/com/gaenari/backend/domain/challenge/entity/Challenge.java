@@ -2,9 +2,13 @@ package com.gaenari.backend.domain.challenge.entity;
 
 import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeType;
+import com.gaenari.backend.domain.memberChallenge.entity.MemberChallenge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,5 +41,10 @@ public class Challenge {
 
     @Column(name = "challenge_heart")
     private Integer heart;
+
+    /* Challenge - MemberChallenge 양방향 매핑 */
+    @Builder.Default
+    @OneToMany(mappedBy = "challenge", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<MemberChallenge> memberChallenges = new ArrayList<>();
 
 }

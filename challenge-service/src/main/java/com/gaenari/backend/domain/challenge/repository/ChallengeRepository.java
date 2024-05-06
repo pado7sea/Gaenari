@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
-    List<Challenge> findByCategoryAndType(ChallengeCategory category, ChallengeType type);
+    // 주어진 ID 목록을 제외한 도전 과제 엔티티를 조회
+    List<Challenge> findByIdNotIn(List<Integer> challengeIds);
 
-    List<Challenge> findByCategory(ChallengeCategory category);
+    Challenge findById(Integer challengeId);
+
 }
