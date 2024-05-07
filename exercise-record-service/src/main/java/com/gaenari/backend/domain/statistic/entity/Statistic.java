@@ -21,7 +21,7 @@ public class Statistic {
 
     @NotNull
     @Column(name = "member_id")
-    private Long memberId;
+    private String memberId;
 
     @NotNull
     @Builder.Default
@@ -69,4 +69,5 @@ public class Statistic {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+
 }

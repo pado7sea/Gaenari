@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChallengeDto {
-    private  int id;
+    private int id;
     private ChallengeCategory category;
     private ChallengeType type;
     private Integer value;

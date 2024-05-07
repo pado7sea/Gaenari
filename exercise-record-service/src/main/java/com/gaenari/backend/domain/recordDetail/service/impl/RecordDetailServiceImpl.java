@@ -34,7 +34,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
     private final ChallengeServiceClient challengeServiceClient;
 
     @Override
-    public RecordDetailDto getExerciseRecordDetail(Long memberId, Long recordId) {
+    public RecordDetailDto getExerciseRecordDetail(String memberId, Long recordId) {
 
         Optional<Record> record = recordRepository.findById(recordId);
 

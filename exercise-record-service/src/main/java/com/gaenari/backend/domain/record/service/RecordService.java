@@ -9,12 +9,12 @@ import java.util.List;
 
 public interface RecordService {
 
-    List<RecordDto> getWholeExerciseRecords(Long memberId);
+    List<RecordDto> getWholeExerciseRecords(String memberId);
 
-    MonthRecordDto getMonthlyExerciseRecords(Long memberId, int year, int month);
+    MonthRecordDto getMonthlyExerciseRecords(String memberId, int year, int month);
 
-    WeekRecordDto getWeeklyExerciseRecords(Long memberId, int year, int month, int day);
+    WeekRecordDto getWeeklyExerciseRecords(String memberId, int year, int month, int day);
 
-    List<RecordDto> getDailyExerciseRecords(Long memberId, LocalDate date);
+    List<RecordDto> getDailyExerciseRecords(String memberId, LocalDate date);
 
 }

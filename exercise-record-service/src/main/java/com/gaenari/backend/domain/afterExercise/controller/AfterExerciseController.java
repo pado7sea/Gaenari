@@ -26,7 +26,7 @@ public class AfterExerciseController {
     @Transactional
     @Operation(summary = "최종 운동 기록 저장", description = "최종 운동 기록 저장")
     @PostMapping("/save")
-    public ResponseEntity<?> getAllPrograms(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") Long memberId,
+    public ResponseEntity<?> getAllPrograms(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId,
                                             @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
         // 누적 통계 업데이트 -> 업적
         afterExerciseService.updateExerciseStatistics(memberId, exerciseDto);
