@@ -56,6 +56,14 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
+        - id: inventory-service
+          uri: http://inventory-service.inventory.svc.cluster.local
+          predicates:
+            - Path=/api/inventory-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
         - id: inventory-service
           uri: http://inventory-service.inventory.svc.cluster.local
           predicates:
@@ -64,6 +72,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
+
         - id: program-service
           uri: http://program-service.program.svc.cluster.local
           predicates:
@@ -79,6 +88,14 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/program-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
+
+        - id: exercise-record-service
+          uri: http://exercise-record-service.exercise-record.svc.cluster.local
+          predicates:
+            - Path=/api/exercise-record-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
         - id: exercise-record-service
           uri: http://exercise-record-service.exercise-record.svc.cluster.local
           predicates:
@@ -87,6 +104,14 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
+
+        - id: challenge-service
+          uri: http://challenge-service.challenge.svc.cluster.local
+          predicates:
+            - Path=/api/challenge-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
         - id: challenge-service
           uri: http://challenge-service.challenge.svc.cluster.local
           predicates:
