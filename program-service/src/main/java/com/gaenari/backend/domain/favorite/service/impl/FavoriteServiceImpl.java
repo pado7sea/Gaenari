@@ -1,12 +1,10 @@
 package com.gaenari.backend.domain.favorite.service.impl;
 
+import com.gaenari.backend.domain.client.RecordServiceClient;
 import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteDto;
 import com.gaenari.backend.domain.favorite.repository.FavoriteRepository;
 import com.gaenari.backend.domain.favorite.service.FavoriteService;
-import com.gaenari.backend.domain.program.dto.responseDto.IntervalDto;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramTypeInfoDto;
-import com.gaenari.backend.domain.program.dto.responseDto.RangeDto;
+import com.gaenari.backend.domain.program.dto.responseDto.*;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.global.exception.favorite.FavoriteCreateException;
 import com.gaenari.backend.global.exception.favorite.FavoriteDeleteException;
@@ -21,19 +19,28 @@ import java.util.stream.Collectors;
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
+    private final RecordServiceClient recordServiceClient;
 
     // 즐겨찾기 목록 조회
     @Override
     public List<FavoriteDto> getFavoriteList(Long memberId) {
+
         return favoriteRepository.getFavoriteList(memberId).stream()
                 .map(program -> {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
+                    // 마이크로 서비스간 통신을 통해 운동 기록 정보 가져오기
+                    List<ProgramDetailDto.UsageLogDto> usageLogDtos = recordServiceClient.getUsageLog(program.getId());
+
+                    int finishedCount = (int) usageLogDtos.stream()
+                            .filter(ProgramDetailDto.UsageLogDto::getIsFinished)
+                            .count();
+
                     return FavoriteDto.builder()
                             .programId(program.getId())
                             .programTitle(program.getTitle())
-                            .usageCount(program.getUsageCount())
-                            .finishedCount(0)
+                            .usageCount(usageLogDtos.size())    // 운동 프로그램 총 사용 횟수
+                            .finishedCount(finishedCount)       // 운동 프로그램 완주 횟수
                             .type(program.getType())
                             .program(programTypeInfoDto)
                             .build();
