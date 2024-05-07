@@ -255,11 +255,11 @@ class _Signup4ScreenState extends State<Signup4Screen> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: myBlack))),
             controller: _petnamecontroller,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(
-                  "[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣!@#<>?\":_`~;[\\]\\|=+)(*&^%£€.{}'`-s/]")),
-            ],
-            maxLength: 20,
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(
+            //       "[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣!@#<>?\":_`~;[\\]\\|=+)(*&^%£€.{}'`-s/]")),
+            // ],
+            maxLength: 8,
           ),
         ],
       ),

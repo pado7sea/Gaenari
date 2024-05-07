@@ -32,13 +32,18 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool _showErrorMessage = false;
 
-  List<String> errors = []; // 비밀번호 에러텍스트
+  String _passworderrorText = ''; // 비밀번호 에러텍스트
   String _checkerrorText = ''; // 비밀번호 확인 에러텍스트
+
+  String _iderrorText = ''; // 아이디 확인 에러텍스트
 
   String _errorText = ''; // 다음 버튼 에러텍스트
   @override
   void initState() {
     super.initState();
+    _passworderrorText = '';
+    _checkerrorText = '';
+    _iderrorText = '';
     _errorText = '';
     _showErrorMessage = false;
   }
@@ -135,27 +140,39 @@ class _SignupScreenState extends State<SignupScreen> {
           Row(
             children: [
               Expanded(
-                // Expanded 위젯을 추가하여 Row의 너비를 확장합니다.
-                child: TextField(
-                  controller: _idcontroller,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: 5),
-                      hintText: '대/소문자와 숫자만 입력가능합니다.',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      // tap 시 borderline 색상 지정
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: myBlack))),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                        RegExp(r'[a-zA-Z0-9]')), // 영어 대소문자와 숫자만 허용
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      check = ""; // 값이 변경될 때마다 check 변수를 초기화해줘
-                    });
-                  },
+                  // Expanded 위젯을 추가하여 Row의 너비를 확장합니다.
+                  child: TextField(
+                controller: _idcontroller,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 5),
+                  hintText: '대/소문자와 숫자만 입력가능합니다.',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  // tap 시 borderline 색상 지정
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: myBlack)),
+                  errorText: _iderrorText.isNotEmpty ? _iderrorText : null,
                 ),
-              ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z0-9]')), // 영어 대소문자와 숫자만 허용
+                ],
+                maxLength: 20,
+                onChanged: (value) {
+                  // 길이를 확인합니다.
+                  if (_idcontroller.text.length < 6) {
+                    setState(() {
+                      _iderrorText = '6자 이상 20자 이하';
+                    });
+                  } else {
+                    setState(() {
+                      _iderrorText = '';
+                    });
+                  }
+                  setState(() {
+                    check = ""; // 값이 변경될 때마다 check 변수를 초기화해줘
+                  });
+                },
+              ))
               // Text(' @ '),
               // Expanded(
               //   child: DropdownButtonFormField(
@@ -236,30 +253,12 @@ class _SignupScreenState extends State<SignupScreen> {
             onChanged: (value) {
               // 비밀번호가 형식에 맞는지 체크합니다.
               if (value.length < 6 && value.length <= 12) {
-                if (!errors.contains('6자 이상 12자 이하')) {
-                  errors.add('6자 이상 12자 이하');
-                }
-              } else {
-                errors.remove('6자 이상 12자 이하');
-              }
-
-              if (!RegExp(
-                      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#\$%^&*])[A-Za-z\d!@#\$%^&*]+$')
-                  .hasMatch(value)) {
-                if (!errors.contains('영문 대/소문자, 숫자, 특수문자 필수')) {
-                  errors.add('영문 대/소문자, 숫자, 특수문자 필수');
-                }
-              } else {
-                errors.remove('영문 대/소문자, 숫자, 특수문자 필수');
-              }
-
-              if (errors.isNotEmpty) {
                 setState(() {
-                  _errorText = errors.join(', ');
+                  _passworderrorText = '6자 이상 12자 이하';
                 });
               } else {
                 setState(() {
-                  _errorText = '';
+                  _passworderrorText = '';
                 });
               }
             },
@@ -272,9 +271,14 @@ class _SignupScreenState extends State<SignupScreen> {
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: myBlack),
               ),
-              errorText:
-                  _errorText.isNotEmpty ? _errorText : null, // 에러 메시지를 표시합니다.
+              errorText: _passworderrorText.isNotEmpty
+                  ? _passworderrorText
+                  : null, // 에러 메시지를 표시합니다.
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'[a-zA-Z0-9!@#\$%^&*]')), // 영어 대소문자와 숫자, 특수문자만 허용
+            ],
             maxLength: 12,
           ),
         ],
@@ -368,7 +372,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ElevatedButton(
             onPressed: () {
               if (_idcontroller.text.isNotEmpty &&
-                  errors.isEmpty &&
+                  _passworderrorText.isEmpty &&
                   check == "사용 가능한 아이디" &&
                   _passwordcontroller.text.isNotEmpty &&
                   _checkerrorText.isEmpty) {
