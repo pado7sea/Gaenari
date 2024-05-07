@@ -1,11 +1,15 @@
 package com.gaenari.backend.domain.recordDetail.service.impl;
 
+import com.gaenari.backend.domain.client.ChallengeServiceClient;
+import com.gaenari.backend.domain.client.dto.ChallengeDto;
 import com.gaenari.backend.domain.client.dto.ProgramDetailAboutRecordDto;
+import com.gaenari.backend.domain.client.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.record.entity.Moment;
 import com.gaenari.backend.domain.client.ProgramServiceClient;
 import com.gaenari.backend.domain.program.dto.ProgramDetailDto;
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
+import com.gaenari.backend.domain.recordChallenge.entity.RecordChallenge;
 import com.gaenari.backend.domain.recordDetail.dto.IntervalDto;
 import com.gaenari.backend.domain.recordDetail.dto.ProgramInfoDto;
 import com.gaenari.backend.domain.recordDetail.dto.RangeDto;
@@ -18,9 +22,8 @@ import com.gaenari.backend.global.exception.record.RecordNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
 
     private final RecordRepository recordRepository;
     private final ProgramServiceClient programServiceClient;
+    private final ChallengeServiceClient challengeServiceClient;
 
     @Override
     public RecordDetailDto getExerciseRecordDetail(Long memberId, Long recordId) {
@@ -69,12 +73,14 @@ public class RecordDetailServiceImpl implements RecordDetailService {
 
         // 최대/최소 심박수 계산
         int maxHeartrate = heartrates.stream()
-                .mapToInt(v -> v)
-                .max().orElse(0);
+                .mapToInt(Integer::intValue) // IntStream으로 변환
+                .max() // 최대값 계산
+                .orElse(0); // 만약 값이 없을 경우 0 반환
 
         int minHeartrate = heartrates.stream()
-                .mapToInt(v -> v)
-                .min().orElse(0);
+                .mapToInt(Integer::intValue) // IntStream으로 변환
+                .min() // 최소값 계산
+                .orElse(0); // 만약 값이 없을 경우 0 반환
 
         RecordDetailDto.HeartrateDto heartrateDto = RecordDetailDto.HeartrateDto.builder()
                 .average(record.getAverageHeartRate())
@@ -93,6 +99,38 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                     .build();
         }
 
+        // 도전과제 정보 가져오기
+        List<ChallengeDto> challenges = getChallengesByRecordId(record);
+
+        // 트로피 리스트 추출
+        // 미션 리스트 추출
+        // 코인 계산
+        // 애정도 계산
+        List<RecordDetailDto.TrophyDto> trophyDtos = new ArrayList<>();
+        List<RecordDetailDto.MissionDto> missionDtos = new ArrayList<>();
+        int attainableCoin = 0;
+        int attainableHeart = 0;
+
+        for (ChallengeDto challenge : challenges) {
+            if (challenge.getCategory() == ChallengeCategory.TROPHY) {
+                trophyDtos.add(RecordDetailDto.TrophyDto.builder()
+                        .id(challenge.getId())
+                        .type(challenge.getType())
+                        .coin(challenge.getCoin())
+                        .build());
+            } else if (challenge.getCategory() == ChallengeCategory.MISSION) {
+                missionDtos.add(RecordDetailDto.MissionDto.builder()
+                        .id(challenge.getId())
+                        .type(challenge.getType())
+                        .value(challenge.getValue())
+                        .coin(challenge.getCoin())
+                        .heart(challenge.getHeart())
+                        .build());
+            }
+            attainableCoin += challenge.getCoin();
+            attainableHeart += challenge.getHeart();
+        }
+
         // ExerciseDetailDto 객체 구성
         return RecordDetailDto.builder()
                 .exerciseId(record.getId())
@@ -103,15 +141,24 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .record(recordDto)
                 .paces(paceDto)
                 .heartrates(heartrateDto)
-//                .trophies() // 트로피 리스트
-//                .missions() // 미션 리스트
-                .attainableCoin(calculateCoins(record)) // 코인 계산 로직
-                .attainableHeart(calculateHearts(record)) // 하트 계산 로직
+                .trophies(trophyDtos)   // 트로피 리스트
+                .missions(missionDtos)  // 미션 리스트
+                .attainableCoin(attainableCoin) // 코인
+                .attainableHeart(attainableHeart) // 애정도
                 .build();
 
     }
 
-        // 타겟 값 설정
+    // 마이크로 서비스 간 통신을 통해 도전과제 (업적, 미션) 가져오기
+    public List<ChallengeDto> getChallengesByRecordId(Record record) {
+        List<Integer> challengeIds = record.getRecordChallenges().stream()
+                .map(RecordChallenge::getChallengeId)
+                .toList();
+
+        return challengeServiceClient.getChallenges(challengeIds);
+    }
+
+    // 타겟 값 설정
     private Double determineTargetValue(Record record) {
         switch (record.getProgramType()) {
             case D:
@@ -140,7 +187,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
 
         double totalDuration = ranges.stream().mapToDouble(RangeDto::getTime).sum();
 
-        // 마이크로 서비스간 통신을 통해 프로그램 정보 가져옴
+        // 마이크로 서비스간 통신을 통해 프로그램 정보 가져오기
         ProgramDetailAboutRecordDto programDetailDto = programServiceClient.getProgramDetailById(record.getProgramId());
 
         // 프로그램 정보가 널이 아닌지 확인 후, 인터벌 정보를 구성
@@ -160,16 +207,6 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                     .ranges(ranges)
                     .build();
         }
-    }
-
-    private int calculateCoins(Record record) {
-        // 코인 계산 로직
-        return 0; // 실제 계산 로직 추가 필요
-    }
-
-    private int calculateHearts(Record record) {
-        // 하트 계산 로직
-        return 0; // 실제 계산 로직 추가 필요
     }
 
 }
