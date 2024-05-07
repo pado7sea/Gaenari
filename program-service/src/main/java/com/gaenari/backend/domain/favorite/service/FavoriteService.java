@@ -1,7 +1,6 @@
 package com.gaenari.backend.domain.favorite.service;
 
 import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteDto;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
