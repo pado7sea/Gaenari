@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    List<FavoriteDto> getFavoriteList(Long memberId);
+    List<FavoriteDto> getFavoriteList(String memberId);
 
-    Boolean registerFavorite(Long programId);
+    Boolean registerFavorite(String memberId, Long programId);
 
-    Boolean clearFavorite(Long programId);
+    Boolean clearFavorite(String memberId, Long programId);
 }
