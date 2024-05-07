@@ -2,10 +2,10 @@ package com.gaenari.backend.domain.afterExercise.service.impl;
 
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
-import com.gaenari.backend.domain.client.ChallengeServiceClient;
-import com.gaenari.backend.domain.client.ProgramServiceClient;
-import com.gaenari.backend.domain.client.dto.ProgramDetailAboutRecordDto;
-import com.gaenari.backend.domain.client.dto.RecordAboutChallengeDto;
+import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
+import com.gaenari.backend.domain.client.program.ProgramServiceClient;
+import com.gaenari.backend.domain.client.program.dto.ProgramDetailAboutRecordDto;
+import com.gaenari.backend.domain.client.challenge.dto.RecordAboutChallengeDto;
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
 import com.gaenari.backend.domain.record.entity.IntervalRangeRecord;
@@ -39,7 +39,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     public TotalStatisticDto updateExerciseStatistics(String memberId, SaveExerciseRecordDto exerciseDto) {
         // 누적 통계를 찾고, 없다면 첫 기록으로 간주하여 새로운 통계 객체 생성
         Statistic currentStats = statisticRepository.findByMemberId(memberId);
-        if(currentStats == null) currentStats =createInitialStatistic(memberId);
+        if (currentStats == null) currentStats = createInitialStatistic(memberId);
 
         // 속도 -> 페이스
         double speed = exerciseDto.getSpeeds().getAverage();
@@ -75,7 +75,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         // ExerciseDto에서 운동 및 프로그램 정보 추출
         ExerciseType exerciseType = exerciseDto.getExerciseType();  // 운동 유형
         ProgramType programType = exerciseDto.getProgramType();     // 프로그램 유형
-        ProgramInfoDto programDto = exerciseDto.getProgram(); // 프로그램 정보
+        SaveExerciseRecordDto.ProgramInfoDto programDto = exerciseDto.getProgram(); // 프로그램 정보
 
         // 프로그램 타입이 P가 아닌 경우에는 프로그램 관련 정보가 없어야 함
         if (exerciseType != ExerciseType.P && (programType != null || programDto != null)) {
@@ -96,7 +96,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         return null;
     }
 
-    // 초기 통계 생성 메소드
+    // 초기 통계 생성 메서드
     private Statistic createInitialStatistic(String memberId) {
         // 첫 기록을 위한 새로운 Statistic 객체 생성
         return Statistic.builder()
@@ -110,13 +110,13 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .build();
     }
 
-    // 운동 후 기록 저장 메소드
+    // 운동 후 기록 저장 메서드
     @Override
     public Long saveExerciseRecord(String memberId, SaveExerciseRecordDto exerciseDto) {
         // ExerciseDto에서 운동 및 프로그램 정보 추출
         ExerciseType exerciseType = exerciseDto.getExerciseType();  // 운동 유형
         ProgramType programType = exerciseDto.getProgramType();     // 프로그램 유형
-        ProgramInfoDto programDto = exerciseDto.getProgram(); // 프로그램 정보
+        SaveExerciseRecordDto.ProgramInfoDto programDto = exerciseDto.getProgram(); // 프로그램 정보
 
         // 프로그램 타입이 P가 아닌 경우에는 프로그램 관련 정보가 없어야 함
         if (exerciseType != ExerciseType.P && (programType != null || programDto != null)) {
@@ -128,14 +128,17 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
             if (exerciseDto.getProgram() == null) {
                 throw new ProgramNotFoundException();
             }
+            
+            // 마이크로 서비스 간 통신을 통해 프로그램 정보 가져오기
+            ProgramDetailAboutRecordDto programDetailDto = programServiceClient.getProgramDetailById(programDto.getProgramId());
 
             // 프로그램 타입에 따라 필요한 정보가 있는지 확인
             if (programType == ProgramType.D || programType == ProgramType.T) {
-                if (exerciseDto.getProgram().getTargetValue() == null) {
+                if (programDetailDto.getProgram().getTargetValue() == null) {
                     throw new IllegalArgumentException(programType + " 타입에서는 targetValue가 필요합니다.");
                 }
             } else if (programType == ProgramType.I) {
-                if (exerciseDto.getProgram().getIntervalInfo() == null) {
+                if (programDetailDto.getProgram().getIntervalInfo() == null) {
                     throw new IllegalArgumentException("Interval 타입에서는 intervalInfo가 필요합니다.");
                 }
             }
@@ -185,7 +188,6 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
             recordChallenges.add(RecordChallenge.builder()
                     .record(null)
                     .challengeId(challengeId)
-//                    .isObtained(false)
                     .build());
         }
 
@@ -200,7 +202,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .distance(exerciseDto.getRecord().getDistance())
                 .averagePace((3600 / exerciseDto.getSpeeds().getAverage()))
                 .averageHeartRate(exerciseDto.getHeartrates().getAverage())
-                .cal(exerciseDto.getRecord().getCal())
+                .cal(calculateCal(exerciseDto)) // 칼로리 계산하는 메서드 따로 뺄 것.
                 .isFinished(determineFinish(exerciseDto)) // 완주 여부
                 .ranges(ranges)
                 .moments(moments)
@@ -216,7 +218,31 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         return recordRepository.save(record).getId();
     }
 
-    // 운동 완주 여부 판단 메소드
+    // 칼로리 계산 메서드(메켈스식(Metcalfe's Law))
+    private Double calculateCal(SaveExerciseRecordDto exerciseDto) {
+        // 운동 시간과 속도를 ExerciseDto로부터 추출
+        double timeInSeconds = exerciseDto.getRecord().getTime(); // 운동 시간(초 단위)
+        double speedInKmPerHour = exerciseDto.getSpeeds().getAverage(); // 평균 속도(km/h)
+
+        // MET 값을 계산하는 calculateMet 메소드를 호출하여 MET 값을 구함
+        double met = calculateMet(timeInSeconds, speedInKmPerHour);
+
+        // 마이크로 서비스 간 통신을 통해 체중 가져오기
+        double weight = 50;// 회원 체중
+        return met*weight*(timeInSeconds / 3600.0); // 시간을 시간 단위로 변환하여 계산
+    }
+
+    // MET(Metabolic Equivalent of Task, 활동 강도 지수) 값 계산 메서드
+    private Double calculateMet(double timeInSeconds, double speedInKmPerHour) {
+        // 운동 강도에 따른 속도와 운동 시간을 이용하여 MET 값을 계산
+        double met = speedInKmPerHour * 0.1 + 3.5;
+        // 운동 시간을 곱하여 최종 MET 값을 결정
+        met *= timeInSeconds / 3600.0; // 시간을 시간 단위로 변환하여 계산
+
+        return met;
+    }
+
+    // 운동 완주 여부 판단 메서드
     private Boolean determineFinish(SaveExerciseRecordDto exerciseDto) {
         // 마이크로 서비스간 통신을 통해 프로그램 정보 가져오기
         ProgramDetailAboutRecordDto programDetailDto = programServiceClient.getProgramDetailById(exerciseDto.getProgram().getProgramId());
@@ -230,18 +256,15 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
             case I: // 인터벌 프로그램인 경우
                 // 프로그램 정보에서 시간과 거리 목표를 가져옴
                 double targetTimeI = programDetailDto.getProgram().getIntervalInfo().getDuration();
-//                double targetDistanceI = programDetailDto.getTargetDistance();
 
-                // 운동 기록에서 실제 시간과 거리를 가져옴
+                // 운동 기록에서 실제 시간을 가져옴
                 double actualTimeI = exerciseDto.getRecord().getTime();
-                double actualDistanceI = exerciseDto.getRecord().getDistance();
 
                 // 인터벌 프로그램 완주 여부 판단
-//                return actualTimeI >= targetTimeI && actualDistanceI >= targetDistanceI;
                 return actualTimeI >= targetTimeI;
 
             case D: // 거리 목표 프로그램인 경우
-                if (exerciseDto.getProgram().getTargetValue() == null) {
+                if (programDetailDto.getProgram().getTargetValue() == null) {
                     throw new IllegalArgumentException("targetValue가 null입니다.");
                 }
                 double targetDistanceD = programDetailDto.getProgram().getTargetValue();
@@ -250,7 +273,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 return actualDistanceD >= targetDistanceD;
 
             case T: // 시간 목표 프로그램인 경우
-                if (exerciseDto.getProgram().getTargetValue() == null) {
+                if (programDetailDto.getProgram().getTargetValue() == null) {
                     throw new IllegalArgumentException("targetValue가 null입니다.");
                 }
                 double targetTimeT = programDetailDto.getProgram().getTargetValue();

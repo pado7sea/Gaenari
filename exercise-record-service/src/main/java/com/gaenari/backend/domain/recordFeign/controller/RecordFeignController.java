@@ -1,6 +1,6 @@
 package com.gaenari.backend.domain.recordFeign.controller;
 
-import com.gaenari.backend.domain.program.dto.ProgramDetailDto;
+import com.gaenari.backend.domain.client.program.dto.ProgramDetailDto;
 import com.gaenari.backend.domain.recordFeign.service.RecordFeignService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
