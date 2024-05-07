@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface ProgramService {
 
-    Long createProgram(Long memberId, ProgramCreateDto programDto);
+    Long createProgram(String memberId, ProgramCreateDto programDto);
 
-    void deleteProgram(Long memberId, Long programId);
+    void deleteProgram(String memberId, Long programId);
 
-    List<ProgramDto> getProgramList(Long memberId);
+    List<ProgramDto> getProgramList(String memberId);
 
-    ProgramDetailDto getProgramDetail(Long memberId, Long programId);
+    ProgramDetailDto getProgramDetail(String memberId, Long programId);
 
 }
