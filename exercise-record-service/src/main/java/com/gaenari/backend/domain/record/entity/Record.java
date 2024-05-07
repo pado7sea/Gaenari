@@ -2,6 +2,7 @@ package com.gaenari.backend.domain.record.entity;
 
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
+import com.gaenari.backend.domain.recordChallenge.entity.RecordChallenge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -28,11 +29,13 @@ public class Record {
     private Long memberId;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "record_exercise_type")
     private ExerciseType exerciseType; // enum: W(걷기), R(달리기), P(운동 프로그램)
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "program_type")
-    private ProgramType programType; // W, R인 경우에는 NULL
+    private ProgramType programType; // W, R인 경우에는 기본값
 
     @Column(name="program_id")
     private Long programId;
@@ -52,11 +55,11 @@ public class Record {
     @Column(name="record_average_pace")
     private Double averagePace;
 
-    @Column(name = "record_average _heartrate")
+    @Column(name = "record_average_heartrate")
     private Double averageHeartRate;
 
     @Column(name = "record_cal")
-    private Double Cal;
+    private Double cal;
 
     @NotNull
     @Column(name = "is_finished")
@@ -71,5 +74,10 @@ public class Record {
     @Builder.Default
     @OneToMany(mappedBy = "record", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Moment> moments = new ArrayList<>();
+
+    /* Record - RecordChallenge 양방향 매핑 */
+    @Builder.Default
+    @OneToMany(mappedBy = "record", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<RecordChallenge> recordChallenges = new ArrayList<>();
 
 }

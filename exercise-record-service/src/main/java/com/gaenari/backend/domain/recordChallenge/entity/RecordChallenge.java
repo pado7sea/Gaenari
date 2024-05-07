@@ -1,5 +1,6 @@
-package com.gaenari.backend.domain.record.entity;
+package com.gaenari.backend.domain.recordChallenge.entity;
 
+import com.gaenari.backend.domain.record.entity.Record;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -9,32 +10,28 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class IntervalRangeRecord {
+public class RecordChallenge {
 
-    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "range_record_id")
+    @Column(name = "exercise_challenge_id")
     private Long id;
-
-    @NotNull
-    @Column(name = "member_id")
-    private Long memberId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
     private Record record;
 
+    @NotNull
+    @Column(name = "challenge_id")
+    private Integer challengeId;
+
+    @Column(name = "record_challenge_value")
+    private Integer value;
+
     @Builder.Default
-    @Column(name = "is_running")
-    private Boolean isRunning = true;
-
-    @Column(name = "range_record_time")
-    private Double time;
-
-    @Column(name = "range_record_speed")
-    private Double speed;
+    @Column(name = "is_obtained")
+    private Boolean isObtained = false;
 
     public void updateRecord(Record record) {
         this.record = record;
