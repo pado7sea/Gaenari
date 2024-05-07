@@ -29,7 +29,7 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 프로그램 생성
     @Override
-    public Long createProgram(Long memberId, ProgramCreateDto programDto) {
+    public Long createProgram(String memberId, ProgramCreateDto programDto) {
         ProgramType type = programDto.getProgramType();
         List<IntervalRange> ranges = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 프로그램 삭제
     @Override
-    public void deleteProgram(Long memberId, Long programId) {
+    public void deleteProgram(String memberId, Long programId) {
         Program program = programRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
 
         // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
@@ -84,9 +84,9 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 프로그램 목록 조회
     @Override
-    public List<ProgramDto> getProgramList(Long memberId) {
+    public List<ProgramDto> getProgramList(String memberId) {
 
-        return programRepository.getProgramList(memberId).stream()
+        return programRepository.findByMemberId(memberId).stream()
                 .map(program -> {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
@@ -148,14 +148,8 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 프로그램 상세 정보 조회
     @Override
-    public ProgramDetailDto getProgramDetail(Long memberId, Long programId) {
-        Optional<Program> optionalProgram = programRepository.findById(programId);
-
-        if (optionalProgram.isEmpty()) {
-            throw new ProgramNotFoundException();
-        }
-
-        Program program = optionalProgram.get();
+    public ProgramDetailDto getProgramDetail(String memberId, Long programId) {
+        Program program = programRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
 
         // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
         if (!program.getMemberId().equals(memberId)) {
@@ -173,7 +167,7 @@ public class ProgramServiceImpl implements ProgramService {
 
         // 운동 프로그램 총 사용 통계
         DoubleSummaryStatistics summary = usageLogDtos.stream()
-                .mapToDouble(log -> log.getDistance())
+                .mapToDouble(ProgramDetailDto.UsageLogDto::getDistance)
                 .summaryStatistics();
 
         // 운동 프로그램 완주 횟수

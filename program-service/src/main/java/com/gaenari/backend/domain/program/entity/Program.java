@@ -26,7 +26,7 @@ public class Program {
 
     @NotNull
     @Column(name = "member_id")
-    private Long memberId;
+    private String memberId;
 
     @NotNull
     @Column(name = "program_title", length = 8)
