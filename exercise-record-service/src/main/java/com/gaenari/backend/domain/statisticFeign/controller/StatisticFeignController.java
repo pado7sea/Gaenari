@@ -1,15 +1,10 @@
-package com.gaenari.backend.domain.statistic.controller;
+package com.gaenari.backend.domain.statisticFeign.controller;
 
-import com.gaenari.backend.domain.statistic.dto.responseDto.MonthStatisticDto;
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
-import com.gaenari.backend.domain.statistic.dto.responseDto.WeekStatisticDto;
 import com.gaenari.backend.domain.statistic.service.StatisticService;
-import com.gaenari.backend.global.format.code.ResponseCode;
-import com.gaenari.backend.global.format.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

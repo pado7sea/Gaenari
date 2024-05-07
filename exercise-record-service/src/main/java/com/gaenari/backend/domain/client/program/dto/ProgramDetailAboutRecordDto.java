@@ -1,6 +1,5 @@
-package com.gaenari.backend.domain.client.dto;
+package com.gaenari.backend.domain.client.program.dto;
 
-import com.gaenari.backend.domain.program.dto.ProgramTypeInfoDto;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
 import lombok.*;
 

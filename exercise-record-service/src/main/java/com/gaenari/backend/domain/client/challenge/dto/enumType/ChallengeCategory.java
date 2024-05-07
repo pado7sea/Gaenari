@@ -1,8 +1,8 @@
-package com.gaenari.backend.domain.client.dto.enumType;
+package com.gaenari.backend.domain.client.challenge.dto.enumType;
 
 import lombok.Getter;
 
-import static com.gaenari.backend.domain.client.dto.enumType.ChallengeAllTypes.*;
+import static com.gaenari.backend.domain.client.challenge.dto.enumType.ChallengeAllTypes.*;
 
 
 @Getter

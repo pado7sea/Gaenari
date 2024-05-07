@@ -1,4 +1,4 @@
-package com.gaenari.backend.domain.program.dto;
+package com.gaenari.backend.domain.client.program.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
