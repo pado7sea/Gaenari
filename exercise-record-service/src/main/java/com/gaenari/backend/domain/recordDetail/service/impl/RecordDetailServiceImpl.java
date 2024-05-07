@@ -1,12 +1,11 @@
 package com.gaenari.backend.domain.recordDetail.service.impl;
 
-import com.gaenari.backend.domain.client.ChallengeServiceClient;
-import com.gaenari.backend.domain.client.dto.ChallengeDto;
-import com.gaenari.backend.domain.client.dto.ProgramDetailAboutRecordDto;
-import com.gaenari.backend.domain.client.dto.enumType.ChallengeCategory;
+import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
+import com.gaenari.backend.domain.client.challenge.dto.ChallengeDto;
+import com.gaenari.backend.domain.client.program.dto.ProgramDetailAboutRecordDto;
+import com.gaenari.backend.domain.client.challenge.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.record.entity.Moment;
-import com.gaenari.backend.domain.client.ProgramServiceClient;
-import com.gaenari.backend.domain.program.dto.ProgramDetailDto;
+import com.gaenari.backend.domain.client.program.ProgramServiceClient;
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
 import com.gaenari.backend.domain.recordChallenge.entity.RecordChallenge;
@@ -23,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
