@@ -1,6 +1,6 @@
 package com.gaenari.backend.domain.recordFeign.service.impl;
 
-import com.gaenari.backend.domain.program.dto.ProgramDetailDto;
+import com.gaenari.backend.domain.client.program.dto.ProgramDetailDto;
 import com.gaenari.backend.domain.record.entity.Record;
 import com.gaenari.backend.domain.record.repository.RecordRepository;
 import com.gaenari.backend.domain.recordFeign.service.RecordFeignService;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
-package com.gaenari.backend.domain.client;
+package com.gaenari.backend.domain.client.challenge;
 
-import com.gaenari.backend.domain.client.dto.ChallengeDto;
-import com.gaenari.backend.domain.client.dto.RecordAboutChallengeDto;
+import com.gaenari.backend.domain.client.challenge.dto.ChallengeDto;
+import com.gaenari.backend.domain.client.challenge.dto.RecordAboutChallengeDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,6 +1,6 @@
-package com.gaenari.backend.domain.client.dto;
+package com.gaenari.backend.domain.client.challenge.dto;
 
-import com.gaenari.backend.domain.client.dto.enumType.ChallengeCategory;
+import com.gaenari.backend.domain.client.challenge.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.record.dto.enumType.ChallengeType;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.gaenari.backend.domain.client.dto.enumType;
+package com.gaenari.backend.domain.client.challenge.dto.enumType;
 
 import com.gaenari.backend.domain.record.dto.enumType.ChallengeType;
 import lombok.Getter;
