@@ -1,14 +1,18 @@
-package com.gaenari.backend.domain.record.service.impl;
+package com.gaenari.backend.domain.recordDetail.service.impl;
 
+import com.gaenari.backend.domain.client.dto.ProgramDetailAboutRecordDto;
 import com.gaenari.backend.domain.record.entity.Moment;
-import com.gaenari.backend.domain.program.ProgramServiceClient;
+import com.gaenari.backend.domain.client.ProgramServiceClient;
 import com.gaenari.backend.domain.program.dto.ProgramDetailDto;
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
-import com.gaenari.backend.domain.record.dto.responseDto.RecordDetailDto;
+import com.gaenari.backend.domain.recordDetail.dto.IntervalDto;
+import com.gaenari.backend.domain.recordDetail.dto.ProgramInfoDto;
+import com.gaenari.backend.domain.recordDetail.dto.RangeDto;
+import com.gaenari.backend.domain.recordDetail.dto.RecordDetailDto;
 import com.gaenari.backend.domain.record.entity.Record;
 import com.gaenari.backend.domain.record.repository.RecordRepository;
-import com.gaenari.backend.domain.record.service.RecordDetailService;
+import com.gaenari.backend.domain.recordDetail.service.RecordDetailService;
 import com.gaenari.backend.global.exception.record.RecordAccessException;
 import com.gaenari.backend.global.exception.record.RecordNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 @Service
 @RequiredArgsConstructor
@@ -81,9 +84,9 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .build();
 
         // ProgramDto, IntervalDto, RangeDto는 programType에 따라 설정
-        RecordDetailDto.ProgramDto programDto = null;
+        ProgramInfoDto programInfoDto = null;
         if (record.getExerciseType() == ExerciseType.P && record.getProgramId() != null) {
-            programDto = RecordDetailDto.ProgramDto.builder()
+            programInfoDto = ProgramInfoDto.builder()
                     .programId(record.getProgramId())
                     .targetValue(determineTargetValue(record))
                     .intervalInfo(constructIntervalDto(record))
@@ -96,7 +99,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .date(record.getDate())
                 .exerciseType(record.getExerciseType())
                 .programType(record.getProgramType())
-                .program(programDto)
+                .program(programInfoDto)
                 .record(recordDto)
                 .paces(paceDto)
                 .heartrates(heartrateDto)
@@ -108,8 +111,8 @@ public class RecordDetailServiceImpl implements RecordDetailService {
 
     }
 
+        // 타겟 값 설정
     private Double determineTargetValue(Record record) {
-        // 타겟 값 설정 로직
         switch (record.getProgramType()) {
             case D:
                 return record.getDistance();
@@ -120,38 +123,43 @@ public class RecordDetailServiceImpl implements RecordDetailService {
         }
     }
 
-    private RecordDetailDto.IntervalDto constructIntervalDto(Record record) {
-        // Interval 정보 구성 로직
-        if (record.getProgramType() == ProgramType.I) {
-            List<RecordDetailDto.RangeDto> ranges = record.getRanges().stream()
-                    .map(range -> new RecordDetailDto.RangeDto(
-                            range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
-                    .toList();
-
-            double totalDuration = ranges.stream().mapToDouble(RecordDetailDto.RangeDto::getTime).sum();
-
-            // 마이크로 서비스간 통신을 통해 프로그램 정보 가져옴
-            ProgramDetailDto programDetailDto = programServiceClient.getProgramInfo(record.getProgramId());
-
-            // 프로그램 정보가 널이 아닌지 확인 후, 인터벌 정보를 구성
-            if (programDetailDto != null && programDetailDto.getProgram() != null && programDetailDto.getProgram().getIntervalInfo() != null) {
-                return RecordDetailDto.IntervalDto.builder()
-                        .duration(totalDuration)
-                        .setCount(programDetailDto.getProgram().getIntervalInfo().getSetCount())
-                        .rangeCount(programDetailDto.getProgram().getIntervalInfo().getRangeCount())
-                        .ranges(ranges)
-                        .build();
-            } else {
-                // 프로그램 정보가 없는 경우 기본값 설정
-                return RecordDetailDto.IntervalDto.builder()
-                        .duration(totalDuration)
-                        .setCount(0) // 기본값으로 설정
-                        .rangeCount(0) // 기본값으로 설정
-                        .ranges(ranges)
-                        .build();
-            }
+    private IntervalDto constructIntervalDto(Record record) {
+        if (record.getProgramType() != ProgramType.I || record.getRanges() == null) {
+            return null;
         }
-        return null;
+
+        // Interval 정보 구성 로직
+        List<RangeDto> ranges = record.getRanges().stream()
+                .map(range -> RangeDto.builder()
+                        .id(range.getId())
+                        .isRunning(range.getIsRunning())
+                        .time(range.getTime())
+                        .speed(range.getSpeed())
+                        .build())
+                .toList();
+
+        double totalDuration = ranges.stream().mapToDouble(RangeDto::getTime).sum();
+
+        // 마이크로 서비스간 통신을 통해 프로그램 정보 가져옴
+        ProgramDetailAboutRecordDto programDetailDto = programServiceClient.getProgramDetailById(record.getProgramId());
+
+        // 프로그램 정보가 널이 아닌지 확인 후, 인터벌 정보를 구성
+        if (programDetailDto != null && programDetailDto.getProgram() != null && programDetailDto.getProgram().getIntervalInfo() != null) {
+            return IntervalDto.builder()
+                    .duration(totalDuration)
+                    .setCount(programDetailDto.getProgram().getIntervalInfo().getSetCount())
+                    .rangeCount(programDetailDto.getProgram().getIntervalInfo().getRangeCount())
+                    .ranges(ranges)
+                    .build();
+        } else {
+            // 프로그램 정보가 없는 경우 기본값 설정
+            return IntervalDto.builder()
+                    .duration(totalDuration)
+                    .setCount(0) // 기본값으로 설정
+                    .rangeCount(0) // 기본값으로 설정
+                    .ranges(ranges)
+                    .build();
+        }
     }
 
     private int calculateCoins(Record record) {

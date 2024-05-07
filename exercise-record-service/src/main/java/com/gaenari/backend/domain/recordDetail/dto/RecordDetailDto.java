@@ -1,4 +1,4 @@
-package com.gaenari.backend.domain.record.dto.responseDto;
+package com.gaenari.backend.domain.recordDetail.dto;
 
 import com.gaenari.backend.domain.record.dto.enumType.ChallengeType;
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
@@ -19,7 +19,7 @@ public class RecordDetailDto {
     private ExerciseType exerciseType;
 
     private ProgramType programType;
-    private ProgramDto program;
+    private ProgramInfoDto program;
 
     private RecordDto record;
     private PaceDto paces;
@@ -30,41 +30,6 @@ public class RecordDetailDto {
 
     private int attainableCoin;
     private int attainableHeart;
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ProgramDto {
-        private Long programId;
-        private Double targetValue;
-        private IntervalDto intervalInfo;
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class IntervalDto {
-        private Double duration;
-        private Integer setCount;
-        private Integer rangeCount;
-        private List<RangeDto> ranges;
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class RangeDto {
-        private Long rangeId;
-        private Boolean isRunning;
-        private Double time;
-        private Double speed;
-    }
 
     @Getter
     @Setter
@@ -107,7 +72,7 @@ public class RecordDetailDto {
     public static class TrophyDto {
         private Integer id;
         private ChallengeType type;  // enum: D(거리), T(시간)
-        private Integer value;
+        private Integer coin;
     }
 
     @Getter

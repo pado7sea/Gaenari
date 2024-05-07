@@ -1,10 +1,8 @@
 package com.gaenari.backend.domain.record.controller;
 
-import com.gaenari.backend.domain.record.dto.responseDto.RecordDetailDto;
 import com.gaenari.backend.domain.record.dto.responseDto.MonthRecordDto;
 import com.gaenari.backend.domain.record.dto.responseDto.RecordDto;
 import com.gaenari.backend.domain.record.dto.responseDto.WeekRecordDto;
-import com.gaenari.backend.domain.record.service.RecordDetailService;
 import com.gaenari.backend.domain.record.service.RecordService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
@@ -29,7 +27,6 @@ public class RecordController {
 
     private final ApiResponse response;
     private final RecordService recordService;
-    private final RecordDetailService recordDetailService;
 
     @Operation(summary = "전체 기록 조회", description = "전체 기록 조회")
     @GetMapping
@@ -66,15 +63,6 @@ public class RecordController {
         List<RecordDto> recordDtos = recordService.getDailyExerciseRecords(memberId, localDate);
 
         return response.success(ResponseCode.RECORD_DAY_FETCHED, recordDtos);
-    }
-
-    @Operation(summary = "기록 상세 조회", description = "기록 상세 조회")
-    @GetMapping("/{recordId}")
-    public ResponseEntity<?> getDetailRecord(@PathVariable(name = "recordId") Long exerciseId) {
-        Long memberId = 1L;
-        RecordDetailDto recordDtos = recordDetailService.getExerciseRecordDetail(memberId, exerciseId);
-
-        return response.success(ResponseCode.RECORD_DETAIL_FETCHED, recordDtos);
     }
 
 }

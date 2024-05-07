@@ -17,46 +17,12 @@ public class ProgramDetailDto {
     private Boolean isFavorite;
 
     private ProgramType type;
-    private ProgramDto program;
+    private ProgramTypeInfoDto program;
 
-    //    private TotalRecordDto totalRecord;
-    private int usageCount; // 운동 프로그램 총 사용횟수
-//    private int finishedCount; // 운동 프로그램 완주 횟수
-//    private List<UsageLogDto> usageLog;
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ProgramDto {
-        private Double targetValue;
-        private IntervalDto intervalInfo;
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class IntervalDto {
-        private Integer duration;   // 인터벌 총 소요 시간
-        private Integer setCount;   // 세트 수
-        private Integer rangeCount;  // 세트 당 구간 수
-        private List<RangeDto> ranges; // 구간 리스트
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class RangeDto {  // 구간 정보
-        private Long id;
-        private Boolean isRunning;
-        private Integer time;
-        private Integer speed;
-    }
+    private TotalRecordDto totalRecord; // 운동 프로그램 총 사용 통계
+    private Integer usageCount; // 운동 프로그램 총 사용횟수
+    private Integer finishedCount; // 운동 프로그램 완주 횟수
+    private List<UsageLogDto> usageLog; // 운동 프로그램 사용 기록
 
     @Getter
     @Setter
@@ -64,9 +30,9 @@ public class ProgramDetailDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TotalRecordDto {
-        private double distance;
-        private long time;
-        private int cal;
+        private Double distance;
+        private Double time;
+        private Double cal;
     }
 
     @Getter
@@ -75,12 +41,12 @@ public class ProgramDetailDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UsageLogDto {
-        private int exerciseId;
-        private double distance;
-        private int averagePace;
-        private long time;
+        private Long recordId;
+        private Double distance;
+        private Double averagePace;
+        private Double time;
         private LocalDateTime date;
-        private int cal;
+        private Double cal;
         private Boolean isFinished;
     }
 
