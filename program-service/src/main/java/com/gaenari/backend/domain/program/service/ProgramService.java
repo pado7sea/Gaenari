@@ -16,5 +16,4 @@ public interface ProgramService {
 
     ProgramDetailDto getProgramDetail(Long memberId, Long programId);
 
-    ProgramDetailDto getProgramInfo(Long programId);
 }
