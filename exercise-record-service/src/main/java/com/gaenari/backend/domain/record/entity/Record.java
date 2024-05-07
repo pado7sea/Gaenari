@@ -26,7 +26,7 @@ public class Record {
 
     @NotNull
     @Column(name = "member_id")
-    private Long memberId;
+    private String memberId;
 
     @NotNull
     @Enumerated(EnumType.STRING)

@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    List<Record> findAllByMemberId(Long memberId);
+    List<Record> findAllByMemberId(String memberId);
 
-    List<Record> findByMemberIdAndDateBetween(Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+    List<Record> findByMemberIdAndDateBetween(String memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     List<Record> findByProgramId(Long programId);
 }
