@@ -3,8 +3,10 @@ package com.gaenari.backend.domain.favorite.service.impl;
 import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteDto;
 import com.gaenari.backend.domain.favorite.repository.FavoriteRepository;
 import com.gaenari.backend.domain.favorite.service.FavoriteService;
-import com.gaenari.backend.domain.program.dto.responseDto.IntervalInfo;
+import com.gaenari.backend.domain.program.dto.responseDto.IntervalDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
+import com.gaenari.backend.domain.program.dto.responseDto.ProgramTypeInfoDto;
+import com.gaenari.backend.domain.program.dto.responseDto.RangeDto;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.global.exception.favorite.FavoriteCreateException;
 import com.gaenari.backend.global.exception.favorite.FavoriteDeleteException;
@@ -14,58 +16,61 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
 
+    // 즐겨찾기 목록 조회
     @Override
     public List<FavoriteDto> getFavoriteList(Long memberId) {
-        List<FavoriteDto> programDtos = convertToProgramDto(favoriteRepository.getFavoriteList(memberId));
+        return favoriteRepository.getFavoriteList(memberId).stream()
+                .map(program -> {
+                    ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
-        // 리스트에 ProgramListDto를 담아서 반환
-        return programDtos;
+                    return FavoriteDto.builder()
+                            .programId(program.getId())
+                            .programTitle(program.getTitle())
+                            .usageCount(program.getUsageCount())
+                            .finishedCount(0)
+                            .type(program.getType())
+                            .program(programTypeInfoDto)
+                            .build();
+                })
+                .toList();
     }
 
-    private List<FavoriteDto> convertToProgramDto(List<Program> programs) {
-        return programs.stream()
-                .map(this::convertToProgramDto)
-                .collect(Collectors.toList());
-    }
-
-    private FavoriteDto convertToProgramDto(Program program) {
-        FavoriteDto.ProgramInfo programInfo = convertToProgramInfo(program);
-
-        return new FavoriteDto(
-                program.getId(),
-                program.getTitle(),
-                program.getUsageCount(),
-                program.getType(),
-                programInfo
-        );
-    }
-
-    private FavoriteDto.ProgramInfo convertToProgramInfo(Program program) {
+    private ProgramTypeInfoDto convertToProgramTypeInfoDto(Program program) {
         switch (program.getType()) {
             case D:  // 거리 목표 프로그램
-                return new FavoriteDto.ProgramInfo(program.getTargetValue(), null);
-
             case T:  // 시간 목표 프로그램
-                return new FavoriteDto.ProgramInfo(program.getTargetValue(), null);
+                return ProgramTypeInfoDto.builder()
+                        .targetValue(program.getTargetValue())
+                        .build();
 
             case I:  // 인터벌 프로그램
-                List<ProgramDto.RangeDto> ranges = program.getRanges().stream()
-                        .map(range -> new ProgramDto.RangeDto(
-                                range.getId(), range.isRunning(), range.getTime(), range.getSpeed()))
-                        .collect(Collectors.toList());
+                List<RangeDto> ranges = program.getRanges().stream()
+                        .map(range -> RangeDto.builder()
+                                .id(range.getId())
+                                .isRunning(range.getIsRunning())
+                                .time(range.getTime())
+                                .speed(range.getSpeed())
+                                .build())
+                        .toList();
 
                 int setCount = program.getSetCount();
                 int rangeCount = ranges.size();
-                int setDuration = ranges.stream().mapToInt(ProgramDto.RangeDto::getTime).sum(); // 각 range의 시간의 합
+                Double setDuration = ranges.stream().mapToDouble(RangeDto::getTime).sum(); // 각 range의 시간의 합
 
-                ProgramDto.IntervalDto intervalDto = new ProgramDto.IntervalDto(setDuration, setCount, rangeCount, ranges);
-                return new FavoriteDto.ProgramInfo(null, intervalDto);
+                return ProgramTypeInfoDto.builder()
+                        .intervalInfo(IntervalDto.builder()
+                                .duration(setDuration)
+                                .setCount(setCount)
+                                .rangeCount(rangeCount)
+                                .ranges(ranges)
+                                .build())
+                        .build();
 
             default:
                 throw new IllegalStateException("Unexpected value: " + program.getType());

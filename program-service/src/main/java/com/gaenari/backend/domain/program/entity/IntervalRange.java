@@ -24,14 +24,14 @@ public class IntervalRange {
     @NotNull
     @Builder.Default
     @Column(name = "is_running")
-    private boolean isRunning = true;
+    private Boolean isRunning = true;
 
     @NotNull
     @Column(name = "range_time")
-    private int time;
+    private Double time;
 
     @Column(name = "range_speed")
-    private int speed;
+    private Double speed;
 
     public void updateProgram(Program program) {
         this.program = program;
