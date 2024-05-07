@@ -36,35 +36,11 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/api/member-service/login
-            - Method=POST
+            - Path=/api/member-service/login/**, /api/member-service/members/**, /api/member-service/logout/**, /api/member-service/v3/api-docs/**, /api/member-service/health_check, /api/member-service/dupl/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/api/member-service/members
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/api/member-service/logout
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/api/member-service/dupl/**
-            - Method=GET
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
+
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
@@ -72,40 +48,58 @@ spring:
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/api/member-service/v3/api-docs
-            - Method=GET
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
+
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/api/member-service/**
-            - Method=GET,POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/member-service/(?<path>.*), /$\{path}
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
+        - id: inventory-service
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/inventory-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
+
         - id: inventory-service
           uri: lb://INVENTORY-SERVICE
           predicates:
             - Path=/api/inventory-service/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/api/inventory-service/(?<path>.*), /inventory-service/$\{path}
+            - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
+
         - id: program-service
-          uri: lb://program-SERVICE
+          uri: lb://PROGRAM-SERVICE
+          predicates:
+            - Path=/api/program-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/program-service/(?<segment>.*), /$\{segment}
+
+        - id: program-service
+          uri: lb://PROGRAM-SERVICE
           predicates:
             - Path=/api/program-service/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/program-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
+
+        - id: exercise-record-service
+          uri: lb://EXERCISE-RECORD-SERVICE
+          predicates:
+            - Path=/api/exercise-record-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
         - id: exercise-record-service
           uri: lb://EXERCISE-RECORD-SERVICE
           predicates:
@@ -114,6 +108,14 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
+
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
+            - Path=/api/challenge-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
         - id: challenge-service
           uri: lb://CHALLENGE-SERVICE
           predicates:
@@ -122,6 +124,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
+
 
 springdoc:
   swagger-ui:
