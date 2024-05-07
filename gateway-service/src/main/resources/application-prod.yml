@@ -71,7 +71,6 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/program-service/(?<segment>.*), /$\{segment}
-            - AuthorizationHeaderFilter
         - id: program-service
           uri: http://program-service.program.svc.cluster.local
           predicates:
