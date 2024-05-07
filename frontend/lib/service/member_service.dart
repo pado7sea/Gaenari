@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:forsythia/models/mates/mate_add.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/models/users/login_form.dart';
 import 'package:forsythia/models/users/nickname_check.dart';
@@ -10,6 +11,8 @@ import 'package:http/http.dart' as http;
 // 회원가입, 로그인, 계정설정관련 apid요청
 class MemberService {
   static const String baseUrl = 'https://api.gaenari.kr/api/member-service';
+  static final SecureStorageService secureStorageService =
+      SecureStorageService();
 
   // 아이디중복체크
   static Future<Check> fetchIdCheck(String endpoint) async {
@@ -109,6 +112,35 @@ class MemberService {
     } else {
       print(response.statusCode);
       throw Exception('그냥 잘못함');
+    }
+  }
+
+  // 닉네임 수정
+  static Future<MateAdd> fetchEditNickName(nickname) async {
+    return fetchPutData('member/nickname?nickName=$nickname')
+        .then((data) => MateAdd.fromJson(data));
+  }
+
+  // put요청
+  static Future<dynamic> fetchPutData(String endpoint) async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.put(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] == "SUCCESS") {
+        return data;
+      } else {
+        throw Exception('내잘못');
+      }
+    } else {
+      throw Exception('ㅇㅇㅇ${response.statusCode}');
     }
   }
 }

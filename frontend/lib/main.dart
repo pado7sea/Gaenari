@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:forsythia/provider/footer_provider.dart';
+import 'package:forsythia/provider/login_info_provider.dart';
 import 'package:forsythia/provider/signup_provider.dart';
 import 'package:forsythia/screens/dashboard/dashboard_screen.dart';
 import 'package:forsythia/screens/doghouse/doghouse_screen.dart';
@@ -81,6 +82,7 @@ class _MyAppState extends State<MyApp> {
         providers: [
           ChangeNotifierProvider(create: (context) => FooterProvider()),
           ChangeNotifierProvider(create: (context) => SignupProvider()),
+          ChangeNotifierProvider(create: (context) => LoginInfoProvider()),
         ],
         child: MaterialApp.router(
           routerDelegate: _router.routerDelegate,
