@@ -30,7 +30,7 @@ public class StatisticServiceImpl implements StatisticService {
 
     // 회원 ID에 해당하는 모든 운동 기록을 조회한 후 그 결과를 이용해 총 합계와 평균을 계산하는 방식(데이터베이스 저장x)
     @Override
-    public TotalStatisticDto getWholeExerciseStatistics(Long memberId) {
+    public TotalStatisticDto getWholeExerciseStatistics(String memberId) {
         List<Record> records = recordRepository.findAllByMemberId(memberId);
         return calculateTotalStatistics(records);
     }
@@ -67,25 +67,23 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public TotalStatisticDto getTotalStatistics(Long memberId) {
-        Optional<Statistic> statistic = statisticRepository.findByMemberId(memberId);
-
-        if (statistic.isEmpty()) {
-            throw new StatisticNotFoundException();
-        }
+    public TotalStatisticDto getTotalStatistics(String memberId) {
+       Statistic statistic = statisticRepository.findByMemberId(memberId);
+       
+       // TODO : 예외처리
 
         return TotalStatisticDto.builder()
-                .time(statistic.get().getTime())
-                .dist(statistic.get().getDist())
-                .cal(statistic.get().getCal())
-                .pace(statistic.get().getPace())
-                .date(statistic.get().getDate())
-                .count(statistic.get().getCount())
+                .time(statistic.getTime())
+                .dist(statistic.getDist())
+                .cal(statistic.getCal())
+                .pace(statistic.getPace())
+                .date(statistic.getDate())
+                .count(statistic.getCount())
                 .build();
     }
 
     @Override
-    public MonthStatisticDto getMonthlyExerciseStatistics(Long memberId, int year, int month) {
+    public MonthStatisticDto getMonthlyExerciseStatistics(String memberId, int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
@@ -118,7 +116,7 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public WeekStatisticDto getWeeklyExerciseStatistics(Long memberId, int year, int month, int day) {
+    public WeekStatisticDto getWeeklyExerciseStatistics(String memberId, int year, int month, int day) {
         LocalDate baseDate = LocalDate.of(year, month, day);
         LocalDate startDate = baseDate.with(ChronoField.DAY_OF_WEEK, 1);  // 주 시작 (일요일)
         LocalDate endDate = startDate.plusDays(6);  // 주 끝 (토요일)

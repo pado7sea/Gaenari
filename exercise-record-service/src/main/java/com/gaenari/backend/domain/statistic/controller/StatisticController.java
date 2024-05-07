@@ -7,13 +7,11 @@ import com.gaenari.backend.domain.statistic.service.StatisticService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Statistic Controller", description = "Statistic Controller API")
 @RestController
@@ -26,8 +24,7 @@ public class StatisticController {
 
     @Operation(summary = "전체 통계 조회 1", description = "운동기록 전체 순회돌아서 누적값 계산(아래거랑 값 같은지 비교용)")
     @GetMapping("/v1")
-    public ResponseEntity<?> getAllStatistics() {
-        Long memberId = 1L;
+    public ResponseEntity<?> getAllStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId) {
         TotalStatisticDto statistic = statisticService.getWholeExerciseStatistics(memberId);
 
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistic);
@@ -35,8 +32,7 @@ public class StatisticController {
 
     @Operation(summary = "전체 통계 조회 2", description = "저장되어있는 누적값 조회")
     @GetMapping("/v2")
-    public ResponseEntity<?> getTotalStatistics() {
-        Long memberId = 1L;
+    public ResponseEntity<?> getTotalStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId) {
         TotalStatisticDto statistic = statisticService.getTotalStatistics(memberId);
 
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistic);
@@ -53,8 +49,8 @@ public class StatisticController {
 
     @Operation(summary = "월간 통계 조회", description = "월간 통계 조회")
     @GetMapping("/month/{year}/{month}")
-    public ResponseEntity<?> getMonthlyStatistics(@PathVariable(name = "year") int year, @PathVariable(name = "month") int month) {
-        Long memberId = 1L;
+    public ResponseEntity<?> getMonthlyStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId,
+                                                  @PathVariable(name = "year") int year, @PathVariable(name = "month") int month) {
         MonthStatisticDto statistic = statisticService.getMonthlyExerciseStatistics(memberId, year, month);
 
         return response.success(ResponseCode.STATISTIC_MONTH_FETCHED, statistic);
@@ -62,8 +58,8 @@ public class StatisticController {
 
     @Operation(summary = "주간 통계 조회", description = "주간 통계 조회")
     @GetMapping("/week/{year}/{month}/{day}")
-    public ResponseEntity<?> getWeeklyStatistics(@PathVariable(name = "year") int year, @PathVariable(name = "month") int month, @PathVariable(name = "day") int day) {
-        Long memberId = 1L;
+    public ResponseEntity<?> getWeeklyStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId,
+                                                 @PathVariable(name = "year") int year, @PathVariable(name = "month") int month, @PathVariable(name = "day") int day) {
         WeekStatisticDto statistic = statisticService.getWeeklyExerciseStatistics(memberId, year, month, day);
 
         return response.success(ResponseCode.STATISTIC_WEEK_FETCHED, statistic);

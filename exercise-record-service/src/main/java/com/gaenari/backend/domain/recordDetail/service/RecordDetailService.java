@@ -4,6 +4,6 @@ import com.gaenari.backend.domain.recordDetail.dto.RecordDetailDto;
 
 public interface RecordDetailService {
 
-    RecordDetailDto getExerciseRecordDetail(Long memberId, Long exerciseId);
+    RecordDetailDto getExerciseRecordDetail(String memberId, Long exerciseId);
 
 }
