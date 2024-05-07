@@ -22,23 +22,6 @@ public class AchievedChallengeFeignServiceImpl implements AchievedChallengeFeign
     private final ChallengeRepository challengeRepository;
     private final MemberChallengeRepository memberChallengeRepository;
 
-    private void createMemberChallege(Long memberId){
-        if (memberChallengeRepository.count() == 0) { // 회원 도전과제가 없을 경우에만 생성
-            for(Challenge challenge: challengeRepository.findAll()){
-
-                MemberChallenge memberChallenge = MemberChallenge.builder()
-                        .memberId(memberId)
-                        .challenge(challenge)
-                        .isAchieved(false)
-                        .count(0)
-                        .obtainable(0)
-                        .build();
-                memberChallengeRepository.save(memberChallenge);
-
-            }
-        }
-    }
-
     @Override
     public List<Integer> getNewlyAchievedChallengeIds(RecordAboutChallengeDto recordDto) {
         // 회원이 기존에 달성한 도전과제 아이디 리스트 조회

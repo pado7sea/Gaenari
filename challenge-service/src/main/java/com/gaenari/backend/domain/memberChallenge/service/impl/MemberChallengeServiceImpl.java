@@ -26,7 +26,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
     private final MemberChallengeRepository memberChallengeRepository;
 
     @Override
-    public List<MemberTrophyDto> getMemberTrophies(Long memberId) {
+    public List<MemberTrophyDto> getMemberTrophies(String memberId) {
         List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId);
         return memberChallenges.stream()
                 .map(this::mapToMemberTrophyDto)
@@ -34,7 +34,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
     }
 
     @Override
-    public List<MemberMissionDto> getMemberMissions(Long memberId) {
+    public List<MemberMissionDto> getMemberMissions(String memberId) {
         List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId);
         return memberChallenges.stream()
                 .map(this::mapToMemberMissionDto)
@@ -42,7 +42,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
     }
 
     @Override
-    public void updateMemberChallenge(Long memberId, Integer challengeId) {
+    public void updateMemberChallenge(String memberId, Integer challengeId) {
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
         Challenge challenge = challengeRepository.findById(challengeId);
 
@@ -70,7 +70,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
     }
 
     @Override
-    public void resetMemberMissionAchievement(Long memberId, Integer challengeId) {
+    public void resetMemberMissionAchievement(String memberId, Integer challengeId) {
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, 1);
         memberChallenge.updateObtainable(0);
     }
