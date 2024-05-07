@@ -1,7 +1,7 @@
 class ProgramList {
   String? status;
   String? message;
-  List<Data>? data;
+  List<ProgramItem>? data;
 
   ProgramList({this.status, this.message, this.data});
 
@@ -9,9 +9,9 @@ class ProgramList {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <ProgramItem>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(ProgramItem.fromJson(v));
       });
     }
   }
@@ -27,7 +27,7 @@ class ProgramList {
   }
 }
 
-class Data {
+class ProgramItem {
   int? programId;
   String? programTitle;
   bool? isFavorite;
@@ -36,7 +36,7 @@ class Data {
   String? type;
   Program? program;
 
-  Data(
+  ProgramItem(
       {this.programId,
       this.programTitle,
       this.isFavorite,
@@ -45,7 +45,7 @@ class Data {
       this.type,
       this.program});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  ProgramItem.fromJson(Map<String, dynamic> json) {
     programId = json['programId'];
     programTitle = json['programTitle'];
     isFavorite = json['isFavorite'];

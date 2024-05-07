@@ -31,7 +31,7 @@ class MateService {
         .then((data) => MateList.fromJson(data));
   }
 
-  // 요청받은 친구목록 불러오기
+  // 친구목록 불러오기
   static Future<MateList> fetchMateList() async {
     return fetchGetData('mate').then((data) => MateList.fromJson(data));
   }
@@ -41,7 +41,7 @@ class MateService {
     return fetchPostData('mate/add/$id').then((data) => MateAdd.fromJson(data));
   }
 
-  // 친구t삭제하기
+  // 친구삭제하기
   static Future<MateAdd> fetchDeleteMate(id) async {
     return fetchPutData('mate/delete/$id')
         .then((data) => MateAdd.fromJson(data));

@@ -153,7 +153,7 @@ class _NewMatePageState extends State<NewMatePage> {
                                   // 거절하는 요청
                                   AcceptForm acceptForm = AcceptForm(
                                       mateId: list[index].mateId,
-                                      isAccept: true);
+                                      isAccept: false);
                                   await MateService.fetchAcceptMate(acceptForm);
                                   _receive();
                                 },
