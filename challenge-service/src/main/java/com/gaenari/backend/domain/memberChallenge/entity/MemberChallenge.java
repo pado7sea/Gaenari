@@ -19,7 +19,7 @@ public class MemberChallenge {
 
     @NotNull
     @Column(name = "member_id")
-    private Long memberId;
+    private String memberId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
