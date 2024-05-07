@@ -8,10 +8,13 @@ import com.gaenari.backend.domain.program.dto.responseDto.*;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.global.exception.favorite.FavoriteCreateException;
 import com.gaenari.backend.global.exception.favorite.FavoriteDeleteException;
+import com.gaenari.backend.global.exception.program.ProgramAccessException;
+import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,9 +26,9 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     // 즐겨찾기 목록 조회
     @Override
-    public List<FavoriteDto> getFavoriteList(Long memberId) {
+    public List<FavoriteDto> getFavoriteList(String memberId) {
 
-        return favoriteRepository.getFavoriteList(memberId).stream()
+        return favoriteRepository.findByMemberId(memberId).stream()
                 .map(program -> {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
@@ -85,8 +88,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public Boolean registerFavorite(Long programId) {
-        Program program = favoriteRepository.findById(programId).orElseThrow(FavoriteCreateException::new);
+    public Boolean registerFavorite(String memberId, Long programId) {
+        Program program = favoriteRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
+
+        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
+        if(!program.getMemberId().equals(memberId)) {
+            throw new ProgramAccessException();
+        }
 
         program.updateIsFavorite(true);
         favoriteRepository.save(program);
@@ -95,8 +103,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public Boolean clearFavorite(Long programId) {
-        Program program = favoriteRepository.findById(programId).orElseThrow(FavoriteDeleteException::new);
+    public Boolean clearFavorite(String memberId, Long programId) {
+        Program program = favoriteRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
+
+        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
+        if(!program.getMemberId().equals(memberId)) {
+            throw new ProgramAccessException();
+        }
 
         program.updateIsFavorite(false);
         favoriteRepository.save(program);
