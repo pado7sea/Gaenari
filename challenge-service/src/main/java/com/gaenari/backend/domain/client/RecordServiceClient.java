@@ -10,6 +10,6 @@ public interface RecordServiceClient {
 
     // exercise-record-service에서 누적 기록 가져오기
     @GetMapping("/statistic/feign/{memberId}")
-    TotalStatisticDto getAllStatistics(@PathVariable(name = "memberId") Long memberId);
+    TotalStatisticDto getAllStatistics(@PathVariable(name = "memberId") String memberId);
 
 }
