@@ -1,8 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:forsythia/screens/setting/account_screen.dart';
-import 'package:forsythia/screens/setting/bodyinfo_screen.dart';
+import 'package:forsythia/screens/setting/edit_bodyinfo_screen.dart';
+import 'package:forsythia/screens/setting/edit_nickname_screen.dart';
+import 'package:forsythia/screens/setting/edit_password_screen.dart';
 import 'package:forsythia/screens/setting/notification_screen.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
@@ -29,21 +29,47 @@ class _SettingScreenState extends State<SettingScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: 30,
+            height: 10,
           ),
-          _account(),
-          _notification(),
+          _nickname(),
+          _password(),
           _body(),
+          _notification(),
           _logout(context),
         ],
       ),
     );
   }
 
-  Widget _account() {
+  Widget _nickname() {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(SlidePageRoute(nextPage: AccountScreen()));
+        Navigator.of(context).push(SlidePageRoute(nextPage: EditNickName()));
+      },
+      child: Container(
+        decoration: myBoxDecoration,
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+        child: Row(
+          children: const [
+            Image(
+              image: AssetImage('assets/emoji/smilepace.png'),
+              width: 20,
+              height: 20,
+              fit: BoxFit.cover,
+            ),
+            Text16(text: '  닉네임')
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _password() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(SlidePageRoute(nextPage: EditPassword()));
       },
       child: Container(
         decoration: myBoxDecoration,
@@ -53,12 +79,12 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Row(
           children: const [
             Image(
-              image: AssetImage('assets/emoji/smilepace.png'),
+              image: AssetImage('assets/emoji/key.png'),
               width: 20,
               height: 20,
               fit: BoxFit.cover,
             ),
-            Text16(text: '  계정')
+            Text16(text: '  비밀번호')
           ],
         ),
       ),
@@ -134,19 +160,19 @@ class _SettingScreenState extends State<SettingScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3), // 블러 효과 설정
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2), // 블러 효과 설정
                     child: ModalContent(
-                      height: 230,
+                      height: 250,
                       customWidget: Column(
                         children: [
-                          SizedBox(height: 10),
-                          Text20(
-                            text: '진짜로 정말로',
-                            bold: true,
-                            textColor: myRed,
-                          ),
-                          Text16(text: '로그아웃 하시겠어요?', bold: true),
                           SizedBox(height: 20),
+                          // Text20(
+                          //   text: '진짜로 정말로',
+                          //   bold: true,
+                          //   textColor: myRed,
+                          // ),
+                          Text20(text: '로그아웃 하시겠습니까?', bold: true),
+                          SizedBox(height: 30),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -154,9 +180,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                text: "잘못누름",
+                                text: "아니오",
                                 active: true,
-                                widthPadding: 30,
+                                widthPadding: 35,
                               ),
                               SizedBox(
                                 width: 16,
@@ -172,7 +198,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 },
                                 text: "로그아웃",
                                 active: false,
-                                widthPadding: 30,
+                                widthPadding: 35,
                               ),
                             ],
                           ),

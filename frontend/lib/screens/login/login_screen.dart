@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/login_form.dart';
 import 'package:forsythia/models/users/login_user.dart';
+import 'package:forsythia/provider/login_info_provider.dart';
 import 'package:forsythia/screens/signup/signup_screen.dart';
 import 'package:forsythia/service/member_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.addInfo2});
@@ -32,6 +34,11 @@ class LoginScreenState extends State<LoginScreen> {
       LoginUser response = loginUser;
       LoginInfo info = response.data!;
       secureStorageService.saveLoginInfo(info);
+
+      // 로그인 정보를 로그인 정보 프로바이더에 저장합니다.
+      Provider.of<LoginInfoProvider>(context, listen: false)
+          .updateLoginInfo(info);
+
       setState(() {
         _loginStatus = '로그인 성공!';
       });

@@ -13,7 +13,7 @@ class ModalContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: myLightYellow,
+          color: myBackground,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       width: double.infinity,

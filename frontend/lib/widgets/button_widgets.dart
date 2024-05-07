@@ -15,7 +15,7 @@ class SmallButton extends StatelessWidget {
     required this.onPressed,
     this.active = false,
     this.widthPadding = 20,
-    this.heightPadding = 10,
+    this.heightPadding = 12,
   });
 
   @override
