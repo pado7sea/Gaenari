@@ -26,13 +26,6 @@ public class RecordChallenge {
     @Column(name = "challenge_id")
     private Integer challengeId;
 
-    @Column(name = "record_challenge_value")
-    private Integer value;
-
-    @Builder.Default
-    @Column(name = "is_obtained")
-    private Boolean isObtained = false;
-
     public void updateRecord(Record record) {
         this.record = record;
     }

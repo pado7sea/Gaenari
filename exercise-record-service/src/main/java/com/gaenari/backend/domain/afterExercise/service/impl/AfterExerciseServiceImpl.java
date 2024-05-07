@@ -1,12 +1,11 @@
 package com.gaenari.backend.domain.afterExercise.service.impl;
 
-import com.gaenari.backend.domain.client.dto.ProgramDetailAboutRecordDto;
-import com.gaenari.backend.domain.client.dto.RecordAboutChallengeDto;
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
 import com.gaenari.backend.domain.client.ChallengeServiceClient;
 import com.gaenari.backend.domain.client.ProgramServiceClient;
-import com.gaenari.backend.domain.program.dto.ProgramDetailDto;
+import com.gaenari.backend.domain.client.dto.ProgramDetailAboutRecordDto;
+import com.gaenari.backend.domain.client.dto.RecordAboutChallengeDto;
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
 import com.gaenari.backend.domain.record.entity.IntervalRangeRecord;
@@ -172,6 +171,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         // RecordChallenge 정보 설정
         List<RecordChallenge> recordChallenges = new ArrayList<>();
         RecordAboutChallengeDto recordAboutChallengeDto = RecordAboutChallengeDto.builder()
+                .memberId(memberId)
                 .recordId(null)
                 .distance(exerciseDto.getRecord().getDistance())
                 .time(exerciseDto.getRecord().getTime())
@@ -180,12 +180,12 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .build();
 
         // 마이크로 서비스간 통신을 통해 도전과제(아이디) 가져오기
-        List<Integer> challengeIds = challengeServiceClient.getAchievedChallengeIds(recordAboutChallengeDto);
+        List<Integer> challengeIds = challengeServiceClient.getNewlyAchievedChallengeIds(recordAboutChallengeDto);
         for (Integer challengeId : challengeIds) {
             recordChallenges.add(RecordChallenge.builder()
                     .record(null)
                     .challengeId(challengeId)
-                    .isObtained(false)
+//                    .isObtained(false)
                     .build());
         }
 
