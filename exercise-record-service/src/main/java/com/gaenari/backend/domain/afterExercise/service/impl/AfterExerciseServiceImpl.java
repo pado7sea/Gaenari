@@ -36,10 +36,10 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 운동 통계 업데이트
     @Override
-    public TotalStatisticDto updateExerciseStatistics(Long memberId, SaveExerciseRecordDto exerciseDto) {
+    public TotalStatisticDto updateExerciseStatistics(String memberId, SaveExerciseRecordDto exerciseDto) {
         // 누적 통계를 찾고, 없다면 첫 기록으로 간주하여 새로운 통계 객체 생성
-        Statistic currentStats = statisticRepository.findByMemberId(memberId)
-                .orElseGet(() -> createInitialStatistic(memberId));
+        Statistic currentStats = statisticRepository.findByMemberId(memberId);
+        if(currentStats == null) currentStats =createInitialStatistic(memberId);
 
         // 속도 -> 페이스
         double speed = exerciseDto.getSpeeds().getAverage();
@@ -71,7 +71,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 프로그램 사용 횟수 업데이트
     @Override
-    public Integer updateProgramUsageCount(Long memberId, SaveExerciseRecordDto exerciseDto) {
+    public Integer updateProgramUsageCount(String memberId, SaveExerciseRecordDto exerciseDto) {
         // ExerciseDto에서 운동 및 프로그램 정보 추출
         ExerciseType exerciseType = exerciseDto.getExerciseType();  // 운동 유형
         ProgramType programType = exerciseDto.getProgramType();     // 프로그램 유형
@@ -97,7 +97,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     }
 
     // 초기 통계 생성 메소드
-    private Statistic createInitialStatistic(Long memberId) {
+    private Statistic createInitialStatistic(String memberId) {
         // 첫 기록을 위한 새로운 Statistic 객체 생성
         return Statistic.builder()
                 .memberId(memberId)
@@ -112,7 +112,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 운동 후 기록 저장 메소드
     @Override
-    public Long saveExerciseRecord(Long memberId, SaveExerciseRecordDto exerciseDto) {
+    public Long saveExerciseRecord(String memberId, SaveExerciseRecordDto exerciseDto) {
         // ExerciseDto에서 운동 및 프로그램 정보 추출
         ExerciseType exerciseType = exerciseDto.getExerciseType();  // 운동 유형
         ProgramType programType = exerciseDto.getProgramType();     // 프로그램 유형
@@ -175,8 +175,8 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .recordId(null)
                 .distance(exerciseDto.getRecord().getDistance())
                 .time(exerciseDto.getRecord().getTime())
-                .statisticDistance(statisticRepository.findByMemberId(memberId).get().getDist())
-                .statisticTime(statisticRepository.findByMemberId(memberId).get().getTime())
+                .statisticDistance(statisticRepository.findByMemberId(memberId).getDist())
+                .statisticTime(statisticRepository.findByMemberId(memberId).getTime())
                 .build();
 
         // 마이크로 서비스간 통신을 통해 도전과제(아이디) 가져오기

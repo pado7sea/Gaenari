@@ -25,8 +25,7 @@ public class StatisticFeignController {
 
     @Operation(summary = "전체 통계 조회", description = "저장되어있는 누적값 조회")
     @GetMapping("/{memberId}")
-    public TotalStatisticDto getTotalStatistics(@PathVariable(name = "memberId") Long memberId) {
-//        memberId = 1L;
+    public TotalStatisticDto getTotalStatistics(@PathVariable(name = "memberId") String memberId) {
         TotalStatisticDto statistics = statisticService.getTotalStatistics(memberId);
 
         return statistics;
