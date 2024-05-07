@@ -63,6 +63,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
         - id: program-service
           uri: http://program-service.program.svc.cluster.local
           predicates:
@@ -70,6 +71,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/program-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: program-service
           uri: http://program-service.program.svc.cluster.local
           predicates:
@@ -77,6 +79,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/program-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
         - id: exercise-record-service
           uri: http://exercise-record-service.exercise-record.svc.cluster.local
           predicates:
@@ -84,6 +87,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
         - id: challenge-service
           uri: http://challenge-service.challenge.svc.cluster.local
           predicates:
@@ -91,6 +95,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
 
 springdoc:
   swagger-ui:
