@@ -151,7 +151,7 @@ class MemberService {
         .then((data) => MateAdd.fromJson(data));
   }
 
-  // put요청
+  // put요청-바디
   static Future<dynamic> fetchBodyInfoPutData(
       String endpoint, dynamic jsonData) async {
     String? token = await secureStorageService.getToken();

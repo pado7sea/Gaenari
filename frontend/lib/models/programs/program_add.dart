@@ -2,7 +2,7 @@ class ProgramAdd {
   String? programTitle;
   String? programType;
   double? programTargetValue;
-  Interval? interval;
+  IntervalItem? interval;
 
   ProgramAdd(
       {this.programTitle,
@@ -14,8 +14,9 @@ class ProgramAdd {
     programTitle = json['programTitle'];
     programType = json['programType'];
     programTargetValue = json['programTargetValue'];
-    interval =
-        json['interval'] != null ? Interval.fromJson(json['interval']) : null;
+    interval = json['interval'] != null
+        ? IntervalItem.fromJson(json['interval'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -29,16 +30,29 @@ class ProgramAdd {
     return data;
   }
 }
+// "IntervalItem": { // type이 D, T인 경우 null
+// 		"duration": int, // 인터벌 총 소요 시
+// 		"setCount": int, // 세트 수
+// 		"rangeCount": int, // 세트 당 구간 수
+// 		"ranges": [
+// 			{
+// 				"isRunning": boolean, // true:뛰는시간, false:걷는시간
+// 				"time": int, // 단위: sec
+// 				"speed": int, // 단위: km/h
+// 			},
+// 			...
+// 		]
+// 	}
 
-class Interval {
+class IntervalItem {
   double? duration;
   int? setCount;
   int? rangeCount;
   List<Ranges>? ranges;
 
-  Interval({this.duration, this.setCount, this.rangeCount, this.ranges});
+  IntervalItem({this.duration, this.setCount, this.rangeCount, this.ranges});
 
-  Interval.fromJson(Map<String, dynamic> json) {
+  IntervalItem.fromJson(Map<String, dynamic> json) {
     duration = json['duration'];
     setCount = json['setCount'];
     rangeCount = json['rangeCount'];
