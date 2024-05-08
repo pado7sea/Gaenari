@@ -3,6 +3,8 @@ package com.gaenari.backend.domain.afterExercise.service.impl;
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
 import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
+import com.gaenari.backend.domain.client.challenge.dto.ChallengeDto;
+import com.gaenari.backend.domain.client.member.MemberServiceClient;
 import com.gaenari.backend.domain.client.program.ProgramServiceClient;
 import com.gaenari.backend.domain.client.program.dto.ProgramDetailAboutRecordDto;
 import com.gaenari.backend.domain.client.challenge.dto.RecordAboutChallengeDto;
@@ -13,12 +15,14 @@ import com.gaenari.backend.domain.record.entity.Moment;
 import com.gaenari.backend.domain.record.entity.Record;
 import com.gaenari.backend.domain.record.repository.RecordRepository;
 import com.gaenari.backend.domain.recordChallenge.entity.RecordChallenge;
+import com.gaenari.backend.domain.recordChallenge.repository.RecordChallengeRepository;
 import com.gaenari.backend.domain.recordDetail.dto.ProgramInfoDto;
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
 import com.gaenari.backend.domain.statistic.entity.Statistic;
 import com.gaenari.backend.domain.statistic.repository.StatisticRepository;
 import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,6 +37,8 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     private final StatisticRepository statisticRepository;
     private final ProgramServiceClient programServiceClient;
     private final ChallengeServiceClient challengeServiceClient;
+    private final MemberServiceClient memberServiceClient;
+    private final RecordChallengeRepository recordChallengeRepository;
 
     // 운동 통계 업데이트
     @Override
@@ -128,7 +134,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
             if (exerciseDto.getProgram() == null) {
                 throw new ProgramNotFoundException();
             }
-            
+
             // 마이크로 서비스 간 통신을 통해 프로그램 정보 가져오기
             ProgramDetailAboutRecordDto programDetailDto = programServiceClient.getProgramDetailById(programDto.getProgramId());
 
@@ -183,12 +189,15 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .build();
 
         // 마이크로 서비스간 통신을 통해 도전과제(아이디) 가져오기
+        // TODO : -> 도전 과제 리스트 가져오기 해서 두개 하나로 합쳐서 할지 고민되네..
         List<Integer> challengeIds = challengeServiceClient.getNewlyAchievedChallengeIds(recordAboutChallengeDto);
+//        List<ChallengeDto> challengeDtos = challengeServiceClient.getChallenges(challengeIds);
         for (Integer challengeId : challengeIds) {
-            recordChallenges.add(RecordChallenge.builder()
+            RecordChallenge recordChallenge = RecordChallenge.builder()
                     .record(null)
                     .challengeId(challengeId)
-                    .build());
+                    .build();
+            recordChallenges.add(recordChallenge);
         }
 
         // Record 객체 생성
@@ -202,7 +211,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .distance(exerciseDto.getRecord().getDistance())
                 .averagePace((3600 / exerciseDto.getSpeeds().getAverage()))
                 .averageHeartRate(exerciseDto.getHeartrates().getAverage())
-                .cal(calculateCal(exerciseDto)) // 칼로리 계산하는 메서드 따로 뺄 것.
+                .cal(calculateCal(memberId, exerciseDto)) // 칼로리 계산하는 메서드 따로 뺄 것.
                 .isFinished(determineFinish(exerciseDto)) // 완주 여부
                 .ranges(ranges)
                 .moments(moments)
@@ -219,7 +228,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     }
 
     // 칼로리 계산 메서드(메켈스식(Metcalfe's Law))
-    private Double calculateCal(SaveExerciseRecordDto exerciseDto) {
+    private Double calculateCal(String memberId, SaveExerciseRecordDto exerciseDto) {
         // 운동 시간과 속도를 ExerciseDto로부터 추출
         double timeInSeconds = exerciseDto.getRecord().getTime(); // 운동 시간(초 단위)
         double speedInKmPerHour = exerciseDto.getSpeeds().getAverage(); // 평균 속도(km/h)
@@ -228,8 +237,10 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         double met = calculateMet(timeInSeconds, speedInKmPerHour);
 
         // 마이크로 서비스 간 통신을 통해 체중 가져오기
-        double weight = 50;// 회원 체중
-        return met*weight*(timeInSeconds / 3600.0); // 시간을 시간 단위로 변환하여 계산
+        ResponseEntity<?> response = memberServiceClient.getWeight(memberId);
+        int weight = response.getStatusCode().value();
+
+        return met * weight * (timeInSeconds / 3600.0); // 시간을 시간 단위로 변환하여 계산
     }
 
     // MET(Metabolic Equivalent of Task, 활동 강도 지수) 값 계산 메서드
