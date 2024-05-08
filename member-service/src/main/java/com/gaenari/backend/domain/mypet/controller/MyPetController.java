@@ -1,6 +1,7 @@
 package com.gaenari.backend.domain.mypet.controller;
 
 import com.gaenari.backend.domain.mypet.dto.requestDto.Adopt;
+import com.gaenari.backend.domain.mypet.dto.requestDto.HeartChange;
 import com.gaenari.backend.domain.mypet.dto.requestDto.IncreaseAffection;
 import com.gaenari.backend.domain.mypet.dto.responseDto.FriendPetDetail;
 import com.gaenari.backend.domain.mypet.service.MyPetService;
@@ -63,6 +64,17 @@ public class MyPetController {
         }
         myPetService.increaseAffection(memberEmail, affection);
         return response.success(ResponseCode.PARTNER_PET_AFFECTION_INCREASE_SUCCESS);
+    }
+
+    @Operation(summary = "[Feign] 반려견 애정도 증/감", description = "Feign API")
+    @PostMapping("/pet/heart/change")
+    public ResponseEntity<?> changeHeart(@RequestBody HeartChange heartChange){
+        // memberId가 null이면 인증 실패
+        if (heartChange.getMemberEmail() == null) {
+            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
+        }
+        myPetService.changeHeart(heartChange);
+        return ResponseEntity.ok().build();
     }
 
 }

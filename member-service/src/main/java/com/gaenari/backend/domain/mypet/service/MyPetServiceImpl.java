@@ -3,6 +3,7 @@ package com.gaenari.backend.domain.mypet.service;
 import com.gaenari.backend.domain.member.entity.Member;
 import com.gaenari.backend.domain.member.repository.MemberRepository;
 import com.gaenari.backend.domain.mypet.dto.requestDto.Adopt;
+import com.gaenari.backend.domain.mypet.dto.requestDto.HeartChange;
 import com.gaenari.backend.domain.mypet.dto.requestDto.IncreaseAffection;
 import com.gaenari.backend.domain.mypet.dto.responseDto.FriendPetDetail;
 import com.gaenari.backend.domain.mypet.entity.Dog;
@@ -169,5 +170,35 @@ public class MyPetServiceImpl implements MyPetService{
                 .changeTime(myPet.getChangeTime())
                 .build();
         myPetRepository.save(updateMyPet);
+    }
+
+    @Override
+    public void changeHeart(HeartChange heartChange) {
+        // 회원 조회
+        Member member = memberRepository.findByEmail(heartChange.getMemberEmail());
+        // 현재 파트너 반려견 조회
+        MyPet currentMyPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
+                .orElseThrow(PartnerPetNotFoundException::new);
+        int changeAffection = 0;
+        if(heartChange.getIsIncreased()){
+            // true : 증가
+            changeAffection = currentMyPet.getAffection() + heartChange.getHeart();
+        }else{
+            // false : 감소
+            changeAffection = currentMyPet.getAffection() - heartChange.getHeart();
+        }
+        // 애정도 변화
+        MyPet updateMyPet = MyPet.builder()
+                .Id(currentMyPet.getId())
+                .member(currentMyPet.getMember())
+                .dog(currentMyPet.getDog())
+                .name(currentMyPet.getName())
+                .affection(changeAffection) // 변경
+                .tier(currentMyPet.getTier())
+                .isPartner(currentMyPet.getIsPartner())
+                .changeTime(currentMyPet.getChangeTime())
+                .build();
+        myPetRepository.save(updateMyPet);
+
     }
 }
