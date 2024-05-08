@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.gaenari.R;
 import com.example.gaenari.databinding.ActivityAuthBinding;
 import com.example.gaenari.dto.request.AuthRequestDto;
 import com.example.gaenari.dto.response.ApiResponseDto;
@@ -66,12 +64,12 @@ public class AuthActivity extends AppCompatActivity {
                 if (response.body().getStatus().equals("ERROR"))
                     Toast.makeText(AuthActivity.this, "인증번호를 다시 확인해주세요.", Toast.LENGTH_SHORT).show();
                 else {
-                    System.out.println(response.body().getData());
                     if (response.isSuccessful() && response.body().getData() != null) {
                         Log.i("Check", "Get AccessToken : " + response.headers().get("authorization"));
 
                         SharedPreferences.Editor edit = pref.edit();
                         edit.putString("accessToken", response.headers().get("authorization"));
+                        edit.apply();
                         AccessToken.getInstance().setAccessToken(response.headers().get("authorization"));
 
                         member = new MemberInfo();
@@ -79,7 +77,7 @@ public class AuthActivity extends AppCompatActivity {
 
                         Toast.makeText(AuthActivity.this, "연동이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                         setResult(Activity.RESULT_OK);
-                        Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+                        Intent intent = new Intent(AuthActivity.this, HomeActivity.class);
                         startActivity(intent);
                         finish();
                     }
