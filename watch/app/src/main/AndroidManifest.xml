@@ -9,10 +9,10 @@
     <uses-permission android:name="android.permission.BODY_SENSORS" /> <!-- 바디센서 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 위치정보 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 위치정보 -->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!--항상허용-->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 항상허용 -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" /><!--화면을 항상 보이게 설정-->
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 화면을 항상 보이게 설정 -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +25,9 @@
         android:theme="@style/Theme.Sibal"
         tools:targetApi="31">
         <activity
+            android:name=".activity.main.AuthActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.result.ResultActivity"
             android:exported="false" />
 
@@ -32,7 +35,6 @@
             android:name=".activity.dactivity.DRunningService"
             android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
         </service>
-
         <service
             android:name=".activity.tactivity.TRunningService"
             android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
@@ -68,6 +70,7 @@
             android:exported="true" />
 
         <service android:name=".service.TimerService" />
+
         <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
