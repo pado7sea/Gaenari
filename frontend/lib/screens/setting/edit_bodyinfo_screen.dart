@@ -1,14 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:forsythia/models/edit/edit_body_info.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/provider/login_info_provider.dart';
 import 'package:forsythia/service/member_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +20,6 @@ class BodyinfoScreen extends StatefulWidget {
 }
 
 class _BodyinfoScreenState extends State<BodyinfoScreen> {
-  late LoginInfoProvider _loginInfoProvider;
-
   final TextEditingController _heightcontroller = TextEditingController();
   final TextEditingController _weightcontroller = TextEditingController();
 
@@ -32,7 +30,6 @@ class _BodyinfoScreenState extends State<BodyinfoScreen> {
   void initState() {
     super.initState();
     initializeLists();
-    _loginInfoProvider = Provider.of<LoginInfoProvider>(context, listen: false);
   }
 
   void initializeLists() {
@@ -52,11 +49,11 @@ class _BodyinfoScreenState extends State<BodyinfoScreen> {
   @override
   Widget build(BuildContext context) {
     // 로그인 유저 프로바이더에서 현재 신체정보 가져오기
-    var now_weight = Provider.of<LoginInfoProvider>(context).loginInfo?.weight;
-    var now_height = Provider.of<LoginInfoProvider>(context).loginInfo?.height;
+    var nowWeight = Provider.of<LoginInfoProvider>(context).loginInfo?.weight;
+    var nowHeight = Provider.of<LoginInfoProvider>(context).loginInfo?.height;
 
-    var nowheight = now_height != null ? now_height - 119 : 0;
-    var nowweight = now_weight != null ? now_weight - 29 : 0;
+    var nowheight = nowHeight != null ? nowHeight - 119 : 0;
+    var nowweight = nowWeight != null ? nowWeight - 29 : 0;
 
     return Scaffold(
       appBar: SmallAppBar(
