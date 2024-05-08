@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/programs/program_add.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
@@ -19,7 +20,6 @@ class AddIntervalProgramPage extends StatefulWidget {
 
 class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
   final TextEditingController _programName = TextEditingController();
-  String check = "";
   bool error = false;
   String _errorText = '';
   List<String> speedList = ["0"]; // 속도를 고르는 부분
@@ -27,8 +27,6 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
   List<String> repeatList = ["1", "2", "3", "4", "5"]; // 반복횟수를 고르는 부분
   List<String> typeList = ["걷기", "달리기"]; // 반복횟수를 고르는 부분
   List<bool> active = [true];
-
-  //루틴 추가할때마다 아래에 있는 5가지에 리스트 추가
 
   //각각의 속도 인덱스와 시간인덱스와 타입인덱스
   List<int> speedIndexList = [0];
@@ -91,9 +89,6 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                                 _errorText = '';
                               });
                             }
-                            setState(() {
-                              check = ""; // 값이 변경될 때마다 check 변수를 초기화해줘
-                            });
                           },
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.only(left: 5),
@@ -123,7 +118,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                 textColor: myMainGreen,
               ),
               SizedBox(height: 20),
-              timeIndexList.isEmpty ? Text("dd") : _routineList(),
+              _routineList(),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,14 +145,51 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
       bottomNavigationBar: GestureDetector(
         onTap: () async {
           if (_programName.text != "") {
-            ProgramAdd program = ProgramAdd(
-              interval: null,
-              programTitle: _programName.text,
-              programType: "D",
-            );
-            await ProgramService.fetchProgramAdd(program);
-            Navigator.pop(context, "update");
-            Navigator.pop(context, "update");
+            bool check = true;
+            for (int i = 0; i < speedIndexList.length; i++) {
+              if (active[i]) {
+                if (speedIndexList[i] == 0 || timeIndexList[i] == 0) {
+                  check = false;
+                  break;
+                }
+              }
+            }
+            if (check) {
+              int rangeCount = 0; //세트당 구간 수
+              double duration = 0; //인터벌 총 소요시간
+              List<Ranges> ranges = [];
+              for (int i = 0; i < speedIndexList.length; i++) {
+                if (active[i]) {
+                  Ranges range = Ranges();
+                  range.isRunning = typeIndexList[i] == 0 ? false : true;
+                  range.speed = speedIndexList[i] * 1.0;
+                  range.time = timeIndexList[i] * 60.0;
+                  ranges.add(range);
+                  rangeCount++;
+                  duration += timeIndexList[i] * 60.0;
+                }
+              }
+              IntervalItem interval = IntervalItem(
+                  duration: duration,
+                  rangeCount: rangeCount,
+                  ranges: ranges,
+                  setCount: repeatIndex);
+              ProgramAdd program = ProgramAdd(
+                interval: interval,
+                programTitle: _programName.text,
+                programType: "I",
+              );
+              await ProgramService.fetchProgramAdd(program);
+              Navigator.pop(context, "update");
+              Navigator.pop(context, "update");
+            } else {
+              Fluttertoast.showToast(
+                msg: '적절하지 않은 값(0)이 있어요!!!',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                backgroundColor: myMainGreen,
+              );
+            }
           }
         },
         child: Padding(
@@ -178,60 +210,6 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _repeatPicker() {
-    return CupertinoPicker(
-      itemExtent: 50.0,
-      onSelectedItemChanged: (int index) {
-        setState(() {
-          repeatIndex = index;
-        });
-      },
-      children: List<Widget>.generate(repeatList.length, (int index) {
-        return Center(
-            child: Text36(
-          text: repeatList[index],
-          bold: true,
-        ));
-      }),
-    );
-  }
-
-  Widget _timePicker(i) {
-    return CupertinoPicker(
-      itemExtent: 40.0,
-      onSelectedItemChanged: (int index) {
-        setState(() {
-          timeIndexList[i] = index;
-        });
-      },
-      children: List<Widget>.generate(timeList.length, (int index) {
-        return Center(
-            child: Text25(
-          text: timeList[index],
-          bold: true,
-        ));
-      }),
-    );
-  }
-
-  Widget _speedPicker(i) {
-    return CupertinoPicker(
-      itemExtent: 40.0,
-      onSelectedItemChanged: (int index) {
-        setState(() {
-          speedIndexList[i] = index;
-        });
-      },
-      children: List<Widget>.generate(speedList.length, (int index) {
-        return Center(
-            child: Text25(
-          text: speedList[index],
-          bold: true,
-        ));
-      }),
     );
   }
 
@@ -360,5 +338,59 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                       ),
                     );
         });
+  }
+
+  Widget _repeatPicker() {
+    return CupertinoPicker(
+      itemExtent: 50.0,
+      onSelectedItemChanged: (int index) {
+        setState(() {
+          repeatIndex = index;
+        });
+      },
+      children: List<Widget>.generate(repeatList.length, (int index) {
+        return Center(
+            child: Text36(
+          text: repeatList[index],
+          bold: true,
+        ));
+      }),
+    );
+  }
+
+  Widget _timePicker(i) {
+    return CupertinoPicker(
+      itemExtent: 40.0,
+      onSelectedItemChanged: (int index) {
+        setState(() {
+          timeIndexList[i] = index;
+        });
+      },
+      children: List<Widget>.generate(timeList.length, (int index) {
+        return Center(
+            child: Text25(
+          text: timeList[index],
+          bold: true,
+        ));
+      }),
+    );
+  }
+
+  Widget _speedPicker(i) {
+    return CupertinoPicker(
+      itemExtent: 40.0,
+      onSelectedItemChanged: (int index) {
+        setState(() {
+          speedIndexList[i] = index;
+        });
+      },
+      children: List<Widget>.generate(speedList.length, (int index) {
+        return Center(
+            child: Text25(
+          text: speedList[index],
+          bold: true,
+        ));
+      }),
+    );
   }
 }

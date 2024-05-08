@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:forsythia/models/programs/program_list.dart';
-import 'package:forsythia/screens/program/program_add.dart';
+import 'package:forsythia/screens/program/program_add_screen.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';

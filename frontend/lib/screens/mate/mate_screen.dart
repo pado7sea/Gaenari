@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/mates/mate_list.dart';
-import 'package:forsythia/screens/mate/mate_add.dart';
-import 'package:forsythia/screens/mate/mate_new.dart';
+import 'package:forsythia/screens/mate/mate_add_screen.dart';
+import 'package:forsythia/screens/mate/mate_new_screen.dart';
 import 'package:forsythia/service/mate_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';

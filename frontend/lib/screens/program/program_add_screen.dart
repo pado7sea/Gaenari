@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/screens/program/program_distance.dart';
-import 'package:forsythia/screens/program/program_interval.dart';
-import 'package:forsythia/screens/program/program_time.dart';
+import 'package:forsythia/screens/program/program_distance_screen.dart';
+import 'package:forsythia/screens/program/program_interval_screen.dart';
+import 'package:forsythia/screens/program/program_time_screen.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
