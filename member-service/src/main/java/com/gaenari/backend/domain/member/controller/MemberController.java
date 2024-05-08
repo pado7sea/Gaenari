@@ -91,10 +91,13 @@ public class MemberController {
         }
 
         Boolean isRight = memberService.checkPwd(memberEmail, password);
+        int num = 0;
         if(isRight){
-            return response.success(ResponseCode.PASSWORD_CHECK_SUCCESS);
+            num = 1;
+            return response.success(ResponseCode.PASSWORD_CHECK_SUCCESS, num);
         }else{
-            return response.error(ErrorCode.PASSWORD_MISMATCH);
+            num = 0;
+            return response.success(ResponseCode.PASSWORD_CHECK_FAIL, num);
         }
     }
 

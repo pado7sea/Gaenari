@@ -15,7 +15,7 @@ import lombok.*;
 public class SignupRequestDto {
     @Email(message = "올바른 형식의 이메일 주소를 입력해 주십시오.")
     @NotEmpty(message = "이메일은 필수 정보입니다.")
-    @Schema(description = "이메일", example = "user1@ssafy.com")
+    @Schema(description = "이메일", example = "ssafy123")
     private String email;
 
 //    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\\d).{8,20}$",
@@ -30,7 +30,7 @@ public class SignupRequestDto {
 
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$",
             message = "생년월일 형식은 YYYY-MM-DD여야 합니다.")
-    @Schema(description = "생년월일", example = "2024-02-24")
+    @Schema(description = "생년월일", example = "20240224")
     private String birth;
 
     @NotEmpty(message = "성별을 반드시 입력해 주셔야 합니다.")
