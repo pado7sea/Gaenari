@@ -37,14 +37,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
   String _iderrorText = ''; // 아이디 확인 에러텍스트
 
-  String _errorText = ''; // 다음 버튼 에러텍스트
   @override
   void initState() {
     super.initState();
     _passworderrorText = '';
     _checkerrorText = '';
     _iderrorText = '';
-    _errorText = '';
     _showErrorMessage = false;
   }
 

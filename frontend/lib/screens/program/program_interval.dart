@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +26,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
   List<String> timeList = ["0"]; // 시간을 고르는 부분
   List<String> repeatList = ["1", "2", "3", "4", "5"]; // 반복횟수를 고르는 부분
   List<String> typeList = ["걷기", "달리기"]; // 반복횟수를 고르는 부분
+  List<bool> active = [true];
 
   //루틴 추가할때마다 아래에 있는 5가지에 리스트 추가
 
@@ -32,11 +35,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
   List<int> timeIndexList = [0];
   List<int> typeIndexList = [0];
   int repeatIndex = 0;
-
-  // 각각의 속도값과 시간값 이부분을 리스트로 만들어야함.
-  // List<TextEditingController> speedRoutinelist = [TextEditingController()];
-  // List<TextEditingController> timeRoutinelist = [TextEditingController()];
-  TextEditingController repeat = TextEditingController();
+  int n = 0;
 
   @override
   void initState() {
@@ -137,7 +136,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(width: 100, child: _repeatPicker()),
+                      SizedBox(width: 100, height: 80, child: _repeatPicker()),
                       Text16(text: '회')
                     ],
                   ),
@@ -183,74 +182,56 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
   }
 
   Widget _repeatPicker() {
-    return CupertinoPageScaffold(
-      child: SizedBox(
-        height: 80,
-        child: CupertinoPicker(
-          itemExtent: 50.0,
-          onSelectedItemChanged: (int index) {
-            setState(() {
-              repeatIndex = index;
-              repeat.text = repeatList[repeatIndex];
-            });
-          },
-          children: List<Widget>.generate(repeatList.length, (int index) {
-            return Center(
-                child: Text36(
-              text: repeatList[index],
-              bold: true,
-            ));
-          }),
-        ),
-      ),
+    return CupertinoPicker(
+      itemExtent: 50.0,
+      onSelectedItemChanged: (int index) {
+        setState(() {
+          repeatIndex = index;
+        });
+      },
+      children: List<Widget>.generate(repeatList.length, (int index) {
+        return Center(
+            child: Text36(
+          text: repeatList[index],
+          bold: true,
+        ));
+      }),
     );
   }
 
   Widget _timePicker(i) {
-    return CupertinoPageScaffold(
-      backgroundColor: typeIndexList[i] == 0 ? myLightYellow : myWhiteGreen,
-      child: SizedBox(
-        height: 80,
-        child: CupertinoPicker(
-          itemExtent: 40.0,
-          onSelectedItemChanged: (int index) {
-            setState(() {
-              timeIndexList[i] = index;
-            });
-          },
-          children: List<Widget>.generate(timeList.length, (int index) {
-            return Center(
-                child: Text25(
-              text: timeList[index],
-              bold: true,
-            ));
-          }),
-        ),
-      ),
+    return CupertinoPicker(
+      itemExtent: 40.0,
+      onSelectedItemChanged: (int index) {
+        setState(() {
+          timeIndexList[i] = index;
+        });
+      },
+      children: List<Widget>.generate(timeList.length, (int index) {
+        return Center(
+            child: Text25(
+          text: timeList[index],
+          bold: true,
+        ));
+      }),
     );
   }
 
   Widget _speedPicker(i) {
-    return CupertinoPageScaffold(
-      backgroundColor: typeIndexList[i] == 0 ? myLightYellow : myWhiteGreen,
-      child: SizedBox(
-        height: 80,
-        child: CupertinoPicker(
-          itemExtent: 40.0,
-          onSelectedItemChanged: (int index) {
-            setState(() {
-              speedIndexList[i] = index;
-            });
-          },
-          children: List<Widget>.generate(speedList.length, (int index) {
-            return Center(
-                child: Text25(
-              text: speedList[index],
-              bold: true,
-            ));
-          }),
-        ),
-      ),
+    return CupertinoPicker(
+      itemExtent: 40.0,
+      onSelectedItemChanged: (int index) {
+        setState(() {
+          speedIndexList[i] = index;
+        });
+      },
+      children: List<Widget>.generate(speedList.length, (int index) {
+        return Center(
+            child: Text25(
+          text: speedList[index],
+          bold: true,
+        ));
+      }),
     );
   }
 
@@ -260,8 +241,9 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: timeIndexList.length + 1,
         itemBuilder: (BuildContext context, int index) {
-          return index != speedIndexList.length
+          return index != speedIndexList.length && active[index]
               ? GestureDetector(
+                  key: Key(index.toString()),
                   onTap: () {
                     setState(() {
                       typeIndexList[index] = (typeIndexList[index] + 1) % 2;
@@ -279,9 +261,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text12(
-                                text: typeIndexList[index] == 0
-                                    ? "걷기루틴"
-                                    : "달리기루틴",
+                                text: typeIndexList[index] == 0 ? "걷기" : "달리기",
                                 bold: true,
                                 textColor: typeIndexList[index] == 0
                                     ? myYellow
@@ -297,15 +277,12 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                                       ? GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              speedIndexList.removeAt(index);
-                                              timeIndexList.removeAt(index);
-                                              typeIndexList.removeAt(index);
+                                              // speedIndexList.removeAt(index);
+                                              // timeIndexList.removeAt(index);
+                                              // typeIndexList.removeAt(index);
+                                              active[index] = false;
+                                              // print(speedIndexList);
                                             });
-                                            for (int i = 0;
-                                                i < typeIndexList.length;
-                                                i++) {
-                                              print(speedIndexList[i]);
-                                            }
                                           },
                                           child: Row(
                                             children: [
@@ -330,9 +307,15 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(width: 60, child: _speedPicker(index)),
+                                SizedBox(
+                                    width: 60,
+                                    height: 80,
+                                    child: _speedPicker(index)),
                                 Text12(text: "km/h의 속도로"),
-                                SizedBox(width: 60, child: _timePicker(index)),
+                                SizedBox(
+                                    width: 60,
+                                    height: 80,
+                                    child: _timePicker(index)),
                                 Text12(text: "분"),
                                 SizedBox(width: 10),
                                 SizedBox(
@@ -351,26 +334,31 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                         ],
                       )),
                 )
-              : GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      speedIndexList.add(0);
-                      timeIndexList.add(0);
-                      typeIndexList.add(0);
-                    });
-                  },
-                  child: Container(
-                    decoration: myActiveBoxDecoration,
-                    margin: EdgeInsets.fromLTRB(10, 0, 10, 16),
-                    padding: EdgeInsets.all(20),
-                    child: Center(
-                      child: Text16(
-                        text: "루틴추가",
-                        bold: true,
+              : index != speedIndexList.length && !active[index]
+                  ? SizedBox(
+                      height: 0,
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          speedIndexList.add(0);
+                          timeIndexList.add(0);
+                          typeIndexList.add(0);
+                          active.add(true);
+                        });
+                      },
+                      child: Container(
+                        decoration: myActiveBoxDecoration,
+                        margin: EdgeInsets.fromLTRB(10, 0, 10, 16),
+                        padding: EdgeInsets.all(20),
+                        child: Center(
+                          child: Text16(
+                            text: "루틴추가",
+                            bold: true,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
+                    );
         });
   }
 }

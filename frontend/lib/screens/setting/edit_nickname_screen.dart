@@ -1,10 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/nickname_check.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/provider/login_info_provider.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
-import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:forsythia/service/member_service.dart';

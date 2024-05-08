@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/password_check.dart';
 import 'package:forsythia/theme/color.dart';
@@ -28,14 +30,11 @@ class _EditPasswordState extends State<EditPassword> {
 
   String _passworderrorText = ''; // 비밀번호 에러텍스트
   String _checkerrorText = ''; // 비밀번호 확인 에러텍스트
-
-  String _errorText = ''; // 다음 버튼 에러텍스트
   @override
   void initState() {
     super.initState();
     _passworderrorText = '';
     _checkerrorText = '';
-    _errorText = '';
     _showErrorMessage = false;
   }
 
