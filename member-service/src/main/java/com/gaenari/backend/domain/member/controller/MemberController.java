@@ -2,6 +2,7 @@ package com.gaenari.backend.domain.member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gaenari.backend.domain.member.dto.MemberDto;
+import com.gaenari.backend.domain.member.dto.requestDto.MemberCoin;
 import com.gaenari.backend.domain.member.dto.requestDto.MemberUpdate;
 import com.gaenari.backend.domain.member.dto.requestDto.RequestLogin;
 import com.gaenari.backend.domain.member.dto.requestDto.SignupRequestDto;
@@ -80,6 +81,23 @@ public class MemberController {
         memberService.updateNick(memberEmail, nickName);
         return response.success(ResponseCode.MEMBER_NICKNAME_UPDATE_SUCCESS);
     }
+
+    @Operation(summary = "회원 비밀번호 확인", description = "비밀번호 변경 전 비밀번호 확인 진행")
+    @PostMapping("/member/password")
+    public ResponseEntity<?> checkPwd(@RequestHeader("User-Info") String memberEmail, @RequestBody String password){
+        // memberId가 null이면 인증 실패
+        if (memberEmail == null) {
+            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
+        }
+
+        Boolean isRight = memberService.checkPwd(memberEmail, password);
+        if(isRight){
+            return response.success(ResponseCode.PASSWORD_CHECK_SUCCESS);
+        }else{
+            return response.error(ErrorCode.PASSWORD_MISMATCH);
+        }
+    }
+
     @Operation(summary = "회원 비밀번호 수정", description = "회원 비밀번호 수정")
     @PutMapping("/member/password")
     public ResponseEntity<?> updatePwd(@RequestHeader("User-Info") String memberEmail, @RequestBody String newPassword){
@@ -183,6 +201,30 @@ public class MemberController {
                 .headers(headers)
                 .body(responseBody);
     }
+
+    @Operation(summary = "[Feign] 회원 체중 조회", description = "Feign API")
+    @GetMapping("/member/weight/{memberEmail}")
+    public ResponseEntity<?> getWeight(@PathVariable String memberEmail){
+        // memberId가 null이면 인증 실패
+        if (memberEmail == null) {
+            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
+        }
+        int weight = memberService.getWeight(memberEmail);
+        return ResponseEntity.ok(weight);
+    }
+
+    @Operation(summary = "[Feign] 회원 코인 증가", description = "Feign API")
+    @PostMapping("/member/coin")
+    public ResponseEntity<?> increaseCoin(@RequestBody MemberCoin memberCoin){
+        // memberId가 null이면 인증 실패
+        if (memberCoin.getMemberEmail() == null) {
+            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
+        }
+        memberService.increaseCoin(memberCoin.getMemberEmail(), memberCoin.getCoin());
+        return ResponseEntity.ok().build();
+    }
+
+
 
 
 }

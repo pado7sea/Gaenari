@@ -174,6 +174,21 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
+    @Override
+    public Boolean checkPwd(String memberEmail, String password) {
+        // 회원 조회
+        Member member = memberRepository.findByEmail(memberEmail);
+
+        if(member==null)
+            throw new EmailNotFoundException();
+
+        String checkPwd = password;
+        String currentPwd = member.getPassword();
+        Boolean isRight = passwordEncoder.matches(checkPwd, currentPwd);
+
+        return isRight;
+    }
+
     @Override // 회원 비밀번호 변경
     public void updatePwd(String memberEmail, String newPassword) {
         // 회원 조회
@@ -339,8 +354,38 @@ public class MemberServiceImpl implements MemberService{
         return memberDto;
     }
 
+    @Override // 체중 조회
+    public int getWeight(String memberEmail) {
+        // 회원 조회
+        Member member = memberRepository.findByEmail(memberEmail);
+        if(member==null)
+            throw new EmailNotFoundException();
+        return member.getWeight();
+    }
 
-
+    @Override // 코인 증가
+    public void increaseCoin(String memberEmail, int coin) {
+        // 회원 조회
+        Member member = memberRepository.findByEmail(memberEmail);
+        if(member==null)
+            throw new EmailNotFoundException();
+        // 코인 증가
+        Member memberCoin = Member.builder()
+                .Id(member.getId())
+                .email(member.getEmail())
+                .password(member.getPassword())
+                .nickname(member.getNickname())
+                .birthday(member.getBirthday())
+                .gender(member.getGender())
+                .height(member.getHeight())
+                .weight(member.getWeight())
+                .coin(member.getCoin() + coin) // 변경
+                .device(member.getDevice())
+                .deviceTime(member.getDeviceTime())
+                .myPetList(member.getMyPetList())
+                .build();
+        memberRepository.save(memberCoin);
+    }
 
 
 }
