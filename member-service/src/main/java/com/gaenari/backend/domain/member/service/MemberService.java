@@ -15,11 +15,14 @@ public interface MemberService extends UserDetailsService {
     void deleteMember(String memberEmail); // 회원 삭제
     int getCoin(String memberEmail); // 보유코인조회
     void updateNick(String memberEmail, String nickName); // 회원 닉네임 변경
+    Boolean checkPwd(String memberEmail,String password); // 비밀번호 확인
     void updatePwd(String memberEmail, String newPassword); // 회원 비밀번호 변경
     void updateInfo(String memberEmail, MemberUpdate memberUpdate); // 회원 정보 변경(키,몸무게)
     Boolean duplNickNameCheck(String nickName); // 닉네임 중복체크
     Boolean duplEmailCheck(String email); // 이메일 중복체크
     String issuedAuthCode(String memberEmail); // 워치 인증번호 발급
     MemberDto checkAuthCode(String authCode); // 워치 인증번호 확인
+    int getWeight(String memberEmail); // 회원 체중 조회
+    void increaseCoin(String memberEmail, int coin); // 코인 증가
 
 }
