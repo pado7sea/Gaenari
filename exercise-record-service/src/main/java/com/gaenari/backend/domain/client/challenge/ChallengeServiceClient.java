@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "challenge-service")
+@FeignClient(name = "challenge-service", url = "${feign.challenge-service.url}")
 public interface ChallengeServiceClient {
 
     // 운동 기록을 보내고 새로 달성한 도전과제 ID 리스트 받아오기

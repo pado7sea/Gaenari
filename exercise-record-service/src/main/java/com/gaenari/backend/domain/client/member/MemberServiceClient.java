@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "member-service")
+@FeignClient(name = "member-service", url = "${feign.member-service.url}")
 public interface MemberServiceClient {
 
 //    // TODO : 최근 운동기록 날짜 기준으로 일정 기간 지나면 애정도 떨어뜨리는 스케줄 작성. 애정도 감소 요청 보내기
