@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -121,13 +123,13 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
         onTap: () async {
           if (_programName.text != "" && _time.text != "0") {
             ProgramAdd program = ProgramAdd(
-              interval: null,
-              programTargetValue: double.parse(_time.text) * 60,
               programTitle: _programName.text,
               programType: "T",
+              programTargetValue: double.parse(_time.text) * 60,
             );
+            print(program.toJson());
             await ProgramService.fetchProgramAdd(program);
-            Navigator.pop(context, "update");
+            Navigator.pop(context);
             Navigator.pop(context, "update");
           }
         },

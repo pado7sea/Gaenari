@@ -127,7 +127,7 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _widgetOptions = [
     DashBoardScreen(),
-    RecodScreen(),
+    RecordScreen(),
     ProgramScreen(),
     DogHouseScreen(),
     SettingScreen(),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 
-class RecodScreen extends StatefulWidget {
-  const RecodScreen({super.key});
+class RecordScreen extends StatefulWidget {
+  const RecordScreen({super.key});
 
   @override
-  State<RecodScreen> createState() => _RecodScreenState();
+  State<RecordScreen> createState() => _RecordScreenState();
 }
 
-class _RecodScreenState extends State<RecodScreen> {
+class _RecordScreenState extends State<RecordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

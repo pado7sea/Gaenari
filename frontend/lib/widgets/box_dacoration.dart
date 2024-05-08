@@ -59,6 +59,29 @@ final BoxDecoration myBorderBoxDecoration = BoxDecoration(
   border: Border.all(color: myLightGreen, width: 1),
 );
 
+final BoxDecoration myWalkBoxDecoration = BoxDecoration(
+  color: myLightYellow, // 배경색
+  borderRadius: BorderRadius.circular(15), // 박스의 모서리를 둥글게
+  boxShadow: [
+    BoxShadow(
+      color: Color(0xffBFC2C8).withOpacity(0.25), // 그림자 색 (투명도 25%)
+      blurRadius: 15, // 그림자 흐림 정도
+      offset: Offset(0, 10), // 그림자의 위치 (x, y)
+    ),
+  ],
+);
+final BoxDecoration myRunBoxDecoration = BoxDecoration(
+  color: myWhiteGreen, // 배경색
+  borderRadius: BorderRadius.circular(15), // 박스의 모서리를 둥글게
+  boxShadow: [
+    BoxShadow(
+      color: Color(0xffBFC2C8).withOpacity(0.25), // 그림자 색 (투명도 25%)
+      blurRadius: 15, // 그림자 흐림 정도
+      offset: Offset(0, 10), // 그림자의 위치 (x, y)
+    ),
+  ],
+);
+
 final Container myContainer = Container(
   decoration: myBoxDecoration,
 );
