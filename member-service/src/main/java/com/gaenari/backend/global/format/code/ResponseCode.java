@@ -18,6 +18,7 @@ public enum ResponseCode {
     AVAILABLE_EMAIL(HttpStatus.OK, "사용가능한 이메일입니다."),
     LOGIN_SUCCESS(HttpStatus.OK, "로그인이 성공적으로 이루어졌습니다."),
     LOGOUT_SUCCESS(HttpStatus.OK, "로그아웃이 성공적으로 이루어졌습니다."),
+    PASSWORD_CHECK_SUCCESS(HttpStatus.OK, "비밀번호 확인이 성공적으로 이루어졌습니다."),
     PASSWORD_RESET_SUCCESS(HttpStatus.OK, "비밀번호 재설정이 성공적으로 이루어졌습니다."),
     PASSWORD_UPDATE_SUCCESS(HttpStatus.OK, "비밀번호 업데이트가 성공적으로 이루어졌습니다."),
     MEMBER_NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "회원 닉네임이 성공적으로 업데이트되었습니다."),
