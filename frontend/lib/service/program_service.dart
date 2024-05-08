@@ -7,7 +7,7 @@ import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:http/http.dart' as http;
 
 class ProgramService {
-  static const String baseUrl = 'https://api.gaenari.kr/api/program-service/';
+  static const String baseUrl = 'https://api.gaenari.kr/api/program-service';
   static final SecureStorageService secureStorageService =
       SecureStorageService();
 
@@ -39,7 +39,7 @@ class ProgramService {
       },
       body: json.encode(program.toJson()),
     );
-
+    print(json.encode(program.toJson()));
     if (response.statusCode == 200) {
       final dynamic data = json.decode(utf8.decode(response.bodyBytes));
       if (data['status'] == "SUCCESS") {
@@ -48,7 +48,7 @@ class ProgramService {
         throw Exception('내잘못');
       }
     } else {
-      throw Exception('백잘못 ${response.statusCode}');
+      throw Exception('백잘못: 프로그램추가안됨 : ${response.statusCode}');
     }
   }
 
@@ -68,10 +68,10 @@ class ProgramService {
       if (data['status'] == "SUCCESS") {
         return data;
       } else {
-        throw Exception('Failed to load data');
+        throw Exception('내잘못');
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception('혜진이잘못 : 에러코드${response.statusCode}');
     }
   }
 
