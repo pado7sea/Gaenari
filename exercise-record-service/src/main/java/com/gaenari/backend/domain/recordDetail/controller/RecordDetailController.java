@@ -22,7 +22,7 @@ public class RecordDetailController {
 
     @Operation(summary = "기록 상세 조회", description = "기록 상세 조회")
     @GetMapping("/{recordId}")
-    public ResponseEntity<?> getDetailRecord(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getDetailRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                              @PathVariable(name = "recordId") Long exerciseId) {
         RecordDetailDto recordDtos = recordDetailService.getExerciseRecordDetail(memberId, exerciseId);
 
