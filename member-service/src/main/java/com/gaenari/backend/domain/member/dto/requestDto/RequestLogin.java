@@ -13,7 +13,7 @@ import lombok.*;
 public class RequestLogin {
     @NotEmpty(message = "이메일은 필수 정보입니다.")
     @Email(message = "올바른 형식의 이메일 주소를 입력해 주십시오.")
-    @Schema(description = "이메일", example = "ssafy123@naver.com")
+    @Schema(description = "이메일", example = "ssafy123")
     private String email;
 
     @NotEmpty(message = "비밀번호는 필수 정보입니다.")
