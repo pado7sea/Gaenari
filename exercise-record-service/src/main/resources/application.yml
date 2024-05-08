@@ -41,3 +41,15 @@ springdoc:
   enable-spring-security: true
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+feign:
+  member-service:
+    url:
+  inventory-service:
+    url:
+  program-service:
+    url:
+  exercise-record-service:
+    url:
+  challenge-service:
+    url:

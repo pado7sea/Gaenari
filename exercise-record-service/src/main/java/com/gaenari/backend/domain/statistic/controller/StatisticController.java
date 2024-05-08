@@ -24,7 +24,7 @@ public class StatisticController {
 
     @Operation(summary = "전체 통계 조회 1", description = "운동기록 전체 순회돌아서 누적값 계산(아래거랑 값 같은지 비교용)")
     @GetMapping("/v1")
-    public ResponseEntity<?> getAllStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId) {
+    public ResponseEntity<?> getAllStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         TotalStatisticDto statistic = statisticService.getWholeExerciseStatistics(memberId);
 
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistic);
@@ -32,7 +32,7 @@ public class StatisticController {
 
     @Operation(summary = "전체 통계 조회 2", description = "저장되어있는 누적값 조회")
     @GetMapping("/v2")
-    public ResponseEntity<?> getTotalStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId) {
+    public ResponseEntity<?> getTotalStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         TotalStatisticDto statistic = statisticService.getTotalStatistics(memberId);
 
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistic);
@@ -49,7 +49,7 @@ public class StatisticController {
 
     @Operation(summary = "월간 통계 조회", description = "월간 통계 조회")
     @GetMapping("/month/{year}/{month}")
-    public ResponseEntity<?> getMonthlyStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getMonthlyStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                                   @PathVariable(name = "year") int year, @PathVariable(name = "month") int month) {
         MonthStatisticDto statistic = statisticService.getMonthlyExerciseStatistics(memberId, year, month);
 
@@ -58,7 +58,7 @@ public class StatisticController {
 
     @Operation(summary = "주간 통계 조회", description = "주간 통계 조회")
     @GetMapping("/week/{year}/{month}/{day}")
-    public ResponseEntity<?> getWeeklyStatistics(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getWeeklyStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                                  @PathVariable(name = "year") int year, @PathVariable(name = "month") int month, @PathVariable(name = "day") int day) {
         WeekStatisticDto statistic = statisticService.getWeeklyExerciseStatistics(memberId, year, month, day);
 
