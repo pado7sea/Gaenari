@@ -19,7 +19,7 @@ import android.widget.Toast
 import com.example.gaenari.R
 import com.example.gaenari.StepCounterViewModel
 
-class MainActivity : AppCompatActivity(), SensorEventListener {
+class HomeActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
     private lateinit var adapter: MyFragmentStateAdapter
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
 
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
