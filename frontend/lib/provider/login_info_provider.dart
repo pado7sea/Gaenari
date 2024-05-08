@@ -1,20 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:forsythia/models/users/login_user.dart';
-
-// class LoginInfoProvider extends ChangeNotifier {
-//   LoginInfo? _loginInfo;
-
-//   LoginInfo? get loginInfo => _loginInfo;
-
-//   void setLoginInfo(LoginInfo info) {
-//     _loginInfo = info;
-//     notifyListeners();
-//     print(
-//         '/////////////////////////////////////////////////////////////////////////');
-//     print(_loginInfo);
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/login_user.dart';
 
