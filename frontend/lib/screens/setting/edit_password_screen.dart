@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forsythia/models/users/nickname_check.dart';
+import 'package:forsythia/models/users/password_check.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
@@ -14,11 +14,16 @@ class EditPassword extends StatefulWidget {
 }
 
 class _EditPasswordState extends State<EditPassword> {
+  final TextEditingController _nowpasswordcontroller =
+      TextEditingController(); // 현재비밀번호 입력
   final TextEditingController _passwordcontroller =
       TextEditingController(); // 변경비밀번호 입력
   final TextEditingController _confirmPasswordcontroller =
       TextEditingController(); // 비밀번호 확인용
 
+  String check = "";
+
+  bool _showTextField = false; // 비밀번호 확인 되면 입력 보여주기
   bool _showErrorMessage = false;
 
   String _passworderrorText = ''; // 비밀번호 에러텍스트
@@ -47,8 +52,14 @@ class _EditPasswordState extends State<EditPassword> {
             SizedBox(height: 30),
             maintext,
             SizedBox(height: 30),
-            _password(),
-            _checkpassword()
+            if (!_showTextField) _nowpassword(),
+            if (_showTextField)
+              Column(
+                children: [
+                  _password(),
+                  _checkpassword(),
+                ],
+              ),
           ],
         ),
       ),
@@ -83,6 +94,84 @@ class _EditPasswordState extends State<EditPassword> {
     ),
   );
 
+  Widget _nowpassword() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+      child: Column(
+        children: [
+          Row(
+            children: const [
+              Image(
+                image: AssetImage('assets/emoji/pensil.png'),
+                width: 20,
+                height: 20,
+                fit: BoxFit.cover,
+              ),
+              Text16(text: '  현재 비밀번호')
+            ],
+          ),
+          TextField(
+            controller: _nowpasswordcontroller,
+            obscureText: true, // 비밀번호 입력을 숨깁니다.
+            onChanged: (value) {
+              setState(() {
+                check = ""; // 값이 변경될 때마다 check 변수를 초기화해줘
+              });
+            },
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(left: 5),
+              hintText: '비밀번호를 입력해주세요.',
+              hintStyle: TextStyle(color: Colors.grey),
+              errorStyle: TextStyle(color: myRed, fontSize: 12),
+              // tap 시 borderline 색상 지정
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: myBlack),
+              ),
+              errorText: _passworderrorText.isNotEmpty
+                  ? _passworderrorText
+                  : null, // 에러 메시지를 표시합니다.
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'[a-zA-Z0-9!@#\$%^&*]')), // 영어 대소문자와 숫자, 특수문자만 허용
+            ],
+            maxLength: 12,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                  onPressed: () async {
+                    final PasswordCheck nowpasswordCheck =
+                        await MemberService.fetchNowPassWord(
+                            _nowpasswordcontroller.text);
+                    setState(() {
+                      if (nowpasswordCheck.data == 1) {
+                        check = "비밀번호 확인완료";
+                        _showTextField = true;
+                      } else {
+                        check = "비밀번호 확인실패";
+                      }
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: myLightYellow,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text12(text: check == "" ? '비밀번호 확인' : check))
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _password() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -96,7 +185,7 @@ class _EditPasswordState extends State<EditPassword> {
                 height: 20,
                 fit: BoxFit.cover,
               ),
-              Text16(text: '  비밀번호')
+              Text16(text: '  변경 비밀번호')
             ],
           ),
           TextField(
@@ -116,7 +205,7 @@ class _EditPasswordState extends State<EditPassword> {
             },
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(left: 5),
-              hintText: '비밀번호를 입력해주세요.',
+              hintText: '변경할 비밀번호를 입력해주세요.',
               hintStyle: TextStyle(color: Colors.grey),
               errorStyle: TextStyle(color: myRed, fontSize: 12),
               // tap 시 borderline 색상 지정
@@ -164,7 +253,7 @@ class _EditPasswordState extends State<EditPassword> {
                 height: 20,
                 fit: BoxFit.cover,
               ),
-              Text16(text: '  비밀번호 확인')
+              Text16(text: '  변경 비밀번호 확인')
             ],
           ),
           TextField(
@@ -202,6 +291,16 @@ class _EditPasswordState extends State<EditPassword> {
     );
   }
 
+  void _fetcheditpassword() async {
+    try {
+      await MemberService.fetchEditPassWord(_passwordcontroller.text);
+
+      Navigator.of(context).pop();
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Widget _button() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
@@ -224,14 +323,12 @@ class _EditPasswordState extends State<EditPassword> {
           ElevatedButton(
             onPressed: () {
               if (_passworderrorText.isEmpty &&
-                  // check == "사용 가능한 아이디" &&
                   _passwordcontroller.text.isNotEmpty &&
                   _checkerrorText.isEmpty) {
+                _fetcheditpassword();
                 setState(() {
                   _showErrorMessage = false; // 에러 메시지 표시
                 });
-                // Navigator.of(context)
-                //     .push(SlidePageRoute(nextPage: Signup2Screen()));
               } else {
                 setState(() {
                   _showErrorMessage = true; // 에러 메시지 표시

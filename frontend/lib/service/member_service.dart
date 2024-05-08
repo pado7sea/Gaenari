@@ -3,6 +3,7 @@ import 'package:forsythia/models/mates/mate_add.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/models/users/login_form.dart';
 import 'package:forsythia/models/users/nickname_check.dart';
+import 'package:forsythia/models/users/password_check.dart';
 import 'package:forsythia/models/users/signup_user.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:http/http.dart' as http;
@@ -172,6 +173,61 @@ class MemberService {
       }
     } else {
       throw Exception('신체정보수정${response.statusCode}');
+    }
+  }
+
+  // 현재 비밀번호 확인
+  static Future<PasswordCheck> fetchNowPassWord(String endpoint) async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/member/password'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+      body: endpoint,
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] == "SUCCESS") {
+        return PasswordCheck.fromJson(data);
+      } else {
+        throw Exception("status : ${data['status']}");
+      }
+    } else {
+      throw Exception('statusCode : ${response.statusCode}');
+    }
+  }
+
+  // 비밀번호 수정
+  static Future<MateAdd> fetchEditPassWord(password) async {
+    return fetchPassWordPutData('member/password', password)
+        .then((data) => MateAdd.fromJson(data));
+  }
+
+  // put요청
+  static Future<dynamic> fetchPassWordPutData(
+      String endpoint, String password) async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.put(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+      body: password,
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] == "SUCCESS") {
+        return data;
+      } else {
+        throw Exception('내잘못');
+      }
+    } else {
+      throw Exception('비밀번호수정${response.statusCode}');
     }
   }
 }
