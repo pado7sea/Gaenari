@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "exercise-record-service")
+@FeignClient(name = "exercise-record-service", url = "${feign.exercise-record-service.url}")
 public interface RecordServiceClient {
 
     @GetMapping("/record/feign/{programId}")
