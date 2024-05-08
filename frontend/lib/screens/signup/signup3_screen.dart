@@ -268,7 +268,9 @@ class _Signup3ScreenState extends State<Signup3Screen> {
                     .setHeight(int.parse(_heightcontroller.text));
                 Navigator.of(context)
                     .push(SlidePageRoute(nextPage: Signup4Screen()));
-                _showErrorMessage = false;
+                setState(() {
+                  _showErrorMessage = false; // 에러 메시지 표시
+                });
               } else {
                 setState(() {
                   _showErrorMessage = true; // 에러 메시지 표시

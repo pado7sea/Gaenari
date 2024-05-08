@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/nickname_check.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/provider/login_info_provider.dart';
-import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
@@ -210,7 +209,7 @@ class _EditNickNameState extends State<EditNickName> {
       );
 
       // 업데이트 성공 시 EditNickName 화면으로 이동
-      Navigator.of(context).push(SlidePageRoute(nextPage: EditNickName()));
+      Navigator.of(context).pop();
     } catch (error) {
       print(error);
     }

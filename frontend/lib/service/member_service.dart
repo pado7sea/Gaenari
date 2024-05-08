@@ -140,7 +140,38 @@ class MemberService {
         throw Exception('내잘못');
       }
     } else {
-      throw Exception('ㅇㅇㅇ${response.statusCode}');
+      throw Exception('닉네임수정${response.statusCode}');
+    }
+  }
+
+  // 신체정보 수정
+  static Future<MateAdd> fetchEditBodyInfo(jsonData) async {
+    return fetchBodyInfoPutData('member/info', jsonData)
+        .then((data) => MateAdd.fromJson(data));
+  }
+
+  // put요청
+  static Future<dynamic> fetchBodyInfoPutData(
+      String endpoint, dynamic jsonData) async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.put(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+      body: jsonData, // 요청 본문에 JSON 데이터 추가
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] == "SUCCESS") {
+        return data;
+      } else {
+        throw Exception('내잘못');
+      }
+    } else {
+      throw Exception('신체정보수정${response.statusCode}');
     }
   }
 }
