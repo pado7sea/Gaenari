@@ -11,9 +11,11 @@ import java.util.List;
 @FeignClient(name = "challenge-service")
 public interface ChallengeServiceClient {
 
+    // 운동 기록을 보내고 새로 달성한 도전과제 ID 리스트 받아오기
     @PostMapping("/achieve/feign/challengeIds")
     List<Integer> getNewlyAchievedChallengeIds(@RequestBody RecordAboutChallengeDto recordDto);
 
+    // 도전과제 ID 리스트를 보내고 도전과제 리스트로 받기
     @PostMapping("/achieve/feign/challenges")
     List<ChallengeDto> getChallenges(@RequestBody List<Integer> challengeIds);
 

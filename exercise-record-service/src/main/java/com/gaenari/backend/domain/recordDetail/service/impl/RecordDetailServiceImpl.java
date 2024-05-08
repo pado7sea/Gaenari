@@ -9,6 +9,7 @@ import com.gaenari.backend.domain.client.program.ProgramServiceClient;
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
 import com.gaenari.backend.domain.recordChallenge.entity.RecordChallenge;
+import com.gaenari.backend.domain.recordChallenge.repository.RecordChallengeRepository;
 import com.gaenari.backend.domain.recordDetail.dto.IntervalDto;
 import com.gaenari.backend.domain.recordDetail.dto.ProgramInfoDto;
 import com.gaenari.backend.domain.recordDetail.dto.RangeDto;
@@ -30,6 +31,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
     private final RecordRepository recordRepository;
     private final ProgramServiceClient programServiceClient;
     private final ChallengeServiceClient challengeServiceClient;
+    private final RecordChallengeRepository recordChallengeRepository;
 
     @Override
     public RecordDetailDto getExerciseRecordDetail(String memberId, Long recordId) {
@@ -128,6 +130,9 @@ public class RecordDetailServiceImpl implements RecordDetailService {
             attainableCoin += challenge.getCoin();
             attainableHeart += challenge.getHeart();
         }
+
+        // recordChallenge 저장
+
 
         // ExerciseDetailDto 객체 구성
         return RecordDetailDto.builder()
