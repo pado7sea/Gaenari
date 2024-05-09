@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +29,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<FavoriteDto> getFavoriteList(String memberId) {
 
-        return favoriteRepository.findByMemberId(memberId).stream()
+        return favoriteRepository.findByMemberIdAndIsFavoriteOrderByUsageCountDesc(memberId, true).stream()
                 .map(program -> {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
@@ -89,21 +90,28 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Boolean updaterFavoriteStatus(String memberId, Long programId) {
-        Program program = favoriteRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
+        Optional<Program> program = favoriteRepository.findById(programId);
 
-        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
-        if (!program.getMemberId().equals(memberId)) {
+        if (program == null) {
+            throw new ProgramNotFoundException();
+        }
+        if (!Objects.equals(program.get().getMemberId(), memberId)) {
             throw new ProgramAccessException();
         }
 
-        if (program.getIsFavorite()) {
-            program.updateIsFavorite(false);
-            favoriteRepository.save(program);
+        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
+        if (!program.get().getMemberId().equals(memberId)) {
+            throw new ProgramAccessException();
+        }
+
+        if (program.get().getIsFavorite()) {
+            program.get().updateIsFavorite(false);
+            favoriteRepository.save(program.get());
 
             return false;
         } else {
-            program.updateIsFavorite(true);
-            favoriteRepository.save(program);
+            program.get().updateIsFavorite(true);
+            favoriteRepository.save(program.get());
 
             return true;
         }
