@@ -1,4 +1,4 @@
-package com.gaenari.backend.domain.client.dto;
+package com.gaenari.backend.domain.client.record.dto;
 
 import lombok.*;
 
