@@ -121,7 +121,6 @@ class _AddDistanceProgramPageState extends State<AddDistanceProgramPage> {
         onTap: () async {
           if (_programName.text != "" && _distance.text != "0") {
             ProgramAdd program = ProgramAdd(
-              interval: null,
               programTargetValue: double.parse(_distance.text) * 0.001,
               programTitle: _programName.text,
               programType: "D",
