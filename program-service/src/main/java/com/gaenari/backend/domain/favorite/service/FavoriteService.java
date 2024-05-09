@@ -8,7 +8,6 @@ public interface FavoriteService {
 
     List<FavoriteDto> getFavoriteList(String memberId);
 
-    Boolean registerFavorite(String memberId, Long programId);
+    Boolean updaterFavoriteStatus(String memberId, Long programId);
 
-    Boolean clearFavorite(String memberId, Long programId);
 }
