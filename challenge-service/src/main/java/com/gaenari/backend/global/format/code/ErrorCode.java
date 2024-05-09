@@ -34,14 +34,16 @@ public enum ErrorCode {
 
     // 도전과제 예외 처리
     CHALLENGE_CREATE_FAILED(HttpStatus.CREATED, "도전과제가 이미 존재합니다. 도전과제를 생성할 수 없습니다."),
-    CHALLENGE_NOT_FOUND(HttpStatus.OK, "도전과제를 찾을 수 없습니다."),
-    CHALLENGE_DELETE_ALL_FAILED(HttpStatus.OK, "도전과제를 삭제할 수 없습니다."),
+    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND, "도전과제를 찾을 수 없습니다."),
+    CHALLENGE_DELETE_ALL_FAILED(HttpStatus.NOT_FOUND, "도전과제를 삭제할 수 없습니다."),
 
-    ACHIEVED_TROPHY_NOT_FOUND(HttpStatus.OK, "달성 업적을 찾을 수 없습니다."),
-    ACHIEVED_MISSION_NOT_FOUND(HttpStatus.OK, "달성 미션을 찾을 수 없습니다."),
+    ACHIEVED_TROPHY_NOT_FOUND(HttpStatus.NOT_FOUND, "달성 업적을 찾을 수 없습니다."),
+    ACHIEVED_MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "달성 미션을 찾을 수 없습니다."),
     ACHIEVED_TROPHY_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "달성 업적에 접근할 수 없습니다."),
-    ACHIEVED_MISSION_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "달성 미션에 접근할 수 없습니다.");
+    ACHIEVED_MISSION_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "달성 미션에 접근할 수 없습니다."),
 
+    /* 보상 */
+    REWARD_NOT_FOUND(HttpStatus.NOT_FOUND, "받을 수 있는 보상이 존재하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;
