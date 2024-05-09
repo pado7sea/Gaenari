@@ -67,7 +67,7 @@ class SecondFragment : Fragment() {
         val calendar = Calendar.getInstance(koreaTimeZone) // 한국 시간대로 캘린더 생성
 
         // 27초를 빼기
-        calendar.add(Calendar.SECOND, -27)
+
 
         // 날짜 포맷 설정
         val dateFormat = SimpleDateFormat("M / d", Locale.getDefault())

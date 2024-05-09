@@ -88,11 +88,11 @@ fun createMockData(): List<Program> {
             program = ProgramDetail(
                 intervalInfo = IntervalInfo(
                     duration = 100,
-                    setCount = 7,
+                    setCount = 2,
                     rangeCount = 2,
                     ranges = listOf(
-                        Range(isRunning = true, time = 50, speed = 8),
-                        Range(isRunning = false, time = 50, speed = 6)
+                        Range(isRunning = true, time = 10, speed = 8),
+                        Range(isRunning = false, time = 6, speed = 6)
                         //이거 time 초단위임
                     )
                 )

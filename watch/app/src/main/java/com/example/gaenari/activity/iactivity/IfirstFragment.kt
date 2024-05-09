@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gaenari.R
 import com.example.gaenari.activity.main.Program
 import com.example.gaenari.activity.result.ResultActivity
+import kotlin.math.log
 
 class IFirstFragment : Fragment() {
     private lateinit var nowProgram: Program
@@ -43,6 +44,7 @@ class IFirstFragment : Fragment() {
     private var exerciseCount: Int = 0
     private var isTransitioning: Boolean = false
 
+    private var startTimeOfCurrentInterval: Long = 0
     companion object {
         fun newInstance(program: Program): IFirstFragment {
             return IFirstFragment().apply {
@@ -85,14 +87,19 @@ class IFirstFragment : Fragment() {
     }
 
     private fun setupUpdateReceiver() {
+
         updateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (intent.action == "com.example.sibal.UPDATE_INFO" && !isTransitioning) {
                     updateMetricsFromIntent(intent)
+
                     val remainingTime = calculateRemainingTime()
-                    if (remainingTime <= 0) {
+
+                    if (remainingTime < 0) {
+                        Log.d("인터벌", "들어오자마자 바껴?: ${nowExerciseCount}")
                         transitionToNextIntervalOrFinish(context)
                     } else {
+                        Log.d("인터벌", "setupUpdateReceiver: ${nowExerciseCount}")
                         updateUI()
                     }
                 }
@@ -101,10 +108,7 @@ class IFirstFragment : Fragment() {
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, IntentFilter("com.example.sibal.UPDATE_INFO"))
     }
 
-    private fun calculateRemainingTime(): Long {
-        val currentIntervalTotalTime = nowProgram.program.intervalInfo.ranges!![nowExerciseCount].time * 60  // 현재 인터벌 시간을 초로 변환
-        return currentIntervalTotalTime - totalTime
-    }
+
     private fun updateMetricsFromIntent(intent: Intent) {
         totalDistance = intent.getDoubleExtra("distance", 0.0)
         val heartRate = intent.getFloatExtra("heartRate", 0f)
@@ -114,18 +118,22 @@ class IFirstFragment : Fragment() {
         }
         totalTime = intent.getLongExtra("time", 0) / 1000  // 넘겨받은 시간을 초로 변환
     }
-    private fun calculateRemainingTime(programTarget: Int): Long {
-        return (programTarget * 3600000L / 3600) - totalTime
+    private fun calculateRemainingTime(): Long {
+        val currentIntervalTime = nowProgram.program.intervalInfo.ranges!![nowExerciseCount].time * 1000  // 초로 변환하여 계산
+        val elapsedTime = System.currentTimeMillis() - startTimeOfCurrentInterval
+        return currentIntervalTime - elapsedTime
     }
-
     private fun transitionToNextIntervalOrFinish(context: Context) {
         isTransitioning = true
         vibrate(context)
+        startTimeOfCurrentInterval = System.currentTimeMillis()
         if (nowExerciseCount < exerciseCount - 1) {
             nowExerciseCount++
+            Log.d("인터벌", "transitionToNextIntervalOrFinish: ${nowExerciseCount}바뀜?")
             totalTime = 0  // 리셋 현재 인터벌의 경과 시간
         } else if (nowSetCount < setCount - 1) {
-            nowExerciseCount = 0
+            nowExerciseCount = 0  // 인터벌을 처음부터 다시 시작
+            Log.d("인터벌", "transitionToNextIntervalOrFinish: 다시시작함?")
             nowSetCount++
             totalTime = 0  // 리셋 현재 인터벌의 경과 시간
         } else {
@@ -139,16 +147,17 @@ class IFirstFragment : Fragment() {
 
     private fun updateUI() {
         circleProgress.setProgress(calculateProgress())
-        distanceView.text = formatTime(totalTime)  // 총 경과 시간 표시
+        val remainingTime = calculateRemainingTime() / 1000
+        distanceView.text = formatTime(remainingTime)  // 총 경과 시간 표시
         timeView.text = String.format("%.2f km", totalDistance / 1000)
-        heartRateView.text = String.format("%d bpm", (totalHeartRate / heartRateCount).toInt())
+        heartRateView.text = String.format("%d", (totalHeartRate / heartRateCount).toInt())
         speedView.text = String.format("%.2f km/h", calculateSpeed())
     }
 
     private fun calculateProgress(): Float {
-        val totalMillis = nowProgram.program.intervalInfo.ranges!![nowExerciseCount].time * 60  // 초로 계산
-        val remainingMillis = calculateRemainingTime()
-        return 100f * (1 - remainingMillis.toFloat() / totalMillis)
+        val totalSeconds = nowProgram.program.intervalInfo.ranges!![nowExerciseCount].time * 1000  // 분을 초로 변환하여 계산
+        val remainingSeconds = calculateRemainingTime()
+        return 100f * (1 - remainingSeconds.toFloat() / totalSeconds)
     }
 
     private fun formatTime(seconds: Long): String {
@@ -192,6 +201,7 @@ class IFirstFragment : Fragment() {
             putExtra("totalTime", totalTime)
         }
         startActivity(intent)
+        Log.d("인터벌", "sendResultsAndFinish: ${intent}")
         activity?.finish()
     }
 
