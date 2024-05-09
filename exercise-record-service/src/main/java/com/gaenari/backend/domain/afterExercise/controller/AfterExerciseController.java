@@ -2,7 +2,6 @@ package com.gaenari.backend.domain.afterExercise.controller;
 
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
-import com.gaenari.backend.domain.record.service.RecordService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +25,7 @@ public class AfterExerciseController {
     @Transactional
     @Operation(summary = "최종 운동 기록 저장", description = "최종 운동 기록 저장")
     @PostMapping("/save")
-    public ResponseEntity<?> getAllPrograms(@Parameter(description = "회원 식별자 아이디") @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getAllPrograms(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                             @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
         // 누적 통계 업데이트 -> 업적
         afterExerciseService.updateExerciseStatistics(memberId, exerciseDto);

@@ -3,6 +3,7 @@ package com.gaenari.backend.domain.recordFeign.controller;
 import com.gaenari.backend.domain.client.program.dto.ProgramDetailDto;
 import com.gaenari.backend.domain.recordFeign.service.RecordFeignService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +23,8 @@ public class RecordFeignController {
 
     @Operation(summary = "프로그램 운동 기록 조회", description = "프로그램 운동 기록 조회")
     @GetMapping("/{programId}")
-    public List<ProgramDetailDto.UsageLogDto> getUsageLog(@PathVariable(name = "programId") Long programId){
-     return recordFeignService.getRecordsByProgramId(programId);
+    public List<ProgramDetailDto.UsageLogDto> getUsageLog(@Parameter(name = "프로그램 ID") @PathVariable(name = "programId") Long programId) {
+        return recordFeignService.getRecordsByProgramId(programId);
     }
 
 }
