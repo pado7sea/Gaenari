@@ -40,8 +40,8 @@ public enum ResponseCode {
     PROGRAM_UPDATED(HttpStatus.OK, "운동 프로그램이 성공적으로 업데이트되었습니다."),
     PROGRAM_DELETED(HttpStatus.OK, "운동 프로그램이 성공적으로 삭제되었습니다."),
     FAVORITE_PROGRAM_LIST_FETCHED(HttpStatus.OK, "즐겨찾기 목록이 성공적으로 조회되었습니다."),
-    FAVORITE_PROGRAM_UPDATED(HttpStatus.OK, "즐겨찾기에 성공적으로 등록되었습니다."),
-    FAVORITE_PROGRAM_DELETED(HttpStatus.OK, "즐겨찾기에서 성공적으로 삭제되었습니다."),
+    FAVORITE_PROGRAM_UPDATED(HttpStatus.OK, "즐겨찾기가 성공적으로 등록되었습니다."),
+    FAVORITE_PROGRAM_DELETED(HttpStatus.OK, "즐겨찾기가 성공적으로 해제되었습니다."),
 
     /* 책(Book) */
     BOOK_LIST_FETCHED(HttpStatus.OK, "나의 책 목록이 성공적으로 조회되었습니다."),

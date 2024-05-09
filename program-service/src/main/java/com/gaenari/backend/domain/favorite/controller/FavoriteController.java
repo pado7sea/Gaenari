@@ -30,21 +30,17 @@ public class FavoriteController {
         return response.success(ResponseCode.FAVORITE_PROGRAM_LIST_FETCHED, favoriteList);
     }
 
-    @Operation(summary = "즐겨찾기 등록", description = "즐겨찾기 등록")
+    @Operation(summary = "즐겨찾기 등록/해제", description = "즐겨찾기 등록/해제")
     @PutMapping("/{programId}")
-    public ResponseEntity<?> registerFavorite(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId, @PathVariable(name = "programId") Long programId) {
-        Boolean isSuccess = favoriteService.registerFavorite(memberId, programId);
+    public ResponseEntity<?> updaterFavoriteStatus(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId, @PathVariable(name = "programId") Long programId) {
+        Boolean isSuccess = favoriteService.updaterFavoriteStatus(memberId, programId);
 
-        return response.success(ResponseCode.FAVORITE_PROGRAM_UPDATED, isSuccess);
+        if (isSuccess) {
+            return response.success(ResponseCode.FAVORITE_PROGRAM_UPDATED, isSuccess);
+
+        } else {
+            return response.success(ResponseCode.FAVORITE_PROGRAM_DELETED, isSuccess);
+        }
     }
-
-    @Operation(summary = "즐겨찾기 해제", description = "즐겨찾기 해제")
-    @DeleteMapping("/{programId}")
-    public ResponseEntity<?> clearFavorite(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId, @PathVariable(name = "programId") Long programId) {
-        Boolean isSuccess = favoriteService.clearFavorite(memberId, programId);
-
-        return response.success(ResponseCode.FAVORITE_PROGRAM_DELETED, isSuccess);
-    }
-
 
 }
