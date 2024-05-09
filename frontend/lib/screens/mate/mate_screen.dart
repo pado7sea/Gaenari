@@ -27,6 +27,8 @@ class ListItem {
 
 class _MatePageState extends State<MatePage> {
   late List<Mate> list = [];
+  late SlidableController slidableController =
+      SlidableController(); // 슬라이드 컨트롤러 추가
 
   List<String> images = [
     'assets/gif/shepherd_standandlook.gif',
@@ -142,6 +144,8 @@ class _MatePageState extends State<MatePage> {
             itemCount: list.length,
             itemBuilder: (BuildContext context, int index) {
               return Slidable(
+                controller: slidableController, // 슬라이드 컨트롤러 추가
+                key: Key(list[index].mateId.toString()),
                 actionPane: SlidableBehindActionPane(), // 슬라이드 액션 패널 설정
                 actionExtentRatio: 0.25, // 슬라이드 액션의 크기 비율 설정
                 secondaryActions: [

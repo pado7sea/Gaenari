@@ -173,7 +173,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                   duration: duration * repeatIndex,
                   rangeCount: rangeCount,
                   ranges: ranges,
-                  setCount: repeatIndex);
+                  setCount: repeatIndex + 1);
               ProgramAdd program = ProgramAdd(
                 interval: interval,
                 programTitle: _programName.text,
