@@ -34,3 +34,15 @@ springdoc:
   enable-spring-security: true
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+feign:
+  member-service:
+    url: http://member-service.member.svc.cluster.local
+  inventory-service:
+    url: http://inventory-service.inventory.svc.cluster.local
+  program-service:
+    url: http://program-service.program.svc.cluster.local
+  exercise-record-service:
+    url: http://exercise-record-service.exercise-record.svc.cluster.local
+  challenge-service:
+    url: http://challenge-service.challenge.svc.cluster.local

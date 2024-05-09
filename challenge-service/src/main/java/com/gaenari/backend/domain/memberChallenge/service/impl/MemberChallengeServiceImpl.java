@@ -4,8 +4,8 @@ import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeType;
 import com.gaenari.backend.domain.challenge.entity.Challenge;
 import com.gaenari.backend.domain.challenge.repository.ChallengeRepository;
-import com.gaenari.backend.domain.client.RecordServiceClient;
-import com.gaenari.backend.domain.client.dto.TotalStatisticDto;
+import com.gaenari.backend.domain.client.record.RecordServiceClient;
+import com.gaenari.backend.domain.client.record.dto.TotalStatisticDto;
 import com.gaenari.backend.domain.memberChallenge.dto.responseDto.MemberMissionDto;
 import com.gaenari.backend.domain.memberChallenge.dto.responseDto.MemberTrophyDto;
 import com.gaenari.backend.domain.memberChallenge.entity.MemberChallenge;
@@ -14,7 +14,6 @@ import com.gaenari.backend.domain.memberChallenge.service.MemberChallengeService
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Member;
 import java.util.List;
 
 @Service
@@ -64,7 +63,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
             memberChallenge.updateIsAchieved(true); // 업적 달성 여부 true
 
         } else if (challengeCategory == ChallengeCategory.MISSION) {
-            memberChallenge.updateCount(1); // 미션 달성 횟수 1 증가
+            memberChallenge.addCount(1); // 미션 달성 횟수 1 증가
         }
         memberChallenge.updateObtainable(memberChallenge.getObtainable() + 1); // 획득 가능한 보상 개수 1 증가
     }
