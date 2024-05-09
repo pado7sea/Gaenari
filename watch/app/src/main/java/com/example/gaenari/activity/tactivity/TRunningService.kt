@@ -96,11 +96,11 @@ class TRunningService : Service(), SensorEventListener {
             wakeLock?.acquire() // WakeLock 활성화
             try {
                 Log.d("TRunningService", "Service started")
-                startTime = SystemClock.elapsedRealtime()
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupLocationTracking()
                 setupHeartRateSensor()
+                startTime = SystemClock.elapsedRealtime()
                 timerHandler.post(timerRunnable) // 타이머 시작
                 oneMinuteHandler.post(oneMinuteRunnable) // 1분 평균 계산 타이머 시작
             } catch (e: Exception) {
@@ -238,6 +238,8 @@ class TRunningService : Service(), SensorEventListener {
         lastPauseTime = SystemClock.elapsedRealtime()
         isPaused = true
         stopForeground(true)
+        // 1분 평균 계산 핸들러를 중지합니다.
+        oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
     }
 
     @SuppressLint("ForegroundServiceType")
@@ -247,6 +249,8 @@ class TRunningService : Service(), SensorEventListener {
         isPaused = false
         isServiceRunning = true
         startForeground(1, notification)
+        // 1분 평균 계산 핸들러를 다시 시작합니다.
+        oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000)
     }
 
     fun stopService() {

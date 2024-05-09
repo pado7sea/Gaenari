@@ -2,11 +2,7 @@
 package com.example.gaenari.activity.dactivity
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Sensor
@@ -14,17 +10,10 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
-import android.os.Binder
-import android.os.IBinder
-import android.os.PowerManager
-import android.os.SystemClock
+import android.os.*
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
@@ -34,105 +23,54 @@ class DRunningService : Service(), SensorEventListener {
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var sensorManager: SensorManager? = null
     private var heartRateSensor: Sensor? = null
-    private var totalDistance = 0.0
-    private var lastLocation: Location? = null
-    private var startTime: Long = 0
-    private var heartRate = 0f // Current heart rate
 
-    // 일시정지에 대한 처리를 해주기위함
+    private var lastLocation: Location? = null
+
+    private var totalDistance = 0.0
+    private var currentHeartRate = 0f // 현재 심박수
+    private var accumulatedSpeed = 0.0
+    private var accumulatedHeartRate = 0f
+    private var speedCount = 0
+    private var heartRateCount = 0
+
+    private var startTime: Long = 0
+
+    private var oneMinuteDistance = 0.0
+    private var elapsedTime: Long = 0
+
+    private var gpsUpdateIntervalMillis: Long = 2500
+    private var timerIntervalMillis: Long = 1000
+
+    // 일시정지 관련 변수
     private var totalPausedTime: Long = 0
     private var lastPauseTime: Long = 0
 
-
     private var wakeLock: PowerManager.WakeLock? = null
-
-    //일시정지일때 데이터를 안보내는 방식을 택함
     private var isPaused = false
 
+    // 타이머 핸들러를 통해 1초마다 시간을 갱신
+    private val timerHandler = Handler(Looper.getMainLooper())
+    private val timerRunnable = object : Runnable {
+        override fun run() {
+            if (!isPaused) {
+                elapsedTime = SystemClock.elapsedRealtime() - startTime - totalPausedTime
+                sendTimeBroadcast(elapsedTime)
 
-    @SuppressLint("ForegroundServiceType")
-    override fun onCreate() {
-        super.onCreate()
-        if (!isServiceRunning) {
-            isServiceRunning = true
-            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
-            wakeLock?.acquire()
-            try {
-                Log.d("DRunningService", "Service started")
-                startTime = SystemClock.elapsedRealtime()
-                createNotificationChannel()
-                startForeground(1, notification)
-                setupLocationTracking()
-                setupHeartRateSensor()
-            } catch (e: Exception) {
-                Log.e("DRunningService", "Error in onCreate: ${e.message}")
+                // 심박수 브로드캐스트
+                sendHeartRateBroadcast(currentHeartRate)
             }
+            timerHandler.postDelayed(this, timerIntervalMillis)
         }
     }
 
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            if (isPaused) return
-            val currentTime = SystemClock.elapsedRealtime()
-            val activeTime = currentTime - startTime - totalPausedTime  // 실제 활동 시간 계산
-
-            if (activeTime < 4555) {  // 첫 5초 동안의 위치 업데이트는 무시
-                return
-            }
-            try {
-                locationResult.locations.forEach { location ->
-                    lastLocation?.let {
-                        totalDistance += it.distanceTo(location).toDouble()
-                        val intent = Intent("com.example.sibal.UPDATE_INFO").apply {
-                            putExtra("distance", totalDistance)
-                            putExtra("time", activeTime)  // 일시 정지 시간 제외한 활동 시간 전송
-                            putExtra("heartRate", heartRate)
-                            putExtra("speed", location.speed)
-                        }
-                        LocalBroadcastManager.getInstance(this@DRunningService).sendBroadcast(intent)
-                    }
-                    lastLocation = location
-                }
-            } catch (e: Exception) {
-                Log.e("DRunningService", "Error processing location update: ${e.message}")
-            }
+    // 1분 평균 계산 핸들러
+    private val oneMinuteHandler = Handler(Looper.getMainLooper())
+    private val oneMinuteRunnable = object : Runnable {
+        override fun run() {
+            calculateOneMinuteAverages()
+            oneMinuteHandler.postDelayed(this, 60000) // 1분 간격 실행
         }
     }
-
-    inner class LocalBinder : Binder() {
-        fun getService(): DRunningService = this@DRunningService
-    }
-
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent == null) {
-            Log.d("DRunningService", "Restarted by the system.")
-        } else {
-            if (!isServiceRunning) {
-                isServiceRunning = true
-                Log.d("DRunningService", "Service starting")
-                // 서비스 초기 설정 코드
-            } else {
-                Log.d("DRunningService", "Service already running")
-            }
-        }
-        return START_STICKY
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        wakeLock?.release()
-        isServiceRunning = false
-        sensorManager?.unregisterListener(this)
-        fusedLocationClient?.removeLocationUpdates(locationCallback)
-        Log.d("DRunningService", "Service destroyed")
-    }
-
-    fun stopService() {
-        stopSelf()
-    }
-
     private val notification: Notification
         get() {
             val notificationIntent = Intent(this, DActivity::class.java)
@@ -148,16 +86,119 @@ class DRunningService : Service(), SensorEventListener {
                 .build()
         }
 
+    @SuppressLint("ForegroundServiceType")
+    override fun onCreate() {
+        super.onCreate()
+        startTime = SystemClock.elapsedRealtime()
+        if (!isServiceRunning) {
+            isServiceRunning = true
+            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
+            wakeLock?.acquire() // WakeLock 활성화
+            try {
+                Log.d("DRunningService", "Service started")
+                createNotificationChannel()
+                startForeground(1, notification)
+                setupLocationTracking()
+                setupHeartRateSensor()
+                startTime = SystemClock.elapsedRealtime()
+                timerHandler.post(timerRunnable) // 타이머 시작
+                oneMinuteHandler.post(oneMinuteRunnable) // 1분 평균 계산 타이머 시작
+            } catch (e: Exception) {
+                Log.e("DRunningService", "Error in onCreate: ${e.message}")
+            }
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            if (isPaused) return
+            try {
+                locationResult.locations.forEach { location ->
+                    val speed = location.speed.toDouble()
+                    accumulatedSpeed += speed
+                    speedCount++
+
+                    val distance = location.distanceTo(lastLocation ?: location).toDouble()
+                    totalDistance += distance
+                    oneMinuteDistance += distance
+                    sendGpsBroadcast(totalDistance, elapsedTime, speed.toFloat())
+                    lastLocation = location
+                }
+            } catch (e: Exception) {
+                Log.e("DRunningService", "Error processing location update: ${e.message}")
+            }
+        }
+    }
+
+    private fun calculateOneMinuteAverages() {
+        Log.d("checkcheck", "시작은 하니 ?: ")
+        val averageSpeed = if (speedCount > 0) accumulatedSpeed / speedCount else 0.0
+        val averageHeartRate = if (heartRateCount > 0) (accumulatedHeartRate / heartRateCount).toInt() else 0
+        Log.d("checkcheck", "서비스다${averageSpeed} , ${averageHeartRate} ,${oneMinuteDistance}")
+        // 1분 데이터 브로드캐스트
+        val intent = Intent("com.example.sibal.UPDATE_ONE_MINUTE").apply {
+            putExtra("averageSpeed", averageSpeed)
+            putExtra("averageHeartRate", averageHeartRate)
+            putExtra("distance", oneMinuteDistance)
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+
+        // 다음 1분을 위한 초기화
+        accumulatedSpeed = 0.0
+        speedCount = 0
+        accumulatedHeartRate = 0f
+        heartRateCount = 0
+        oneMinuteDistance = 0.0
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+        Log.d("checkcheck", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
+        if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
+            currentHeartRate = event.values[0]
+            accumulatedHeartRate += currentHeartRate
+            heartRateCount++
+        }
+    }
+
+    override fun onDestroy() {
+        wakeLock?.release()
+        isServiceRunning = false
+        sensorManager?.unregisterListener(this)
+        fusedLocationClient?.removeLocationUpdates(locationCallback)
+        timerHandler.removeCallbacks(timerRunnable)
+        oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
+        Log.d("DRunningService", "Service destroyed")
+        super.onDestroy()
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+
+    inner class LocalBinder : Binder() {
+        fun getService(): DRunningService = this@DRunningService
+    }
+
+    override fun onBind(intent: Intent): IBinder = binder
+
+    private fun createNotificationChannel() {
+        val serviceChannel = NotificationChannel(
+            "ForegroundServiceChannel",
+            "Exercise Service Channel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(serviceChannel)
+    }
+
     private fun setupLocationTracking() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        val locationRequest = LocationRequest.create().apply {
-            interval = 1000 // 1 second interval
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, gpsUpdateIntervalMillis)
+            .build()
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return
         }
-        fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, null)
+        fusedLocationClient?.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
     private fun setupHeartRateSensor() {
@@ -165,51 +206,55 @@ class DRunningService : Service(), SensorEventListener {
         heartRateSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_HEART_RATE)
         heartRateSensor?.let {
             sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
-        } ?: run {
-            Log.e("DRunningService", "No heart rate sensor available")
         }
     }
 
-    override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
-            heartRate = event.values[0]
+    // GPS 브로드캐스트를 통해 거리, 시간, 속도를 보내는 함수
+    private fun sendGpsBroadcast(distance: Double, time: Long, speed: Float) {
+        val intent = Intent("com.example.sibal.UPDATE_INFO").apply {
+            putExtra("distance", distance)
+            putExtra("time", time)
+            putExtra("speed", speed)
         }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-        // 필요에 따라 구현
+    // 타이머 정보를 브로드캐스트하는 함수
+    private fun sendTimeBroadcast(time: Long) {
+        val intent = Intent("com.example.sibal.UPDATE_TIMER").apply {
+            putExtra("time", time)
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    override fun onBind(intent: Intent): IBinder {
-        return binder
+    // 심박수를 브로드캐스트하는 함수
+    private fun sendHeartRateBroadcast(currentHeartRate: Float) {
+        val intent = Intent("com.example.sibal.UPDATE_HEART_RATE").apply {
+            putExtra("heartRate", currentHeartRate)
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
     fun pauseService() {
-        lastPauseTime = SystemClock.elapsedRealtime()  // 일시 정지 시작 시간 기록
+        lastPauseTime = SystemClock.elapsedRealtime()
         isPaused = true
         stopForeground(true)
+        // 1분 평균 계산 핸들러를 중지합니다.
+        oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
     }
 
     @SuppressLint("ForegroundServiceType")
     fun resumeService() {
         val currentResumeTime = SystemClock.elapsedRealtime()
-        totalPausedTime += currentResumeTime - lastPauseTime  // 누적 일시 정지 시간 갱신
+        totalPausedTime += currentResumeTime - lastPauseTime
         isPaused = false
         isServiceRunning = true
         startForeground(1, notification)
+        // 1분 평균 계산 핸들러를 다시 시작합니다.
+        oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000)
     }
 
-    private fun createNotificationChannel() {
-        try {
-            val serviceChannel = NotificationChannel(
-                "ForegroundServiceChannel",
-                "Exercise Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(serviceChannel)
-        } catch (e: Exception) {
-            Log.e("DRunningService", "Error creating notification channel: ${e.message}")
-        }
+    fun stopService() {
+        stopSelf()
     }
 }
