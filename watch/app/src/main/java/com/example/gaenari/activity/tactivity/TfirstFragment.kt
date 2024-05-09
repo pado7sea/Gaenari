@@ -88,8 +88,9 @@ class TFirstFragment : Fragment() {
 
                         totalDistance = distance
                         totalTime = time
+                        Log.d("티액티비티", "onReceive: ${time}")
 
-                        val remainingTime = (programTarget * 3600000 / 60) - totalTime
+                        val remainingTime = (programTarget * 1000) - totalTime
                         if (remainingTime <= 0) {
                             sendResultsAndFinish(context)
                         } else {
@@ -98,7 +99,7 @@ class TFirstFragment : Fragment() {
                     }
                     "com.example.sibal.UPDATE_TIMER" -> {
                         val time = intent.getLongExtra("time", 0)
-                        val remainingTime = (programTarget * 3600000 / 60) - time
+                        val remainingTime = (programTarget * 1000) - time
                         updateTimerUI(remainingTime , programTarget,)
                     }
                     "com.example.sibal.UPDATE_ONE_MINUTE" -> {
@@ -135,7 +136,7 @@ class TFirstFragment : Fragment() {
         check3.text = String.format("%d", checkheart)
     }
     private fun updateUI(distance: Double, programTarget: Int, remainingTime: Long, speed: Float) {
-        val totalMillis = programTarget * 3600000 / 60
+        val totalMillis = programTarget * 1000
         val progress = 100 * (1 - (remainingTime.toFloat() / totalMillis))
         circleProgress.setProgress(progress)
 
@@ -149,7 +150,7 @@ class TFirstFragment : Fragment() {
     }
 
     private fun updateTimerUI(remainingTime: Long , programTarget: Int) {
-        val totalMillis = programTarget * 3600000 / 60
+        val totalMillis = programTarget * 1000
         val progress = 100 * (1 - (remainingTime.toFloat() / totalMillis))
         circleProgress.setProgress(progress)
         distanceView.text = formatTime(remainingTime)
@@ -171,7 +172,7 @@ class TFirstFragment : Fragment() {
             vibrator.vibrate(500)
         }
 
-        val programTarget = arguments?.getInt("programTarget") ?: 0
+//        val programTarget = arguments?.getInt("programTarget") ?: 0
         val programType = arguments?.getString("programType") ?: ""
         val programTitle = arguments?.getString("programTitle") ?: ""
         val programId = arguments?.getLong("programId") ?: 0L
@@ -180,7 +181,7 @@ class TFirstFragment : Fragment() {
         val averageSpeed = if (totalTime > 0) (totalDistance / totalTime) * 3600 else 0.0
 
         val intent = Intent(context, ResultActivity::class.java).apply {
-            putExtra("programTarget", programTarget)
+//            putExtra("programTarget", programTarget)
             putExtra("programType", programType)
             putExtra("programTitle", programTitle)
             putExtra("programId", programId)
