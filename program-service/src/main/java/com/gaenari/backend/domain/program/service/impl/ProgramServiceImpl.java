@@ -86,7 +86,7 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public List<ProgramDto> getProgramList(String memberId) {
 
-        return programRepository.findByMemberId(memberId).stream()
+        return programRepository.findByMemberIdOrderByIsFavoriteDescUsageCountDesc(memberId).stream()
                 .map(program -> {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
