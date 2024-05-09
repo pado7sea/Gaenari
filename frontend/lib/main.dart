@@ -17,7 +17,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter/rendering.dart';
+
 void main() async {
+  // debugPaintSizeEnabled = true;
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진과 위젯 트리 바인딩
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
