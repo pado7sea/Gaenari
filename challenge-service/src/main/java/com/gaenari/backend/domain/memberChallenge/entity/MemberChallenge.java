@@ -42,7 +42,7 @@ public class MemberChallenge {
         this.isAchieved = b;
     }
 
-    public void updateCount(int i) {
+    public void addCount(int i) {
         this.count += i;
     }
 
