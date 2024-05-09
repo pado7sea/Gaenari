@@ -72,7 +72,7 @@ class ProgramItem {
 }
 
 class Program {
-  int? targetValue;
+  double? targetValue;
   IntervalInfo? intervalInfo;
 
   Program({this.targetValue, this.intervalInfo});
@@ -95,7 +95,7 @@ class Program {
 }
 
 class IntervalInfo {
-  int? duration;
+  double? duration;
   int? setCount;
   int? rangeCount;
   List<Ranges>? ranges;
@@ -129,8 +129,8 @@ class IntervalInfo {
 class Ranges {
   int? id;
   bool? isRunning;
-  int? time;
-  int? speed;
+  double? time;
+  double? speed;
 
   Ranges({this.id, this.isRunning, this.time, this.speed});
 

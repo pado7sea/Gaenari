@@ -170,7 +170,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                 }
               }
               IntervalItem interval = IntervalItem(
-                  duration: duration,
+                  duration: duration * repeatIndex,
                   rangeCount: rangeCount,
                   ranges: ranges,
                   setCount: repeatIndex);
@@ -255,11 +255,7 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                                       ? GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              // speedIndexList.removeAt(index);
-                                              // timeIndexList.removeAt(index);
-                                              // typeIndexList.removeAt(index);
                                               active[index] = false;
-                                              // print(speedIndexList);
                                             });
                                           },
                                           child: Row(
