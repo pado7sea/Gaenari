@@ -12,8 +12,8 @@ class ProgramService {
       SecureStorageService();
 
   // 운동프로그램 상세조회
-  static Future<ProgramDetail> fetchProgramDetail(number) async {
-    return fetchGetData('program/$number')
+  static Future<ProgramDetail> fetchProgramDetail(id) async {
+    return fetchGetData('program/$id')
         .then((data) => ProgramDetail.fromJson(data));
   }
 
@@ -26,6 +26,12 @@ class ProgramService {
   static Future<ProgramRes> fetchDeleteProgram(id) async {
     return fetchDeleteData('program/$id')
         .then((data) => ProgramRes.fromJson(data));
+  }
+
+  // 운동프로그램 즐겨찾기 등록
+  static Future<ProgramResBool> fetchFavoriteProgram(id) async {
+    return fetchPutData('program/favorite/$id')
+        .then((data) => ProgramResBool.fromJson(data));
   }
 
   // 프로그램 추가하기
@@ -79,6 +85,29 @@ class ProgramService {
   static Future<dynamic> fetchDeleteData(String endpoint) async {
     String? token = await secureStorageService.getToken();
     final response = await http.delete(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] == "SUCCESS") {
+        return data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  // put요청
+  static Future<dynamic> fetchPutData(String endpoint) async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.put(
       Uri.parse('$baseUrl/$endpoint'),
       headers: {
         'Content-Type': 'application/json',
