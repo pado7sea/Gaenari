@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@drawable/actiback4">
 
     <com.example.gaenari.activity.iactivity.ICircleProgress
         android:id="@+id/circleProgress"
@@ -16,6 +16,20 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <!-- RecyclerView for displaying circles dynamically -->
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@raw/dog1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.157"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.312" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvIntervals"
         android:layout_width="70dp"
@@ -79,7 +93,7 @@
         android:textColor="@color/whitegreen"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.312"
+        app:layout_constraintHorizontal_bias="0.392"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/속력" />
 
@@ -89,9 +103,11 @@
         android:layout_height="wrap_content"
         android:text="BPM"
         android:textColor="@color/whitegreen"
+        android:fontFamily="@font/thejamsil_medium"
         android:textSize="12sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/심박수"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.584"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline

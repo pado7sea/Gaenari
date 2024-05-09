@@ -10,7 +10,7 @@ class DFragmentStateAdapter(fragmentActivity: FragmentActivity, private val prog
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> DSecondFragment()
-            1 -> DFirstFragment.newInstance(programTarget,programType,programTitle,programId) // 수정된 부분
+            1 -> DFirstFragment() // 수정된 부분
             2 -> DSecondFragment()
             else -> throw IllegalArgumentException("Invalid position: $position")
         }
