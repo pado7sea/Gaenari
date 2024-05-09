@@ -23,8 +23,8 @@ public class RecordDetailController {
     @Operation(summary = "기록 상세 조회", description = "기록 상세 조회")
     @GetMapping("/{recordId}")
     public ResponseEntity<?> getDetailRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
-                                             @PathVariable(name = "recordId") Long exerciseId) {
-        RecordDetailDto recordDtos = recordDetailService.getExerciseRecordDetail(memberId, exerciseId);
+                                             @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId) {
+        RecordDetailDto recordDtos = recordDetailService.getExerciseRecordDetail(memberId, recordId);
 
         return response.success(ResponseCode.RECORD_DETAIL_FETCHED, recordDtos);
     }
