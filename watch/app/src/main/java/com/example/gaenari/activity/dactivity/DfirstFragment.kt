@@ -37,13 +37,13 @@ class DFirstFragment : Fragment() {
 
     companion object {
         fun newInstance(
-            programTarget: Int,
+            programTarget: Double,
             programType: String,
             programTitle: String,
             programId: Long
         ): DFirstFragment {
             val args = Bundle()
-            args.putInt("programTarget", programTarget)
+            args.putDouble("programTarget", programTarget)
             args.putString("programType", programType)
             args.putString("programTitle", programTitle)
             args.putLong("programId", programId)
@@ -69,13 +69,13 @@ class DFirstFragment : Fragment() {
         check2 = view.findViewById(R.id.체크2)
         check3 = view.findViewById(R.id.체크3)
 
-        val programTarget = arguments?.getInt("programTarget") ?: 0
+        val programTarget = arguments?.getDouble("programTarget") ?: 0
         Log.d("first", "onCreateView: ${programTarget}")
-        setupUpdateReceiver(programTarget)
+        setupUpdateReceiver(programTarget as Double)
         return view
     }
 
-    private fun setupUpdateReceiver(programTarget: Int) {
+    private fun setupUpdateReceiver(programTarget: Double) {
         updateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
@@ -132,7 +132,7 @@ class DFirstFragment : Fragment() {
         check2.text = String.format("%.2f km", checkdistance / 1000)
         check3.text = String.format("%d", checkheart)
     }
-    private fun updateUI(remainingdistance: Double, programTarget: Int, time: Long, speed: Float) {
+    private fun updateUI(remainingdistance: Double, programTarget: Double, time: Long, speed: Float) {
         val totalMillis = programTarget
         val progress = 100 * (1 - (remainingdistance / totalMillis))
         circleProgress.setProgress(progress.toFloat())
@@ -166,7 +166,7 @@ class DFirstFragment : Fragment() {
             vibrator.vibrate(500)
         }
 
-        val programTarget = arguments?.getInt("programTarget") ?: 0
+//        val programTarget = arguments?.getInt("programTarget") ?: 0
         val programType = arguments?.getString("programType") ?: ""
         val programTitle = arguments?.getString("programTitle") ?: ""
         val programId = arguments?.getLong("programId") ?: 0L
@@ -175,7 +175,7 @@ class DFirstFragment : Fragment() {
         val averageSpeed = if (totalTime > 0) (totalDistance / totalTime) * 3600 else 0.0
 
         val intent = Intent(context, ResultActivity::class.java).apply {
-            putExtra("programTarget", programTarget)
+//            putExtra("programTarget", programTarget)
             putExtra("programType", programType)
             putExtra("programTitle", programTitle)
             putExtra("programId", programId)

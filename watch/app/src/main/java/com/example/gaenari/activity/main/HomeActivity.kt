@@ -20,6 +20,7 @@ import com.example.gaenari.R
 import com.example.gaenari.StepCounterViewModel
 import com.example.gaenari.dto.response.ApiResponseListDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.model.SharedViewModel
 import com.example.gaenari.util.AccessToken
 import com.example.gaenari.util.PreferencesUtil
 import com.example.gaenari.util.Retrofit
@@ -40,8 +41,12 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var viewModel: StepCounterViewModel
     private val PERMISSION_REQUEST_CODE = 100 // 권한 요청 코드
 
+    //즐겨찾기 데이터를 여기에 담아서 프래그먼트에서 보여줄예정
+    private lateinit var sharedViewModel: SharedViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         setContentView(R.layout.activity_home)
 
         prefs = PreferencesUtil.getEncryptedSharedPreferences(applicationContext)
@@ -109,7 +114,10 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
                 if (response.body()!!.status == "ERROR") {
                     Toast.makeText(this@HomeActivity, "즐겨찾기 목록 조회 실패.", Toast.LENGTH_SHORT).show()
                 } else {
+                    val dataList: List<FavoriteResponseDto?> = response.body()?.data ?: emptyList()
 
+                    // ViewModel에 데이터 전달
+                    sharedViewModel.setFavoritePrograms(dataList)
                 }
             }
 

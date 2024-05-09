@@ -1,8 +1,9 @@
 package com.example.gaenari.dto.response;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class FavoriteResponseDto {
+public class FavoriteResponseDto implements Serializable {
     private Long programId;
     private String programTitle;
     private int usageCount; // 운동 프로그램 총 사용횟수
@@ -10,12 +11,12 @@ public class FavoriteResponseDto {
     private String type; // enum: D(거리목표), T(시간목표), I(인터벌)
     private ProgramTypeInfoDto program;
 
-    class ProgramTypeInfoDto {
+    // 내부 클래스도 Serializable을 구현합니다.
+    public static class ProgramTypeInfoDto implements Serializable {
         private Double targetValue;
         private IntervalDto intervalInfo;
 
-        public ProgramTypeInfoDto() {
-        }
+        public ProgramTypeInfoDto() {}
 
         public Double getTargetValue() {
             return targetValue;
@@ -41,14 +42,14 @@ public class FavoriteResponseDto {
                     '}';
         }
 
-        class IntervalDto {
+        // IntervalDto도 Serializable을 구현합니다.
+        public static class IntervalDto implements Serializable {
             private Double duration;  // 인터벌 총 소요 시간
             private Integer setCount;  // 세트 수
             private Integer rangeCount; // 세트 당 구간 수
             private List<RangeDto> ranges; // 구간 리스트
 
-            public IntervalDto() {
-            }
+            public IntervalDto() {}
 
             public Double getDuration() {
                 return duration;
@@ -92,14 +93,14 @@ public class FavoriteResponseDto {
                         '}';
             }
 
-            class RangeDto{
+            // RangeDto도 Serializable을 구현합니다.
+            public static class RangeDto implements Serializable {
                 private Long id;
-                private Boolean isRunning;  // true:뛰는시간, false:걷는시간
+                private Boolean isRunning;  // true:뛰는 시간, false: 걷는 시간
                 private Double time;  // 단위: sec
                 private Double speed; // 단위: km/h
 
-                public RangeDto() {
-                }
+                public RangeDto() {}
 
                 public Long getId() {
                     return id;
@@ -146,8 +147,7 @@ public class FavoriteResponseDto {
         }
     }
 
-    public FavoriteResponseDto() {
-    }
+    public FavoriteResponseDto() {}
 
     public Long getProgramId() {
         return programId;

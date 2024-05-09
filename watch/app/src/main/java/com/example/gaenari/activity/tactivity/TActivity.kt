@@ -24,7 +24,7 @@ class TActivity : AppCompatActivity() {
         programType = intent.getStringExtra("programType") ?: "기본값"
         programTarget = intent.getIntExtra("programTarget", 0) // Intent에서 programTarget 가져오기
         setupViewPager()
-        Log.d("jinzza", "onCreate: 서비스시작은됨?")
+        Log.d("jinzza", "programTarget: ${programTarget}")
 
     }
     override fun onDestroy() {

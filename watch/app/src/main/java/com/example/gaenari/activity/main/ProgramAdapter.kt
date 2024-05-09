@@ -10,8 +10,9 @@ import android.widget.TextView
 import com.example.gaenari.R
 import android.util.Log
 import com.example.gaenari.activity.CountdownActivity
+import com.example.gaenari.dto.response.FavoriteResponseDto
 
-class ProgramAdapter(private val programs: List<Program>) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
+class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_program, parent, false)
@@ -50,7 +51,12 @@ class ProgramAdapter(private val programs: List<Program>) : RecyclerView.Adapter
                     putExtra("programId", program.programId)
                     putExtra("programTitle", program.programTitle)
                     putExtra("programType", program.type)
-                    putExtra("programTarget", program.program.intervalInfo.targetValue)
+                if(program.type=="D"){
+                    putExtra("programTarget", program.program.targetValue)
+                }
+                if(program.type =="T"){
+                    putExtra("programTarget", program.program.targetValue.toInt())
+                }
                 // `I` 타입의 프로그램에 대해서만 전체 객체를 넘김
                 if (program.type == "I") {
                     putExtra("programData", program)
@@ -59,7 +65,7 @@ class ProgramAdapter(private val programs: List<Program>) : RecyclerView.Adapter
                 Log.d("ProgramAdapter", "Sending program: $program")
                 Log.d("ProgramAdapter", "Sending program12: ${program.programTitle}")
                 Log.d("ProgramAdapter", "Sending program23: ${program.type}")
-                Log.d("ProgramAdapter", "Sending program34: ${program.program.intervalInfo.targetValue}")
+                Log.d("ProgramAdapter", "Sending program34: ${program.program.targetValue}")
             }
 
             if (intent.resolveActivity(context.packageManager) != null) {
