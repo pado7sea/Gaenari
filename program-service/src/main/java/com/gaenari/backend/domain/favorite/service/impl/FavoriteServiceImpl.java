@@ -88,32 +88,25 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public Boolean registerFavorite(String memberId, Long programId) {
+    public Boolean updaterFavoriteStatus(String memberId, Long programId) {
         Program program = favoriteRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
 
         // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
-        if(!program.getMemberId().equals(memberId)) {
+        if (!program.getMemberId().equals(memberId)) {
             throw new ProgramAccessException();
         }
 
-        program.updateIsFavorite(true);
-        favoriteRepository.save(program);
+        if (program.getIsFavorite()) {
+            program.updateIsFavorite(false);
+            favoriteRepository.save(program);
 
-        return true;
-    }
+            return false;
+        } else {
+            program.updateIsFavorite(true);
+            favoriteRepository.save(program);
 
-    @Override
-    public Boolean clearFavorite(String memberId, Long programId) {
-        Program program = favoriteRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
-
-        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
-        if(!program.getMemberId().equals(memberId)) {
-            throw new ProgramAccessException();
+            return true;
         }
 
-        program.updateIsFavorite(false);
-        favoriteRepository.save(program);
-
-        return true;
     }
 }
