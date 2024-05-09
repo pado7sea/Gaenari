@@ -28,8 +28,12 @@ public enum ResponseCode {
     CHALLENGE_FETCHED(HttpStatus.OK, "도전과제가 성공적으로 조회되었습니다."),
     CHALLENGE_DELETED_ALL(HttpStatus.OK,"도전과제를 모두 삭제하였습니다." ),
     ACHIEVED_TROPHY_FETCHED(HttpStatus.OK, "달성 업적이 성공적으로 조회되었습니다."),
-    ACHIEVED_MISSION_FETCHED(HttpStatus.OK, "달성 미션이 성공적으로 조회되었습니다.");
+    ACHIEVED_MISSION_FETCHED(HttpStatus.OK, "달성 미션이 성공적으로 조회되었습니다."),
 
+    /* 보상 */
+    REWARD_ALL_RECEIVE_SUCCESS(HttpStatus.OK, "모든 보상을 성공적으로 수령하였습니다."),
+    REWARD_RECORD_RECEIVE_SUCCESS(HttpStatus.OK, "해당 운동 기록의 보상을 성공적으로 수령하였습니다."),
+    REWARD_ONE_RECEIVE_SUCCESS(HttpStatus.OK, "도전 과제 보상을 성공적으로 수령하였습니다.");
 
     private final HttpStatus status;
     private final String message;
