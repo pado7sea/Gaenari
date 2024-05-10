@@ -32,8 +32,9 @@ public enum ResponseCode {
 
     /* 보상 */
     REWARD_ALL_RECEIVE_SUCCESS(HttpStatus.OK, "모든 보상을 성공적으로 수령하였습니다."),
-    REWARD_RECORD_RECEIVE_SUCCESS(HttpStatus.OK, "해당 운동 기록의 보상을 성공적으로 수령하였습니다."),
-    REWARD_ONE_RECEIVE_SUCCESS(HttpStatus.OK, "도전 과제 보상을 성공적으로 수령하였습니다.");
+    REWARD_RECORD_RECEIVE_SUCCESS(HttpStatus.OK, "해당 운동 기록과 관련된 보상을 성공적으로 수령하였습니다."),
+    REWARD_ONE_RECEIVE_SUCCESS(HttpStatus.OK, "도전 과제 보상을 성공적으로 수령하였습니다."),
+    REWARD_EXIST_SUCCESS(HttpStatus.OK, "받지 않은 보상 여부를 성공적으로 조회하였습니다.");
 
     private final HttpStatus status;
     private final String message;

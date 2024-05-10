@@ -16,7 +16,7 @@ public interface MemberChallengeRepository extends JpaRepository<MemberChallenge
     // 회원 아이디와 도전 과제 아이디로 해당 회원의 도전 과제 정보를 조회
     MemberChallenge findByMemberIdAndChallengeId(String memberId, Integer challengeId);
 
-    // 업데이트된 회원 도전과제 정보를 저장
-    MemberChallenge save(MemberChallenge memberChallenge);
+    // 회원 아이디와 일치하고, Obtainable이 i 보다 큰 회원의 도전과제 리스트 조회
+    List<MemberChallenge> findByMemberIdAndObtainableGreaterThan(String memberId, int i);
 
 }
