@@ -2,7 +2,6 @@ package com.gaenari.backend.domain.record.entity;
 
 import com.gaenari.backend.domain.record.dto.enumType.ExerciseType;
 import com.gaenari.backend.domain.record.dto.enumType.ProgramType;
-import com.gaenari.backend.domain.recordChallenge.entity.RecordChallenge;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
