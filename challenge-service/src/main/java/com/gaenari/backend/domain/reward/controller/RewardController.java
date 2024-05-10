@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Member Challenge Controller", description = "Member Challenge Controller API")
+@Tag(name = "Reward Controller", description = "Reward Controller API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reward")
@@ -29,6 +29,19 @@ public class RewardController {
         // 회원 ID로 보상을 받지 않은 도전과제가 있는지 찾기
         boolean isExist = rewardService.findObtainableChallenge(memberId);
         return response.success(ResponseCode.REWARD_EXIST_SUCCESS, isExist);
+    }
+
+    @Operation(summary = "[Feign] 받지 않은 보상 여부", description = "받지 않은 보상이 있을 때 true")
+    @PutMapping("/notice/{memberId}")
+    public ResponseEntity<?> feignNoticeReward(@PathVariable String memberId) {
+        // memberId가 null이면 인증 실패
+        if (memberId == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 회원 ID로 보상을 받지 않은 도전과제가 있는지 찾기
+        boolean isExist = rewardService.findObtainableChallenge(memberId);
+        return ResponseEntity.ok(isExist);
     }
 
     @Operation(summary = "모든 보상 받기", description = "해당 회원이 받지 않은 모든 보상 받기")
