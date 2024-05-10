@@ -53,12 +53,12 @@ springdoc:
 
 feign:
   member-service:
-    url:
+    url: http://localhost:8081
   inventory-service:
-    url:
+    url: http://localhost:8084
   program-service:
-    url:
+    url: http://localhost:8085
   exercise-record-service:
-    url:
+    url: http://localhost:8086
   challenge-service:
-    url:
+    url: http://localhost:8088
