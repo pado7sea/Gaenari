@@ -1,6 +1,5 @@
-package com.gaenari.backend.domain.recordChallenge.entity;
+package com.gaenari.backend.domain.record.entity;
 
-import com.gaenari.backend.domain.record.entity.Record;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -29,4 +28,5 @@ public class RecordChallenge {
     public void updateRecord(Record record) {
         this.record = record;
     }
+
 }
