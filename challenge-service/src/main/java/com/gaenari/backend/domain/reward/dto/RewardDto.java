@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RewardDto {
-    private Integer challengeId;
+    private String memberId;
     private Integer coin;
     private Integer heart;
 }
