@@ -20,7 +20,7 @@ class RecordScreen extends StatefulWidget {
 
 class _RecordScreenState extends State<RecordScreen> {
   DateTime _focusedDay = DateTime.now(); // 달력에 오늘 날짜 표시
-  DateTime? _selectedDay; // 선택한 날짜 표시
+  DateTime _selectedDay = DateTime.now(); // 선택한 날짜 표시
 
   // 이벤트 추가
   Map<DateTime, List<Event>> events = {
@@ -46,18 +46,16 @@ class _RecordScreenState extends State<RecordScreen> {
 
   @override
   void dispose() {
-    _selectedEvents.dispose();
+    // _selectedEvents.dispose();
     super.dispose();
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-      });
-      _selectedEvents.value = _getEventsForDay(selectedDay);
-    }
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+    });
+    _selectedEvents.value = _getEventsForDay(selectedDay);
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -71,19 +69,21 @@ class _RecordScreenState extends State<RecordScreen> {
       appBar: SmallAppBar(
         title: '기록',
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _monthrecord(),
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _calendar(),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _monthrecord(),
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _calendar(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -177,10 +177,10 @@ class _RecordScreenState extends State<RecordScreen> {
           TableCalendar(
             headerStyle: HeaderStyle(
                 formatButtonVisible: false,
-                headerMargin: EdgeInsets.symmetric(vertical: 20),
+                headerMargin: EdgeInsets.symmetric(vertical: 10),
                 titleCentered: true,
-                titleTextStyle: TextStyle(fontSize: 20)),
-            rowHeight: 60, // 각 날짜 행의 높이 설정
+                titleTextStyle: TextStyle(fontSize: 16)),
+            rowHeight: 55, // 각 날짜 행의 높이 설정
             locale: 'ko-KR', // 로케일 설정 (한국어)
             firstDay: DateTime.utc(2024, 1, 1),
             lastDay: DateTime.utc(2030, 3, 14),
@@ -188,20 +188,28 @@ class _RecordScreenState extends State<RecordScreen> {
             calendarFormat: CalendarFormat.month,
             // 달력 스타일
             calendarStyle: CalendarStyle(
-              markersAlignment: Alignment.bottomCenter,
-              canMarkersOverflow: true,
-              markersMaxCount: 2,
-              markersAnchor: 0.7,
-              todayDecoration: BoxDecoration(
-                color: myMainGreen,
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: myLightGreen,
-                shape: BoxShape.circle,
-              ),
-              weekendTextStyle: TextStyle(color: myRed),
-            ),
+                markersAlignment: Alignment.bottomCenter,
+                canMarkersOverflow: true,
+                todayDecoration: BoxDecoration(
+                  color: myWhiteGreen,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: myLightYellow,
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle:
+                    TextStyle(color: myYellow, fontWeight: FontWeight.bold),
+                todayTextStyle:
+                    TextStyle(color: myMainGreen, fontWeight: FontWeight.bold),
+                weekendTextStyle: TextStyle(color: myRed),
+                // 마커스타일
+                markerSize: 7,
+                markersMaxCount: 3,
+                markersAnchor: 1,
+                markerMargin: EdgeInsets.symmetric(horizontal: 2),
+                markerDecoration:
+                    BoxDecoration(color: myMainGreen, shape: BoxShape.circle)),
             // 선택된 날짜
             selectedDayPredicate: (day) {
               return isSameDay(_selectedDay, day);
@@ -215,7 +223,7 @@ class _RecordScreenState extends State<RecordScreen> {
           SizedBox(height: 10),
           SizedBox(
             width: MediaQuery.of(context).size.width - 40,
-            height: 170,
+            height: 150,
             child: ValueListenableBuilder<List<Event>>(
                 valueListenable: _selectedEvents,
                 builder: (context, value, _) {
@@ -230,9 +238,11 @@ class _RecordScreenState extends State<RecordScreen> {
                           child: ListTile(
                               onTap: () => Navigator.of(context).push(
                                   SlidePageRoute(
-                                      nextPage: DetailRecordScreen())),
+                                      nextPage: DetailRecordScreen(
+                                          selectedDate: _selectedDay!))),
                               title: Padding(
-                                padding: const EdgeInsets.all(15),
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 0, 10),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -245,7 +255,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                       fit: BoxFit.cover,
                                     ),
                                     SizedBox(width: 5),
-                                    Text20(text: '10.9'),
+                                    Text16(text: '10.9', bold: true),
                                     SizedBox(width: 10),
                                     Container(
                                       width: 1,
@@ -261,7 +271,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                       fit: BoxFit.cover,
                                     ),
                                     SizedBox(width: 5),
-                                    Text20(text: '160'),
+                                    Text16(text: '160', bold: true),
                                     SizedBox(width: 10),
                                     Container(
                                       width: 1,
@@ -277,7 +287,15 @@ class _RecordScreenState extends State<RecordScreen> {
                                       fit: BoxFit.cover,
                                     ),
                                     SizedBox(width: 5),
-                                    Text20(text: '78'),
+                                    Text16(text: ' 78', bold: true),
+                                    SizedBox(width: 30),
+                                    Image(
+                                      image: AssetImage(
+                                          'assets/icons/common_front.png'),
+                                      width: 20,
+                                      height: 20,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ],
                                 ),
                               )
