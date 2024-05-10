@@ -56,6 +56,7 @@ final BoxDecoration myNoneBoxDecoration = BoxDecoration(
     ),
   ],
 );
+
 final BoxDecoration myBorderBoxDecoration = BoxDecoration(
   color: Color(0xffFFFFFF), // 배경색
   borderRadius: BorderRadius.circular(15), // 박스의 모서리를 둥글게
@@ -68,6 +69,12 @@ final BoxDecoration myBorderBoxDecoration = BoxDecoration(
     ),
   ],
   border: Border.all(color: myLightGreen, width: 1),
+);
+
+final BoxDecoration myTrophyBoxDecoration = BoxDecoration(
+  color: Color(0xffFFFFFF), // 배경색
+  borderRadius: BorderRadius.circular(15), // 박스의 모서리를 둥글게
+  border: Border.all(color: myYellow, width: 1),
 );
 
 final BoxDecoration myWalkBoxDecoration = BoxDecoration(
