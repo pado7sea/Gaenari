@@ -9,5 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class MemberCoinDto {
     String memberEmail;
+    Boolean isIncreased;
     Integer coin;
 }
