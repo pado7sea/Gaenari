@@ -24,7 +24,7 @@ public class RewardController {
     private final RewardService rewardService;
 
     @Operation(summary = "받지 않은 보상 여부", description = "받지 않은 보상이 있을 때 true")
-    @PutMapping("/notice")
+    @GetMapping("/notice")
     public ResponseEntity<?> noticeReward(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         // 회원 ID로 보상을 받지 않은 도전과제가 있는지 찾기
         boolean isExist = rewardService.findObtainableChallenge(memberId);
@@ -32,7 +32,7 @@ public class RewardController {
     }
 
     @Operation(summary = "[Feign] 받지 않은 보상 여부", description = "받지 않은 보상이 있을 때 true")
-    @PutMapping("/notice/{memberId}")
+    @GetMapping("/notice/{memberId}")
     public ResponseEntity<?> feignNoticeReward(@PathVariable String memberId) {
         // memberId가 null이면 인증 실패
         if (memberId == null) {
