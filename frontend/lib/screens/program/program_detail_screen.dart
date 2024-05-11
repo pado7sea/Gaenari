@@ -1,26 +1,16 @@
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:forsythia/models/programs/program_detail.dart';
-import 'package:forsythia/models/programs/program_list.dart';
-import 'package:forsythia/screens/program/program_add_screen.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
-import 'package:forsythia/widgets/button_widgets.dart';
-import 'package:forsythia/widgets/modal.dart';
-import 'package:forsythia/widgets/slide_page_route.dart';
 
 import 'package:forsythia/widgets/small_app_bar.dart';
 
 class ProgramDetailScreen extends StatefulWidget {
   final int programId;
 
-  const ProgramDetailScreen({Key? key, required this.programId})
-      : super(key: key);
+  const ProgramDetailScreen({super.key, required this.programId});
 
   @override
   State<ProgramDetailScreen> createState() => _ProgramDetailScreenState();
@@ -264,7 +254,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                         fit: BoxFit.cover,
                       ),
                       SizedBox(
-                        width: 85,
+                        width: 75,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                           child: Column(
@@ -301,7 +291,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                         fit: BoxFit.cover,
                       ),
                       SizedBox(
-                        width: 85,
+                        width: 75,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                           child: Column(
@@ -338,7 +328,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                         fit: BoxFit.cover,
                       ),
                       SizedBox(
-                        width: 85,
+                        width: 75,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                           child: Column(

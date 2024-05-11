@@ -1,5 +1,6 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
@@ -8,8 +9,7 @@ import 'package:forsythia/widgets/small_app_bar.dart';
 class DetailRecordScreen extends StatefulWidget {
   final DateTime selectedDate;
 
-  const DetailRecordScreen({Key? key, required this.selectedDate})
-      : super(key: key);
+  const DetailRecordScreen({super.key, required this.selectedDate});
 
   @override
   State<DetailRecordScreen> createState() => _DetailRecordScreenState();
@@ -92,6 +92,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     return Container(
       height: 70,
       width: double.infinity,
+      decoration: myBoxDecoration,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         child: Row(
@@ -111,7 +112,6 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
           ],
         ),
       ),
-      decoration: myBoxDecoration,
     );
   }
 
@@ -275,6 +275,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
   Widget _mission() {
     return Container(
+      decoration: BoxDecoration(
+          color: myWhiteGreen, borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
           Padding(
@@ -284,6 +286,17 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
               children: [
                 Text16(text: '  미션', bold: true),
                 Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xffBFC2C8).withOpacity(0.25),
+                        blurRadius: 15,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
                     child: Row(
@@ -305,17 +318,6 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                         Text12(text: ' + 500', bold: true)
                       ],
                     ),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xffBFC2C8).withOpacity(0.25),
-                        blurRadius: 15,
-                        offset: Offset(0, 10),
-                      ),
-                    ],
                   ),
                 )
               ],
@@ -371,8 +373,6 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
           )
         ],
       ),
-      decoration: BoxDecoration(
-          color: myWhiteGreen, borderRadius: BorderRadius.circular(10)),
     );
   }
 }
@@ -392,17 +392,17 @@ class MissionCircle extends StatelessWidget {
       alignment: Alignment.center,
       height: 60,
       width: 60,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(100),
+        border: done ? Border.all(color: myLightGreen, width: 4) : null,
+      ),
       child: Text(text,
           style: TextStyle(
             fontSize: 16,
             color: done ? myLightGreen : myGrey,
             fontWeight: done ? FontWeight.bold : FontWeight.normal,
           )),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(100),
-        border: done ? Border.all(color: myLightGreen, width: 4) : null,
-      ),
     );
   }
 }
@@ -417,6 +417,7 @@ class Trophy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: myTrophyBoxDecoration,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
         child: Row(
@@ -434,7 +435,6 @@ class Trophy extends StatelessWidget {
           ],
         ),
       ),
-      decoration: myTrophyBoxDecoration,
     );
   }
 }

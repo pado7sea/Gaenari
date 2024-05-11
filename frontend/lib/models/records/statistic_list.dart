@@ -3,14 +3,14 @@
 class StatisticList {
   String? status;
   String? message;
-  statistic? data;
+  Statistic? data;
 
   StatisticList({this.status, this.message, this.data});
 
   StatisticList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? statistic.fromJson(json['data']) : null;
+    data = json['data'] != null ? Statistic.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -24,7 +24,7 @@ class StatisticList {
   }
 }
 
-class statistic {
+class Statistic {
   double? time;
   double? dist;
   int? cal;
@@ -32,9 +32,9 @@ class statistic {
   String? date;
   int? count;
 
-  statistic({this.time, this.dist, this.cal, this.pace, this.date, this.count});
+  Statistic({this.time, this.dist, this.cal, this.pace, this.date, this.count});
 
-  statistic.fromJson(Map<String, dynamic> json) {
+  Statistic.fromJson(Map<String, dynamic> json) {
     time = json['time'];
     dist = json['dist'];
     cal = json['cal'];

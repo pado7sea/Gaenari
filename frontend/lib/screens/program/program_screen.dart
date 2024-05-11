@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -15,7 +17,7 @@ import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 
 class ProgramScreen extends StatefulWidget {
-  const ProgramScreen({Key? key});
+  const ProgramScreen({super.key});
 
   @override
   State<ProgramScreen> createState() => _ProgramScreenState();
