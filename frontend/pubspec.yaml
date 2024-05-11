@@ -37,7 +37,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   provider: ^6.1.2
-  draggable_bottom_sheet: ^1.0.2 # 대시보드에서 쓰는 드래그되는 시트 라이브러리
+  sliding_up_panel: ^2.0.0+1
   http: ^0.13.3
   smooth_page_indicator: ^1.1.0
   carousel_slider: ^4.2.1

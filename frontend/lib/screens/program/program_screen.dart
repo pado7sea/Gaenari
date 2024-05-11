@@ -1,11 +1,9 @@
 import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:forsythia/models/programs/program_list.dart';
 import 'package:forsythia/screens/program/program_add_screen.dart';
+import 'package:forsythia/screens/program/program_detail_screen.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -102,11 +100,11 @@ class _ProgramScreenState extends State<ProgramScreen> {
                       child: Container(
                         decoration: activeNum == 0
                             ? BoxDecoration(
-                                color: myLightGrey,
+                                color: myBlue,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
-                                color: Colors.white,
+                                color: myLightGrey,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                         padding: EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -131,7 +129,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
-                                color: Colors.white,
+                                color: myLightGrey,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                         padding: EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -156,7 +154,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
-                                color: Colors.white,
+                                color: myLightGrey,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                         padding: EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -181,7 +179,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
-                                color: Colors.white,
+                                color: myLightGrey,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                         padding: EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -251,178 +249,195 @@ class _ProgramScreenState extends State<ProgramScreen> {
           shrinkWrap: true,
           itemCount: list.length,
           itemBuilder: (BuildContext context, int index) {
-            return Slidable(
-              controller: slidableController, // 슬라이드 컨트롤러 추가
-              key: Key(list[index].programId.toString()),
-              actionPane: SlidableBehindActionPane(),
-              actionExtentRatio: 0.25,
-              secondaryActions: [
-                GestureDetector(
-                  onTap: () async {
-                    await showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                          child: ModalContent(
-                            height: 250,
-                            customWidget: _modal(index),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    decoration: myRedBoxDecoration,
-                    margin: EdgeInsets.fromLTRB(0, 5, 20, 21),
-                    padding: EdgeInsets.all(13),
-                    child: Column(
-                      children: const [
-                        Image(
-                          image: AssetImage("assets/icons/common_trash.png"),
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.cover,
-                          filterQuality: FilterQuality.none,
-                        ),
-                        SizedBox(height: 12),
-                        Text12(text: "삭제")
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-              actions: [
-                GestureDetector(
-                  onTap: () async {
-                    await ProgramService.fetchFavoriteProgram(
-                        list[index].programId);
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(SlidePageRoute(
+                        nextPage: ProgramDetailScreen(
+                            programId: list[index].programId!)))
+                    .then((result) {
+                  // 돌아올 때 데이터를 수신하고 처리
+                  if (result == "update") {
+                    // 리스트 업데이트 메서드 호출
                     getList();
-                    slidableController.activeState?.close();
-                  },
-                  child: Container(
-                    decoration: myYellowBoxDecoration,
-                    margin: EdgeInsets.fromLTRB(20, 5, 0, 21),
-                    padding: EdgeInsets.all(13),
-                    child: Column(
-                      children: const [
-                        Image(
-                          image: AssetImage("assets/emoji/party.png"),
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.cover,
-                          filterQuality: FilterQuality.none,
-                        ),
-                        SizedBox(height: 12),
-                        Text12(text: "즐겨찾기")
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-              child: Container(
-                decoration: myBoxDecoration,
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 16),
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        // color: myWhiteGreen,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Image(
-                        image: AssetImage("assets/emoji/running.png"),
-                        height: 60,
-                        width: 60,
-                        fit: BoxFit.cover,
-                        filterQuality: FilterQuality.none,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
+                  }
+                });
+              },
+              child: Slidable(
+                controller: slidableController, // 슬라이드 컨트롤러 추가
+                key: Key(list[index].programId.toString()),
+                actionPane: SlidableBehindActionPane(),
+                actionExtentRatio: 0.25,
+                secondaryActions: [
+                  GestureDetector(
+                    onTap: () async {
+                      await showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                            child: ModalContent(
+                              height: 250,
+                              customWidget: _modal(index),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      decoration: myRedBoxDecoration,
+                      margin: EdgeInsets.fromLTRB(0, 5, 20, 21),
+                      padding: EdgeInsets.all(13),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text16(
-                                      text: list[index].programTitle!,
-                                      bold: true,
-                                    ),
-                                    SizedBox(height: 2),
-                                    Text12(
-                                      text: list[index].type == "T"
-                                          ? "${((list[index].program!.targetValue)! ~/ 60).toInt()}분 목표"
-                                          : list[index].type == "D"
-                                              ? "${(list[index].program!.targetValue)}km 목표"
-                                              : "세트 당 ${((list[index].program!.intervalInfo!.duration)! ~/ 60).toInt().toString()}분 | 총 ${list[index].program!.intervalInfo!.setCount}세트 목표",
-                                      textColor: myGrey,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Image.asset(
-                                list[index].isFavorite!
-                                    ? "assets/emoji/party.png"
-                                    : "assets/emoji/dogface.png",
-                                width: 40,
-                                height: 40,
-                                fit: BoxFit.cover,
-                                filterQuality: FilterQuality.none,
-                              ),
-                              SizedBox(width: 10),
-                            ],
+                        children: const [
+                          Image(
+                            image: AssetImage("assets/icons/common_trash.png"),
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.none,
                           ),
-                          SizedBox(height: 7),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                decoration: list[index].type == "T"
-                                    ? myActiveBoxDecoration
-                                    : list[index].type == "D"
-                                        ? myYellowBoxDecoration
-                                        : myRedBoxDecoration,
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      10, 2, 10, 2),
-                                  child: Text12(
-                                    text: list[index].type == "T"
-                                        ? "시간목표"
-                                        : list[index].type == "D"
-                                            ? "거리목표"
-                                            : "인터벌목표",
-                                    bold: true,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text16(
-                                    text: "달성 ${list[index].finishedCount}회",
-                                    bold: true,
-                                  ),
-                                  Text12(text: "/총 ${list[index].usageCount}회")
-                                ],
-                              )
-                            ],
-                          )
+                          SizedBox(height: 12),
+                          Text12(text: "삭제")
                         ],
                       ),
-                    )
-                  ],
+                    ),
+                  ),
+                ],
+                actions: [
+                  GestureDetector(
+                    onTap: () async {
+                      await ProgramService.fetchFavoriteProgram(
+                          list[index].programId);
+                      getList();
+                      slidableController.activeState?.close();
+                    },
+                    child: Container(
+                      decoration: myYellowBoxDecoration,
+                      margin: EdgeInsets.fromLTRB(20, 5, 0, 21),
+                      padding: EdgeInsets.all(13),
+                      child: Column(
+                        children: const [
+                          Image(
+                            image: AssetImage("assets/emoji/party.png"),
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.none,
+                          ),
+                          SizedBox(height: 12),
+                          Text12(text: "즐겨찾기")
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+                child: Container(
+                  decoration: myBoxDecoration,
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          // color: myWhiteGreen,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Image(
+                          image: AssetImage("assets/emoji/running.png"),
+                          height: 60,
+                          width: 60,
+                          fit: BoxFit.cover,
+                          filterQuality: FilterQuality.none,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text16(
+                                        text: list[index].programTitle!,
+                                        bold: true,
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text12(
+                                        text: list[index].type == "T"
+                                            ? "${((list[index].program!.targetValue)! ~/ 60).toInt()}분 목표"
+                                            : list[index].type == "D"
+                                                ? "${(list[index].program!.targetValue)}km 목표"
+                                                : "세트 당 ${((list[index].program!.intervalInfo!.duration)! ~/ 60).toInt().toString()}분 | 총 ${list[index].program!.intervalInfo!.setCount}세트 목표",
+                                        textColor: myGrey,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Image.asset(
+                                  list[index].isFavorite!
+                                      ? "assets/emoji/party.png"
+                                      : "assets/emoji/dogface.png",
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                  filterQuality: FilterQuality.none,
+                                ),
+                                SizedBox(width: 10),
+                              ],
+                            ),
+                            SizedBox(height: 7),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  decoration: list[index].type == "T"
+                                      ? myActiveBoxDecoration
+                                      : list[index].type == "D"
+                                          ? myYellowBoxDecoration
+                                          : myRedBoxDecoration,
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        10, 2, 10, 2),
+                                    child: Text12(
+                                      text: list[index].type == "T"
+                                          ? "시간목표"
+                                          : list[index].type == "D"
+                                              ? "거리목표"
+                                              : "인터벌목표",
+                                      bold: true,
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text16(
+                                      text: "달성 ${list[index].finishedCount}회",
+                                      bold: true,
+                                    ),
+                                    Text12(
+                                        text: "/총 ${list[index].usageCount}회")
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
