@@ -34,6 +34,7 @@ public enum ResponseCode {
     REMOVE_MATE_SUCCESS(HttpStatus.OK, "친구삭제가 성공적으로 이루어졌습니다."),
     SEARCH_MEMBER_SUCCESS(HttpStatus.OK, "멤버 검색이 성공적으로 이루어졌습니다."),
     COIN_FETCH_SUCCESS(HttpStatus.OK, "보유코인개수를 성공적으로 불러왔습니다."),
+    COIN_UPDATE_SUCCESS(HttpStatus.OK, "보유코인개수가 성공적으로 업데이트되었습니다."),
     ISSUED_WATCH_AUTH_CODE_SUCCESS(HttpStatus.OK, "워치 연동인증번호가 성공적으로 발급되었습니다."),
     WATCH_CONNECT_SUCCESS(HttpStatus.OK, "워치 연동이 정상적으로 이루어졌습니다."),
     ACCOUNT_SECESSION_SUCCESS(HttpStatus.OK, "계정 탈퇴가 성공적으로 이루어졌습니다."),
