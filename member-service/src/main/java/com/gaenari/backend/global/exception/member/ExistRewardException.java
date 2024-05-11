@@ -4,9 +4,11 @@ import com.gaenari.backend.global.format.code.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class NotTimeChangePartnerException extends RuntimeException{
+public class ExistRewardException extends RuntimeException {
+
     private final ErrorCode errorCode;
-    public NotTimeChangePartnerException() {
-        this.errorCode = ErrorCode.NOT_TIME_CHANGE_PARTNER;
+
+    public ExistRewardException() {
+        this.errorCode = ErrorCode.EXIST_REWARD;
     }
 }
