@@ -26,7 +26,7 @@ public class AchievedChallengeFeignController {
 
     // exercise-record-service에서 기록 저장 시 사용
     @Transactional
-    @Operation(summary = "기록당 달성 과제 조회", description = "도전과제 아이디 리스트로 출력")
+    @Operation(summary = "[Feign] 기록당 달성 과제 조회", description = "도전과제 아이디 리스트로 출력")
     @PostMapping("/challengeIds")
     public List<Integer> getNewlyAchievedChallengeIds(@RequestBody RecordAboutChallengeDto recordDto) {
         
@@ -40,7 +40,7 @@ public class AchievedChallengeFeignController {
     }
 
     // exercise-record-service에서 상세 기록 조회 시 사용
-    @Operation(summary = "도전과제 리스트 조회", description = "도전과제 아이디 리스트를 도전과제 리스트로 반환")
+    @Operation(summary = "[Feign] 도전과제 리스트 조회", description = "도전과제 아이디 리스트를 도전과제 리스트로 반환")
     @PostMapping("/challenges")
     public List<ChallengeDto> getChallenges(@RequestBody List<Integer> challengeIds) {
 

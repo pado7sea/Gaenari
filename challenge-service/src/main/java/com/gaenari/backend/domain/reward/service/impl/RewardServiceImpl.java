@@ -2,6 +2,7 @@ package com.gaenari.backend.domain.reward.service.impl;
 
 import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.client.member.MemberServiceClient;
+import com.gaenari.backend.domain.client.member.dto.CoinTitle;
 import com.gaenari.backend.domain.client.member.dto.HeartChangeDto;
 import com.gaenari.backend.domain.client.member.dto.MemberCoinDto;
 import com.gaenari.backend.domain.client.record.RecordServiceClient;
@@ -141,8 +142,9 @@ public class RewardServiceImpl implements RewardService {
     public void callFeignUpdateCoin(String memberId, Integer coin) {
         MemberCoinDto memberCoinDto = MemberCoinDto.builder()
                 .memberEmail(memberId)
+                .coinAmount(coin)
                 .isIncreased(true)
-                .coin(coin)
+                .coinTitle(CoinTitle.REWARD)
                 .build();
 
         // 마이크로 서비스 간 통신을 통해 회원의 코인 증가시키기
