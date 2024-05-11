@@ -69,6 +69,10 @@ dependencies {
     implementation (libs.glide)
     annotationProcessor (libs.compiler)
 
+    // 이미지 라이브러리
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
     //gif만들기
     implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.25")
     //구글아이콘

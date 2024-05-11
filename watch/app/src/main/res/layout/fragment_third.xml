@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@drawable/mainback98">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -23,7 +23,7 @@
         android:fontFamily="@font/thejamsil_medium"
         android:gravity="center"
         android:text="프로그램 상세 정보"
-        android:textColor="@color/whitegreen"
+        android:textColor="#061D40"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/guidecontextbottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -38,8 +38,8 @@
         android:fontFamily="@font/thejamsil_medium"
         android:gravity="center"
         android:text="프로그램타이틀임"
-        android:textColor="@color/lightyellow"
-        android:textSize="12sp"
+        android:textColor="@color/blue"
+        android:textSize="11sp"
         app:layout_constraintBottom_toTopOf="@+id/guidetitlebottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
@@ -52,7 +52,7 @@
         android:fontFamily="@font/thejamsil_medium"
         android:gravity="center"
         android:text="동그라미를 눌러 운동 시작"
-        android:textColor="@color/whitegreen"
+        android:textColor="@color/black"
         android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@+id/guidetitletop"
         app:layout_constraintEnd_toEndOf="parent"

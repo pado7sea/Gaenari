@@ -1,6 +1,7 @@
 package com.example.gaenari.activity.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -88,11 +89,21 @@ class ThirdFragment : Fragment() {
             }
             "I" -> {
                 val rangeCount = programTypeInfo?.intervalInfo?.rangeCount ?: "정보 없음"
-                "세트 수\n${rangeCount} 세트"
+                val setCount = programTypeInfo?.intervalInfo?.setCount ?: "정보 없음"
+                "${setCount} 세트\n세트당 ${rangeCount}구간"
             }
             else -> "타입 알 수 없음"
         }
+        val programTextSize = when (program.type) {
+            "D", "T" -> 8.5f
+            "I" -> 7.5f
+            else -> 9f // 또는 기본값
+        }
 
         programDetails.text = programDetailsText
+        programDetails.textSize = convertSpToPx(programTextSize, requireContext())
+    }
+    private fun convertSpToPx(sp: Float, context: Context): Float {
+        return sp * context.resources.displayMetrics.scaledDensity
     }
 }
