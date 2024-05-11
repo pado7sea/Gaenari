@@ -126,5 +126,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return response.error(e.getErrorCode());
     }
 
+    @ExceptionHandler(ConnectFeignFailException.class)
+    protected ResponseEntity<?> handle(ConnectFeignFailException e) {
+        log.error("ConnectFeignFailException = {}", e.getErrorCode().getMessage());
+        return response.error(e.getErrorCode());
+    }
+
+    @ExceptionHandler(ExistRewardException.class)
+    protected ResponseEntity<?> handle(ExistRewardException e) {
+        log.error("ExistRewardException = {}", e.getErrorCode().getMessage());
+        return response.error(e.getErrorCode());
+    }
+
 
 }
