@@ -12,7 +12,7 @@ class ProgramService {
       SecureStorageService();
 
   // 운동프로그램 상세조회
-  static Future<ProgramDetail> fetchProgramDetail(id) async {
+  static Future<ProgramDetail> fetchProgramDetail(int id) async {
     return fetchGetData('program/$id')
         .then((data) => ProgramDetail.fromJson(data));
   }
