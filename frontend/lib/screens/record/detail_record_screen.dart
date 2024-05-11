@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -31,7 +32,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
               _day(),
               SizedBox(height: 20),
               _program(),
-              SizedBox(height: 25),
+              SizedBox(height: 10),
               _record(),
               SizedBox(height: 25),
               _pace(),
@@ -90,7 +91,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
   Widget _program() {
     return Container(
-      height: 70,
+      height: 55,
       width: double.infinity,
       decoration: myBoxDecoration,
       child: Padding(
@@ -99,13 +100,13 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
           children: [
             Image(
               image: AssetImage('assets/gif/retriever1_standandlook.gif'),
-              height: 50,
-              width: 50,
+              height: 40,
+              width: 40,
               fit: BoxFit.cover,
               filterQuality: FilterQuality.none,
             ),
             SizedBox(width: 10),
-            Text20(
+            Text16(
               text: '자유걷기',
               bold: true,
             ),
@@ -219,15 +220,18 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-            child: Row(
-              children: List.generate(60, (index) {
-                return Container(
-                  height: 40,
-                  width: 3,
-                  margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
-                  color: myBlue, // 콘테이너 색상 설정
-                );
-              }),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(50, (index) {
+                  return Container(
+                    height: 40,
+                    width: 3,
+                    margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
+                    color: myBlue, // 콘테이너 색상 설정
+                  );
+                }),
+              ),
             ),
           )
         ],
@@ -257,15 +261,18 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-            child: Row(
-              children: List.generate(60, (index) {
-                return Container(
-                  height: 40,
-                  width: 3,
-                  margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
-                  color: myRed, // 콘테이너 색상 설정
-                );
-              }),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(100, (index) {
+                  return Container(
+                    height: 40,
+                    width: 3,
+                    margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
+                    color: myRed, // 콘테이너 색상 설정
+                  );
+                }),
+              ),
             ),
           )
         ],
@@ -280,11 +287,48 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+            padding: const EdgeInsets.fromLTRB(30, 20, 20, 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text16(text: '  미션', bold: true),
+                Row(
+                  children: [
+                    Text16(text: '  미션', bold: true),
+                    IconButton(
+                      icon: Icon(Icons.info_outline), // 정보를 나타내는 아이콘으로 변경 가능
+                      onPressed: () {
+                        showDialog(
+                          context: context, // 현재 컨텍스트를 전달합니다.
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              backgroundColor: myBackground,
+                              title: Text('미션'), // 다이얼로그 제목
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('뭐하면 애정도 상승 저쩌구'), // 미션 내용 추가
+                                  // 다른 미션 정보 내용 추가 가능
+                                ],
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // 다이얼로그 닫기
+                                    },
+                                    child: Text16(
+                                      text: '닫기',
+                                      textColor: myBlack,
+                                    ) // 닫기 버튼 텍스트
+                                    ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
@@ -307,7 +351,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           height: 20,
                           fit: BoxFit.cover,
                         ),
-                        Text12(text: ' + 3', bold: true),
+                        Text16(text: ' + 3', bold: true),
                         SizedBox(width: 10),
                         Image(
                           image: AssetImage('assets/emoji/money.png'),
@@ -315,7 +359,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           height: 20,
                           fit: BoxFit.cover,
                         ),
-                        Text12(text: ' + 500', bold: true)
+                        Text16(text: ' + 500', bold: true)
                       ],
                     ),
                   ),
