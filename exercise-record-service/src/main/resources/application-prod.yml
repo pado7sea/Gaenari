@@ -46,3 +46,7 @@ feign:
     url: http://exercise-record-service.exercise-record.svc.cluster.local
   challenge-service:
     url: http://challenge-service.challenge.svc.cluster.local
+
+scheduler:
+  cron:
+    expression: "0 0 0 * * ?" # 매일 자정에 실행
