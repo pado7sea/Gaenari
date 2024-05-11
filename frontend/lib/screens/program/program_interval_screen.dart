@@ -251,7 +251,11 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                                     text: "클릭하여 타입변경",
                                     textColor: myGrey,
                                   ),
-                                  speedIndexList.length != 1
+                                  active
+                                              .where(
+                                                  (element) => element == true)
+                                              .length !=
+                                          1
                                       ? GestureDetector(
                                           onTap: () {
                                             setState(() {
