@@ -23,14 +23,14 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/thejamsil_medium"
         android:text="ㅎㅇㅎㅇ"
-        android:textColor="@color/whitegreen"
+        android:textColor="#04204A"
         android:textSize="10sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="@+id/guideline9"
         app:layout_constraintTop_toTopOf="@+id/guideline6"
-         />
+        app:layout_constraintVertical_bias="0.342" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
