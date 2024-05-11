@@ -20,7 +20,7 @@ public class RecordFeignServiceImpl implements RecordFeignService {
     @Override
     public List<ProgramDetailDto.UsageLogDto> getRecordsByProgramId(Long programId) {
 
-        List<Record> records = recordRepository.findByProgramId(programId);
+        List<Record> records = recordRepository.findByProgramIdOrderByDateDesc(programId);
 
         return records.stream()
                 .map(record -> ProgramDetailDto.UsageLogDto.builder()
