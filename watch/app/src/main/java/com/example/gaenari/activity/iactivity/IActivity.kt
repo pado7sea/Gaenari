@@ -11,17 +11,18 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gaenari.R
 import com.example.gaenari.activity.main.Program
+import com.example.gaenari.dto.response.FavoriteResponseDto
 
 class IActivity : AppCompatActivity() {
 
     //프로그램 객체를 받아서왔다
-    private lateinit var program : Program
+    private lateinit var program : FavoriteResponseDto
     private lateinit var viewPager: ViewPager2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        program = intent.getParcelableExtra("programData")!!
-        Log.d("인터벌", "onCreate: ${program}")
+        program = intent.getParcelableExtra("programData", FavoriteResponseDto::class.java)!!
+        Log.d("인터벌", "onCreate: $program")
         setContentView(R.layout.activity_iactivity)
         setupViewPager()
     }

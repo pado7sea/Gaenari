@@ -17,7 +17,10 @@ import android.util.Log
 import com.example.gaenari.R
 import com.example.gaenari.activity.dactivity.DRunningService
 import com.example.gaenari.activity.iactivity.IRunningService
+import com.example.gaenari.activity.iactivity.IntervalService
+import com.example.gaenari.activity.main.Program
 import com.example.gaenari.activity.tactivity.TRunningService
+import com.example.gaenari.dto.response.FavoriteResponseDto
 
 class CountdownActivity : AppCompatActivity() {
     override fun onCreate(savedCreateState: Bundle?) {
@@ -114,8 +117,9 @@ class CountdownActivity : AppCompatActivity() {
         startForegroundService(serviceIntent)
     }
     private fun startIRunningService() {
-        val serviceIntent = Intent(this, IRunningService::class.java)
-
+        val serviceIntent = Intent(this, IntervalService::class.java)
+        Log.d("Intent Check", "Interval Service Intent : $serviceIntent")
+        serviceIntent.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
         startForegroundService(serviceIntent)
     }
 }

@@ -46,8 +46,6 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
         holder.icon.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, CountdownActivity::class.java).apply {
-
-
                     putExtra("programId", program.programId)
                     putExtra("programTitle", program.programTitle)
                     putExtra("programType", program.type)
@@ -55,7 +53,7 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
                     putExtra("programTarget", program.program.targetValue)
                 }
                 if(program.type =="T"){
-                    putExtra("programTarget", program.program.targetValue.toInt())
+                    putExtra("programTarget", program.program.targetValue?.toInt())
                 }
                 // `I` 타입의 프로그램에 대해서만 전체 객체를 넘김
                 if (program.type == "I") {

@@ -19,12 +19,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gaenari.R
-import com.example.gaenari.activity.main.Program
 import com.example.gaenari.activity.result.ResultActivity
-import kotlin.math.log
+import com.example.gaenari.dto.request.HeartRates
+import com.example.gaenari.dto.request.IntervalInfo
+import com.example.gaenari.dto.request.Ranges
+import com.example.gaenari.dto.request.Record
+import com.example.gaenari.dto.request.SaveDataRequestDto
+import com.example.gaenari.dto.request.Speeds
+import com.example.gaenari.dto.response.FavoriteResponseDto
+import java.time.LocalDate
 
 class IFirstFragment : Fragment() {
-    private lateinit var nowProgram: Program
+    private lateinit var nowProgram: FavoriteResponseDto
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CircleAdapter
     private lateinit var distanceView: TextView
@@ -34,10 +40,13 @@ class IFirstFragment : Fragment() {
     private lateinit var circleProgress: ICircleProgress
     private lateinit var updateReceiver: BroadcastReceiver
 
+
+    private var totalHeartRateAvg: Float = 0f
+    private var totalSpeedAvg: Double = 0.0
+    private var curHeartRate: Float = 0f
     private var totalDistance: Double = 0.0
-    private var totalHeartRate: Float = 0f
-    private var heartRateCount: Int = 0
     private var totalTime: Long = 0
+    private var heartRateCount: Int = 0
     private var nowSetCount: Int = 0
     private var nowExerciseCount: Int = 0
     private var setCount: Int = 0
@@ -45,8 +54,9 @@ class IFirstFragment : Fragment() {
     private var isTransitioning: Boolean = false
 
     private var startTimeOfCurrentInterval: Long = 0
+
     companion object {
-        fun newInstance(program: Program): IFirstFragment {
+        fun newInstance(program: FavoriteResponseDto): IFirstFragment {
             return IFirstFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("program", program)
@@ -55,7 +65,11 @@ class IFirstFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val view = inflater.inflate(R.layout.fragment_ifirst, container, false)
         setupViews(view)
         setupRecyclerView(view)
@@ -74,15 +88,16 @@ class IFirstFragment : Fragment() {
 
     private fun setupRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.rvIntervals)
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.addItemDecoration(CustomItemDecoration(10))
     }
 
     private fun setupProgramData() {
-        nowProgram = arguments?.getParcelable("program") ?: return
-        setCount = nowProgram.program.intervalInfo.setCount!!
-        exerciseCount = nowProgram.program.intervalInfo.rangeCount!!
-        adapter = CircleAdapter(nowProgram.program.intervalInfo.ranges!!)
+        nowProgram = arguments?.getParcelable("program", FavoriteResponseDto::class.java) ?: return
+        setCount = nowProgram.program.intervalInfo?.setCount!!
+        exerciseCount = nowProgram.program.intervalInfo?.rangeCount!!
+        adapter = CircleAdapter(nowProgram.program.intervalInfo?.ranges!!)
         recyclerView.adapter = adapter
     }
 
@@ -90,40 +105,64 @@ class IFirstFragment : Fragment() {
 
         updateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == "com.example.sibal.UPDATE_INFO" && !isTransitioning) {
-                    updateMetricsFromIntent(intent)
+                when (intent.action) {
+                    "com.example.sibal.UPDATE_INFO" -> {
+                        val distance = intent.getDoubleExtra("distance", 0.0)
+                        val speed = intent.getFloatExtra("speed", 0f)
+                        val time = intent.getLongExtra("time", 0)
 
-                    val remainingTime = calculateRemainingTime()
-
-                    if (remainingTime < 0) {
-                        Log.d("인터벌", "들어오자마자 바껴?: ${nowExerciseCount}")
-                        transitionToNextIntervalOrFinish(context)
-                    } else {
-                        Log.d("인터벌", "setupUpdateReceiver: ${nowExerciseCount}")
-                        updateUI()
+                        totalDistance = distance
+                        totalTime = time
+                        Log.d("Interval Activity", "onReceive: $time")
+                    }
+                    "com.example.sibal.UPDATE_TIMER" -> {
+                        val time = intent.getLongExtra("time", 0)
+                    }
+                    "com.example.sibal.UPDATE_HEART_RATE" -> {
+                        curHeartRate = intent.getFloatExtra("heartRate", 0f)
+                    }
+                    "com.example.sibal.UPDATE_RANGE_INFO" -> {
+                        // 세트 내 n 번째 구간
+                        val rangeIndex = intent.getIntExtra("rangeIndex", 0)
+                        // 몇번째 세트
+                        nowSetCount = intent.getIntExtra("setCount", 0)
+                        // 걷기, 달리기 여부
+                        val isRunning = intent.getBooleanExtra("isRunning", false)
+                        // 현재 구간 총 시간
+                        val rangeTime = intent.getLongExtra("rangeTime", 0)
+                    }
+                    "com.example.sibal.EXIT_INTERVAL_PROGRAM" -> {
+                        totalHeartRateAvg = intent.getFloatExtra("totalHeartRateAvg", 0f)
+                        totalSpeedAvg = intent.getDoubleExtra("totalSpeedAvg", 0.0)
+                        sendResultsAndFinish(context)
                     }
                 }
             }
         }
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, IntentFilter("com.example.sibal.UPDATE_INFO"))
+        val intentFilter = IntentFilter().apply {
+            addAction("com.example.sibal.UPDATE_INFO")
+            addAction("com.example.sibal.UPDATE_TIMER")
+            addAction("com.example.sibal.UPDATE_HEART_RATE")
+            addAction("com.example.sibal.UPDATE_RANGE_INFO")
+            addAction("com.example.sibal.EXIT_INTERVAL_PROGRAM")
+        }
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, intentFilter)
     }
-
 
     private fun updateMetricsFromIntent(intent: Intent) {
         totalDistance = intent.getDoubleExtra("distance", 0.0)
         val heartRate = intent.getFloatExtra("heartRate", 0f)
-        if (heartRate > 40) {
-            totalHeartRate += heartRate
-            heartRateCount++
-        }
         totalTime = intent.getLongExtra("time", 0) / 1000  // 넘겨받은 시간을 초로 변환
     }
-    private fun calculateRemainingTime(): Long {
-        val currentIntervalTime = nowProgram.program.intervalInfo.ranges!![nowExerciseCount].time * 1000  // 초로 변환하여 계산
+
+    private fun calculateRemainingTime(): Double {
+        val currentIntervalTime =
+            nowProgram.program.intervalInfo?.ranges!![nowExerciseCount].time!! * 1000  // 초로 변환하여 계산
         val elapsedTime = System.currentTimeMillis() - startTimeOfCurrentInterval
         return currentIntervalTime - elapsedTime
     }
-    private fun transitionToNextIntervalOrFinish(context: Context) {
+
+    private fun transitionToNextIntervalOrFinish(context: Context, intent: Intent) {
         isTransitioning = true
         vibrate(context)
         startTimeOfCurrentInterval = System.currentTimeMillis()
@@ -150,17 +189,18 @@ class IFirstFragment : Fragment() {
         val remainingTime = calculateRemainingTime() / 1000
         distanceView.text = formatTime(remainingTime)  // 총 경과 시간 표시
         timeView.text = String.format("%.2f km", totalDistance / 1000)
-        heartRateView.text = String.format("%d", (totalHeartRate / heartRateCount).toInt())
+        heartRateView.text = String.format("%d", curHeartRate)
         speedView.text = String.format("%.2f km/h", calculateSpeed())
     }
 
-    private fun calculateProgress(): Float {
-        val totalSeconds = nowProgram.program.intervalInfo.ranges!![nowExerciseCount].time * 1000  // 분을 초로 변환하여 계산
+    private fun calculateProgress(): Double {
+        val totalSeconds =
+            nowProgram.program.intervalInfo?.ranges!![nowExerciseCount].time!! * 1000  // 분을 초로 변환하여 계산
         val remainingSeconds = calculateRemainingTime()
         return 100f * (1 - remainingSeconds.toFloat() / totalSeconds)
     }
 
-    private fun formatTime(seconds: Long): String {
+    private fun formatTime(seconds: Double): String {
         val hours = (seconds / 3600)
         val minutes = (seconds % 3600) / 60
         val secs = seconds % 60
@@ -170,6 +210,7 @@ class IFirstFragment : Fragment() {
     private fun calculateSpeed(): Float {
         return if (totalTime > 0) ((totalDistance / totalTime) * 3600).toFloat() else 0f
     }
+
     private fun vibrate(context: Context) {
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -180,14 +221,10 @@ class IFirstFragment : Fragment() {
     }
 
     private fun sendResultsAndFinish(context: Context) {
-
         val programTarget = arguments?.getInt("programTarget") ?: 0
         val programType = arguments?.getString("programType") ?: ""
         val programTitle = arguments?.getString("programTitle") ?: ""
         val programId = arguments?.getLong("programId") ?: 0L
-
-        val averageHeartRate = if (heartRateCount > 0) totalHeartRate / heartRateCount else 0f
-        val averageSpeed = if (totalTime > 0) (totalDistance / totalTime) * 3600 else 0.0
 
         val intent = Intent(context, ResultActivity::class.java).apply {
 
@@ -196,12 +233,12 @@ class IFirstFragment : Fragment() {
             putExtra("programTitle", programTitle)
             putExtra("programId", programId)
             putExtra("totalDistance", totalDistance)
-            putExtra("averageHeartRate", averageHeartRate)
-            putExtra("averageSpeed", averageSpeed)
+            putExtra("averageHeartRate", totalHeartRateAvg)
+            putExtra("averageSpeed", totalSpeedAvg)
             putExtra("totalTime", totalTime)
         }
         startActivity(intent)
-        Log.d("인터벌", "sendResultsAndFinish: ${intent}")
+        Log.d("인터벌", "sendResultsAndFinish: $intent")
         activity?.finish()
     }
 
@@ -211,7 +248,12 @@ class IFirstFragment : Fragment() {
     }
 
     class CustomItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
             outRect.right = space
         }
     }
