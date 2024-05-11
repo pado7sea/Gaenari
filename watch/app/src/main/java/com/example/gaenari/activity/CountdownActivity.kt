@@ -44,18 +44,6 @@ class CountdownActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = (millisUntilFinished / 1000).toInt()
                 countdownTextView.text = secondsRemaining.toString()
-                if(secondsRemaining==5 && programType=="D") {
-                    Log.d("countdown", "onTick: DDDDDㅎㅇㅎㅇ")
-                    startDRunningService()
-                }
-                if(secondsRemaining==5 && programType=="T") {
-                    Log.d("countdown", "onTick: TTTTㅎㅇㅎㅇ")
-                    startTRunningService()
-                }
-                if(secondsRemaining==5 && programType=="I") {
-                    Log.d("countdown", "onTick: IIIIㅎㅇㅎㅇ")
-                    startIRunningService()
-                }
                 // 텍스트 크기 애니메이션
                 val textSizeAnimator = ObjectAnimator.ofFloat(
                     countdownTextView, "textSize", textSizeStart, textSizeEnd
@@ -97,7 +85,21 @@ class CountdownActivity : AppCompatActivity() {
 
                 if (intent != null) {
                     intent.putExtras(this@CountdownActivity.intent.extras ?: Bundle()) // 인텐트 데이터 복사
-                    Log.d("countdown", "잘가니? : ${intent}")
+                    Log.d("countdown", "잘가니? : $intent")
+
+                    if(programType=="D") {
+                        Log.d("countdown", "onTick: DDDDDㅎㅇㅎㅇ")
+                        startDRunningService()
+                    }
+                    if(programType=="T") {
+                        Log.d("countdown", "onTick: TTTTㅎㅇㅎㅇ")
+                        startTRunningService()
+                    }
+                    if(programType=="I") {
+                        Log.d("countdown", "onTick: IIIIㅎㅇㅎㅇ")
+                        startIRunningService()
+                    }
+
                     startActivity(intent) // 다음 액티비티 시작
                 }
 

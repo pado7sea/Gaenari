@@ -185,6 +185,8 @@ class IntervalService : Service(), SensorEventListener {
         currentRunningType =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
 
+        sendRangeInfoBroadcast()
+
         currentRangeIndex += 1
 
         rangeHandler.postDelayed(rangeRunnable, currentRangeTime)
@@ -232,10 +234,10 @@ class IntervalService : Service(), SensorEventListener {
         )
 
         /* Update requestDto */
-        requestDto?.speeds?.average?.plus(averageSpeed)
-        requestDto?.speeds?.addSpeed(averageSpeed)
-        requestDto?.heartrates?.average?.plus(averageHeartRate)
-        requestDto?.heartrates?.addHeartRate(averageHeartRate)
+        requestDto.speeds.average.plus(averageSpeed)
+        requestDto.speeds.addSpeed(averageSpeed)
+        requestDto.heartrates.average.plus(averageHeartRate)
+        requestDto.heartrates.addHeartRate(averageHeartRate)
 
         /* 다음 1분을 위한 초기화 */
         oneMinuteSpeed = 0.0
@@ -261,7 +263,7 @@ class IntervalService : Service(), SensorEventListener {
             speed = averageSpeed
         )
         Log.d("Check", "Input Range Info to RequestDto : $range")
-        requestDto?.program?.intervalInfo?.addRange(range)
+        requestDto.program.intervalInfo.addRange(range)
         Log.d("Check", "RequestDto Status : $requestDto")
 
         // 속도 정보 초기화
@@ -295,6 +297,8 @@ class IntervalService : Service(), SensorEventListener {
         currentRunningType =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
 
+        sendRangeInfoBroadcast()
+
         currentRangeIndex += 1
 
         Log.d(
@@ -312,8 +316,6 @@ class IntervalService : Service(), SensorEventListener {
             "Check",
             "Check Set Count : current($currentSetCount), total(${programData?.program?.intervalInfo?.setCount})"
         )
-
-        sendRangeInfoBroadcast()
     }
 
     /**
@@ -340,12 +342,12 @@ class IntervalService : Service(), SensorEventListener {
 
     override fun onDestroy() {
         /* 분 당 정보 누적합을 누적 개수로 나누어 전체 평균 계산 */
-        requestDto?.speeds?.average?.div(requestDto?.speeds?.arr?.size!!)
-        requestDto?.heartrates?.average?.div(requestDto?.heartrates?.arr?.size!!)
+        requestDto.speeds.average.div(requestDto.speeds.arr.size)
+        requestDto.heartrates.average.div(requestDto.heartrates.arr.size)
 
         /* record 정보 추가 */
-        requestDto?.record?.distance = totalDistance
-        requestDto?.record?.time = programData?.program?.intervalInfo?.duration!!
+        requestDto.record.distance = totalDistance
+        requestDto.record.time = programData?.program?.intervalInfo?.duration!!
 
         wakeLock?.release()
         isServiceRunning = false
@@ -374,7 +376,7 @@ class IntervalService : Service(), SensorEventListener {
                 call: Call<ApiResponseDto<String>>,
                 response: Response<ApiResponseDto<String>>
             ) {
-                if (response?.body()?.status == "SUCCESS")
+                if (response.body()?.status == "SUCCESS")
                     Toast.makeText(
                         this@IntervalService,
                         "운동 기록 전송 성공",
@@ -444,7 +446,9 @@ class IntervalService : Service(), SensorEventListener {
         }
     }
 
-    // GPS 브로드캐스트를 통해 거리, 시간, 속도를 보내는 함수
+    /**
+     * GPS 브로드캐스트 통해 거리, 시간, 속도 전송
+     */
     private fun sendGpsBroadcast(distance: Double, time: Long, speed: Float) {
         val intent = Intent("com.example.sibal.UPDATE_INFO").apply {
             putExtra("distance", distance)
@@ -454,7 +458,9 @@ class IntervalService : Service(), SensorEventListener {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    // 타이머 정보를 브로드캐스트하는 함수
+    /**
+     * 타이머 정보를 브로드캐스트
+     */
     private fun sendTimeBroadcast(time: Long) {
         val intent = Intent("com.example.sibal.UPDATE_TIMER").apply {
             putExtra("time", time)
@@ -462,7 +468,9 @@ class IntervalService : Service(), SensorEventListener {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    // 심박수를 브로드캐스트하는 함수
+    /**
+     * 심박수를 브로드캐스트하는 함수
+     */
     private fun sendHeartRateBroadcast(currentHeartRate: Float) {
         val intent = Intent("com.example.sibal.UPDATE_HEART_RATE").apply {
             putExtra("heartRate", currentHeartRate)
