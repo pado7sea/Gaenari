@@ -1,4 +1,4 @@
-package com.example.gaenari.activity.iactivity
+package com.example.gaenari.activity.tactivity
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -16,9 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.gaenari.dto.request.HeartRates
-import com.example.gaenari.dto.request.IntervalInfo
 import com.example.gaenari.dto.request.Program
-import com.example.gaenari.dto.request.Ranges
 import com.example.gaenari.dto.request.Record
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.request.Speeds
@@ -33,7 +31,7 @@ import retrofit2.Response
 import java.time.LocalDateTime
 
 
-class IntervalService : Service(), SensorEventListener {
+class TimeTargetService : Service(), SensorEventListener {
     private val binder = LocalBinder()
     private var isServiceRunning = false
     private var fusedLocationClient: FusedLocationProviderClient? = null
@@ -54,18 +52,13 @@ class IntervalService : Service(), SensorEventListener {
     private var speedCount = 0
     private var heartRateCount = 0
 
-    private var currentSetCount = 0
-    private var currentRangeIndex = 0
-    private var currentRangeTime: Long = 60000
-    private var currentRunningType: Boolean = false
-
     private var startTime: Long = 0
 
     private var oneMinuteDistance = 0.0
     private var elapsedTime: Long = 0
 
-    private var gpsUpdateIntervalMillis: Long = 2500
-    private var timerIntervalMillis: Long = 1000
+    private var gpsUpdateTimeTargetMillis: Long = 2500
+    private var timerTimeTargetMillis: Long = 1000
 
     // 일시정지 관련 변수
     private var totalPausedTime: Long = 0
@@ -82,12 +75,16 @@ class IntervalService : Service(), SensorEventListener {
         override fun run() {
             if (!isPaused) {
                 elapsedTime = SystemClock.elapsedRealtime() - startTime - totalPausedTime
+
+                if(elapsedTime >= programData?.program?.targetValue!! * 1000)
+                    stopService()
+
                 sendTimeBroadcast(elapsedTime)
 
                 // 심박수 브로드캐스트
                 sendHeartRateBroadcast(currentHeartRate)
             }
-            timerHandler.postDelayed(this, timerIntervalMillis)
+            timerHandler.postDelayed(this, timerTimeTargetMillis)
         }
     }
 
@@ -102,21 +99,9 @@ class IntervalService : Service(), SensorEventListener {
         }
     }
 
-    /**
-     * 구간 평균 계산 핸들러
-     */
-    private val rangeHandler = Handler(Looper.getMainLooper())
-    private val rangeRunnable = object : Runnable {
-        override fun run() {
-            Log.d("Delay", "Range Delay Time Check : $currentRangeTime")
-            calculateRangeAverages()
-            rangeHandler.postDelayed(this, currentRangeTime)
-        }
-    }
-
     private val notification: Notification
         get() {
-            val notificationIntent = Intent(this, IActivity::class.java)
+            val notificationIntent = Intent(this, TActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -160,15 +145,15 @@ class IntervalService : Service(), SensorEventListener {
     private fun initRequestDto() {
         Log.d("Check", "initRequestDto() 들어옴")
         Log.d("Check", "ProgramData in InitRequestDto Method : $programData")
-        val intervalInfo = IntervalInfo(ArrayList())
-        val program = Program(programData?.programId!!, intervalInfo)
+//        val timeTargetInfo = TimeTargetInfo(ArrayList())
+        val program = Program(programData?.programId!!, null)
         val record = Record(0.0, 0.0)
         val speed = Speeds(0.0, ArrayList())
         val heartRate = HeartRates(0, ArrayList())
 
         requestDto = SaveDataRequestDto(
             date = LocalDateTime.now(),
-            exerciseType = "P", programType = "I", program = program,
+            exerciseType = "P", programType = "T", program = program,
             record = record, speeds = speed, heartrates = heartRate
         )
 
@@ -179,17 +164,6 @@ class IntervalService : Service(), SensorEventListener {
         programData = intent?.getParcelableExtra("programData", FavoriteResponseDto::class.java)
 
         initRequestDto()
-
-        currentRangeTime =
-            programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.time?.toLong()!! * 1000
-        currentRunningType =
-            programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
-
-        sendRangeInfoBroadcast()
-
-        currentRangeIndex += 1
-
-        rangeHandler.postDelayed(rangeRunnable, currentRangeTime)
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -247,90 +221,6 @@ class IntervalService : Service(), SensorEventListener {
         oneMinuteDistance = 0.0
     }
 
-    /**
-     * 구간 운동 기록 계산
-     */
-    private fun calculateRangeAverages() {
-        val isRunning = currentRunningType
-        val rangeTime = currentRangeTime
-        val averageSpeed = if (rangeSpeedCnt > 0) rangeSpeed / rangeSpeedCnt else 0.0
-        Log.d("Check", "Calculate Range Average : $isRunning, ${rangeTime}, $averageSpeed")
-
-        /* Update requestDto Range Info */
-        val range = Ranges(
-            isRunning = isRunning,
-            time = (rangeTime / 1000).toInt(),
-            speed = averageSpeed
-        )
-        Log.d("Check", "Input Range Info to RequestDto : $range")
-        requestDto.program.intervalInfo?.addRange(range)
-        Log.d("Check", "RequestDto Status : $requestDto")
-
-        // 속도 정보 초기화
-        rangeSpeed = 0.0
-        rangeSpeedCnt = 0
-
-        isEndOfProgram()
-        updateNextRangeInfo()
-    }
-
-    /**
-     * 인터벌 프로그램 종료조건 확인
-     */
-    private fun isEndOfProgram() {
-        /* 모든 세트의 완료 여부 확인 */
-        if (currentSetCount == programData?.program?.intervalInfo?.setCount) {
-            Log.d("Check", "Interval Service Stop")
-            stopService()
-        }
-    }
-
-    /**
-     * 다음 인터벌 구간 정보 Update
-     */
-    private fun updateNextRangeInfo() {
-        Log.d("Check", "Before Update Range Info Index : $currentRangeIndex")
-
-        /* 다음 구간 정보 */
-        currentRangeTime =
-            programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.time?.toLong()!! * 1000
-        currentRunningType =
-            programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
-
-        sendRangeInfoBroadcast()
-
-        currentRangeIndex += 1
-
-        Log.d(
-            "Check",
-            "Check Range Count : current($currentRangeIndex), total(${programData?.program?.intervalInfo?.rangeCount})"
-        )
-
-        /* 세트 종료 시 구간 정보 초기화 */
-        if (currentRangeIndex == programData?.program?.intervalInfo?.rangeCount) {
-            currentRangeIndex = 0
-            currentSetCount++
-        }
-
-        Log.d(
-            "Check",
-            "Check Set Count : current($currentSetCount), total(${programData?.program?.intervalInfo?.setCount})"
-        )
-    }
-
-    /**
-     * 구간 정보 브로드 캐스트
-     */
-    private fun sendRangeInfoBroadcast() {
-        val intent = Intent("com.example.sibal.UPDATE_RANGE_INFO").apply {
-            putExtra("rangeIndex", currentRangeIndex)
-            putExtra("setCount", currentSetCount)
-            putExtra("isRunning", currentRunningType)
-            putExtra("rangeTime", currentRangeTime)
-        }
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-    }
-
     override fun onSensorChanged(event: SensorEvent) {
         Log.d("Check", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
@@ -347,7 +237,7 @@ class IntervalService : Service(), SensorEventListener {
 
         /* record 정보 추가 */
         requestDto.record.distance = totalDistance
-        requestDto.record.time = programData?.program?.intervalInfo?.duration!!
+//        requestDto.record.time =
 
         wakeLock?.release()
         isServiceRunning = false
@@ -364,7 +254,7 @@ class IntervalService : Service(), SensorEventListener {
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
     inner class LocalBinder : Binder() {
-        fun getService(): IntervalService = this@IntervalService
+        fun getService(): TimeTargetService = this@TimeTargetService
     }
 
     override fun onBind(intent: Intent): IBinder = binder
@@ -382,7 +272,7 @@ class IntervalService : Service(), SensorEventListener {
     private fun setupLocationTracking() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         val locationRequest =
-            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, gpsUpdateIntervalMillis)
+            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, gpsUpdateTimeTargetMillis)
                 .build()
 
         if (ActivityCompat.checkSelfPermission(

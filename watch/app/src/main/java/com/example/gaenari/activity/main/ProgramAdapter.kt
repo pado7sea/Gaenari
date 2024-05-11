@@ -50,9 +50,11 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
                     putExtra("programTitle", program.programTitle)
                     putExtra("programType", program.type)
                 if(program.type=="D"){
+                    putExtra("programData", program)
                     putExtra("programTarget", program.program.targetValue)
                 }
                 if(program.type =="T"){
+                    putExtra("programData", program)
                     putExtra("programTarget", program.program.targetValue?.toInt())
                 }
                 // `I` 타입의 프로그램에 대해서만 전체 객체를 넘김

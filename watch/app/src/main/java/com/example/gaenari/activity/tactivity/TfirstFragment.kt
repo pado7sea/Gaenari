@@ -22,6 +22,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
+import com.example.gaenari.dto.request.SaveDataRequestDto
 
 class TFirstFragment : Fragment() {
     private lateinit var distanceView: TextView
@@ -33,7 +34,10 @@ class TFirstFragment : Fragment() {
     private lateinit var check1 : TextView
     private lateinit var check2 : TextView
     private lateinit var check3 : TextView
+    private lateinit var requestDto: SaveDataRequestDto
 
+    private var totalHeartRateAvg: Int = 0
+    private var totalSpeedAvg: Double = 0.0
     private var totalDistance: Double = 0.0
     private var totalHeartRate: Float = 0f
     private var heartRateCount: Int = 0
@@ -99,9 +103,7 @@ class TFirstFragment : Fragment() {
                         Log.d("티액티비티", "onReceive: ${time}")
 
                         val remainingTime = (programTarget * 1000) - totalTime
-                        if (remainingTime <= 0) {
-                            sendResultsAndFinish(context)
-                        } else {
+                        if (remainingTime > 0) {
                             updateUI(distance, programTarget, remainingTime, speed)
                         }
                     }
@@ -125,6 +127,12 @@ class TFirstFragment : Fragment() {
                         }
                         updateheartUI(heartRate)
                     }
+                    "com.example.sibal.EXIT_PROGRAM" -> {
+                        requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
+                        totalHeartRateAvg = requestDto.heartrates.average
+                        totalSpeedAvg = requestDto.speeds.average
+                        sendResultsAndFinish(context)
+                    }
                 }
             }
         }
@@ -134,6 +142,7 @@ class TFirstFragment : Fragment() {
             addAction("com.example.sibal.UPDATE_TIMER")
             addAction("com.example.sibal.UPDATE_ONE_MINUTE")
             addAction("com.example.sibal.UPDATE_HEART_RATE")
+            addAction("com.example.sibal.EXIT_PROGRAM")
         }
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, intentFilter)
     }
@@ -178,31 +187,23 @@ class TFirstFragment : Fragment() {
             vibrator.vibrate(500)
         }
 
-//        val programTarget = arguments?.getInt("programTarget") ?: 0
+        val programTarget = arguments?.getInt("programTarget") ?: 0
         val programType = arguments?.getString("programType") ?: ""
         val programTitle = arguments?.getString("programTitle") ?: ""
         val programId = arguments?.getLong("programId") ?: 0L
 
-        val averageHeartRate = if (heartRateCount > 0) totalHeartRate / heartRateCount else 0f
-        val averageSpeed = if (totalTime > 0) (totalDistance / totalTime) * 3600 else 0.0
-
         val intent = Intent(context, ResultActivity::class.java).apply {
-//            putExtra("programTarget", programTarget)
+            putExtra("requestDto", requestDto)
+            putExtra("programTarget", programTarget)
             putExtra("programType", programType)
             putExtra("programTitle", programTitle)
             putExtra("programId", programId)
             putExtra("totalDistance", totalDistance)
-            putExtra("averageHeartRate", averageHeartRate)
-            putExtra("averageSpeed", averageSpeed)
             putExtra("totalTime", totalTime)
         }
 
         startActivity(intent)
         activity?.finish()
-
-        Intent(context, TRunningService::class.java).also { serviceIntent ->
-            context.stopService(serviceIntent)
-        }
     }
 
     override fun onDestroyView() {
