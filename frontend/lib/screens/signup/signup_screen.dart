@@ -23,14 +23,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _confirmPasswordcontroller =
       TextEditingController(); // 비밀번호 확인용
   String check = "";
-  // final List<String> _domains = [
-  //   'naver.com',
-  //   'gmail.com',
-  //   'hotmail.com'
-  // ]; // 도메인 리스트
-  // String _selectedDomain = ''; // 선택된 도메인
 
   bool _showErrorMessage = false;
+  bool _showCheck = false;
 
   String _passworderrorText = ''; // 비밀번호 에러텍스트
   String _checkerrorText = ''; // 비밀번호 확인 에러텍스트
@@ -164,6 +159,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   } else {
                     setState(() {
                       _iderrorText = '';
+                      _showCheck = true;
                     });
                   }
                   setState(() {
@@ -171,58 +167,38 @@ class _SignupScreenState extends State<SignupScreen> {
                   });
                 },
               ))
-              // Text(' @ '),
-              // Expanded(
-              //   child: DropdownButtonFormField(
-              //     value: _selectedDomain.isNotEmpty ? _selectedDomain : null,
-              //     items: _domains.map((domain) {
-              //       return DropdownMenuItem(
-              //         value: domain,
-              //         child: Text(domain),
-              //       );
-              //     }).toList(),
-              //     onChanged: (value) {
-              //       setState(() {
-              //         _selectedDomain = value!;
-              //       });
-              //     },
-              //     decoration: InputDecoration(
-              //         contentPadding: EdgeInsets.only(left: 5),
-              //         hintText: 'example.com',
-              //         hintStyle: TextStyle(color: Colors.grey),
-              //         focusedBorder: UnderlineInputBorder(
-              //             borderSide: BorderSide(color: myBlack))),
-              //   ),
-              // )
             ],
           ),
           SizedBox(
             height: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    final Check idCheck =
-                        await MemberService.fetchIdCheck(_idcontroller.text);
-                    setState(() {
-                      if (idCheck.data != null && idCheck.data == false) {
-                        check = "사용 가능한 아이디";
-                      } else {
-                        check = "중복된 아이디";
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: myLightYellow,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+          Visibility(
+            visible: _showCheck,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                    onPressed: () async {
+                      final Check idCheck =
+                          await MemberService.fetchIdCheck(_idcontroller.text);
+                      setState(() {
+                        if (idCheck.data != null && idCheck.data == false) {
+                          check = "사용 가능한 아이디";
+                        } else {
+                          check = "중복된 아이디";
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: myLightYellow,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  child: Text12(text: check == "" ? '아이디 중복검사' : check))
-            ],
+                    child: Text12(text: check == "" ? '아이디 중복검사' : check))
+              ],
+            ),
           )
         ],
       ),

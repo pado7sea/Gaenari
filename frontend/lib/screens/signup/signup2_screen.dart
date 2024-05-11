@@ -30,6 +30,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
   String check = "";
 
   bool _showErrorMessage = false;
+  bool _showCheck = false;
 
   String _errorText = '';
   @override
@@ -119,6 +120,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                     } else {
                       setState(() {
                         _errorText = '';
+                        _showCheck = true;
                       });
                     }
                     setState(() {
@@ -136,7 +138,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(
-                        r'[a-zA-Z0-9_ㄱ-힣]')), // 영어 대소문자, 숫자, 언더바, 한글 허용 // 최대 10자까지 입력 허용
+                        r'[a-zA-Z0-9ㄱ-힣]')), // 영어 대소문자, 숫자, 한글 허용 // 최대 10자까지 입력 허용
                   ],
                   maxLength: 10,
                 ),
@@ -146,32 +148,35 @@ class _Signup2ScreenState extends State<Signup2Screen> {
           SizedBox(
             height: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    final Check idCheck =
-                        await MemberService.fetchNickNameCheck(
-                            _nicknamecontroller.text);
-                    setState(() {
-                      if (idCheck.data != null && idCheck.data == false) {
-                        check = "사용 가능한 닉네임";
-                      } else {
-                        check = "중복된 닉네임";
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: myLightYellow,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+          Visibility(
+            visible: _showCheck,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                    onPressed: () async {
+                      final Check idCheck =
+                          await MemberService.fetchNickNameCheck(
+                              _nicknamecontroller.text);
+                      setState(() {
+                        if (idCheck.data != null && idCheck.data == false) {
+                          check = "사용 가능한 닉네임";
+                        } else {
+                          check = "중복된 닉네임";
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: myLightYellow,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  child: Text12(text: check == "" ? '닉네임 중복검사' : check))
-            ],
-          )
+                    child: Text12(text: check == "" ? '닉네임 중복검사' : check))
+              ],
+            ),
+          ),
         ],
       ),
     );
