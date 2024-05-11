@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +34,7 @@ public class SaveExerciseRecordDto {
 
     @Getter
     @Setter
+    @ToString
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -45,6 +47,7 @@ public class SaveExerciseRecordDto {
 
     @Getter
     @Setter
+    @ToString
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -53,8 +56,7 @@ public class SaveExerciseRecordDto {
         private List<RangeDto> ranges;
     }
 
-    @Getter
-    @Setter
+    @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -69,6 +71,7 @@ public class SaveExerciseRecordDto {
 
     @Getter
     @Setter
+    @ToString
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -81,6 +84,7 @@ public class SaveExerciseRecordDto {
 
     @Getter
     @Setter
+    @ToString
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor

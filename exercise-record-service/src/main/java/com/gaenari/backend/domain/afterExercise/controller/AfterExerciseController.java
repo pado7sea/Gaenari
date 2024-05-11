@@ -30,7 +30,6 @@ public class AfterExerciseController {
     public ResponseEntity<?> saveExerciseRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                             @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
 
-        log.debug("SaveExerciseRecordDto: {}", exerciseDto);
         log.info("SaveExerciseRecordDto: {}", exerciseDto);
 
         // 누적 통계 업데이트 -> 업적
