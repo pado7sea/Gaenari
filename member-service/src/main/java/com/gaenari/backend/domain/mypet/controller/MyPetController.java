@@ -60,7 +60,7 @@ public class MyPetController {
     }
 
     @Operation(summary = "반려견 애정도 증가")
-    @PutMapping("/heart")
+    @PostMapping("/heart")
     public ResponseEntity<?> increaseAffection(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody IncreaseAffection affection){
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
@@ -71,7 +71,7 @@ public class MyPetController {
     }
 
     @Operation(summary = "[Feign] 반려견 애정도 증/감", description = "Feign API")
-    @PostMapping("/heart/change")
+    @PutMapping("/heart")
     public ResponseEntity<?> changeHeart(@RequestBody HeartChange heartChange){
         // memberId가 null이면 인증 실패
         if (heartChange.getMemberEmail() == null) {
