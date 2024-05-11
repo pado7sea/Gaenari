@@ -335,13 +335,15 @@ public class InventoryServiceImpl implements InventoryService{
                 break;
             }
         }
-        // 인벤토리에 저장
-        addInventory = Inventory.builder()
-                .memberEmail(memberEmail)
-                .item(selectItem)
-                .isEquip(false)
-                .build();
-        inventoryRepository.save(addInventory);
+        // 가지고 있지 않다면, 인벤토리에 저장
+        if(!checkHave){
+            addInventory = Inventory.builder()
+                    .memberEmail(memberEmail)
+                    .item(selectItem)
+                    .isEquip(false)
+                    .build();
+            inventoryRepository.save(addInventory);
+        }
 
         Items items = Items.builder()
                 .id(selectItem.getId())
