@@ -18,7 +18,7 @@ data class SaveDataRequestDto(
 @Parcelize
 data class Program(
     val programId: Long,
-    val intervalInfo: IntervalInfo
+    val intervalInfo: IntervalInfo?
 ) : Parcelable
 
 @Parcelize

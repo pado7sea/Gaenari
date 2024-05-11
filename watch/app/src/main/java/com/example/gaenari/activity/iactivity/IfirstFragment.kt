@@ -20,14 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
-import com.example.gaenari.dto.request.HeartRates
-import com.example.gaenari.dto.request.IntervalInfo
-import com.example.gaenari.dto.request.Ranges
-import com.example.gaenari.dto.request.Record
 import com.example.gaenari.dto.request.SaveDataRequestDto
-import com.example.gaenari.dto.request.Speeds
 import com.example.gaenari.dto.response.FavoriteResponseDto
-import java.time.LocalDate
 
 class IFirstFragment : Fragment() {
     private lateinit var nowProgram: FavoriteResponseDto
@@ -39,9 +33,9 @@ class IFirstFragment : Fragment() {
     private lateinit var speedView: TextView
     private lateinit var circleProgress: ICircleProgress
     private lateinit var updateReceiver: BroadcastReceiver
+    private lateinit var requestDto: SaveDataRequestDto
 
-
-    private var totalHeartRateAvg: Float = 0f
+    private var totalHeartRateAvg: Int = 0
     private var totalSpeedAvg: Double = 0.0
     private var curHeartRate: Float = 0f
     private var totalDistance: Double = 0.0
@@ -125,15 +119,16 @@ class IFirstFragment : Fragment() {
                         // 세트 내 n 번째 구간
                         val rangeIndex = intent.getIntExtra("rangeIndex", 0)
                         // 몇번째 세트
-                        nowSetCount = intent.getIntExtra("setCount", 0)
+                        nowSetCount = intent.getIntExtra("setCount", 0) + 1
                         // 걷기, 달리기 여부
                         val isRunning = intent.getBooleanExtra("isRunning", false)
                         // 현재 구간 총 시간
                         val rangeTime = intent.getLongExtra("rangeTime", 0)
                     }
-                    "com.example.sibal.EXIT_INTERVAL_PROGRAM" -> {
-                        totalHeartRateAvg = intent.getFloatExtra("totalHeartRateAvg", 0f)
-                        totalSpeedAvg = intent.getDoubleExtra("totalSpeedAvg", 0.0)
+                    "com.example.sibal.EXIT_PROGRAM" -> {
+                        requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
+                        totalHeartRateAvg = requestDto.heartrates.average
+                        totalSpeedAvg = requestDto.speeds.average
                         sendResultsAndFinish(context)
                     }
                 }
@@ -144,7 +139,7 @@ class IFirstFragment : Fragment() {
             addAction("com.example.sibal.UPDATE_TIMER")
             addAction("com.example.sibal.UPDATE_HEART_RATE")
             addAction("com.example.sibal.UPDATE_RANGE_INFO")
-            addAction("com.example.sibal.EXIT_INTERVAL_PROGRAM")
+            addAction("com.example.sibal.EXIT_PROGRAM")
         }
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, intentFilter)
     }
@@ -227,14 +222,12 @@ class IFirstFragment : Fragment() {
         val programId = arguments?.getLong("programId") ?: 0L
 
         val intent = Intent(context, ResultActivity::class.java).apply {
-
+            putExtra("requestDto", requestDto)
             putExtra("programTarget", programTarget)
             putExtra("programType", programType)
             putExtra("programTitle", programTitle)
             putExtra("programId", programId)
             putExtra("totalDistance", totalDistance)
-            putExtra("averageHeartRate", totalHeartRateAvg)
-            putExtra("averageSpeed", totalSpeedAvg)
             putExtra("totalTime", totalTime)
         }
         startActivity(intent)
