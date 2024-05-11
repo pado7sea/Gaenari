@@ -46,6 +46,9 @@
             android:name=".activity.iactivity.IRunningService"
             android:exported="false"> <!-- or false, depending on whether you want the service to be accessible from other apps -->
         </service>
+        <service android:name=".activity.iactivity.IntervalService"
+            android:exported="false">
+        </service>
 
         <activity
             android:name=".activity.CountdownActivity"

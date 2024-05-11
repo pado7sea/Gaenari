@@ -3,9 +3,9 @@ package com.example.gaenari.activity.iactivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.gaenari.activity.main.Program
+import com.example.gaenari.dto.response.FavoriteResponseDto
 
-class IFragmentStateAdapter(fragmentActivity: FragmentActivity, private val  program: Program) : FragmentStateAdapter(fragmentActivity) {
+class IFragmentStateAdapter(fragmentActivity: FragmentActivity, private val  program: FavoriteResponseDto) : FragmentStateAdapter(fragmentActivity) {
     override fun getItemCount(): Int = 3
 
     override fun createFragment(position: Int): Fragment {

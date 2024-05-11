@@ -23,20 +23,52 @@ class IRunningService : Service(), SensorEventListener {
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var sensorManager: SensorManager? = null
     private var heartRateSensor: Sensor? = null
-    private var totalDistance = 0.0
+
     private var lastLocation: Location? = null
+
+    private var totalDistance = 0.0
+    private var currentHeartRate = 0f // Current heart rate
+    private var oneMinuteSpeed = 0.0
+    private var oneMinuteHeartRate = 0f
+    private var speedCount = 0
+    private var heartRateCount = 0
+
     private var startTime: Long = 0
-    private var heartRate = 0f // Current heart rate
+
+    private var oneMinuteDistance = 0.0
+    private var elapsedTime: Long = 0
+
+    private var gpsUpdateIntervalMillis: Long = 2500
+    private var timerIntervalMillis: Long = 1000
 
     // 일시정지에 대한 처리를 해주기위함
     private var totalPausedTime: Long = 0
     private var lastPauseTime: Long = 0
 
-
     private var wakeLock: PowerManager.WakeLock? = null
 
     //일시정지일때 데이터를 안보내는 방식을 택함
     private var isPaused = false
+
+//    private val timerHandler = Handler(Looper.getMainLooper())
+//    private val timerRunnable = object : Runnable {
+//        override fun run() {
+//            if (!isPaused) {
+//                elapsedTime = SystemClock.elapsedRealtime() - startTime - totalPausedTime
+//                sendTimeBroadcast(elapsedTime)
+//                sendHeartRateBroadcast(currentHeartRate)
+//            }
+//            timerHandler.postDelayed(this, timerIntervalMillis)
+//        }
+//    }
+//
+//    private val oneMinuteHandler = Handler(Looper.getMainLooper())
+//    private val oneMinuteRunnable = object : Runnable {
+//        override fun run() {
+//            calculateOneMinuteAverages()
+//            oneMinuteHandler.postDelayed(this, 60000) // 1분 간격 실행
+//        }
+//    }
 
     @SuppressLint("ForegroundServiceType")
     override fun onCreate() {
@@ -77,7 +109,7 @@ class IRunningService : Service(), SensorEventListener {
                         val intent = Intent("com.example.sibal.UPDATE_INFO").apply {
                             putExtra("distance", totalDistance)
                             putExtra("time", activeTime)
-                            putExtra("heartRate", heartRate)
+                            putExtra("heartRate", currentHeartRate)
                             putExtra("speed", location.speed)
                         }
                         Log.d("IRunningService", "Sending broadcast: Distance $totalDistance, Time ${SystemClock.elapsedRealtime() - startTime}")
@@ -162,7 +194,7 @@ class IRunningService : Service(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
-            heartRate = event.values[0]
+            currentHeartRate = event.values[0]
         }
     }
 

@@ -110,8 +110,8 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
                 response: Response<ApiResponseListDto<FavoriteResponseDto?>>
             ) {
                 Log.d("Response", "Favorite Response : $response")
-                Log.d("Check", "Favorite program : " + response.body()!!.data)
-                if (response.body()!!.status == "ERROR") {
+                Log.d("Check", "Favorite program : " + response.body()?.data)
+                if (response.body()?.status == "ERROR") {
                     Toast.makeText(this@HomeActivity, "즐겨찾기 목록 조회 실패.", Toast.LENGTH_SHORT).show()
                 } else {
                     val dataList: List<FavoriteResponseDto?> = response.body()?.data ?: emptyList()

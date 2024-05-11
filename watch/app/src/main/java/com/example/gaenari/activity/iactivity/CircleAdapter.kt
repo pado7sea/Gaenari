@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gaenari.R
 import com.example.gaenari.activity.main.Range
+import com.example.gaenari.dto.request.Ranges
+import com.example.gaenari.dto.response.RangeDto
 
-class CircleAdapter(private var ranges: List<Range>) :
+class CircleAdapter(private var ranges: List<RangeDto>) :
     RecyclerView.Adapter<CircleAdapter.CircleViewHolder>() {
 
     class CircleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -25,7 +27,7 @@ class CircleAdapter(private var ranges: List<Range>) :
     override fun onBindViewHolder(holder: CircleViewHolder, position: Int) {
         val range = ranges[position]
         holder.circleView.background.setColorFilter(
-            if (range.isRunning) Color.GREEN else Color.BLUE, PorterDuff.Mode.SRC_IN
+            if (range.isRunning == true) Color.GREEN else Color.BLUE, PorterDuff.Mode.SRC_IN
         )
         val layoutParams = holder.circleView.layoutParams as ViewGroup.LayoutParams
         layoutParams.width = 30

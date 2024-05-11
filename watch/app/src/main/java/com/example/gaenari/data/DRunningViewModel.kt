@@ -72,7 +72,7 @@ class DRunningViewModel(application: Application) : AndroidViewModel(application
         if (secondSpeedList.size >= 60) {
             val averageSpeed = secondSpeedList.average()
 
-            // 평균을 Speeds 배열에 추가
+            // 평균을 com.example.gaenari.dto.request.Speeds 배열에 추가
             val updatedSpeeds = _runningData.value?.speeds ?: DsendData.Speeds(0.0, mutableListOf())
             updatedSpeeds.arr.add(averageSpeed.toInt())
 
@@ -94,7 +94,7 @@ class DRunningViewModel(application: Application) : AndroidViewModel(application
         if (secondHeartRateList.size >= 60) {
             val averageHeartRate = secondHeartRateList.average().toInt()
 
-            // 평균을 HeartRates 배열에 추가
+            // 평균을 com.example.gaenari.dto.request.HeartRates 배열에 추가
             val updatedHeartRates = _runningData.value?.heartrates ?: DsendData.HeartRates(0, mutableListOf())
             updatedHeartRates.arr.add(averageHeartRate)
 
@@ -153,7 +153,7 @@ class DRunningViewModel(application: Application) : AndroidViewModel(application
         // 현재 `program`이 없다면 아무 작업도 하지 않고 종료
         val currentProgram = currentRunningData?.program ?: return
 
-        // `programId`만 업데이트된 새로운 Program 객체 생성
+        // `programId`만 업데이트된 새로운 com.example.gaenari.dto.request.Program 객체 생성
         val updatedProgram = currentProgram.copy(programId = newProgramId)
 
         // 전체 `DsendData`에서 Program만 변경하여 업데이트
