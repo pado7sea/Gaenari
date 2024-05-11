@@ -53,3 +53,7 @@ feign:
     url: http://localhost:8086
   challenge-service:
     url: http://localhost:8088
+
+scheduler:
+  cron:
+    expression: "*/30 * * * * ?" # 개발 환경에서는 30초마다 실행
