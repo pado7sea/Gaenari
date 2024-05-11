@@ -13,4 +13,8 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     List<Record> findByMemberIdAndDateBetween(String memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     List<Record> findByProgramId(Long programId);
+
+    Record findByMemberIdAndId(String memberId, Long recordId);
+
+    List<Record> findByMemberId(String memberId);
 }
