@@ -19,7 +19,7 @@ public class StatisticFeignController {
 
     private final StatisticService statisticService;
 
-    @Operation(summary = "전체 통계 조회", description = "저장되어있는 누적값 조회")
+    @Operation(summary = "[Feign] 전체 통계 조회", description = "저장되어있는 누적값 조회")
     @GetMapping("/{memberId}")
     public TotalStatisticDto getTotalStatistics(@Parameter(name = "회원 ID")  @PathVariable(name = "memberId") String memberId) {
         TotalStatisticDto statistics = statisticService.getTotalStatistics(memberId);
