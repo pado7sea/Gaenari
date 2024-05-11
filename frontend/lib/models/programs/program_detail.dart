@@ -1,14 +1,14 @@
 class ProgramDetail {
   String? status;
   String? message;
-  Data? data;
+  Detail? data;
 
   ProgramDetail({this.status, this.message, this.data});
 
   ProgramDetail.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Detail.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -22,30 +22,46 @@ class ProgramDetail {
   }
 }
 
-class Data {
+class Detail {
   int? programId;
   String? programTitle;
   bool? isFavorite;
   String? type;
   Program? program;
+  TotalRecord? totalRecord;
   int? usageCount;
+  int? finishedCount;
+  List<UsageLog>? usageLog;
 
-  Data(
+  Detail(
       {this.programId,
       this.programTitle,
       this.isFavorite,
       this.type,
       this.program,
-      this.usageCount});
+      this.totalRecord,
+      this.usageCount,
+      this.finishedCount,
+      this.usageLog});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Detail.fromJson(Map<String, dynamic> json) {
     programId = json['programId'];
     programTitle = json['programTitle'];
     isFavorite = json['isFavorite'];
     type = json['type'];
     program =
         json['program'] != null ? Program.fromJson(json['program']) : null;
+    totalRecord = json['totalRecord'] != null
+        ? TotalRecord.fromJson(json['totalRecord'])
+        : null;
     usageCount = json['usageCount'];
+    finishedCount = json['finishedCount'];
+    if (json['usageLog'] != null) {
+      usageLog = <UsageLog>[];
+      json['usageLog'].forEach((v) {
+        usageLog!.add(UsageLog.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -57,13 +73,20 @@ class Data {
     if (program != null) {
       data['program'] = program!.toJson();
     }
+    if (totalRecord != null) {
+      data['totalRecord'] = totalRecord!.toJson();
+    }
     data['usageCount'] = usageCount;
+    data['finishedCount'] = finishedCount;
+    if (usageLog != null) {
+      data['usageLog'] = usageLog!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
 
 class Program {
-  String? targetValue;
+  double? targetValue;
   IntervalInfo? intervalInfo;
 
   Program({this.targetValue, this.intervalInfo});
@@ -86,7 +109,7 @@ class Program {
 }
 
 class IntervalInfo {
-  int? duration;
+  double? duration;
   int? setCount;
   int? rangeCount;
   List<Ranges>? ranges;
@@ -120,8 +143,8 @@ class IntervalInfo {
 class Ranges {
   int? id;
   bool? isRunning;
-  int? time;
-  int? speed;
+  double? time;
+  double? speed;
 
   Ranges({this.id, this.isRunning, this.time, this.speed});
 
@@ -138,6 +161,69 @@ class Ranges {
     data['isRunning'] = isRunning;
     data['time'] = time;
     data['speed'] = speed;
+    return data;
+  }
+}
+
+class TotalRecord {
+  double? distance;
+  double? time;
+  double? cal;
+
+  TotalRecord({this.distance, this.time, this.cal});
+
+  TotalRecord.fromJson(Map<String, dynamic> json) {
+    distance = json['distance'];
+    time = json['time'];
+    cal = json['cal'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['distance'] = distance;
+    data['time'] = time;
+    data['cal'] = cal;
+    return data;
+  }
+}
+
+class UsageLog {
+  int? recordId;
+  double? distance;
+  double? averagePace;
+  double? time;
+  String? date;
+  double? cal;
+  bool? isFinished;
+
+  UsageLog(
+      {this.recordId,
+      this.distance,
+      this.averagePace,
+      this.time,
+      this.date,
+      this.cal,
+      this.isFinished});
+
+  UsageLog.fromJson(Map<String, dynamic> json) {
+    recordId = json['recordId'];
+    distance = json['distance'];
+    averagePace = json['averagePace'];
+    time = json['time'];
+    date = json['date'];
+    cal = json['cal'];
+    isFinished = json['isFinished'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['recordId'] = recordId;
+    data['distance'] = distance;
+    data['averagePace'] = averagePace;
+    data['time'] = time;
+    data['date'] = date;
+    data['cal'] = cal;
+    data['isFinished'] = isFinished;
     return data;
   }
 }
