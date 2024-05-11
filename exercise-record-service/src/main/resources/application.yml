@@ -56,4 +56,4 @@ feign:
 
 scheduler:
   cron:
-    expression: "*/30 * * * * ?" # 개발 환경에서는 30초마다 실행
+    expression: "0 0 0 * * ?" # 자정마다 실행, "*/30 * * * * ?" # 30초마다 실행
