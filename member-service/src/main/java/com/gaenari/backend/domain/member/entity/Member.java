@@ -1,5 +1,6 @@
 package com.gaenari.backend.domain.member.entity;
 
+import com.gaenari.backend.domain.coin.entity.Coin;
 import com.gaenari.backend.domain.mate.entity.Mate;
 import com.gaenari.backend.domain.mypet.entity.MyPet;
 import jakarta.persistence.*;
@@ -75,6 +76,9 @@ public class Member {
 
     @OneToMany(mappedBy = "friend2", cascade = CascadeType.REMOVE)
     private List<Mate> mateListAsFriend2 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Coin> coinList = new ArrayList<>();
 
 
 }
