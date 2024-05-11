@@ -1,6 +1,8 @@
 package com.gaenari.backend.domain.member.service;
 
+import com.gaenari.backend.domain.client.InventoryServiceClient;
 import com.gaenari.backend.domain.member.dto.MemberDto;
+import com.gaenari.backend.domain.member.dto.requestDto.MemberCoin;
 import com.gaenari.backend.domain.member.dto.requestDto.MemberUpdate;
 import com.gaenari.backend.domain.member.dto.requestDto.MyPetDto;
 import com.gaenari.backend.domain.member.dto.requestDto.SignupRequestDto;
@@ -13,6 +15,9 @@ import com.gaenari.backend.domain.mypet.repository.DogRepository;
 import com.gaenari.backend.domain.mypet.repository.MyPetRepository;
 import com.gaenari.backend.global.exception.member.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +41,7 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
     private final MyPetRepository myPetRepository;
+    private final InventoryServiceClient inventoryServiceClient;
 
     @Override // 회원가입
     public SignupResponse createMember(SignupRequestDto requestDto) {
@@ -69,6 +75,13 @@ public class MemberServiceImpl implements MemberService{
                 .changeTime(LocalDateTime.now())
                 .build();
         MyPet registMyPet = myPetRepository.save(myPet);
+
+        // 기본 아이템 생성
+        ResponseEntity<?> res = inventoryServiceClient.createNormalItems(requestDto.getEmail());
+        int code = res.getStatusCode().value();
+        if(code != 200){
+            throw new ConnectFeignFailException();
+        }
 
         // LocalDateTime을 String으로 변경
         LocalDateTime changeTime = registMyPet.getChangeTime();
@@ -138,8 +151,14 @@ public class MemberServiceImpl implements MemberService{
     public void deleteMember(String memberEmail) {
         // 회원 있는지 확인
         Member mem = memberRepository.findByEmail(memberEmail);
-
         memberRepository.delete(mem);
+
+        // 회원 아이템 삭제
+        ResponseEntity<?> res = inventoryServiceClient.deleteItems(memberEmail);
+        int code = res.getStatusCode().value();
+        if(code != 200){
+            throw new ConnectFeignFailException();
+        }
     }
 
     @Override // 보유코인 조회
@@ -363,14 +382,21 @@ public class MemberServiceImpl implements MemberService{
         return member.getWeight();
     }
 
-    @Override // 코인 증가
-    public void increaseCoin(String memberEmail, int coin) {
+    @Override // 코인 증가/감소
+    public void updateCoin(MemberCoin memberCoin) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
+        Member member = memberRepository.findByEmail(memberCoin.getMemberEmail());
         if(member==null)
             throw new EmailNotFoundException();
+        // 변동코인
+        int changeCoin = 0;
+        if(memberCoin.getIsIncreased()){
+            changeCoin = member.getCoin() + memberCoin.getCoin();
+        }else{
+            changeCoin = member.getCoin() - memberCoin.getCoin();
+        }
         // 코인 증가
-        Member memberCoin = Member.builder()
+        Member registMember = Member.builder()
                 .Id(member.getId())
                 .email(member.getEmail())
                 .password(member.getPassword())
@@ -379,12 +405,21 @@ public class MemberServiceImpl implements MemberService{
                 .gender(member.getGender())
                 .height(member.getHeight())
                 .weight(member.getWeight())
-                .coin(member.getCoin() + coin) // 변경
+                .coin(changeCoin) // 변경
                 .device(member.getDevice())
                 .deviceTime(member.getDeviceTime())
                 .myPetList(member.getMyPetList())
                 .build();
-        memberRepository.save(memberCoin);
+        memberRepository.save(registMember);
+    }
+
+    @Override // 회원 이메일 조회
+    public String getMemberEmail(Long mateId) {
+        Member member = memberRepository.findById(mateId)
+                .orElseThrow(MemberNotFoundException::new);
+        String memberEmail = member.getEmail();
+
+        return memberEmail;
     }
 
 

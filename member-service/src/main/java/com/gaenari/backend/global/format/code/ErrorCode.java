@@ -25,6 +25,7 @@ public enum ErrorCode {
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     MISSING_PATH_VARIABLE(HttpStatus.BAD_REQUEST, "PathVariable 파라미터가 요청에 포함되지 않았습니다."),
     EMPTY_MEMBER(HttpStatus.NOT_FOUND, "회원 정보가 비어있습니다."),
+    CONNECT_FEIGN_FAIL(HttpStatus.BAD_REQUEST, "Feign Client 연결에 실패했습니다."),
 
     ACCESS_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "액세스 토큰을 찾을 수 없습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "새로운 로그인이 필요합니다. 재로그인을 진행해주세요."),
@@ -60,8 +61,11 @@ public enum ErrorCode {
     // 반려견 관련 예외 처리
     PARTNERPET_NOT_FOUND(HttpStatus.BAD_REQUEST, "파트너 반려견이 존재하지 않습니다."),
     ALREADY_HAVE_PET_TYPE(HttpStatus.BAD_REQUEST, "이미 보유중인 종류입니다."),
-    NOT_TIME_CHANGE_PARTNER(HttpStatus.BAD_REQUEST, "파트너 반려견을 변경가능할 수 있는 시간이 아닙니다."),
-    DOG_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 개 종류입니다.");
+    NOT_TIME_CHANGE_PARTNER(HttpStatus.BAD_REQUEST, "파트너 반려견을 변경할 수 있는 시간이 아닙니다."),
+    DOG_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 개 종류입니다."),
+
+    // 보상
+    EXIST_REWARD(HttpStatus.BAD_REQUEST, "아직 수령하지 않은 보상이 존재합니다.");
 
 
     private final HttpStatus status;
