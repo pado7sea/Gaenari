@@ -4,9 +4,9 @@ import com.gaenari.backend.global.format.code.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class NotTimeChangePartnerException extends RuntimeException{
+public class ConnectFeignFailException extends RuntimeException{
     private final ErrorCode errorCode;
-    public NotTimeChangePartnerException() {
-        this.errorCode = ErrorCode.NOT_TIME_CHANGE_PARTNER;
+    public ConnectFeignFailException() {
+        this.errorCode = ErrorCode.CONNECT_FEIGN_FAIL;
     }
 }

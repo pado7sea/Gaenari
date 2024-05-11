@@ -1,11 +1,13 @@
 package com.gaenari.backend.domain.mypet.service;
 
+import com.gaenari.backend.domain.client.ChallengeServiceClient;
 import com.gaenari.backend.domain.member.entity.Member;
 import com.gaenari.backend.domain.member.repository.MemberRepository;
 import com.gaenari.backend.domain.mypet.dto.requestDto.Adopt;
 import com.gaenari.backend.domain.mypet.dto.requestDto.HeartChange;
 import com.gaenari.backend.domain.mypet.dto.requestDto.IncreaseAffection;
 import com.gaenari.backend.domain.mypet.dto.responseDto.FriendPetDetail;
+import com.gaenari.backend.domain.mypet.dto.responseDto.Pets;
 import com.gaenari.backend.domain.mypet.entity.Dog;
 import com.gaenari.backend.domain.mypet.entity.MyPet;
 import com.gaenari.backend.domain.mypet.entity.Tier;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +28,7 @@ public class MyPetServiceImpl implements MyPetService{
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
     private final MyPetRepository myPetRepository;
+    private final ChallengeServiceClient challengeServiceClient;
     @Override // 반려견 입양
     public void adopt(String memberEmail, Adopt adopt) {
         Member member = memberRepository.findByEmail(memberEmail);
@@ -69,6 +73,11 @@ public class MyPetServiceImpl implements MyPetService{
     @Override // 파트너 반려견 변경
     public void changePartner(String memberEmail, Long dogId) {
         Member member = memberRepository.findByEmail(memberEmail);
+        // 받지 않은 보상이 있는지 확인
+        boolean reward = challengeServiceClient.isGetReward(memberEmail);
+        if(reward){
+            throw new ExistRewardException();
+        }
         // 현재 파트너 반려견 조회
         MyPet currentMyPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
                 .orElseThrow(PartnerPetNotFoundException::new);
@@ -200,5 +209,35 @@ public class MyPetServiceImpl implements MyPetService{
                 .build();
         myPetRepository.save(updateMyPet);
 
+    }
+
+    @Override
+    public List<Pets> getPets(String memberEmail) {
+        Member member = memberRepository.findByEmail(memberEmail);
+        List<MyPet> myPetList = myPetRepository.findByMemberId(member.getId());
+        List<Pets> petsList = new ArrayList<>();
+        for(MyPet myPet : myPetList){
+            // 해당 종의 정보 가져오기
+            Dog dog = dogRepository.findById(myPet.getDog().getId())
+                    .orElseThrow(DogNotFoundException::new);
+            Pets pets = Pets.builder()
+                    .id(myPet.getDog().getId())
+                    .name(myPet.getName())
+                    .affection(myPet.getAffection())
+                    .tier(myPet.getTier())
+                    .isPartner(myPet.getIsPartner())
+                    .price(dog.getPrice())
+                    .build();
+            petsList.add(pets);
+        }
+
+        return petsList;
+    }
+
+    @Override // 강아지 가격 조회
+    public int getDogPrice(int dogId) {
+        Dog dog = dogRepository.findById((long)dogId)
+                .orElseThrow(DogNotFoundException::new);
+        return dog.getPrice();
     }
 }
