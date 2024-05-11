@@ -8,4 +8,6 @@ public interface RecordFeignService {
 
     List<ProgramDetailDto.UsageLogDto> getRecordsByProgramId(Long programId);
 
+    List<Integer> getChallengeIdsByRecordId(String memberId, Long recordId);
+
 }

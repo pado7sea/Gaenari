@@ -3,7 +3,6 @@ package com.gaenari.backend.domain.afterExercise.service.impl;
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
 import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
-import com.gaenari.backend.domain.client.challenge.dto.ChallengeDto;
 import com.gaenari.backend.domain.client.member.MemberServiceClient;
 import com.gaenari.backend.domain.client.program.ProgramServiceClient;
 import com.gaenari.backend.domain.client.program.dto.ProgramDetailAboutRecordDto;
@@ -14,9 +13,7 @@ import com.gaenari.backend.domain.record.entity.IntervalRangeRecord;
 import com.gaenari.backend.domain.record.entity.Moment;
 import com.gaenari.backend.domain.record.entity.Record;
 import com.gaenari.backend.domain.record.repository.RecordRepository;
-import com.gaenari.backend.domain.recordChallenge.entity.RecordChallenge;
-import com.gaenari.backend.domain.recordChallenge.repository.RecordChallengeRepository;
-import com.gaenari.backend.domain.recordDetail.dto.ProgramInfoDto;
+import com.gaenari.backend.domain.record.entity.RecordChallenge;
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
 import com.gaenari.backend.domain.statistic.entity.Statistic;
 import com.gaenari.backend.domain.statistic.repository.StatisticRepository;
@@ -38,7 +35,6 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     private final ProgramServiceClient programServiceClient;
     private final ChallengeServiceClient challengeServiceClient;
     private final MemberServiceClient memberServiceClient;
-    private final RecordChallengeRepository recordChallengeRepository;
 
     // 운동 통계 업데이트
     @Override

@@ -27,4 +27,12 @@ public class RecordFeignController {
         return recordFeignService.getRecordsByProgramId(programId);
     }
 
+    @Operation(summary = "운동 기록의 도전과제 ID 리스트 조회", description = "운동 기록 ID로 도전과제 ID 리스트 반환")
+    @GetMapping("/recordChallenge/{memberId}/{recordId}")
+    public List<Integer> getChallengeIdsByRecordId(@Parameter(name = "회원 ID") @PathVariable(name = "memberId") String memberId,
+                                                   @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId) {
+
+        return recordFeignService.getChallengeIdsByRecordId(memberId, recordId);
+    }
+
 }
