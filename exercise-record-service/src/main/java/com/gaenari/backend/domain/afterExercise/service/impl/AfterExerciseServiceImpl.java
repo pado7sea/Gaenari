@@ -168,7 +168,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 moments.add(Moment.builder()
                         .heartrate(heartrate)
                         .distance(speed * 60 / 3600) // 시속 km/h를 m/min로 변환
-                        .pace(speed == 0 ? null : 3600 / speed) // 분당 페이스 계산, 속도가 0이면 null로 설정
+                        .pace(speed == 0 ? 0 : 3600 / speed) // 분당 페이스 계산, 속도가 0이면 null로 설정
                         .build());
             }
         }
@@ -205,7 +205,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .date(exerciseDto.getDate())
                 .time(exerciseDto.getRecord().getTime())
                 .distance(exerciseDto.getRecord().getDistance())
-                .averagePace((3600 / exerciseDto.getSpeeds().getAverage()))
+                .averagePace(exerciseDto.getSpeeds().getAverage() != 0 ? (3600 / exerciseDto.getSpeeds().getAverage()) : 0)
                 .averageHeartRate(exerciseDto.getHeartrates().getAverage())
                 .cal(calculateCal(memberId, exerciseDto)) // 칼로리 계산하는 메서드 따로 뺄 것.
                 .isFinished(determineFinish(exerciseDto)) // 완주 여부
