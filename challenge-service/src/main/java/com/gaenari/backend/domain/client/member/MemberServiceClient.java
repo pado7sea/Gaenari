@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface MemberServiceClient {
 
     // 회원 코인 업데이트
-    @PutMapping("/member/coin")
+    @PutMapping("/coin")
     ResponseEntity<?> updateCoin(@RequestBody MemberCoinDto memberCoinDto);
 
     // 파트너 펫 애정도 업데이트
