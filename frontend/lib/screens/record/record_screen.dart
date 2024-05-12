@@ -180,7 +180,8 @@ class _RecordScreenState extends State<RecordScreen> {
                     formatButtonVisible: false,
                     headerMargin: EdgeInsets.symmetric(vertical: 10),
                     titleCentered: true,
-                    titleTextStyle: TextStyle(fontSize: 16)),
+                    titleTextStyle:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 rowHeight: 55, // 각 날짜 행의 높이 설정
                 locale: 'ko-KR', // 로케일 설정 (한국어)
                 firstDay: DateTime.utc(2024, 1, 1),
