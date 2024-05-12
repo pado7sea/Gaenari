@@ -11,7 +11,10 @@ import com.gaenari.backend.domain.memberChallenge.dto.responseDto.MemberTrophyDt
 import com.gaenari.backend.domain.memberChallenge.entity.MemberChallenge;
 import com.gaenari.backend.domain.memberChallenge.repository.MemberChallengeRepository;
 import com.gaenari.backend.domain.memberChallenge.service.MemberChallengeService;
+import com.gaenari.backend.global.exception.feign.ConnectFeignFailException;
+import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
     private final ChallengeRepository challengeRepository;
     private final MemberChallengeRepository memberChallengeRepository;
 
+    // 회원 업적 조회
     @Override
     public List<MemberTrophyDto> getMemberTrophies(String memberId) {
         List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId);
@@ -32,6 +36,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
                 .toList();
     }
 
+    // 회원 미션 조회
     @Override
     public List<MemberMissionDto> getMemberMissions(String memberId) {
         List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId);
@@ -40,6 +45,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
                 .toList();
     }
 
+    // 회원 도전과제 업데이트
     @Override
     public void updateMemberChallenge(String memberId, Integer challengeId) {
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
@@ -68,6 +74,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
         memberChallenge.updateObtainable(memberChallenge.getObtainable() + 1); // 획득 가능한 보상 개수 1 증가
     }
 
+    // 회원 미션 달성 횟수 초기화
     @Override
     public void resetMemberMissionAchievement(String memberId, Integer challengeId) {
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, 1);
@@ -75,11 +82,10 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
     }
 
     private MemberTrophyDto mapToMemberTrophyDto(MemberChallenge memberChallenge) {
-
         Challenge challenge = memberChallenge.getChallenge();
 
         // 마이크로 서비스 간 통신을 통해 누적 기록 가져오기
-        TotalStatisticDto statisticDto = recordServiceClient.getAllStatistics(memberChallenge.getMemberId());
+        TotalStatisticDto statisticDto = fetchAllStatistics(memberChallenge.getMemberId());
 
         double memberValue = 0.0;
 
@@ -103,8 +109,16 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
                 .build();
     }
 
-    private MemberMissionDto mapToMemberMissionDto(MemberChallenge memberChallenge) {
+    // 마이크로 서비스 간 통신을 통해 누적 기록 가져오기
+    private TotalStatisticDto fetchAllStatistics(String memberId) {
+        ResponseEntity<GenericResponse<TotalStatisticDto>> response =  recordServiceClient.getAllStatistics(memberId);
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new ConnectFeignFailException();
+        }
+        return response.getBody().getData();
+    }
 
+    private MemberMissionDto mapToMemberMissionDto(MemberChallenge memberChallenge) {
         Challenge challenge = memberChallenge.getChallenge();
 
         return MemberMissionDto.builder()
