@@ -31,9 +31,7 @@ class TFirstFragment : Fragment() {
     private lateinit var speedView: TextView
     private lateinit var circleProgress: TCircleProgress
     private lateinit var updateReceiver: BroadcastReceiver
-    private lateinit var check1 : TextView
-    private lateinit var check2 : TextView
-    private lateinit var check3 : TextView
+    private lateinit var gifImageView : pl.droidsonroids.gif.GifImageView
     private lateinit var requestDto: SaveDataRequestDto
 
     private var totalHeartRateAvg: Int = 0
@@ -73,15 +71,14 @@ class TFirstFragment : Fragment() {
         heartRateView = view.findViewById(R.id.심박수)
         speedView = view.findViewById(R.id.속력)
         circleProgress = view.findViewById(R.id.circleProgress)
-        check1 = view.findViewById(R.id.체크1)
-        val gifImageView = view.findViewById<ImageView>(R.id.gifImageView)
-        context?.let {
-            Glide.with(it)
-                .asGif()
-                .load(R.raw.dog98)
-                .dontTransform()
-                .into(gifImageView)
-        }
+        gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
+//        context?.let {
+//            Glide.with(it)
+//                .asGif()
+//                .load(R.raw.run5)
+//                .dontTransform()
+//                .into(gifImageView)
+//        }
 
         val programTarget = arguments?.getInt("programTarget") ?: 0
         Log.d("first", "onCreateView: ${programTarget}")
@@ -97,6 +94,11 @@ class TFirstFragment : Fragment() {
                         val distance = intent.getDoubleExtra("distance", 0.0)
                         val speed = intent.getFloatExtra("speed", 0f)
                         val time = intent.getLongExtra("time", 0)
+                        if(speed>0.6){
+                            updateGifForActivity(true)
+                        }else{
+                            updateGifForActivity(false)
+                        }
 
                         totalDistance = distance
                         totalTime = time
@@ -148,7 +150,6 @@ class TFirstFragment : Fragment() {
     }
 
     private fun updateUIcheck(checkspeed : Double,checkheart:Int,checkdistance:Double ){
-        check1.text = String.format("%.2f km/h", checkspeed * 3.6)
     }
     private fun updateUI(distance: Double, programTarget: Int, remainingTime: Long, speed: Float) {
         val totalMillis = programTarget * 1000
@@ -159,6 +160,18 @@ class TFirstFragment : Fragment() {
         timeView.text = String.format("%.2f", distance / 1000)
         speedView.text = String.format("%.2f", speed * 3.6)
     }
+
+    @SuppressLint("ResourceType")
+    fun updateGifForActivity(isRunning: Boolean) {
+        val resourceId = if (isRunning) {
+            R.raw.run4  // 사용자가 달리기를 시작한 경우
+        } else {
+            R.raw.stop4 // 사용자가 달리기를 멈춘 경우
+        }
+        gifImageView.setImageResource(resourceId)
+    }
+
+
 
     private fun updateheartUI(heartRate: Float) {
         heartRateView.text = String.format("%d", heartRate.toInt())

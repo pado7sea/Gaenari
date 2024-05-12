@@ -15,7 +15,7 @@ class CircularProgressButton @JvmOverloads constructor(
 
     private val progressPaint = Paint().apply {
         isAntiAlias = true
-        strokeWidth = 16f
+        strokeWidth = 17f
         style = Paint.Style.STROKE
         color = ContextCompat.getColor(context, R.color.mainyellow)
     }
@@ -23,7 +23,7 @@ class CircularProgressButton @JvmOverloads constructor(
     @SuppressLint("ResourceAsColor")
     private val backgroundPaint = Paint().apply {
         isAntiAlias = true
-        color = R.color.dd5
+        color = ContextCompat.getColor(context, R.color.dd5)  // 색상 코드를 정확하게 지정
     }
 
     private var progress = 0f // 진행률
@@ -33,7 +33,7 @@ class CircularProgressButton @JvmOverloads constructor(
 
         val cx = width / 2f
         val cy = height / 2f
-        val radius = (Math.min(width, height) / 2f) - 20f
+        val radius = (Math.min(width, height) / 2f)-9f
 
         // 배경 원 그리기
         canvas.drawCircle(cx, cy, radius, backgroundPaint)
