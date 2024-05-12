@@ -1,8 +1,6 @@
-package com.gaenari.backend.domain.favorite.dto.responseDto;
+package com.gaenari.backend.domain.program.dto.responseDto;
 
 import com.gaenari.backend.domain.program.dto.enumType.ProgramType;
-import com.gaenari.backend.domain.program.dto.responseDto.ProgramTypeInfoDto;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Getter
