@@ -27,11 +27,7 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public List<RecordDto> getWholeExerciseRecords(String memberId) {
-        List<Record> records = recordRepository.findAllByMemberId(memberId); // 못찾으면 예외처리
-
-        if (records.isEmpty()) {
-            return Collections.emptyList();
-        }
+        List<Record> records = recordRepository.findAllByMemberId(memberId);
 
         return records.stream()
                 .map(this::convertToRecordDto)
@@ -107,8 +103,7 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public WeekRecordDto getWeeklyExerciseRecords(String memberId, int year, int month, int day) {
-        LocalDate baseDate = LocalDate.of(year, month, day);
-        LocalDate startDate = baseDate.with(ChronoField.DAY_OF_WEEK, 1); // 주의 시작 (일요일)
+        LocalDate startDate = LocalDate.of(year, month, day).with(ChronoField.DAY_OF_WEEK, 1); // 주의 시작 (일요일)
         LocalDate endDate = startDate.plusDays(6); // 주의 끝 (토요일)
 
         List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(startDate),
