@@ -10,6 +10,8 @@ import com.gaenari.backend.domain.memberChallenge.entity.MemberChallenge;
 import com.gaenari.backend.domain.memberChallenge.repository.MemberChallengeRepository;
 import com.gaenari.backend.domain.reward.dto.RewardDto;
 import com.gaenari.backend.domain.reward.service.RewardService;
+import com.gaenari.backend.global.exception.feign.ConnectFeignFailException;
+import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -53,11 +55,14 @@ public class RewardServiceImpl implements RewardService {
         return challengeIds;
     }
 
-    // 운동 기록 ID로 운동 기록에 연결되어 있는 도전과제 ID 리스트 찾기
+    // 마이크로 서비스간 통신을 통해 운동 기록 ID로 도전과제 ID 리스트 조회
     @Override
     public List<Integer> getChallengeIdsByRecordId(String memberId, Long recordId) {
-        // 마이크로 서비스간 통신을 통해 운동 기록 ID로 도전과제 ID 리스트 조회
-        return recordServiceClient.getChallengeIdsByRecordId(memberId, recordId);
+        ResponseEntity<GenericResponse<List<Integer>>> response =recordServiceClient.getChallengeIdsByRecordId(memberId, recordId);
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new ConnectFeignFailException();
+        }
+        return response.getBody().getData();
     }
 
     // 도전 과제 아이디로 받을 수 있는 보상 찾기
@@ -127,7 +132,6 @@ public class RewardServiceImpl implements RewardService {
         // 받을 수 있는 보상 횟수를 업데이트
         updateObtainableCount(memberChallenge, 1);
 
-
         // 코인과 애정도 반환
         return RewardDto.builder()
                 .memberId(memberId)
@@ -149,7 +153,6 @@ public class RewardServiceImpl implements RewardService {
 
         // 마이크로 서비스 간 통신을 통해 회원의 코인 증가시키기
         ResponseEntity<?> response = memberServiceClient.updateCoin(memberCoinDto);
-        // TODO : 응답에 따른 예외처리 해주면 좋을 듯
     }
 
     // 마이크로 서비스 간 통신을 통해서 애정도 보상 받게 하기
