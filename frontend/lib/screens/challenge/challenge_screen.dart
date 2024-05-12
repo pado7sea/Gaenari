@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -15,7 +16,9 @@ class _ChallengePageState extends State<ChallengePage> {
   // int? CompleteRunIndex = null;
   // int? CompleteTimeIndex = null;
 
-  bool mission = false;
+  bool mission = false; // 미션 or 업적
+  bool clear = false; // 달성했는지
+  bool reword = false; // 보상 받았는지
 
   List<String> run = [
     '1km',
@@ -46,16 +49,28 @@ class _ChallengePageState extends State<ChallengePage> {
         children: [
           _togglebutton(),
           mission
-              ? SingleChildScrollView()
-              : SingleChildScrollView(
+              ? SingleChildScrollView(
                   child: Center(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
                     child: Column(
-                      children: [_complete(), _notcomplete()],
+                      children: [
+                        _complete(),
+                        _notcomplete(),
+                        _notcomplete(),
+                        _notcomplete(),
+                        _clear()
+                      ],
                     ),
                   ),
-                )),
+                ))
+              : Wrap(
+                  children: [
+                    _missioncomplete(),
+                    _missioncomplete(),
+                    _missioncomplete(),
+                  ],
+                )
         ],
       ),
     );
@@ -69,11 +84,11 @@ class _ChallengePageState extends State<ChallengePage> {
           GestureDetector(
             onTap: () {
               setState(() {
-                mission = false;
+                mission = true;
               });
             },
             child: Row(
-              children: const [
+              children: [
                 Image(
                   image: AssetImage('assets/emoji/trophy.png'),
                   width: 25,
@@ -84,24 +99,44 @@ class _ChallengePageState extends State<ChallengePage> {
                 Text20(
                   text: '업적',
                   bold: true,
+                  textColor: mission ? myBlack : myGrey,
+                ),
+                Column(
+                  children: [
+                    reword
+                        ? Container()
+                        : Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: myRed,
+                              ),
+                            ),
+                          ),
+                    SizedBox(height: 20)
+                  ],
                 )
               ],
             ),
           ),
-          Image(
-            image: AssetImage('assets/emoji/bar.png'),
-            width: 25,
-            height: 25,
-            fit: BoxFit.cover,
+          SizedBox(width: 10),
+          Container(
+            width: 2,
+            height: 20,
+            decoration: BoxDecoration(color: myGrey),
           ),
+          SizedBox(width: 10),
           GestureDetector(
             onTap: () {
               setState(() {
-                mission = true;
+                mission = false;
               });
             },
             child: Row(
-              children: const [
+              children: [
                 Image(
                   image: AssetImage('assets/emoji/v.png'),
                   width: 25,
@@ -112,6 +147,25 @@ class _ChallengePageState extends State<ChallengePage> {
                 Text20(
                   text: '미션',
                   bold: true,
+                  textColor: mission ? myGrey : myBlack,
+                ),
+                Column(
+                  children: [
+                    reword
+                        ? Container()
+                        : Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: myRed,
+                              ),
+                            ),
+                          ),
+                    SizedBox(height: 20)
+                  ],
                 )
               ],
             ),
@@ -123,6 +177,9 @@ class _ChallengePageState extends State<ChallengePage> {
 
   // 달성한거
   Widget _complete() {
+    setState(() {
+      clear = true;
+    });
     return Container(
       width: MediaQuery.of(context).size.width - 40,
       decoration: myBorderBoxDecoration,
@@ -164,43 +221,83 @@ class _ChallengePageState extends State<ChallengePage> {
 
   // 달성 못한거
   Widget _notcomplete() {
+    setState(() {
+      clear = false;
+    });
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: Container(
         width: MediaQuery.of(context).size.width - 60,
         decoration: myBorderBoxDecoration,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Row(
+          child: Column(
             children: [
-              Flexible(
-                flex: 7,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: const [
-                        Image(
-                          image: AssetImage('assets/emoji/running.png'),
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(width: 10),
-                        Text16(text: '4km 달리기', bold: true),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: const [
+                    Image(
+                      image: AssetImage('assets/emoji/running.png'),
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
                     ),
-                    SizedBox(height: 10),
-                    Stack(
-                      children: [_bar(), _progressbar()],
-                    ),
-                  ],
-                ),
+                    SizedBox(width: 10),
+                    Text16(text: '4km 달리기', bold: true),
+                  ]),
+                  _button(),
+                ],
               ),
-              SizedBox(width: 10),
-              Flexible(flex: 4, child: _button()),
+              SizedBox(height: 10),
+              Stack(
+                children: [_bar(), _progressbar()],
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // 보상도 다 받은
+  Widget _clear() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: myMainGreen,
+          borderRadius: BorderRadius.circular(15), // 박스의 모서리를 둥글게
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xffBFC2C8).withOpacity(0.25), // 그림자 색 (투명도 25%)
+              blurRadius: 15, // 그림자 흐림 정도
+              offset: Offset(0, 10), // 그림자의 위치 (x, y)
+            ),
+          ],
+        ),
+        width: MediaQuery.of(context).size.width - 60,
+        height: 70,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(
+              image: AssetImage('assets/emoji/party.png'),
+              width: 20,
+              height: 20,
+              fit: BoxFit.cover,
+            ),
+            Text16(
+              text: ' 1Km 달리기 달성 완료 ',
+              bold: true,
+            ),
+            Image(
+              image: AssetImage('assets/emoji/party.png'),
+              width: 20,
+              height: 20,
+              fit: BoxFit.cover,
+            )
+          ],
         ),
       ),
     );
@@ -215,69 +312,135 @@ class _ChallengePageState extends State<ChallengePage> {
   }
 
   Widget _progressbar() {
-    return Container(
-      height: 6,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3), color: myLightGreen),
-    );
+    return clear
+        ? Container(
+            height: 6,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3), color: myLightGreen),
+          )
+        : Container(
+            width: 100,
+            height: 6,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3), color: myYellow),
+          );
   }
 
   Widget _button() {
-    return ElevatedButton(
-      onPressed: () {
-        // 버튼을 클릭했을 때 실행되는 동작
-      },
-      style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          backgroundColor: myMainGreen),
-      child: Container(
-        height: 60,
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: const [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '400 ',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: myBlack),
+    return clear
+        ? ElevatedButton(
+            onPressed: () {
+              // 버튼을 클릭했을 때 실행되는 동작
+            },
+            style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                Image(
-                  image: AssetImage('assets/emoji/money.png'),
-                  width: 18,
-                  height: 18,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  '4 ',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: myBlack),
-                ),
-                Image(
-                  image: AssetImage('assets/emoji/heart.png'),
-                  width: 18,
-                  height: 18,
-                  fit: BoxFit.cover,
-                ),
-              ],
+                backgroundColor: myMainGreen),
+            child: Container(
+              height: 60,
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: const [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        '400 ',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: myBlack),
+                      ),
+                      Image(
+                        image: AssetImage('assets/emoji/money.png'),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        '4 ',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: myBlack),
+                      ),
+                      Image(
+                        image: AssetImage('assets/emoji/heart.png'),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.cover,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 3),
+                  Text(
+                    '보상받기',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: myBlack),
+                  )
+                ],
+              ),
             ),
-            SizedBox(height: 3),
-            Text(
-              '보상받기',
-              style: TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.bold, color: myBlack),
-            )
-          ],
+          )
+        : Container(
+            alignment: Alignment.centerRight,
+            child: Row(
+              children: [
+                Text16(text: '3.2Km', textColor: myGrey, bold: true),
+                Text12(text: '/5Km', textColor: myGrey, bold: true),
+                SizedBox(width: 10)
+              ],
+            ));
+  }
+
+  // 미션 --------------------------------
+
+  Widget _missioncomplete() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+      child: Container(
+        decoration: myBorderBoxDecoration,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+          child: Column(
+            children: [
+              Text16(text: '1KM', bold: true),
+              SizedBox(height: 10),
+              Image(
+                image: AssetImage('assets/emoji/running.png'),
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    reword = true;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text16(
+                    text: '보상받기',
+                    textColor: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: reword ? myLightGreen : myLightGrey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
