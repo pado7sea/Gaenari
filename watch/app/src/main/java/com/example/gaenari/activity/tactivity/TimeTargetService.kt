@@ -2,7 +2,10 @@ package com.example.gaenari.activity.tactivity
 
 import android.annotation.SuppressLint
 import android.app.*
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -32,16 +35,15 @@ import java.time.LocalDateTime
 
 
 class TimeTargetService : Service(), SensorEventListener {
+    private lateinit var updateReceiver: BroadcastReceiver
+
     private val binder = LocalBinder()
     private var isServiceRunning = false
-    private var fusedLocationClient: FusedLocationProviderClient? = null
     private var sensorManager: SensorManager? = null
     private var heartRateSensor: Sensor? = null
 
     private var programData: FavoriteResponseDto? = null
     private lateinit var requestDto: SaveDataRequestDto
-
-    private var lastLocation: Location? = null
 
     private var totalDistance = 0.0
     private var currentHeartRate = 0f // 현재 심박수
@@ -57,7 +59,6 @@ class TimeTargetService : Service(), SensorEventListener {
     private var oneMinuteDistance = 0.0
     private var elapsedTime: Long = 0
 
-    private var gpsUpdateTimeTargetMillis: Long = 2500
     private var timerTimeTargetMillis: Long = 1000
 
     // 일시정지 관련 변수
@@ -128,13 +129,13 @@ class TimeTargetService : Service(), SensorEventListener {
                 Log.d("IRunningService", "Service started")
                 createNotificationChannel()
                 startForeground(1, notification)
-                setupLocationTracking()
                 setupHeartRateSensor()
+                setupUpdateReceiver()
                 startTime = SystemClock.elapsedRealtime()
                 timerHandler.postDelayed(timerRunnable, 1000) // 타이머 시작
                 oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000) // 1분 평균 계산 타이머 시작
             } catch (e: Exception) {
-                Log.e("IRunningService", "Error in onCreate: ${e.message}")
+                Log.e("TimeTargetService", "Error in onCreate: ${e.message}")
             }
         }
     }
@@ -143,7 +144,6 @@ class TimeTargetService : Service(), SensorEventListener {
      * saveRequestDto 초기화
      */
     private fun initRequestDto() {
-        Log.d("Check", "initRequestDto() 들어옴")
         Log.d("Check", "ProgramData in InitRequestDto Method : $programData")
 //        val timeTargetInfo = TimeTargetInfo(ArrayList())
         val program = Program(programData?.programId!!, null)
@@ -166,32 +166,6 @@ class TimeTargetService : Service(), SensorEventListener {
         initRequestDto()
 
         return super.onStartCommand(intent, flags, startId)
-    }
-
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            if (isPaused) return
-            try {
-                locationResult.locations.forEach { location ->
-                    val speed = location.speed.toDouble()
-                    // 분 당 속도
-                    oneMinuteSpeed += speed
-                    speedCount++
-
-                    // 구간 당 속도
-                    rangeSpeed += speed
-                    rangeSpeedCnt++
-
-                    val distance = location.distanceTo(lastLocation ?: location).toDouble()
-                    totalDistance += distance
-                    oneMinuteDistance += distance
-                    sendGpsBroadcast(totalDistance, elapsedTime, speed.toFloat())
-                    lastLocation = location
-                }
-            } catch (e: Exception) {
-                Log.e("IRunningService", "Error processing location update: ${e.message}")
-            }
-        }
     }
 
     /**
@@ -265,9 +239,9 @@ class TimeTargetService : Service(), SensorEventListener {
         wakeLock?.release()
         isServiceRunning = false
         sensorManager?.unregisterListener(this)
-        fusedLocationClient?.removeLocationUpdates(locationCallback)
         timerHandler.removeCallbacks(timerRunnable)
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
+        unregisterBroadcastReceiver()
         Log.d("IRunningService", "Service destroyed")
 
         sendEndProgramBroadcast()
@@ -289,26 +263,6 @@ class TimeTargetService : Service(), SensorEventListener {
         )
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(serviceChannel)
-    }
-
-    private fun setupLocationTracking() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        val locationRequest =
-            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, gpsUpdateTimeTargetMillis)
-                .build()
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        fusedLocationClient?.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
     }
 
     private fun setupHeartRateSensor() {
@@ -389,9 +343,57 @@ class TimeTargetService : Service(), SensorEventListener {
      * 일시정지 알림 브로드캐스트
      */
     private fun sendPauseBroadcast(){
-        val intent = Intent("com.example.sibal.Pause_PROGRAM").apply {
+        val intent = Intent("com.example.sibal.PAUSE_PROGRAM").apply {
             putExtra("isPause", isPaused)
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+    }
+
+    /**
+     * Broadcast Receive 등록
+     */
+    private fun setupUpdateReceiver(){
+        updateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                when (intent.action) {
+                    "com.example.sibal.UPDATE_LOCATION" -> {
+                        if(!isPaused) {
+                            val distance = intent.getDoubleExtra("distance", 0.0)
+                            val speed = intent.getDoubleExtra("speed", 0.0)
+                            Log.d("Check", "Update Location : dist($distance), speed($speed)")
+                            // 분 당 속도
+                            oneMinuteSpeed += speed
+                            speedCount++
+
+                            // 구간 당 속도
+                            rangeSpeed += speed
+                            rangeSpeedCnt++
+
+                            totalDistance += distance
+                            oneMinuteDistance += distance
+
+                            sendGpsBroadcast(
+                                totalDistance,
+                                elapsedTime,
+                                speed.toFloat()
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        val intentFilter = IntentFilter().apply {
+            addAction("com.example.sibal.UPDATE_LOCATION")
+        }
+        LocalBroadcastManager.getInstance(this@TimeTargetService)
+            .registerReceiver(updateReceiver, intentFilter)
+    }
+
+    /**
+     * Broadcast Receive 해제
+     */
+    private fun unregisterBroadcastReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver)
     }
 }

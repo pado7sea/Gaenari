@@ -4,109 +4,117 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
+import android.os.Binder
 import android.os.IBinder
+import android.os.Looper
+import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.location.*
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.gaenari.activity.main.HomeActivity
+import com.example.gaenari.activity.tactivity.TActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 
 class LocationService : Service() {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private val locationData = MutableLiveData<Location>()
-    private val distanceData = MutableLiveData<Double>()
+    private val binder = LocalBinder()
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private var gpsUpdateTimeTargetMillis: Long = 1000
     private var lastLocation: Location? = null
-    private var totalDistance = 0.0
 
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            val newLocation = locationResult.lastLocation ?: return
-
-            // 속도 (m/s)
-            val speed = newLocation.speed
-            // 총 이동 거리 계산
-            if (lastLocation != null) {
-                val distance = lastLocation!!.distanceTo(newLocation).toDouble()
-                totalDistance += distance
-                distanceData.postValue(totalDistance)
-            }
-
-            lastLocation = newLocation
-            locationData.postValue(newLocation)
-        }
+    inner class LocalBinder : Binder() {
+        fun getService(): LocationService = this@LocationService
     }
 
-    companion object {
-        private const val NOTIFICATION_ID = 20
-        private const val CHANNEL_ID = "LocationServiceChannel"
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                CHANNEL_ID,
-                "Location Tracking Service",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(serviceChannel)
-        }
-    }
-
-    private fun getNotification(): Notification {
-        return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_map)
-            .setContentTitle("Location Service Running")
-            .setContentText("Tracking location data")
-            .build()
-    }
-
-    override fun onBind(intent: Intent?): IBinder? = null
-
-    override fun onCreate() {
-        super.onCreate()
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-    }
+    override fun onBind(intent: Intent): IBinder = binder
 
     @SuppressLint("ForegroundServiceType")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
-        startForeground(NOTIFICATION_ID, getNotification())
-        startTracking()
-        return START_STICKY
+        startForeground(2, notification) // 포그라운드 서비스 시작
+        setupLocationTracking(applicationContext)
+        return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun startTracking() {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
-            .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(1000)
-            .setMaxUpdateDelayMillis(1000)
-            .build()
+    private fun setupLocationTracking(context: Context) {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        val locationRequest =
+            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, gpsUpdateTimeTargetMillis)
+                .build()
 
-        try {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                null // 기본 메인 스레드에서 호출
-            )
-        } catch (e: SecurityException) {
-            // 위치 권한이 없는 경우
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient?.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            try {
+                locationResult.locations.forEach { location ->
+                    Log.d("Check", "Sending Location Info")
+                    val speed = location.speed.toDouble()
+                    val distance = location.distanceTo(lastLocation ?: location).toDouble()
+                    sendLocationBroadcast(distance, speed)
+                    lastLocation = location
+                }
+            } catch (e: Exception) {
+                Log.e("Check", "Error processing location update: ${e.message}")
+            }
         }
     }
 
-    private fun stopTracking() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
+    /**
+     * GPS 브로드캐스트 통해 거리, 속도 전송
+     */
+    private fun sendLocationBroadcast(distance: Double, speed: Double) {
+        val intent = Intent("com.example.sibal.UPDATE_LOCATION").apply {
+            putExtra("distance", distance)
+            putExtra("speed", speed)
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    override fun onDestroy() {
-        stopTracking()
-        stopForeground(true)
-        super.onDestroy()
-    }
+    private val notification: Notification
+        get() {
+            val notificationIntent = Intent(this, HomeActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                this, 0, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            return NotificationCompat.Builder(this, "LocationServiceChannel")
+                .setContentTitle("Location Running")
+                .setContentText("Tracking your exercise")
+                .setContentIntent(pendingIntent)
+                .build()
+        }
 
-    fun getLocationLiveData(): MutableLiveData<Location> = locationData
-    fun getDistanceLiveData(): MutableLiveData<Double> = distanceData
+    private fun createNotificationChannel() {
+        val serviceChannel = NotificationChannel(
+            "LocationServiceChannel",
+            "Location Service Channel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(serviceChannel)
+    }
 }

@@ -2,7 +2,10 @@ package com.example.gaenari.activity.iactivity
 
 import android.annotation.SuppressLint
 import android.app.*
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -34,16 +37,15 @@ import java.time.LocalDateTime
 
 
 class IntervalService : Service(), SensorEventListener {
+    private lateinit var updateReceiver: BroadcastReceiver
+
     private val binder = LocalBinder()
     private var isServiceRunning = false
-    private var fusedLocationClient: FusedLocationProviderClient? = null
     private var sensorManager: SensorManager? = null
     private var heartRateSensor: Sensor? = null
 
     private var programData: FavoriteResponseDto? = null
     private lateinit var requestDto: SaveDataRequestDto
-
-    private var lastLocation: Location? = null
 
     private var totalDistance = 0.0
     private var currentHeartRate = 0f // 현재 심박수
@@ -143,8 +145,8 @@ class IntervalService : Service(), SensorEventListener {
                 Log.d("IRunningService", "Service started")
                 createNotificationChannel()
                 startForeground(1, notification)
-                setupLocationTracking()
                 setupHeartRateSensor()
+                setupUpdateReceiver()
                 startTime = SystemClock.elapsedRealtime()
                 timerHandler.postDelayed(timerRunnable, 1000) // 타이머 시작
                 oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000) // 1분 평균 계산 타이머 시작
@@ -191,32 +193,6 @@ class IntervalService : Service(), SensorEventListener {
         rangeHandler.postDelayed(rangeRunnable, currentRangeTime)
 
         return super.onStartCommand(intent, flags, startId)
-    }
-
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            if (isPaused) return
-            try {
-                locationResult.locations.forEach { location ->
-                    val speed = location.speed.toDouble()
-                    // 분 당 속도
-                    oneMinuteSpeed += speed
-                    speedCount++
-
-                    // 구간 당 속도
-                    rangeSpeed += speed
-                    rangeSpeedCnt++
-
-                    val distance = location.distanceTo(lastLocation ?: location).toDouble()
-                    totalDistance += distance
-                    oneMinuteDistance += distance
-                    sendGpsBroadcast(totalDistance, elapsedTime, speed.toFloat())
-                    lastLocation = location
-                }
-            } catch (e: Exception) {
-                Log.e("IRunningService", "Error processing location update: ${e.message}")
-            }
-        }
     }
 
     /**
@@ -374,9 +350,9 @@ class IntervalService : Service(), SensorEventListener {
         wakeLock?.release()
         isServiceRunning = false
         sensorManager?.unregisterListener(this)
-        fusedLocationClient?.removeLocationUpdates(locationCallback)
         timerHandler.removeCallbacks(timerRunnable)
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
+        unregisterBroadcastReceiver()
         Log.d("IRunningService", "Service destroyed")
 
         sendEndProgramBroadcast()
@@ -398,26 +374,6 @@ class IntervalService : Service(), SensorEventListener {
         )
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(serviceChannel)
-    }
-
-    private fun setupLocationTracking() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        val locationRequest =
-            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, gpsUpdateIntervalMillis)
-                .build()
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        fusedLocationClient?.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
     }
 
     private fun setupHeartRateSensor() {
@@ -502,5 +458,53 @@ class IntervalService : Service(), SensorEventListener {
             putExtra("isPause", isPaused)
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+    }
+
+    /**
+     * Broadcast Receive 등록
+     */
+    private fun setupUpdateReceiver(){
+        updateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                when (intent.action) {
+                    "com.example.sibal.UPDATE_LOCATION" -> {
+                        if(!isPaused) {
+                            val distance = intent.getDoubleExtra("distance", 0.0)
+                            val speed = intent.getDoubleExtra("speed", 0.0)
+                            Log.d("Check", "Update Location : dist($distance), speed($speed)")
+                            // 분 당 속도
+                            oneMinuteSpeed += speed
+                            speedCount++
+
+                            // 구간 당 속도
+                            rangeSpeed += speed
+                            rangeSpeedCnt++
+
+                            totalDistance += distance
+                            oneMinuteDistance += distance
+
+                            sendGpsBroadcast(
+                                totalDistance,
+                                elapsedTime,
+                                speed.toFloat()
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        val intentFilter = IntentFilter().apply {
+            addAction("com.example.sibal.UPDATE_LOCATION")
+        }
+        LocalBroadcastManager.getInstance(this@IntervalService)
+            .registerReceiver(updateReceiver, intentFilter)
+    }
+
+    /**
+     * Broadcast Receive 해제
+     */
+    private fun unregisterBroadcastReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver)
     }
 }
