@@ -72,6 +72,9 @@ flutter:
     - assets/bottom/
     - assets/emoji/
     - assets/gif/
+    - assets/color_icons/
+    - assets/dog_tier/
+    - assets/item_tier/
 
   fonts:
     - family: TheJamsil
