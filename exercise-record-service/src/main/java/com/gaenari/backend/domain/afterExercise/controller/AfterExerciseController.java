@@ -28,12 +28,9 @@ public class AfterExerciseController {
     @Operation(summary = "최종 운동 기록 저장", description = "최종 운동 기록 저장")
     @PostMapping("/save")
     public ResponseEntity<?> saveExerciseRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
-                                            @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
+                                                @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
 
         log.info("SaveExerciseRecordDto: {}", exerciseDto);
-
-        // 누적 통계 업데이트 -> 업적
-        afterExerciseService.updateExerciseStatistics(memberId, exerciseDto);
 
         // 프로그램 사용 횟수 1 증가
         afterExerciseService.updateProgramUsageCount(memberId, exerciseDto);
@@ -41,8 +38,10 @@ public class AfterExerciseController {
         // 운동 기록 저장 -> 미션
         Long exerciseId = afterExerciseService.saveExerciseRecord(memberId, exerciseDto);
 
+        // 누적 통계 업데이트 -> 업적
+        afterExerciseService.updateExerciseStatistics(memberId, exerciseDto);
+
         return response.success(ResponseCode.EXERCISE_RECORD_SAVE_SUCCESS, exerciseId);
     }
-
 
 }
