@@ -184,8 +184,7 @@ class IntervalService : Service(), SensorEventListener {
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.time?.toLong()!! * 1000
         currentRunningType =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
-
-        sendRangeInfoBroadcast()
+//        sendRangeInfoBroadcast()
 
         currentRangeIndex += 1
 

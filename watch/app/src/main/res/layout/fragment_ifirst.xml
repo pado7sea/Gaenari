@@ -17,10 +17,23 @@
 
     <!-- RecyclerView for displaying circles dynamically -->
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/gifImageView"
+    <TextView
+        android:id="@+id/setname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/thejamsil_medium"
+        android:text="현재세트"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:scaleType="centerCrop"
         android:src="@raw/dog1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,42 +42,44 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.781" />
 
+    <!-- Other TextViews and ImageView for displaying running data -->
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvIntervals"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_marginTop="36dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Other TextViews and ImageView for displaying running data -->
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/달린거리"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="76dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="0.65"
         android:textColor="@color/black"
-        android:textSize="13sp"
+        android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.304"
+        app:layout_constraintHorizontal_bias="0.337"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvIntervals" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:fontFamily="@font/thejamsil_medium"
         android:text="km"
         android:textColor="@color/black"
-        android:fontFamily="@font/thejamsil_medium"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.325"
+        app:layout_constraintHorizontal_bias="0.344"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/달린거리" />
 
@@ -90,17 +105,17 @@
         android:fontFamily="@font/thejamsil_medium"
         android:text="0.0"
         android:textColor="@color/black"
-        android:textSize="13sp"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.854"
+        app:layout_constraintHorizontal_bias="0.870"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="km/h"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:textColor="@color/black"
         android:fontFamily="@font/thejamsil_medium"
         app:layout_constraintEnd_toEndOf="parent"

@@ -35,7 +35,7 @@ class ICircleProgress @JvmOverloads constructor(
         canvas.drawArc(rect, 270f, 360 * progress / 100, false, paint)
     }
 
-    fun setProgress(progress: Double) {
+    fun setProgress(progress: Float) {
         this.progress = progress.toFloat()
         invalidate()
     }
