@@ -7,8 +7,10 @@ import java.util.List;
 
 public interface MemberChallengeService {
 
+    // 회원 업적 조회
     List<MemberTrophyDto> getMemberTrophies(String memberId);
 
+    // 회원 미션 조회
     List<MemberMissionDto> getMemberMissions(String memberId);
 
     // 회원 도전과제 업데이트
