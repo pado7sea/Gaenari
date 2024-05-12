@@ -98,13 +98,13 @@ public class InventoryController {
     }
 
     @Operation(summary = "친구집 방문", description = "친구 집 적용 아이템 조회")
-    @GetMapping("/mate/{mateId}")
-    public ResponseEntity<?> getMateItems(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @PathVariable Long mateId){
+    @GetMapping("/mate/{memberId}")
+    public ResponseEntity<?> getMateItems(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @PathVariable Long memberId){
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        String mateEmail = inventoryService.getMateEmail(mateId);
+        String mateEmail = inventoryService.getMateEmail(memberId);
         MyEquipItems myEquipItemsList = inventoryService.getEquipItems(mateEmail);
         return response.success(ResponseCode.VISIT_FRIEND_HOME_SUCCESS, myEquipItemsList);
     }
