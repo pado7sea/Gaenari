@@ -37,6 +37,7 @@ class DFirstFragment : Fragment() {
     private var totalHeartRate: Float = 0f
     private var heartRateCount: Int = 0
     private var totalTime: Long = 0
+    private var isPaused: Boolean = false
 
     companion object {
         fun newInstance(
@@ -135,6 +136,9 @@ class DFirstFragment : Fragment() {
                         totalSpeedAvg = requestDto.speeds.average
                         sendResultsAndFinish(context)
                     }
+                    "com.example.siball.PAUSE_PROGRAM" -> {
+                        isPaused = intent.getBooleanExtra("isPause", false)
+                    }
                 }
             }
         }
@@ -145,6 +149,7 @@ class DFirstFragment : Fragment() {
             addAction("com.example.sibal.UPDATE_ONE_MINUTE")
             addAction("com.example.sibal.UPDATE_HEART_RATE")
             addAction("com.example.sibal.EXIT_PROGRAM")
+            addAction("com.example.siball.PAUSE_PROGRAM")
         }
         LocalBroadcastManager.getInstance(requireContext())
             .registerReceiver(updateReceiver, intentFilter)
