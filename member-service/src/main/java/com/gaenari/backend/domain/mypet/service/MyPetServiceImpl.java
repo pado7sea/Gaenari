@@ -1,6 +1,6 @@
 package com.gaenari.backend.domain.mypet.service;
 
-import com.gaenari.backend.domain.client.ChallengeServiceClient;
+import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
 import com.gaenari.backend.domain.member.entity.Member;
 import com.gaenari.backend.domain.member.repository.MemberRepository;
 import com.gaenari.backend.domain.mypet.dto.requestDto.Adopt;

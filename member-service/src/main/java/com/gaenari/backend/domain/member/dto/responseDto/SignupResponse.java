@@ -1,6 +1,6 @@
 package com.gaenari.backend.domain.member.dto.responseDto;
 
-import com.gaenari.backend.domain.member.dto.requestDto.MyPetDto;
+import com.gaenari.backend.domain.mypet.dto.MyPetDto;
 import lombok.*;
 
 @Getter

@@ -1,15 +1,11 @@
 package com.gaenari.backend.domain.member.service;
 
-import com.gaenari.backend.domain.client.InventoryServiceClient;
-import com.gaenari.backend.domain.coin.entity.Coin;
+import com.gaenari.backend.domain.client.inventory.InventoryServiceClient;
 import com.gaenari.backend.domain.coin.repository.CoinRepository;
 import com.gaenari.backend.domain.member.dto.MemberDto;
-import com.gaenari.backend.domain.member.dto.requestDto.MemberCoin;
 import com.gaenari.backend.domain.member.dto.requestDto.MemberUpdate;
-import com.gaenari.backend.domain.member.dto.requestDto.MyPetDto;
+import com.gaenari.backend.domain.mypet.dto.MyPetDto;
 import com.gaenari.backend.domain.member.dto.requestDto.SignupRequestDto;
-import com.gaenari.backend.domain.member.dto.responseDto.MemberCoinHistory;
-import com.gaenari.backend.domain.member.dto.responseDto.MemberCoinRecord;
 import com.gaenari.backend.domain.member.dto.responseDto.SignupResponse;
 import com.gaenari.backend.domain.member.entity.Member;
 import com.gaenari.backend.domain.member.repository.MemberRepository;
@@ -19,8 +15,6 @@ import com.gaenari.backend.domain.mypet.repository.DogRepository;
 import com.gaenari.backend.domain.mypet.repository.MyPetRepository;
 import com.gaenari.backend.global.exception.member.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,12 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.time.Duration;
 
@@ -166,41 +157,6 @@ public class MemberServiceImpl implements MemberService{
         if(code != 200){
             throw new ConnectFeignFailException();
         }
-    }
-
-    @Override // 보유코인 조회
-    public int getCoin(String memberEmail) {
-        Member mem = memberRepository.findByEmail(memberEmail);
-        int coin = mem.getCoin();
-        return coin;
-    }
-
-    @Override // 회원 코인내역조회
-    public MemberCoinHistory getCoinRecord(String memberEmail, int year, int month) {
-        // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
-        // 코인 내역 조회
-        List<Coin> coinList = coinRepository.findByMemberAndYearAndMonthOrderByTimeDesc(member, year, month);
-        // MemberCoinRecord Dto로 변환
-        List<MemberCoinRecord> memberCoinRecordList = new ArrayList<>();
-        for(Coin coin : coinList){
-            MemberCoinRecord memberCoinRecord = MemberCoinRecord.builder()
-                    .day(coin.getDay())
-                    .isIncreased(coin.getIsIncreased())
-                    .coinTitle(coin.getCoinTitle())
-                    .coinAmount(coin.getCoinAmount())
-                    .balance(coin.getBalance())
-                    .build();
-            memberCoinRecordList.add(memberCoinRecord);
-        }
-        // 최종 MemberCoinHistory Dto로 변환
-        MemberCoinHistory memberCoinHistory = MemberCoinHistory.builder()
-                .year(year)
-                .month(month)
-                .memberCoinRecordList(memberCoinRecordList)
-                .build();
-
-        return memberCoinHistory;
     }
 
     @Override // 회원 닉네임 변경
@@ -415,62 +371,6 @@ public class MemberServiceImpl implements MemberService{
         if(member==null)
             throw new EmailNotFoundException();
         return member.getWeight();
-    }
-
-    @Override // 코인 증가/감소
-    public void updateCoin(MemberCoin memberCoin) {
-        // 회원 조회
-        Member member = memberRepository.findByEmail(memberCoin.getMemberEmail());
-        if(member==null)
-            throw new EmailNotFoundException();
-        // 변동코인
-        int changeCoin = 0;
-        if(memberCoin.getIsIncreased()){
-            changeCoin = member.getCoin() + memberCoin.getCoinAmount();
-        }else{
-            changeCoin = member.getCoin() - memberCoin.getCoinAmount();
-        }
-        if(changeCoin < 0){
-            throw new LackCoinException();
-        }
-        // 코인 증/감
-        Member registMember = Member.builder()
-                .Id(member.getId())
-                .email(member.getEmail())
-                .password(member.getPassword())
-                .nickname(member.getNickname())
-                .birthday(member.getBirthday())
-                .gender(member.getGender())
-                .height(member.getHeight())
-                .weight(member.getWeight())
-                .coin(changeCoin) // 변경
-                .device(member.getDevice())
-                .deviceTime(member.getDeviceTime())
-                .myPetList(member.getMyPetList())
-                .build();
-        memberRepository.save(registMember);
-
-        // 코인 내역 테이블에 변동 정보가 저장되어야함
-        LocalDate currentDate = LocalDate.now();
-        LocalTime currentTime = LocalTime.now(); // 시,분,초만 저장
-
-        // 현재 날짜의 년, 월, 일을 각각 저장
-        int year = currentDate.getYear();
-        int month = currentDate.getMonthValue();
-        int day = currentDate.getDayOfMonth();
-
-        Coin coin = Coin.builder()
-                .member(member)
-                .year(year)
-                .month(month)
-                .day(day)
-                .time(currentTime)
-                .isIncreased(memberCoin.getIsIncreased())
-                .coinTitle(memberCoin.getCoinTitle())
-                .coinAmount(memberCoin.getCoinAmount())
-                .balance(changeCoin)
-                .build();
-        coinRepository.save(coin);
     }
 
     @Override // 회원 이메일 조회
