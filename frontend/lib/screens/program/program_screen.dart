@@ -299,7 +299,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                             fit: BoxFit.cover,
                             filterQuality: FilterQuality.none,
                           ),
-                          SizedBox(height: 12),
+                          SizedBox(height: 9),
                           Text12(text: "삭제")
                         ],
                       ),
@@ -321,13 +321,14 @@ class _ProgramScreenState extends State<ProgramScreen> {
                       child: Column(
                         children: const [
                           Image(
-                            image: AssetImage("assets/emoji/party.png"),
+                            image:
+                                AssetImage("assets/color_icons/icon_star.png"),
                             width: 30,
                             height: 30,
                             fit: BoxFit.cover,
                             filterQuality: FilterQuality.none,
                           ),
-                          SizedBox(height: 12),
+                          SizedBox(height: 9),
                           Text12(text: "즐겨찾기")
                         ],
                       ),
@@ -389,8 +390,8 @@ class _ProgramScreenState extends State<ProgramScreen> {
                                 ),
                                 Image.asset(
                                   list[index].isFavorite!
-                                      ? "assets/emoji/party.png"
-                                      : "assets/emoji/dogface.png",
+                                      ? "assets/color_icons/icon_star.png"
+                                      : "assets/color_icons/icon_nonestar.png",
                                   width: 40,
                                   height: 40,
                                   fit: BoxFit.cover,
