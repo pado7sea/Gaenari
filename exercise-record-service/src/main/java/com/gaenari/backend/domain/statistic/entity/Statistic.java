@@ -58,6 +58,8 @@ public class Statistic {
         this.time = v;
     }
 
+    public void setCal(double v) { this.cal = v; }
+
     public void setPace(double newAveragePace) {
         this.pace = newAveragePace;
     }
