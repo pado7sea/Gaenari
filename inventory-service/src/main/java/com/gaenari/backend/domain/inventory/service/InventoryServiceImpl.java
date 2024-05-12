@@ -1,6 +1,8 @@
 package com.gaenari.backend.domain.inventory.service;
 
 import com.gaenari.backend.domain.client.MemberServiceClient;
+import com.gaenari.backend.domain.client.dto.CoinTitle;
+import com.gaenari.backend.domain.client.dto.MemberCoin;
 import com.gaenari.backend.domain.inventory.dto.responseDto.*;
 import com.gaenari.backend.domain.inventory.entity.Inventory;
 import com.gaenari.backend.domain.inventory.repository.InventoryRepository;
@@ -302,7 +304,8 @@ public class InventoryServiceImpl implements InventoryService{
         // 코인 감소시키기
         MemberCoin memberCoin = MemberCoin.builder()
                 .memberEmail(memberEmail)
-                .coin(1000)
+                .coinTitle(CoinTitle.ITEM_PURCHASE)
+                .coinAmount(1000)
                 .isIncreased(false)
                 .build();
         ResponseEntity<?> res = memberServiceClient.updateCoin(memberCoin);
