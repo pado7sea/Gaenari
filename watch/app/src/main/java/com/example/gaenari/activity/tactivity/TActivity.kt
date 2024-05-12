@@ -18,7 +18,6 @@ class TActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tactivity)
 
-//        startTRunningService()
         programId = intent.getLongExtra("programId",0)
         programTitle = intent.getStringExtra("programTitle") ?: "기본값"
         programType = intent.getStringExtra("programType") ?: "기본값"
@@ -26,10 +25,6 @@ class TActivity : AppCompatActivity() {
         setupViewPager()
         Log.d("jinzza", "programTarget: ${programTarget}")
 
-    }
-    override fun onDestroy() {
-        stopRunningService() // 액티비티가 파괴될 때 서비스 종료
-        super.onDestroy()
     }
 
     private fun setupViewPager() {
@@ -49,15 +44,6 @@ class TActivity : AppCompatActivity() {
         when (position) {
             0 -> viewPager.setCurrentItem(2, false)
         }
-    }
-
-    private fun startTRunningService() {
-        val serviceIntent = Intent(this, TRunningService::class.java)
-        startForegroundService(serviceIntent)
-    }
-    private fun stopRunningService() {
-        val serviceIntent = Intent(this, TRunningService::class.java)
-        stopService(serviceIntent)
     }
 }
 

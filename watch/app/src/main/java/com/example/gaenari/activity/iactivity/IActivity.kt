@@ -45,20 +45,4 @@ class IActivity : AppCompatActivity() {
             0 -> viewPager.setCurrentItem(2, false)
         }
     }
-
-
-
-    override fun onDestroy() {
-        stopRunningService() // 액티비티가 파괴될 때 서비스 종료
-        super.onDestroy()
-    }
-    private fun startIRunningService() {
-        val serviceIntent = Intent(this, IRunningService::class.java)
-        startForegroundService(serviceIntent)
-    }
-
-    private fun stopRunningService() {
-        val serviceIntent = Intent(this, IRunningService::class.java)
-        stopService(serviceIntent)
-    }
 }

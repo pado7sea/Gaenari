@@ -43,8 +43,7 @@ class IsecondFragment : Fragment() {
     }
 
     private fun stopExercise() {
-        service?.stopService()
-        activity?.finish() // 현재 액티비티 종료
+        service?.onDestroy()
     }
     private fun bindService() {
         Intent(context, IntervalService::class.java).also { intent ->

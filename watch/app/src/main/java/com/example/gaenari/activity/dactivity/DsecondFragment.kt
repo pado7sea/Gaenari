@@ -24,7 +24,7 @@ import kotlin.math.min
 class DSecondFragment : Fragment() {
     private lateinit var pauseButton: Button
     private lateinit var stopButton: Button
-    private var service: DRunningService? = null
+    private var service: DistTargetService? = null
     private lateinit var circularProgressButton: CircularProgressButton
     private var isPaused = false
     private val pauseTargetTimeMillis = 500L
@@ -117,19 +117,18 @@ class DSecondFragment : Fragment() {
     }
 
     private fun stopExercise() {
-        service?.stopService()
-        activity?.finish() // 현재 액티비티 종료
+        service?.onDestroy()
     }
 
     private fun bindService() {
-        Intent(context, DRunningService::class.java).also { intent ->
+        Intent(context, DistTargetService::class.java).also { intent ->
             context?.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as DRunningService.LocalBinder
+            val binder = service as DistTargetService.LocalBinder
             this@DSecondFragment.service = binder.getService()
         }
 

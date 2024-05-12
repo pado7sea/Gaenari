@@ -55,7 +55,7 @@ data class Speeds(
 
 @Parcelize
 data class HeartRates(
-    val average: Int,
+    var average: Int,
     val arr: MutableList<Int>
 ) : Parcelable {
     fun addHeartRate(int: Int){

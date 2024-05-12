@@ -52,7 +52,14 @@ class TSecondFragment : Fragment() {
                 colorRes
             )
         }
-        stopButton.setOnTouchListener { _, event -> handleProgress(event, stopTargetTimeMillis, ::stopExercise, R.color.resultred) }
+        stopButton.setOnTouchListener { _, event ->
+            handleProgress(
+                event,
+                stopTargetTimeMillis,
+                ::stopExercise,
+                R.color.resultred
+            )
+        }
 
         bindService()
         return view
@@ -123,8 +130,7 @@ class TSecondFragment : Fragment() {
     }
 
     private fun stopExercise() {
-        service?.stopService()
-        activity?.finish()
+        service?.onDestroy()
     }
 
     private fun bindService() {
