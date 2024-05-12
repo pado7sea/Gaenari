@@ -29,7 +29,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                             .id(i++)
                             .category(category)
                             .type(type.getType())
-                            .value(type.getValue()) // enum에서 가져온 value로 설정
+                            .value(type.getValue()) // enum 에서 가져온 value 로 설정
                             .coin(type.getCoin())
                             .heart(type.getHeart())
                             .build();
