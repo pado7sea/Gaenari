@@ -61,12 +61,16 @@ public class MyPetController {
 
     @Operation(summary = "반려견 애정도 증가")
     @PostMapping("/heart")
-    public ResponseEntity<?> increaseAffection(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody IncreaseAffection affection){
+    public ResponseEntity<?> increaseAffection(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody IncreaseAffection increaseAffection){
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        myPetService.increaseAffection(memberEmail, affection);
+        // 애정도가 0이상이여야함
+        if(increaseAffection.getAffection() <= 0){
+            return response.error(ErrorCode.NOT_REQUEST_AFFECTION.getMessage());
+        }
+        myPetService.increaseAffection(memberEmail, increaseAffection);
         return response.success(ResponseCode.PARTNER_PET_AFFECTION_INCREASE_SUCCESS);
     }
 
