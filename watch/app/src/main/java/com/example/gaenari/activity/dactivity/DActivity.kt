@@ -27,10 +27,6 @@ class DActivity : AppCompatActivity() {
         Log.d("jinzza", "onCreate: 서비스시작은됨?")
 
     }
-    override fun onDestroy() {
-        stopRunningService() // 액티비티가 파괴될 때 서비스 종료
-        super.onDestroy()
-    }
 
     private fun setupViewPager() {
         viewPager = findViewById(R.id.viewPager2)
@@ -49,14 +45,5 @@ class DActivity : AppCompatActivity() {
         when (position) {
             0 -> viewPager.setCurrentItem(2, false)
         }
-    }
-
-    private fun startTRunningService() {
-        val serviceIntent = Intent(this, DRunningService::class.java)
-        startForegroundService(serviceIntent)
-    }
-    private fun stopRunningService() {
-        val serviceIntent = Intent(this, DRunningService::class.java)
-        stopService(serviceIntent)
     }
 }

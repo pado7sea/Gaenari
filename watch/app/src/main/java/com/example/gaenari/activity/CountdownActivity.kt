@@ -17,6 +17,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.gaenari.R
 import com.example.gaenari.activity.dactivity.DRunningService
+import com.example.gaenari.activity.dactivity.DistTargetService
 import com.example.gaenari.activity.iactivity.IRunningService
 import com.example.gaenari.activity.iactivity.IntervalService
 import com.example.gaenari.activity.main.Program
@@ -115,7 +116,8 @@ class CountdownActivity : AppCompatActivity() {
     }
 
     private fun startDRunningService() {
-        val serviceIntent = Intent(this, DRunningService::class.java)
+        val serviceIntent = Intent(this, DistTargetService::class.java)
+        serviceIntent.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
         Log.d("countdown", "startDRunningService: DDDD시작?")
         startForegroundService(serviceIntent)
     }

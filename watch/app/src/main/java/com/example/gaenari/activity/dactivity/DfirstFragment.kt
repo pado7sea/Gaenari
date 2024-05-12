@@ -20,6 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
+import com.example.gaenari.dto.request.SaveDataRequestDto
 
 class DFirstFragment : Fragment() {
     private lateinit var distanceView: TextView
@@ -28,10 +29,10 @@ class DFirstFragment : Fragment() {
     private lateinit var speedView: TextView
     private lateinit var circleProgress: DCircleProgress
     private lateinit var updateReceiver: BroadcastReceiver
-    private lateinit var check1 : TextView
-    private lateinit var check2 : TextView
-    private lateinit var check3 : TextView
+    private lateinit var requestDto: SaveDataRequestDto
 
+    private var totalHeartRateAvg: Int = 0
+    private var totalSpeedAvg: Double = 0.0
     private var totalDistance: Double = 0.0
     private var totalHeartRate: Float = 0f
     private var heartRateCount: Int = 0
@@ -88,32 +89,38 @@ class DFirstFragment : Fragment() {
                 when (intent.action) {
                     "com.example.sibal.UPDATE_INFO" -> {
                         val distance = intent.getDoubleExtra("distance", 0.0)
+                        val remainingdistance = intent.getDoubleExtra("remainDistance", 0.0)
                         val speed = intent.getFloatExtra("speed", 0f)
                         val time = intent.getLongExtra("time", 0)
-                        Log.d("d프래그먼트", "distance: ${distance}, programtarget : ${programTarget}")
+                        Log.d(
+                            "d프래그먼트",
+                            "distance: ${remainingdistance}, programtarget : ${programTarget}"
+                        )
                         totalDistance = distance
                         totalTime = time
 
-                        val remainingdistance = programTarget*1000 - totalDistance
-                        Log.d("distance", "programTarget: ${programTarget*1000} totalDistance: ${totalDistance}")
-                        if (remainingdistance <= 0) {
-                            sendResultsAndFinish(context)
-                        } else {
+                        Log.d(
+                            "distance",
+                            "programTarget: ${programTarget * 1000} totalDistance: ${totalDistance}"
+                        )
+                        if (remainingdistance >= 0) {
                             updateUI(remainingdistance, programTarget, totalTime, speed)
                         }
                     }
+
                     "com.example.sibal.UPDATE_TIMER" -> {
                         val time = intent.getLongExtra("time", 0)
-//                        val remainingTime = (programTarget * 3600000 / 60) - time
                         updateTimerUI(time)
                     }
+
                     "com.example.sibal.UPDATE_ONE_MINUTE" -> {
-                        val checkspeed = intent.getDoubleExtra("(averageSpeed",0.0)
-                        val checkheart = intent.getIntExtra("averageHeartRate",0)
-                        val checkdistance = intent.getDoubleExtra("distance",0.0)
+                        val checkspeed = intent.getDoubleExtra("(averageSpeed", 0.0)
+                        val checkheart = intent.getIntExtra("averageHeartRate", 0)
+                        val checkdistance = intent.getDoubleExtra("distance", 0.0)
                         Log.d("checkcheck", "${checkspeed} , ${checkheart}, ${checkdistance} ")
-                        updateUIcheck(checkspeed,checkheart,checkdistance)
+                        updateUIcheck(checkspeed, checkheart, checkdistance)
                     }
+
                     "com.example.sibal.UPDATE_HEART_RATE" -> {
                         val heartRate = intent.getFloatExtra("heartRate", 0f)
                         totalHeartRate += heartRate
@@ -121,6 +128,12 @@ class DFirstFragment : Fragment() {
                             heartRateCount++
                         }
                         updateheartUI(heartRate)
+                    }
+                    "com.example.sibal.EXIT_PROGRAM" -> {
+                        requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
+                        totalHeartRateAvg = requestDto.heartrates.average
+                        totalSpeedAvg = requestDto.speeds.average
+                        sendResultsAndFinish(context)
                     }
                 }
             }
@@ -131,13 +144,21 @@ class DFirstFragment : Fragment() {
             addAction("com.example.sibal.UPDATE_TIMER")
             addAction("com.example.sibal.UPDATE_ONE_MINUTE")
             addAction("com.example.sibal.UPDATE_HEART_RATE")
+            addAction("com.example.sibal.EXIT_PROGRAM")
         }
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, intentFilter)
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(updateReceiver, intentFilter)
     }
 
-    private fun updateUIcheck(checkspeed : Double,checkheart:Int,checkdistance:Double ){
+    private fun updateUIcheck(checkspeed: Double, checkheart: Int, checkdistance: Double) {
     }
-    private fun updateUI(remainingdistance: Double, programTarget: Double, time: Long, speed: Float) {
+
+    private fun updateUI(
+        remainingdistance: Double,
+        programTarget: Double,
+        time: Long,
+        speed: Float
+    ) {
         val totalMillis = programTarget
         val progress = 100 * (1 - (remainingdistance / totalMillis))
         circleProgress.setProgress(progress.toFloat())
@@ -165,37 +186,30 @@ class DFirstFragment : Fragment() {
     private fun sendResultsAndFinish(context: Context) {
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val vibrationEffect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
+            val vibrationEffect =
+                VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
             vibrator.vibrate(vibrationEffect)
         } else {
             vibrator.vibrate(500)
         }
 
-//        val programTarget = arguments?.getInt("programTarget") ?: 0
+        val programTarget = arguments?.getInt("programTarget") ?: 0
         val programType = arguments?.getString("programType") ?: ""
         val programTitle = arguments?.getString("programTitle") ?: ""
         val programId = arguments?.getLong("programId") ?: 0L
 
-        val averageHeartRate = if (heartRateCount > 0) totalHeartRate / heartRateCount else 0f
-        val averageSpeed = if (totalTime > 0) (totalDistance / totalTime) * 3600 else 0.0
-
         val intent = Intent(context, ResultActivity::class.java).apply {
-//            putExtra("programTarget", programTarget)
+            putExtra("requestDto", requestDto)
+            putExtra("programTarget", programTarget)
             putExtra("programType", programType)
             putExtra("programTitle", programTitle)
             putExtra("programId", programId)
             putExtra("totalDistance", totalDistance)
-            putExtra("averageHeartRate", averageHeartRate)
-            putExtra("averageSpeed", averageSpeed)
             putExtra("totalTime", totalTime)
         }
 
         startActivity(intent)
         activity?.finish()
-
-        Intent(context, DRunningService::class.java).also { serviceIntent ->
-            context.stopService(serviceIntent)
-        }
     }
 
     override fun onDestroyView() {
