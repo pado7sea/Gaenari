@@ -1,6 +1,5 @@
-package com.gaenari.backend.domain.member.dto.responseDto;
+package com.gaenari.backend.domain.coin.dto.responseDto;
 
-import com.gaenari.backend.domain.member.dto.requestDto.MemberCoin;
 import lombok.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.gaenari.backend.domain.client;
+package com.gaenari.backend.domain.client.challenge;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
