@@ -36,7 +36,8 @@ public class ProgramController {
 
     @Operation(summary = "운동 프로그램 상세 조회", description = "운동 프로그램 상세 조회")
     @GetMapping("/{programId}")
-    public ResponseEntity<?> getProgramDetail(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId, @PathVariable(name = "programId") Long programId) {
+    public ResponseEntity<?> getProgramDetail(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+                                              @Parameter(description = "운동 프로그램 ID") @PathVariable(name = "programId") Long programId) {
         ProgramDetailDto programDetail = programService.getProgramDetail(memberId, programId);
 
         return response.success(ResponseCode.PROGRAM_INFO_FETCHED, programDetail);
@@ -44,7 +45,8 @@ public class ProgramController {
 
     @Operation(summary = "운동 프로그램 생성", description = "운동 프로그램 생성")
     @PostMapping
-    public ResponseEntity<?> createProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId, @Valid @RequestBody ProgramCreateDto programDto) {
+    public ResponseEntity<?> createProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+                                           @Valid @RequestBody ProgramCreateDto programDto) {
         Long programId = programService.createProgram(memberId, programDto);
 
         return response.success(ResponseCode.PROGRAM_CREATED, programId);
@@ -52,7 +54,8 @@ public class ProgramController {
 
     @Operation(summary = "운동 프로그램 삭제", description = "운동 프로그램 삭제")
     @DeleteMapping("/{programId}")
-    public ResponseEntity<?> deleteProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId, @PathVariable(name = "programId") Long programId) {
+    public ResponseEntity<?> deleteProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+                                           @Parameter(description = "운동 프로그램 ID") @PathVariable(name = "programId") Long programId) {
         programService.deleteProgram(memberId, programId);
 
         return response.success(ResponseCode.PROGRAM_DELETED);

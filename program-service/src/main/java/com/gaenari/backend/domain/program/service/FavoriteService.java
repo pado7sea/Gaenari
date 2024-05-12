@@ -1,6 +1,6 @@
-package com.gaenari.backend.domain.favorite.service;
+package com.gaenari.backend.domain.program.service;
 
-import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteDto;
+import com.gaenari.backend.domain.program.dto.responseDto.FavoriteDto;
 
 import java.util.List;
 
