@@ -130,6 +130,7 @@ class TFirstFragment : Fragment() {
                         updateheartUI(heartRate)
                     }
                     "com.example.sibal.EXIT_PROGRAM" -> {
+                        Log.d("Check", "Receive Exit BroadCast")
                         requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
                         totalHeartRateAvg = requestDto.heartrates.average
                         totalSpeedAvg = requestDto.speeds.average

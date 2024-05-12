@@ -234,9 +234,9 @@ class IntervalService : Service(), SensorEventListener {
         )
 
         /* Update requestDto */
-        requestDto.speeds.average.plus(averageSpeed)
+        requestDto.speeds.average += averageSpeed
         requestDto.speeds.addSpeed(averageSpeed)
-        requestDto.heartrates.average.plus(averageHeartRate)
+        requestDto.heartrates.average += averageHeartRate
         requestDto.heartrates.addHeartRate(averageHeartRate)
 
         /* 다음 1분을 위한 초기화 */
@@ -281,7 +281,7 @@ class IntervalService : Service(), SensorEventListener {
         /* 모든 세트의 완료 여부 확인 */
         if (currentSetCount == programData?.program?.intervalInfo?.setCount) {
             Log.d("Check", "Interval Service Stop")
-            stopService()
+            onDestroy()
         }
     }
 
@@ -331,6 +331,27 @@ class IntervalService : Service(), SensorEventListener {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
+    /**
+     * 1분 이전 조기 종료 시 남은 정보 저장
+     */
+    private fun remainInfoSave(){
+        Log.d("Check", "조기 종료 시 평균 값 계산 시작")
+        val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
+        val averageHeartRate =
+            if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
+        Log.d(
+            "Check",
+            "RemainInfoAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
+        )
+
+        /* Update requestDto */
+        requestDto.speeds.average += averageSpeed
+        requestDto.speeds.addSpeed(averageSpeed)
+        requestDto.heartrates.average += averageHeartRate
+        requestDto.heartrates.addHeartRate(averageHeartRate)
+
+    }
+
     override fun onSensorChanged(event: SensorEvent) {
         Log.d("Check", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
@@ -341,6 +362,8 @@ class IntervalService : Service(), SensorEventListener {
     }
 
     override fun onDestroy() {
+        remainInfoSave()
+
         /* 분 당 정보 누적합을 누적 개수로 나누어 전체 평균 계산 */
         requestDto.speeds.average.div(requestDto.speeds.arr.size)
         requestDto.heartrates.average.div(requestDto.heartrates.arr.size)
@@ -358,7 +381,6 @@ class IntervalService : Service(), SensorEventListener {
         Log.d("IRunningService", "Service destroyed")
 
         sendEndProgramBroadcast()
-        super.onDestroy()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -469,9 +491,5 @@ class IntervalService : Service(), SensorEventListener {
         startForeground(1, notification)
         // 1분 평균 계산 핸들러를 다시 시작합니다.
         oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000)
-    }
-
-    fun stopService() {
-        stopSelf()
     }
 }

@@ -77,7 +77,7 @@ class TimeTargetService : Service(), SensorEventListener {
                 elapsedTime = SystemClock.elapsedRealtime() - startTime - totalPausedTime
 
                 if(elapsedTime >= programData?.program?.targetValue!! * 1000)
-                    stopService()
+                    onDestroy()
 
                 sendTimeBroadcast(elapsedTime)
 
@@ -208,9 +208,9 @@ class TimeTargetService : Service(), SensorEventListener {
         )
 
         /* Update requestDto */
-        requestDto.speeds.average.plus(averageSpeed)
+        requestDto.speeds.average += averageSpeed
         requestDto.speeds.addSpeed(averageSpeed)
-        requestDto.heartrates.average.plus(averageHeartRate)
+        requestDto.heartrates.average += averageHeartRate
         requestDto.heartrates.addHeartRate(averageHeartRate)
 
         /* 다음 1분을 위한 초기화 */
@@ -219,6 +219,27 @@ class TimeTargetService : Service(), SensorEventListener {
         oneMinuteHeartRate = 0f
         heartRateCount = 0
         oneMinuteDistance = 0.0
+    }
+
+    /**
+     * 1분 이전 조기 종료 시 남은 정보 저장
+     */
+    private fun remainInfoSave(){
+        Log.d("Check", "조기 종료 시 평균 값 계산 시작")
+        val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
+        val averageHeartRate =
+            if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
+        Log.d(
+            "Check",
+            "RemainInfoAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
+        )
+
+        /* Update requestDto */
+        requestDto.speeds.average += averageSpeed
+        requestDto.speeds.addSpeed(averageSpeed)
+        requestDto.heartrates.average += averageHeartRate
+        requestDto.heartrates.addHeartRate(averageHeartRate)
+
     }
 
     override fun onSensorChanged(event: SensorEvent) {
@@ -231,6 +252,8 @@ class TimeTargetService : Service(), SensorEventListener {
     }
 
     override fun onDestroy() {
+        remainInfoSave()
+
         /* 분 당 정보 누적합을 누적 개수로 나누어 전체 평균 계산 */
         requestDto.speeds.average.div(requestDto.speeds.arr.size)
         requestDto.heartrates.average.div(requestDto.heartrates.arr.size)
@@ -248,7 +271,6 @@ class TimeTargetService : Service(), SensorEventListener {
         Log.d("IRunningService", "Service destroyed")
 
         sendEndProgramBroadcast()
-        super.onDestroy()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -359,9 +381,5 @@ class TimeTargetService : Service(), SensorEventListener {
         startForeground(1, notification)
         // 1분 평균 계산 핸들러를 다시 시작합니다.
         oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000)
-    }
-
-    fun stopService() {
-        stopSelf()
     }
 }
