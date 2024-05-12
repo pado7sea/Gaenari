@@ -8,24 +8,22 @@ import com.gaenari.backend.domain.program.dto.responseDto.*;
 import com.gaenari.backend.domain.program.entity.IntervalRange;
 import com.gaenari.backend.domain.program.entity.Program;
 import com.gaenari.backend.domain.program.repository.ProgramRepository;
+import com.gaenari.backend.domain.program.service.ProgramBaseService;
 import com.gaenari.backend.domain.program.service.ProgramService;
-import com.gaenari.backend.global.exception.program.ProgramAccessException;
 import com.gaenari.backend.global.exception.program.ProgramDeleteException;
 import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class ProgramServiceImpl implements ProgramService {
+public class ProgramServiceImpl extends ProgramBaseService implements ProgramService {
 
-    private final ProgramRepository programRepository;
-    private final RecordServiceClient recordServiceClient;
+    public ProgramServiceImpl(ProgramRepository programRepository, RecordServiceClient recordServiceClient) {
+        super(programRepository, recordServiceClient);
+    }
 
     // 프로그램 생성
     @Override
@@ -61,7 +59,7 @@ public class ProgramServiceImpl implements ProgramService {
         for (IntervalRange range : ranges) {
             range.updateProgram(program); // 프로그램 생성 후 역참조 설정
         }
-        
+
         // Entity 저장
         Program savedProgram = programRepository.save(program);
 
@@ -91,7 +89,7 @@ public class ProgramServiceImpl implements ProgramService {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
                     // 마이크로 서비스간 통신을 통해 운동 기록 정보 가져오기
-                    List<ProgramDetailDto.UsageLogDto> usageLogDtos = recordServiceClient.getUsageLog(program.getId());
+                    List<ProgramDetailDto.UsageLogDto> usageLogDtos = fetchUsageLog(program.getId());
 
                     int finishedCount = (int) usageLogDtos.stream()
                             .filter(ProgramDetailDto.UsageLogDto::getIsFinished)
@@ -110,50 +108,13 @@ public class ProgramServiceImpl implements ProgramService {
                 .toList();
     }
 
-    private ProgramTypeInfoDto convertToProgramTypeInfoDto(Program program) {
-        switch (program.getType()) {
-            case D:  // 거리 목표 프로그램
-            case T:  // 시간 목표 프로그램
-                return ProgramTypeInfoDto.builder()
-                        .targetValue(program.getTargetValue())
-                        .build();
-
-            case I:  // 인터벌 프로그램
-                List<RangeDto> ranges = program.getRanges().stream()
-                        .map(range -> RangeDto.builder()
-                                .id(range.getId())
-                                .isRunning(range.getIsRunning())
-                                .time(range.getTime())
-                                .speed(range.getSpeed())
-                                .build())
-                        .toList();
-
-                int setCount = program.getSetCount();
-                int rangeCount = ranges.size();
-                double setDuration = ranges.stream().mapToDouble(RangeDto::getTime).sum(); // 각 range의 시간의 합
-
-                return ProgramTypeInfoDto.builder()
-                        .intervalInfo(IntervalDto.builder()
-                                .duration(setDuration)
-                                .setCount(setCount)
-                                .rangeCount(rangeCount)
-                                .ranges(ranges)
-                                .build())
-                        .build();
-
-            default:
-                throw new IllegalStateException("Unexpected value: " + program.getType());
-        }
-    }
-
     // 프로그램 상세 정보 조회
     @Override
     public ProgramDetailDto getProgramDetail(String memberId, Long programId) {
-        Program program = programRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
+        Program program = programRepository.findByMemberIdAndId(memberId, programId);
 
-        // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
-        if (!program.getMemberId().equals(memberId)) {
-            throw new ProgramAccessException();
+        if (program == null) {
+            throw new ProgramNotFoundException();
         }
 
         // ProgramTypeInfoDto, IntervalDto, RangeDto는 programType에 따라 설정
@@ -163,7 +124,7 @@ public class ProgramServiceImpl implements ProgramService {
                 .build();
 
         // 마이크로 서비스간 통신을 통해 운동 기록 정보 가져오기
-        List<ProgramDetailDto.UsageLogDto> usageLogDtos = recordServiceClient.getUsageLog(program.getId());
+        List<ProgramDetailDto.UsageLogDto> usageLogDtos = fetchUsageLog(program.getId());
 
         // 운동 프로그램 총 사용 통계
         DoubleSummaryStatistics summary = usageLogDtos.stream()
