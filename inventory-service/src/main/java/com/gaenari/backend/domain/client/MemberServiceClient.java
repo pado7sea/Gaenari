@@ -1,6 +1,6 @@
 package com.gaenari.backend.domain.client;
 
-import com.gaenari.backend.domain.inventory.dto.responseDto.MemberCoin;
+import com.gaenari.backend.domain.client.dto.MemberCoin;
 import com.gaenari.backend.domain.item.dto.responseDto.Pets;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +22,9 @@ public interface MemberServiceClient {
     @GetMapping("/mate/email/{mateId}") // 친구 이메일 조회
     String getMateEmail(@PathVariable Long mateId);
 
-    @PutMapping("/member/coin") // 회원 코인 증/감
+    @PutMapping("/coin") // 회원 코인 증/감
     ResponseEntity<?> updateCoin(@RequestBody MemberCoin memberCoin);
 
-    @GetMapping("/member/coin/{memberEmail}") // 회원보유코인 조회
+    @GetMapping("/coin/{memberEmail}") // 회원보유코인 조회
     int getMemberCoin(@PathVariable String memberEmail);
 }
