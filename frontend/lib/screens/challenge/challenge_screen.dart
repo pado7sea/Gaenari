@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -280,7 +279,7 @@ class _ChallengePageState extends State<ChallengePage> {
         height: 70,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Image(
               image: AssetImage('assets/emoji/party.png'),
               width: 20,
@@ -391,7 +390,7 @@ class _ChallengePageState extends State<ChallengePage> {
         : Container(
             alignment: Alignment.centerRight,
             child: Row(
-              children: [
+              children: const [
                 Text16(text: '3.2Km', textColor: myGrey, bold: true),
                 Text12(text: '/5Km', textColor: myGrey, bold: true),
                 SizedBox(width: 10)
@@ -425,17 +424,17 @@ class _ChallengePageState extends State<ChallengePage> {
                     reword = true;
                   });
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: reword ? myLightGreen : myLightGrey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text16(
                     text: '보상받기',
                     textColor: Colors.white,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: reword ? myLightGreen : myLightGrey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
