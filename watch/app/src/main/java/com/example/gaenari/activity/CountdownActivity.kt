@@ -14,6 +14,7 @@ import com.example.gaenari.activity.dactivity.DActivity
 import com.example.gaenari.activity.iactivity.IActivity
 import com.example.gaenari.activity.tactivity.TActivity
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.example.gaenari.R
 import com.example.gaenari.activity.dactivity.DRunningService
 import com.example.gaenari.activity.iactivity.IRunningService
@@ -30,15 +31,19 @@ class CountdownActivity : AppCompatActivity() {
 
         val countdownTextView = findViewById<TextView>(R.id.countdownTextView)
         val imageView = findViewById<ImageView>(R.id.imageView)
+        val title = findViewById<TextView>(R.id.title)
+
 
         val programType = intent.getStringExtra("programType")
+        val programTitle = intent.getStringExtra("programTitle")
+        title.text=programTitle
 
         val textSizeStart = 90f
         val textSizeEnd = 75f
-        val textColorStart = Color.BLACK
-        val textColorEnd = Color.DKGRAY
-        val borderColorStart = Color.GREEN
-        val borderColorEnd = Color.LTGRAY
+        val textColorStart = ContextCompat.getColor(this, R.color.blue)
+        val textColorEnd = ContextCompat.getColor(this, R.color.gray2)
+        val borderColorStart = ContextCompat.getColor(this, R.color.countdown1)
+        val borderColorEnd = ContextCompat.getColor(this, R.color.lightgreen)
         val animationDuration = 1000L
 
         object : CountDownTimer(6000, 1000) {

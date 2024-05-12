@@ -29,6 +29,9 @@
             android:enabled="true"
             android:exported="true"></service>
 
+        <!--        <activity-->
+        <!--            android:name=".activity.walkandrun.run.OnlyRunActivity"-->
+        <!--            android:exported="false" />-->
         <activity
             android:name=".activity.main.HomeActivity"
             android:exported="false" />

@@ -16,12 +16,11 @@ import com.example.gaenari.R
 class IsecondFragment : Fragment() {
     private lateinit var pauseButton: Button
     private lateinit var stopButton: Button
-    private var service: IRunningService? =null
+    private var service: IntervalService? =null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle? //
     ): View? {
-        return inflater.inflate(R.layout.fragment_isecond, container, false)
         val view = inflater.inflate(R.layout.fragment_isecond, container, false)
         pauseButton = view.findViewById(R.id.pauseButton)
         stopButton = view.findViewById(R.id.stopButton)
@@ -48,13 +47,13 @@ class IsecondFragment : Fragment() {
         activity?.finish() // 현재 액티비티 종료
     }
     private fun bindService() {
-        Intent(context, IRunningService::class.java).also { intent ->
+        Intent(context, IntervalService::class.java).also { intent ->
             context?.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as IRunningService.LocalBinder
+            val binder = service as IntervalService.LocalBinder
             this@IsecondFragment.service = binder.getService()
         }
 

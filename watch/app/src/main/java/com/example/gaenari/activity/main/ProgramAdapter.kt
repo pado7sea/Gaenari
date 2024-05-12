@@ -1,14 +1,16 @@
 package com.example.gaenari.activity.main
 
 import android.content.Intent
-import androidx.recyclerview.widget.RecyclerView
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
 import com.example.gaenari.R
-import android.util.Log
 import com.example.gaenari.activity.CountdownActivity
 import com.example.gaenari.dto.response.FavoriteResponseDto
 
@@ -42,36 +44,55 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
 
         holder.menu.text = text
 
-        // 아이콘 클릭 이벤트 추가
+        // 아이콘 클릭 이벤트 수정
         holder.icon.setOnClickListener {
             val context = holder.itemView.context
-            val intent = Intent(context, CountdownActivity::class.java).apply {
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
+            val programNameTextView: TextView = dialogView.findViewById(R.id.programName)
+            val startButton: Button = dialogView.findViewById(R.id.buttonStart)
+            val cancelButton: Button = dialogView.findViewById(R.id.buttonCancel)
+
+            programNameTextView.text = program.programTitle
+
+            val alertDialog = AlertDialog.Builder(context).apply {
+                setView(dialogView)
+                setCancelable(false)  // 다이얼로그 바깥을 터치해도 닫히지 않도록 설정
+            }.create()
+
+            startButton.setOnClickListener {
+                // 인텐트 시작
+                val intent = Intent(context, CountdownActivity::class.java).apply {
                     putExtra("programId", program.programId)
                     putExtra("programTitle", program.programTitle)
                     putExtra("programType", program.type)
-                if(program.type=="D"){
-                    putExtra("programData", program)
-                    putExtra("programTarget", program.program.targetValue)
+                    if (program.type == "D" ) {
+                        putExtra("programData", program)
+                        putExtra("programTarget", program.program.targetValue)
+                    }
+                    if (program.type == "T") {
+                        putExtra("programData", program)
+                        putExtra("programTarget", program.program.targetValue?.toInt())
+                    }
+                    if (program.type == "I") {
+                        putExtra("programData", program)
+                    }
                 }
-                if(program.type =="T"){
-                    putExtra("programData", program)
-                    putExtra("programTarget", program.program.targetValue?.toInt())
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(intent)
                 }
-                // `I` 타입의 프로그램에 대해서만 전체 객체를 넘김
-                if (program.type == "I") {
-                    putExtra("programData", program)
-                }
-
-                Log.d("ProgramAdapter", "Sending program: $program")
-                Log.d("ProgramAdapter", "Sending program12: ${program.programTitle}")
-                Log.d("ProgramAdapter", "Sending program23: ${program.type}")
-                Log.d("ProgramAdapter", "Sending program34: ${program.program.targetValue}")
+                alertDialog.dismiss()
             }
 
-            if (intent.resolveActivity(context.packageManager) != null) {
-                context.startActivity(intent)
+            cancelButton.setOnClickListener {
+                alertDialog.dismiss()
             }
+
+            if (alertDialog.window != null) {
+                alertDialog.window!!.setBackgroundDrawable(ColorDrawable(-0x30000000))
+            }
+            alertDialog.show()
         }
+
     }
 
     override fun getItemCount(): Int = programs.size

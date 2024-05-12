@@ -25,7 +25,7 @@ class TSecondFragment : Fragment() {
     private lateinit var pauseButton: Button
     private lateinit var stopButton: Button
     private lateinit var circularProgressButton: CircularProgressButton
-    private var service: TRunningService? = null
+    private var service: TimeTargetService? = null
     private var isPaused = false
     private val pauseTargetTimeMillis = 500L
     private val stopTargetTimeMillis = 1500L
@@ -128,14 +128,14 @@ class TSecondFragment : Fragment() {
     }
 
     private fun bindService() {
-        Intent(context, TRunningService::class.java).also { intent ->
+        Intent(context, TimeTargetService::class.java).also { intent ->
             context?.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as TRunningService.LocalBinder
+            val binder = service as TimeTargetService.LocalBinder
             this@TSecondFragment.service = binder.getService()
         }
 

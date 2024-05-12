@@ -13,9 +13,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.bumptech.glide.Glide
 import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
 
@@ -65,9 +67,14 @@ class DFirstFragment : Fragment() {
         heartRateView = view.findViewById(R.id.심박수)
         speedView = view.findViewById(R.id.속력)
         circleProgress = view.findViewById(R.id.circleProgress)
-        check1 = view.findViewById(R.id.체크1)
-        check2 = view.findViewById(R.id.체크2)
-        check3 = view.findViewById(R.id.체크3)
+        val gifImageView = view.findViewById<ImageView>(R.id.gifImageView)
+        context?.let {
+            Glide.with(it)
+                .asGif()
+                .load(R.raw.dog98)
+                .dontTransform()
+                .into(gifImageView)
+        }
 
         val programTarget = arguments?.getDouble("programTarget") ?: 0
         Log.d("first", "onCreateView: ${programTarget}")
@@ -88,6 +95,7 @@ class DFirstFragment : Fragment() {
                         totalTime = time
 
                         val remainingdistance = programTarget*1000 - totalDistance
+                        Log.d("distance", "programTarget: ${programTarget*1000} totalDistance: ${totalDistance}")
                         if (remainingdistance <= 0) {
                             sendResultsAndFinish(context)
                         } else {
@@ -128,16 +136,13 @@ class DFirstFragment : Fragment() {
     }
 
     private fun updateUIcheck(checkspeed : Double,checkheart:Int,checkdistance:Double ){
-        check1.text = String.format("%.2f km/h", checkspeed * 3.6)
-        check2.text = String.format("%.2f km", checkdistance / 1000)
-        check3.text = String.format("%d", checkheart)
     }
     private fun updateUI(remainingdistance: Double, programTarget: Double, time: Long, speed: Float) {
         val totalMillis = programTarget
         val progress = 100 * (1 - (remainingdistance / totalMillis))
         circleProgress.setProgress(progress.toFloat())
-        distanceView.text = String.format("%.2f", (remainingdistance / 1000))
-        speedView.text = String.format("%.2f km/h", speed * 3.6)
+        distanceView.text = String.format("%.2f km", (remainingdistance / 1000))
+        speedView.text = String.format("%.2f", speed * 3.6)
     }
 
     private fun updateheartUI(heartRate: Float) {
