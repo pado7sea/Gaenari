@@ -479,6 +479,7 @@ class IntervalService : Service(), SensorEventListener {
         stopForeground(true)
         // 1분 평균 계산 핸들러를 중지합니다.
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
+        sendPauseBroadcast()
     }
 
     @SuppressLint("ForegroundServiceType")
@@ -490,5 +491,16 @@ class IntervalService : Service(), SensorEventListener {
         startForeground(1, notification)
         // 1분 평균 계산 핸들러를 다시 시작합니다.
         oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000)
+        sendPauseBroadcast()
+    }
+
+    /**
+     * 일시정지 알림 브로드캐스트
+     */
+    private fun sendPauseBroadcast(){
+        val intent = Intent("com.example.sibal.Pause_PROGRAM").apply {
+            putExtra("isPause", isPaused)
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 }
