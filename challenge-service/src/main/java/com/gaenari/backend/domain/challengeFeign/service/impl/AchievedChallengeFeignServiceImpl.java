@@ -41,6 +41,10 @@ public class AchievedChallengeFeignServiceImpl implements AchievedChallengeFeign
         }
 
         // 새로 달성한 도전과제 아이디 리스트
+        return getIds(recordDto, challenges);
+    }
+
+    private static List<Integer> getIds(RecordAboutChallengeDto recordDto, List<Challenge> challenges) {
         List<Integer> newlyAchievedIds = new ArrayList<>();
 
         // 도전과제 달성 여부 판단
@@ -56,7 +60,6 @@ public class AchievedChallengeFeignServiceImpl implements AchievedChallengeFeign
                 newlyAchievedIds.add(challenge.getId());
             }
         }
-
         return newlyAchievedIds;
     }
 
