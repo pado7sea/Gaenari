@@ -37,8 +37,8 @@ public class RecordController {
     @Operation(summary = "월간 기록 조회", description = "월간 기록이 없으면 빈 리스트 반환")
     @GetMapping("/month/{year}/{month}")
     public ResponseEntity<?> getMonthlyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
-                                               @Parameter(name = "연") @PathVariable(name = "year") int year,
-                                               @Parameter(name = "월") @PathVariable(name = "month") int month) {
+                                               @Parameter(description = "연") @PathVariable(name = "year") int year,
+                                               @Parameter(description = "월") @PathVariable(name = "month") int month) {
         MonthRecordDto recordDtos = recordService.getMonthlyExerciseRecords(memberId, year, month);
 
         return response.success(ResponseCode.RECORD_MONTH_FETCHED, recordDtos);
@@ -47,9 +47,9 @@ public class RecordController {
     @Operation(summary = "주간 기록 조회", description = "주간 기록이 없으면 빈 리스트 반환. 정보를 보길 원하는 주간의 어느 날짜든 주면 됨(일~토). ex) 2024년 5월 5일(월) → 2024년 5월 4일(일) ~  5월11일(토)\"")
     @GetMapping("/week/{year}/{month}/{day}")
     public ResponseEntity<?> getWeeklyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
-                                              @Parameter(name = "연") @PathVariable(name = "year") int year,
-                                              @Parameter(name = "월") @PathVariable(name = "month") int month,
-                                              @Parameter(name = "일주일 중 아무 날짜") @PathVariable(name = "day") int day) {
+                                              @Parameter(description = "연") @PathVariable(name = "year") int year,
+                                              @Parameter(description = "월") @PathVariable(name = "month") int month,
+                                              @Parameter(description = "일주일 중 아무 날짜") @PathVariable(name = "day") int day) {
         WeekRecordDto recordDtos = recordService.getWeeklyExerciseRecords(memberId, year, month, day);
 
         return response.success(ResponseCode.RECORD_WEEK_FETCHED, recordDtos);
@@ -58,7 +58,7 @@ public class RecordController {
     @Operation(summary = "일일 기록 조회", description = "일일 기록이 없으면 빈 리스트 반환")
     @GetMapping("/date/{date}")
     public ResponseEntity<?> getDailyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
-                                             @Parameter(name = "연월일 8글자") @PathVariable(name = "date") String date) {
+                                             @Parameter(description = "연월일 8글자") @PathVariable(name = "date") String date) {
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"));
         List<RecordDto> recordDtos = recordService.getDailyExerciseRecords(memberId, localDate);
 
