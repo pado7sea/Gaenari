@@ -1,5 +1,6 @@
 package com.example.gaenari.activity.iactivity
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -29,11 +30,14 @@ class IFirstFragment : Fragment() {
     private lateinit var adapter: CircleAdapter
     private lateinit var distanceView: TextView
     private lateinit var timeView: TextView
+    private lateinit var setView: TextView
     private lateinit var heartRateView: TextView
     private lateinit var speedView: TextView
     private lateinit var circleProgress: ICircleProgress
     private lateinit var updateReceiver: BroadcastReceiver
     private lateinit var requestDto: SaveDataRequestDto
+    //gif
+    private lateinit var gifImageView : pl.droidsonroids.gif.GifImageView
 
     private var totalHeartRateAvg: Int = 0
     private var totalSpeedAvg: Double = 0.0
@@ -46,6 +50,14 @@ class IFirstFragment : Fragment() {
     private var setCount: Int = 0
     private var exerciseCount: Int = 0
     private var isTransitioning: Boolean = false
+    //이번인터벌의 내가 정한 속도
+    private var nowExerciseSpeed: Double = 0.0
+    //이번인터벌이 뛰니 안뛰니
+    private var nowisRunning : Boolean = false
+    //이제 해야할 운동의 시간
+    private var nowecercisetime : Long = 0
+    //리얼타임을 계산할거
+    private var realtime : Long = 0
 
     private var startTimeOfCurrentInterval: Long = 0
 
@@ -66,7 +78,7 @@ class IFirstFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_ifirst, container, false)
         setupViews(view)
-        setupRecyclerView(view)
+//        setupRecyclerView(view)
         setupProgramData()
         setupUpdateReceiver()
         return view
@@ -78,6 +90,8 @@ class IFirstFragment : Fragment() {
         heartRateView = view.findViewById(R.id.심박수)
         speedView = view.findViewById(R.id.속력)
         circleProgress = view.findViewById(R.id.circleProgress)
+        gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
+        setView = view.findViewById(R.id.setname)
     }
 
     private fun setupRecyclerView(view: View) {
@@ -89,10 +103,20 @@ class IFirstFragment : Fragment() {
 
     private fun setupProgramData() {
         nowProgram = arguments?.getParcelable("program", FavoriteResponseDto::class.java) ?: return
+        Log.d("Interval Activity", "setupProgramData: ${nowProgram}")
         setCount = nowProgram.program.intervalInfo?.setCount!!
         exerciseCount = nowProgram.program.intervalInfo?.rangeCount!!
-        adapter = CircleAdapter(nowProgram.program.intervalInfo?.ranges!!)
-        recyclerView.adapter = adapter
+        nowExerciseSpeed = nowProgram.program.intervalInfo?.ranges!![0].speed!!
+        nowisRunning=nowProgram.program.intervalInfo?.ranges!![0].isRunning!!
+        nowecercisetime= nowProgram.program.intervalInfo?.ranges!![0].time?.toLong()!!*1000
+        Log.d("인터벌액티비티", "nowecercisetime: $nowecercisetime")
+
+
+        firstUI(setCount,nowisRunning )
+        Log.d("인터벌액티비티", "초기데이터 setCount: ${setCount} exerciseCount:$exerciseCount")
+        Log.d("인터벌액티비티", "초기데이터 range: ${nowProgram.program.intervalInfo!!.ranges!![exerciseCount-1]}")
+//        adapter = CircleAdapter(nowProgram.program.intervalInfo?.ranges!!)
+//        recyclerView.adapter = adapter
     }
 
     private fun setupUpdateReceiver() {
@@ -104,26 +128,41 @@ class IFirstFragment : Fragment() {
                         val distance = intent.getDoubleExtra("distance", 0.0)
                         val speed = intent.getFloatExtra("speed", 0f)
                         val time = intent.getLongExtra("time", 0)
-
                         totalDistance = distance
                         totalTime = time
-                        Log.d("Interval Activity", "onReceive: $time")
+
+                        updatedisandspeedUI(distance,speed)
                     }
                     "com.example.sibal.UPDATE_TIMER" -> {
                         val time = intent.getLongExtra("time", 0)
+
+                        realtime += 1000
+                            updateTimerUI(realtime, nowecercisetime)
+                        Log.d("Interval Activity", "UPDATE_TIMER: $time")
+                        //이거는 모든 시간을 다 보여줌
                     }
                     "com.example.sibal.UPDATE_HEART_RATE" -> {
                         curHeartRate = intent.getFloatExtra("heartRate", 0f)
+                        updateheartUI(curHeartRate)
                     }
                     "com.example.sibal.UPDATE_RANGE_INFO" -> {
                         // 세트 내 n 번째 구간
-                        val rangeIndex = intent.getIntExtra("rangeIndex", 0)
+                        nowExerciseCount = intent.getIntExtra("rangeIndex", 0)
+                        Log.d("Interval Activity", "UPDATE_RANGE_INFO: $nowExerciseCount")
+                        //화면에 보여질 지금 운동구간임 +1한게 몇번째꺼인지 ㅇㅇ 화면에 보여주면됨
                         // 몇번째 세트
                         nowSetCount = intent.getIntExtra("setCount", 0) + 1
+                        //+1을 해줌으로써 첫번째 세트라는걸 알려줌
+                        Log.d("Interval Activity", "UPDATE_RANGE_INFO: $nowSetCount")
                         // 걷기, 달리기 여부
-                        val isRunning = intent.getBooleanExtra("isRunning", false)
+                        nowisRunning = intent.getBooleanExtra("isRunning", false)
+                        Log.d("Interval Activity", "UPDATE_RANGE_INFO: $nowisRunning")
                         // 현재 구간 총 시간
-                        val rangeTime = intent.getLongExtra("rangeTime", 0)
+                        nowecercisetime = intent.getLongExtra("rangeTime", 0)
+                        Log.d("Interval Activity", "UPDATE_RANGE_INFO: $nowecercisetime")
+                        //이게 다음세트꺼 시간을 의미하는건가 ?
+                        realtime=0
+                        updateDataUI(nowisRunning,nowSetCount)
                     }
                     "com.example.sibal.EXIT_PROGRAM" -> {
                         requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
@@ -142,6 +181,44 @@ class IFirstFragment : Fragment() {
             addAction("com.example.sibal.EXIT_PROGRAM")
         }
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, intentFilter)
+    }
+
+    @SuppressLint("SetTextI18n", "ResourceType")
+    private fun firstUI(setCount:Int, nowisRunning:Boolean){
+        setView.text = "1 / ${setCount} set"
+        val resourceId = if (nowisRunning) {
+            R.raw.run6  // 사용자가 달리기를 시작한 경우
+        } else {
+            R.raw.walk4 // 사용자가 달리기를 멈춘 경우
+        }
+        gifImageView.setImageResource(resourceId)
+    }
+    //심박수 UI업데이트
+    private fun updateheartUI(heartRate: Float) {
+        heartRateView.text = String.format("%d", heartRate.toInt())
+    }
+    //달린거리랑 속도 업데이트
+    private fun updatedisandspeedUI(distance: Double,speed: Float) {
+        distanceView.text = String.format("%.2f", distance / 1000)
+        speedView.text = String.format("%.2f" , speed)
+    }
+    //타임업데이트
+    private fun updateTimerUI(realtime: Long , nowecercisetime: Long) {
+        var time = (nowecercisetime-realtime)
+        val progress = 100 * (1 - (time.toFloat() / nowecercisetime))
+        circleProgress.setProgress(progress)
+        timeView.text = formatTime(time)
+    }
+
+    @SuppressLint("ResourceType")
+    private fun updateDataUI(nowisRunning:Boolean, nowSetCount : Int){
+        setView.text = "${nowSetCount} / ${setCount} set"
+        val resourceId = if (nowisRunning) {
+            R.raw.run8  // 사용자가 달리기를 시작한 경우
+        } else {
+            R.raw.walk8 // 사용자가 달리기를 멈춘 경우
+        }
+        gifImageView.setImageResource(resourceId)
     }
 
     private fun updateMetricsFromIntent(intent: Intent) {
@@ -179,15 +256,6 @@ class IFirstFragment : Fragment() {
         isTransitioning = false
     }
 
-    private fun updateUI() {
-        circleProgress.setProgress(calculateProgress())
-        val remainingTime = calculateRemainingTime() / 1000
-        distanceView.text = formatTime(remainingTime)  // 총 경과 시간 표시
-        timeView.text = String.format("%.2f km", totalDistance / 1000)
-        heartRateView.text = String.format("%d", curHeartRate)
-        speedView.text = String.format("%.2f km/h", calculateSpeed())
-    }
-
     private fun calculateProgress(): Double {
         val totalSeconds =
             nowProgram.program.intervalInfo?.ranges!![nowExerciseCount].time!! * 1000  // 분을 초로 변환하여 계산
@@ -195,11 +263,11 @@ class IFirstFragment : Fragment() {
         return 100f * (1 - remainingSeconds.toFloat() / totalSeconds)
     }
 
-    private fun formatTime(seconds: Double): String {
-        val hours = (seconds / 3600)
-        val minutes = (seconds % 3600) / 60
-        val secs = seconds % 60
-        return String.format("%02d:%02d:%02d", hours, minutes, secs)
+    private fun formatTime(millis: Long): String {
+        val hours = (millis / 3600000) % 24
+        val minutes = (millis / 60000) % 60
+        val seconds = (millis / 1000) % 60
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 
     private fun calculateSpeed(): Float {
