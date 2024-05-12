@@ -2,16 +2,13 @@ package com.gaenari.backend.domain.mate.service;
 
 import com.gaenari.backend.domain.mate.dto.requestDto.MateCheck;
 import com.gaenari.backend.domain.mate.dto.responseDto.ApplyMate;
-import com.gaenari.backend.domain.mate.dto.responseDto.Mates;
 import com.gaenari.backend.domain.mate.dto.responseDto.SearchMates;
 import com.gaenari.backend.domain.mate.entity.Call;
 import com.gaenari.backend.domain.mate.entity.Mate;
 import com.gaenari.backend.domain.mate.entity.State;
 import com.gaenari.backend.domain.mate.repository.MateRepository;
-import com.gaenari.backend.domain.member.dto.requestDto.MyPetDto;
 import com.gaenari.backend.domain.member.entity.Member;
 import com.gaenari.backend.domain.member.repository.MemberRepository;
-import com.gaenari.backend.domain.mypet.dto.responseDto.FriendPet;
 import com.gaenari.backend.domain.mypet.entity.MyPet;
 import com.gaenari.backend.domain.mypet.repository.MyPetRepository;
 import com.gaenari.backend.global.exception.member.*;

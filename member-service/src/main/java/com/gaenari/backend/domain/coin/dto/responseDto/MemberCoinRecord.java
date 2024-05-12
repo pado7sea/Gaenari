@@ -1,7 +1,6 @@
-package com.gaenari.backend.domain.member.dto.responseDto;
+package com.gaenari.backend.domain.coin.dto.responseDto;
 
 import com.gaenari.backend.domain.coin.entity.CoinTitle;
-import com.gaenari.backend.domain.member.dto.requestDto.MyPetDto;
 import lombok.*;
 
 @Getter

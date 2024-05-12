@@ -1,6 +1,7 @@
 package com.gaenari.backend.domain.member.dto.requestDto;
 
 import com.gaenari.backend.domain.member.entity.Gender;
+import com.gaenari.backend.domain.mypet.dto.MyPetDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
