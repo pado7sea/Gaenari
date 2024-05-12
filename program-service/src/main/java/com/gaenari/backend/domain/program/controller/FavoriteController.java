@@ -1,7 +1,7 @@
-package com.gaenari.backend.domain.favorite.controller;
+package com.gaenari.backend.domain.program.controller;
 
-import com.gaenari.backend.domain.favorite.dto.responseDto.FavoriteDto;
-import com.gaenari.backend.domain.favorite.service.FavoriteService;
+import com.gaenari.backend.domain.program.dto.responseDto.FavoriteDto;
+import com.gaenari.backend.domain.program.service.FavoriteService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +32,8 @@ public class FavoriteController {
 
     @Operation(summary = "즐겨찾기 등록/해제", description = "즐겨찾기 등록/해제")
     @PutMapping("/{programId}")
-    public ResponseEntity<?> updaterFavoriteStatus(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId, @PathVariable(name = "programId") Long programId) {
+    public ResponseEntity<?> updaterFavoriteStatus(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+                                                   @Parameter(description = "운동 프로그램 ID")  @PathVariable(name = "programId") Long programId) {
         Boolean isSuccess = favoriteService.updaterFavoriteStatus(memberId, programId);
 
         if (isSuccess) {
