@@ -8,10 +8,8 @@ import com.gaenari.backend.domain.statistic.dto.responseDto.WeekStatisticDto;
 import com.gaenari.backend.domain.statistic.entity.Statistic;
 import com.gaenari.backend.domain.statistic.repository.StatisticRepository;
 import com.gaenari.backend.domain.statistic.service.StatisticService;
-import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import com.gaenari.backend.global.exception.statistic.StatisticNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,11 +63,13 @@ public class StatisticServiceImpl implements StatisticService {
                 .orElse(null);
     }
 
+    // 저장되어있는 누적값 조회
     @Override
     public TotalStatisticDto getTotalStatistics(String memberId) {
        Statistic statistic = statisticRepository.findByMemberId(memberId);
-       
-       // TODO : 예외처리
+        if (statistic == null) {
+            throw new StatisticNotFoundException();
+        }
 
         return TotalStatisticDto.builder()
                 .time(statistic.getTime())
@@ -82,6 +81,7 @@ public class StatisticServiceImpl implements StatisticService {
                 .build();
     }
 
+    // 월간 통계 조회
     @Override
     public MonthStatisticDto getMonthlyExerciseStatistics(String memberId, int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -89,9 +89,10 @@ public class StatisticServiceImpl implements StatisticService {
 
         List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(startDate),
                 atEndOfDay(endDate).plusSeconds(1));
+
         return calculatePeriodStatistics(records, year, month);
     }
-
+    
     private MonthStatisticDto calculatePeriodStatistics(List<Record> records, int year, int month) {
         double totalTime = 0, totalDistance = 0, totalCalories = 0, totalPace = 0, totalHeartRate = 0;
         int count = records.size();
@@ -115,6 +116,7 @@ public class StatisticServiceImpl implements StatisticService {
                 .build();
     }
 
+    // 주간 통계 조회
     @Override
     public WeekStatisticDto getWeeklyExerciseStatistics(String memberId, int year, int month, int day) {
         LocalDate baseDate = LocalDate.of(year, month, day);

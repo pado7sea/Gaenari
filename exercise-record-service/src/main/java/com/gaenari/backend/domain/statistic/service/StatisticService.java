@@ -13,8 +13,10 @@ public interface StatisticService {
     // 저장되어있는 누적값 조회
     TotalStatisticDto getTotalStatistics(String memberId);
 
+    // 월간 통계 조회
     MonthStatisticDto getMonthlyExerciseStatistics(String memberId, int year, int month);
 
+    // 주간 통계 조회
     WeekStatisticDto getWeeklyExerciseStatistics(String memberId, int year, int month, int day);
 
 }
