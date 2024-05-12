@@ -1,13 +1,10 @@
 package com.gaenari.backend.domain.member.dto;
 
-import com.gaenari.backend.domain.member.dto.requestDto.MyPetDto;
+import com.gaenari.backend.domain.mypet.dto.MyPetDto;
 import com.gaenari.backend.domain.member.entity.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor

@@ -1,9 +1,12 @@
 package com.gaenari.backend.domain.member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.gaenari.backend.domain.coin.dto.requestDto.MemberCoin;
+import com.gaenari.backend.domain.coin.dto.requestDto.MemberCoinIncrease;
+import com.gaenari.backend.domain.coin.service.CoinService;
 import com.gaenari.backend.domain.member.dto.MemberDto;
 import com.gaenari.backend.domain.member.dto.requestDto.*;
-import com.gaenari.backend.domain.member.dto.responseDto.MemberCoinHistory;
+import com.gaenari.backend.domain.coin.dto.responseDto.MemberCoinHistory;
 import com.gaenari.backend.domain.member.dto.responseDto.SignupResponse;
 import com.gaenari.backend.domain.member.service.MemberService;
 import com.gaenari.backend.global.exception.member.DuplicateEmailException;
@@ -32,6 +35,7 @@ public class MemberController {
     private final ApiResponse response;
     private final Environment env;
     private final MemberService memberService;
+    private final CoinService coinService;
 
     @Operation(summary = "회원가입", description = "아이디 최대 50글자, 닉네임 최대 10글자, 비밀번호 최대 12글자(대소문자구분)")
     @PostMapping("/members") // 회원가입
@@ -140,29 +144,6 @@ public class MemberController {
             return ApiResponse.getInstance().success(ResponseCode.AVAILABLE_EMAIL, isDuplEmail);
         }
     }
-    @Operation(summary = "회원보유코인 조회", description = "회원보유코인 조회")
-    @GetMapping("/member/coin")
-    public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail) {
-        // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
-            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
-        }
-        int Coin = memberService.getCoin(memberEmail);
-        return response.success(ResponseCode.COIN_FETCH_SUCCESS, Coin);
-    }
-
-    @Operation(summary = "회원코인 내역조회", description = "회원코인 내역조회")
-    @GetMapping("/member/coin/{year}/{month}")
-    public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail,
-                                     @PathVariable(name = "year") int year,
-                                     @PathVariable(name = "month") int month) {
-        // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
-            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
-        }
-        MemberCoinHistory memberCoinHistory = memberService.getCoinRecord(memberEmail, year, month);
-        return response.success(ResponseCode.COIN_FETCH_SUCCESS, memberCoinHistory);
-    }
 
     @Operation(summary = "워치 연동인증번호 발급", description = "워치 연동인증번호 발급")
     @GetMapping("watch")
@@ -209,35 +190,6 @@ public class MemberController {
                 .headers(headers)
                 .body(responseBody);
     }
-    @Operation(summary = "회원 코인 증/감", description = "회원 코인 증/감")
-    @PostMapping("/member/coin")
-    public ResponseEntity<?> createCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail,
-                                        @RequestBody MemberCoinIncrease memberCoinIncrease){
-        // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
-            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
-        }
-        // MemberCoin Dto로 변환
-        MemberCoin memberCoin = MemberCoin.builder()
-                .memberEmail(memberEmail)
-                .isIncreased(memberCoinIncrease.getIsIncreased())
-                .coinTitle(memberCoinIncrease.getCoinTitle())
-                .coinAmount(memberCoinIncrease.getCoinAmount())
-                .build();
-        memberService.updateCoin(memberCoin);
-        return ApiResponse.getInstance().success(ResponseCode.COIN_UPDATE_SUCCESS);
-    }
-
-    @Operation(summary = "[Feign] 회원 코인 증/감", description = "Feign API")
-    @PutMapping("/member/coin")
-    public ResponseEntity<?> updateCoin(@RequestBody MemberCoin memberCoin){
-        // memberId가 null이면 인증 실패
-        if (memberCoin.getMemberEmail() == null) {
-            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
-        }
-        memberService.updateCoin(memberCoin);
-        return ResponseEntity.ok().build();
-    }
 
     @Operation(summary = "[Feign] 회원 체중 조회", description = "Feign API")
     @GetMapping("/member/weight/{memberEmail}")
@@ -249,19 +201,5 @@ public class MemberController {
         int weight = memberService.getWeight(memberEmail);
         return ResponseEntity.ok(weight);
     }
-
-    @Operation(summary = "[Feign] 회원보유코인 조회", description = "Feign API")
-    @GetMapping("/member/coin/{memberEmail}")
-    public ResponseEntity<?> getMemberCoin(@PathVariable String memberEmail) {
-        // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
-            return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
-        }
-        int Coin = memberService.getCoin(memberEmail);
-        return ResponseEntity.ok(Coin);
-    }
-
-
-
 
 }

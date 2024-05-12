@@ -1,4 +1,4 @@
-package com.gaenari.backend.domain.member.dto.requestDto;
+package com.gaenari.backend.domain.mypet.dto;
 
 import com.gaenari.backend.domain.mypet.entity.Tier;
 import lombok.*;
