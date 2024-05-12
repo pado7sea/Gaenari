@@ -103,7 +103,7 @@ class TFirstFragment : Fragment() {
 
                         totalDistance = distance
                         totalTime = time
-                        Log.d("티액티비티", "onReceive: ${time}")
+                        Log.d("티액티비티", "onReceive: $time")
 
                         val remainingTime = (programTarget * 1000) - totalTime
                         if (remainingTime > 0) {

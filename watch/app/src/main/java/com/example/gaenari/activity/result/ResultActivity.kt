@@ -63,8 +63,6 @@ class ResultActivity : AppCompatActivity() {
         }
     }
 
-
-
     /**
      * 운동 기록 저장 API 호출 및 결과 확인
      */

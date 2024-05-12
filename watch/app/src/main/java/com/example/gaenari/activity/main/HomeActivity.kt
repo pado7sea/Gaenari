@@ -1,6 +1,7 @@
 package com.example.gaenari.activity.main
 
 import android.Manifest
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.Sensor
@@ -21,6 +22,7 @@ import com.example.gaenari.StepCounterViewModel
 import com.example.gaenari.dto.response.ApiResponseListDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
 import com.example.gaenari.model.SharedViewModel
+import com.example.gaenari.service.LocationService
 import com.example.gaenari.util.AccessToken
 import com.example.gaenari.util.PreferencesUtil
 import com.example.gaenari.util.Retrofit
@@ -47,8 +49,8 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+        setupLocationService()
         setContentView(R.layout.activity_home)
-
         prefs = PreferencesUtil.getEncryptedSharedPreferences(applicationContext)
 
         viewPager = findViewById(R.id.viewPager)
@@ -95,6 +97,11 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
 
         // ViewModel 초기화
         viewModel = ViewModelProvider(this).get(StepCounterViewModel::class.java)
+    }
+
+    private fun setupLocationService(){
+        val intent = Intent(this@HomeActivity, LocationService::class.java)
+        startForegroundService(intent)
     }
 
     private fun getFavoriteProgram() {
