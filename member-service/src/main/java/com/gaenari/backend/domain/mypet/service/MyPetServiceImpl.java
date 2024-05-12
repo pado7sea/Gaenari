@@ -145,7 +145,7 @@ public class MyPetServiceImpl implements MyPetService{
         int increaseHeart = myPet.getAffection() + affection.getAffection();
         // 레벨 업
         if(increaseHeart>=100){
-            increaseHeart -= 100;
+            increaseHeart = 30;
             switch (currentTier) {
                 case BRONZE:
                     currentTier = Tier.SILVER;
@@ -181,7 +181,7 @@ public class MyPetServiceImpl implements MyPetService{
         myPetRepository.save(updateMyPet);
     }
 
-    @Override
+    @Override // [Feign] 반려견 애정도 증/감
     public void changeHeart(HeartChange heartChange) {
         // 회원 조회
         Member member = memberRepository.findByEmail(heartChange.getMemberEmail());
@@ -189,12 +189,60 @@ public class MyPetServiceImpl implements MyPetService{
         MyPet currentMyPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
                 .orElseThrow(PartnerPetNotFoundException::new);
         int changeAffection = 0;
+        Tier currentTier = currentMyPet.getTier();
         if(heartChange.getIsIncreased()){
             // true : 증가
             changeAffection = currentMyPet.getAffection() + heartChange.getHeart();
+            if(changeAffection>=100){
+                changeAffection = 30;
+                switch (currentTier) {
+                    case BRONZE:
+                        currentTier = Tier.SILVER;
+                        break;
+                    case SILVER:
+                        currentTier = Tier.GOLD;
+                        break;
+                    case GOLD:
+                        currentTier = Tier.PLATINUM;
+                        break;
+                    case PLATINUM:
+                        currentTier = Tier.DIAMOND;
+                        break;
+                    case DIAMOND:
+                        currentTier = Tier.MASTER;
+                        break;
+                    case MASTER:
+                        currentTier = Tier.MASTER; // 티어가 마스터인 경우, 일단 그대로
+                        break;
+                }
+            }
         }else{
             // false : 감소
             changeAffection = currentMyPet.getAffection() - heartChange.getHeart();
+            if(changeAffection<=0){
+                changeAffection = 70;
+                switch (currentTier) {
+                    case BRONZE:
+                        currentTier = Tier.BRONZE; // 티어가 브론즈인 경우, 그대로
+                        changeAffection = 0;
+                        break;
+                    case SILVER:
+                        currentTier = Tier.BRONZE;
+                        break;
+                    case GOLD:
+                        currentTier = Tier.SILVER;
+                        break;
+                    case PLATINUM:
+                        currentTier = Tier.GOLD;
+                        break;
+                    case DIAMOND:
+                        currentTier = Tier.PLATINUM;
+                        break;
+                    case MASTER:
+                        currentTier = Tier.DIAMOND;
+                        break;
+                }
+            }
         }
         // 애정도 변화
         MyPet updateMyPet = MyPet.builder()
@@ -203,7 +251,7 @@ public class MyPetServiceImpl implements MyPetService{
                 .dog(currentMyPet.getDog())
                 .name(currentMyPet.getName())
                 .affection(changeAffection) // 변경
-                .tier(currentMyPet.getTier())
+                .tier(currentTier) // 변경
                 .isPartner(currentMyPet.getIsPartner())
                 .changeTime(currentMyPet.getChangeTime())
                 .build();

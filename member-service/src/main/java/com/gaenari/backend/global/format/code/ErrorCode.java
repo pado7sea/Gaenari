@@ -63,6 +63,7 @@ public enum ErrorCode {
     ALREADY_HAVE_PET_TYPE(HttpStatus.BAD_REQUEST, "이미 보유중인 종류입니다."),
     NOT_TIME_CHANGE_PARTNER(HttpStatus.BAD_REQUEST, "파트너 반려견을 변경할 수 있는 시간이 아닙니다."),
     DOG_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 개 종류입니다."),
+    NOT_REQUEST_AFFECTION(HttpStatus.BAD_REQUEST, "요청할 수 없는 애정도입니다."),
 
     // 보상
     EXIST_REWARD(HttpStatus.BAD_REQUEST, "아직 수령하지 않은 보상이 존재합니다.");
