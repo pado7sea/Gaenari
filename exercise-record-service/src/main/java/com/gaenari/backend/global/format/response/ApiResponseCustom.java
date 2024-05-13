@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ApiResponse {
+public class ApiResponseCustom {
 
-    private static ApiResponse instance;
+    private static ApiResponseCustom instance;
 
-    public static ApiResponse getInstance() {
+    public static ApiResponseCustom getInstance() {
         if (instance == null) {
-            instance = new ApiResponse();
+            instance = new ApiResponseCustom();
         }
         return instance;
     }
@@ -60,9 +60,8 @@ public class ApiResponse {
         }
     }
 
+    @Data
     @Builder
-    @Setter
-    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SucceededBody<T> {
@@ -72,9 +71,8 @@ public class ApiResponse {
         private T data;
     }
 
+    @Data
     @Builder
-    @Setter
-    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class FailedBody<E> {
@@ -84,9 +82,8 @@ public class ApiResponse {
         private E errors;
     }
 
+    @Data
     @Builder
-    @Setter
-    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ErroredBody {
@@ -98,9 +95,8 @@ public class ApiResponse {
     /**
      * <p>필드 에러 출력에 사용할 객체</p>
      */
+    @Data
     @Builder
-    @Getter
-    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class FieldError {

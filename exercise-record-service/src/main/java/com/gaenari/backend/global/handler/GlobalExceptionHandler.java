@@ -7,7 +7,7 @@ import com.gaenari.backend.global.exception.record.RecordAccessException;
 import com.gaenari.backend.global.exception.record.RecordNotFoundException;
 import com.gaenari.backend.global.exception.statistic.StatisticNotFoundException;
 import com.gaenari.backend.global.format.code.ErrorCode;
-import com.gaenari.backend.global.format.response.ApiResponse;
+import com.gaenari.backend.global.format.response.ApiResponseCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final ApiResponse response;
+    private final ApiResponseCustom response;
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> handle(Exception e) {

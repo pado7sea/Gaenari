@@ -6,8 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,8 +23,7 @@ public class ProgramDetailDto {
     private Integer finishedCount; // 운동 프로그램 완주 횟수
     private List<UsageLogDto> usageLog; // 운동 프로그램 사용 기록
 
-    @Getter
-    @Setter
+    @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -35,8 +33,7 @@ public class ProgramDetailDto {
         private Double cal;
     }
 
-    @Getter
-    @Setter
+    @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor

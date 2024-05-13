@@ -2,10 +2,15 @@ package com.gaenari.backend.domain.afterExercise.controller;
 
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
+import com.gaenari.backend.domain.record.dto.responseDto.RecordDto;
 import com.gaenari.backend.global.format.code.ResponseCode;
-import com.gaenari.backend.global.format.response.ApiResponse;
+import com.gaenari.backend.global.format.response.ApiResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -21,12 +26,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/exercise")
 public class AfterExerciseController {
 
-    private final ApiResponse response;
+    private final ApiResponseCustom response;
     private final AfterExerciseService afterExerciseService;
 
     @Transactional
     @Operation(summary = "최종 운동 기록 저장", description = "최종 운동 기록 저장")
     @PostMapping("/save")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "최종 운동 기록 저장 성공", content = @Content(schema = @Schema(implementation = Long.class))),
+    })
     public ResponseEntity<?> saveExerciseRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                                 @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
 
