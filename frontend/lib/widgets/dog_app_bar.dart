@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:forsythia/screens/coin/coin_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
 
 class DogAppBar extends StatefulWidget implements PreferredSizeWidget {
   const DogAppBar({super.key});
@@ -117,18 +119,21 @@ class _DogAppBarState extends State<DogAppBar> {
   }
 
   Widget _coin() {
-    return Row(
-      children: [
-        Text16(text: '  20.000  ', bold: true),
-        Image(
-          image: AssetImage('assets/color_icons/icon_coin.png'),
-          width: 18,
-          height: 18,
-          fit: BoxFit.cover,
-          filterQuality: FilterQuality.none,
-        ),
-        SizedBox(width: 10)
-      ],
-    );
+    return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(SlidePageRoute(nextPage: CoinScreen()));
+        },
+        child: Row(
+          children: [
+            Text16(text: '  20.000  ', bold: true),
+            Image(
+              image: AssetImage('assets/color_icons/icon_coin.png'),
+              width: 18,
+              height: 18,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.none,
+            ),
+          ],
+        ));
   }
 }
