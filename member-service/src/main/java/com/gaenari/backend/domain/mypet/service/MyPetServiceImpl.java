@@ -14,6 +14,7 @@ import com.gaenari.backend.domain.mypet.entity.Tier;
 import com.gaenari.backend.domain.mypet.repository.DogRepository;
 import com.gaenari.backend.domain.mypet.repository.MyPetRepository;
 import com.gaenari.backend.global.exception.member.*;
+import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +76,11 @@ public class MyPetServiceImpl implements MyPetService{
     public void changePartner(String memberEmail, Long dogId) {
         Member member = memberRepository.findByEmail(memberEmail);
         // 받지 않은 보상이 있는지 확인
-        boolean reward = challengeServiceClient.isGetReward(memberEmail);
+        GenericResponse<?> getRewardRes = challengeServiceClient.isGetReward(memberEmail).getBody();
+        if(!getRewardRes.getStatus().equals("SUCCESS")){
+            throw new ExistRewardException();
+        }
+        boolean reward = (boolean) getRewardRes.getData();
         if(reward){
             throw new ExistRewardException();
         }

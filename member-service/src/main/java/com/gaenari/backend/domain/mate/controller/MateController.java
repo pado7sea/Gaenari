@@ -129,7 +129,7 @@ public class MateController {
     @GetMapping("/email/{mateId}")
     public ResponseEntity<?> getMateEmail(@PathVariable Long mateId){
         String mateEmail = memberService.getMemberEmail(mateId);
-        return ResponseEntity.ok(mateEmail);
+        return response.success(ResponseCode.SEARCH_MEMBER_SUCCESS, mateEmail);
     }
 
 
