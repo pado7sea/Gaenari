@@ -79,8 +79,8 @@ class IFirstFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_ifirst, container, false)
         setupViews(view)
-//        setupRecyclerView(view)
         setupProgramData()
+        setupRecyclerView(view)
         setupUpdateReceiver()
         return view
     }
@@ -99,7 +99,9 @@ class IFirstFragment : Fragment() {
         recyclerView = view.findViewById(R.id.rvIntervals)
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.addItemDecoration(CustomItemDecoration(10))
+//        recyclerView.addItemDecoration(CustomItemDecoration(10))
+        adapter = CircleAdapter(nowProgram.program.intervalInfo!!.ranges!!, 0)
+        recyclerView.adapter = adapter
     }
 
     private fun setupProgramData() {
@@ -164,6 +166,8 @@ class IFirstFragment : Fragment() {
                         //이게 다음세트꺼 시간을 의미하는건가 ?
                         realtime=0
                         updateDataUI(nowisRunning,nowSetCount)
+                        adapter.updateIndex(nowExerciseCount)
+                        vibrate(context)
                     }
                     "com.example.sibal.EXIT_PROGRAM" -> {
                         requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
@@ -190,7 +194,7 @@ class IFirstFragment : Fragment() {
 
     @SuppressLint("SetTextI18n", "ResourceType")
     private fun firstUI(setCount:Int, nowisRunning:Boolean){
-        setView.text = "1 / ${setCount} set"
+        setView.text = "1 / ${setCount}"
         val resourceId = if (nowisRunning) {
             R.raw.run6  // 사용자가 달리기를 시작한 경우
         } else {
@@ -214,10 +218,27 @@ class IFirstFragment : Fragment() {
         circleProgress.setProgress(progress)
         timeView.text = formatTime(time)
     }
+    //시간이 있는것들만 보이게
+    private fun formatTime(millis: Long): String {
+        val hours = (millis / 3600000) % 24
+        val minutes = (millis / 60000) % 60
+        val seconds = (millis / 1000) % 60
+        val formattedTime = StringBuilder()
+
+        if (hours > 0) {
+            formattedTime.append("${hours}h ")
+        }
+        if (minutes > 0 || hours > 0) { // 시간이 있는 경우 0분도 표시
+            formattedTime.append("${minutes}m ")
+        }
+        formattedTime.append("${seconds}s") // 초는 항상 표시
+
+        return formattedTime.toString().trim()
+    }
 
     @SuppressLint("ResourceType")
     private fun updateDataUI(nowisRunning:Boolean, nowSetCount : Int){
-        setView.text = "${nowSetCount} / ${setCount} set"
+        setView.text = "${nowSetCount} / ${setCount}"
         val resourceId = if (nowisRunning) {
             R.raw.run8  // 사용자가 달리기를 시작한 경우
         } else {
@@ -226,58 +247,57 @@ class IFirstFragment : Fragment() {
         gifImageView.setImageResource(resourceId)
     }
 
-    private fun updateMetricsFromIntent(intent: Intent) {
-        totalDistance = intent.getDoubleExtra("distance", 0.0)
-        val heartRate = intent.getFloatExtra("heartRate", 0f)
-        totalTime = intent.getLongExtra("time", 0) / 1000  // 넘겨받은 시간을 초로 변환
-    }
 
-    private fun calculateRemainingTime(): Double {
-        val currentIntervalTime =
-            nowProgram.program.intervalInfo?.ranges!![nowExerciseCount].time!! * 1000  // 초로 변환하여 계산
-        val elapsedTime = System.currentTimeMillis() - startTimeOfCurrentInterval
-        return currentIntervalTime - elapsedTime
-    }
+//
+//
+//
+//
+//
+//    private fun updateMetricsFromIntent(intent: Intent) {
+//        totalDistance = intent.getDoubleExtra("distance", 0.0)
+//        val heartRate = intent.getFloatExtra("heartRate", 0f)
+//        totalTime = intent.getLongExtra("time", 0) / 1000  // 넘겨받은 시간을 초로 변환
+//    }
+//
+//    private fun calculateRemainingTime(): Double {
+//        val currentIntervalTime =
+//            nowProgram.program.intervalInfo?.ranges!![nowExerciseCount].time!! * 1000  // 초로 변환하여 계산
+//        val elapsedTime = System.currentTimeMillis() - startTimeOfCurrentInterval
+//        return currentIntervalTime - elapsedTime
+//    }
 
-    private fun transitionToNextIntervalOrFinish(context: Context, intent: Intent) {
-        isTransitioning = true
-        vibrate(context)
-        startTimeOfCurrentInterval = System.currentTimeMillis()
-        if (nowExerciseCount < exerciseCount - 1) {
-            nowExerciseCount++
-            Log.d("인터벌", "transitionToNextIntervalOrFinish: ${nowExerciseCount}바뀜?")
-            totalTime = 0  // 리셋 현재 인터벌의 경과 시간
-        } else if (nowSetCount < setCount - 1) {
-            nowExerciseCount = 0  // 인터벌을 처음부터 다시 시작
-            Log.d("인터벌", "transitionToNextIntervalOrFinish: 다시시작함?")
-            nowSetCount++
-            totalTime = 0  // 리셋 현재 인터벌의 경과 시간
-        } else {
-            sendResultsAndFinish(context)
-            return
-        }
-        adapter.updateActiveIndex(nowExerciseCount)
-        setupUpdateReceiver()  // 리셋 리시버를 다시 설정하여 새 인터벌에 대한 타이밍을 재조정
-        isTransitioning = false
-    }
+//    private fun transitionToNextIntervalOrFinish(context: Context, intent: Intent) {
+//        isTransitioning = true
+//        vibrate(context)
+//        startTimeOfCurrentInterval = System.currentTimeMillis()
+//        if (nowExerciseCount < exerciseCount - 1) {
+//            nowExerciseCount++
+//            Log.d("인터벌", "transitionToNextIntervalOrFinish: ${nowExerciseCount}바뀜?")
+//            totalTime = 0  // 리셋 현재 인터벌의 경과 시간
+//        } else if (nowSetCount < setCount - 1) {
+//            nowExerciseCount = 0  // 인터벌을 처음부터 다시 시작
+//            Log.d("인터벌", "transitionToNextIntervalOrFinish: 다시시작함?")
+//            nowSetCount++
+//            totalTime = 0  // 리셋 현재 인터벌의 경과 시간
+//        } else {
+//            sendResultsAndFinish(context)
+//            return
+//        }
+//        adapter.updateActiveIndex(nowExerciseCount)
+//        setupUpdateReceiver()  // 리셋 리시버를 다시 설정하여 새 인터벌에 대한 타이밍을 재조정
+//        isTransitioning = false
+//    }
 
-    private fun calculateProgress(): Double {
-        val totalSeconds =
-            nowProgram.program.intervalInfo?.ranges!![nowExerciseCount].time!! * 1000  // 분을 초로 변환하여 계산
-        val remainingSeconds = calculateRemainingTime()
-        return 100f * (1 - remainingSeconds.toFloat() / totalSeconds)
-    }
-
-    private fun formatTime(millis: Long): String {
-        val hours = (millis / 3600000) % 24
-        val minutes = (millis / 60000) % 60
-        val seconds = (millis / 1000) % 60
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
-    }
-
-    private fun calculateSpeed(): Float {
-        return if (totalTime > 0) ((totalDistance / totalTime) * 3600).toFloat() else 0f
-    }
+//    private fun calculateProgress(): Double {
+//        val totalSeconds =
+//            nowProgram.program.intervalInfo?.ranges!![nowExerciseCount].time!! * 1000  // 분을 초로 변환하여 계산
+//        val remainingSeconds = calculateRemainingTime()
+//        return 100f * (1 - remainingSeconds.toFloat() / totalSeconds)
+//    }
+//
+//    private fun calculateSpeed(): Float {
+//        return if (totalTime > 0) ((totalDistance / totalTime) * 3600).toFloat() else 0f
+//    }
 
     private fun vibrate(context: Context) {
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -313,14 +333,14 @@ class IFirstFragment : Fragment() {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateReceiver)
     }
 
-    class CustomItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            outRect.right = space
-        }
-    }
+//    class CustomItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
+//        override fun getItemOffsets(
+//            outRect: Rect,
+//            view: View,
+//            parent: RecyclerView,
+//            state: RecyclerView.State
+//        ) {
+//            outRect.right = space
+//        }
+//    }
 }

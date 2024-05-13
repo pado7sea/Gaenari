@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mainback98">
+    android:background="@drawable/gaenariback1211">
 
 <!--    <ImageView-->
 <!--        android:layout_width="wrap_content"-->
@@ -20,29 +20,31 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/thejamsil_medium"
         android:text="Second Fragment"
+        android:textColor="@color/mainyellow"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:fontFamily="@font/thejamsil_medium"
-        android:textSize="12sp"
-        android:textColor="@color/mainyellow"
-        app:layout_constraintVertical_bias="0.180" />
+        app:layout_constraintVertical_bias="0.219" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Second Fragment"
-        android:textSize="16sp"
-        android:textColor="@color/mainblue"
         android:fontFamily="@font/thejamsil_medium"
+        android:text="Second Fragment"
+        android:textColor="@color/mainblue"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.294" />
+        app:layout_constraintVertical_bias="0.317" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
@@ -62,6 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="0"
+        android:textSize="0dp"
         android:fontFamily="@font/thejamsil_medium"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
