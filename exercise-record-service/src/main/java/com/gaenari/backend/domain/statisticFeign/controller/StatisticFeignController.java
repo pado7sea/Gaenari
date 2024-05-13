@@ -1,7 +1,6 @@
 package com.gaenari.backend.domain.statisticFeign.controller;
 
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
-import com.gaenari.backend.domain.statistic.dto.responseDto.WeekStatisticDto;
 import com.gaenari.backend.domain.statistic.service.StatisticService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponseCustom;
@@ -27,7 +26,6 @@ public class StatisticFeignController {
 
     private final ApiResponseCustom response;
     private final StatisticService statisticService;
-
 
     @Operation(summary = "[Feign] 전체 통계 조회", description = "저장되어있는 누적값 조회")
     @GetMapping("/{memberId}")

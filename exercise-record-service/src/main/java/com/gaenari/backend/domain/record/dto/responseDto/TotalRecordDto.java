@@ -3,7 +3,6 @@ package com.gaenari.backend.domain.record.dto.responseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data

@@ -1,7 +1,6 @@
 package com.gaenari.backend.domain.recordFeign.controller;
 
 import com.gaenari.backend.domain.client.program.dto.ProgramDetailDto;
-import com.gaenari.backend.domain.recordDetail.dto.RecordDetailDto;
 import com.gaenari.backend.domain.recordFeign.service.RecordFeignService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponseCustom;
