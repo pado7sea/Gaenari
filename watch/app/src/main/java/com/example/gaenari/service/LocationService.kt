@@ -30,7 +30,6 @@ import com.google.android.gms.location.Priority
 class LocationService : Service() {
     private val binder = LocalBinder()
     private var fusedLocationClient: FusedLocationProviderClient? = null
-    private var gpsUpdateTimeTargetMillis: Long = 1000
     private var lastLocation: Location? = null
 
     inner class LocalBinder : Binder() {
@@ -50,7 +49,7 @@ class LocationService : Service() {
     private fun setupLocationTracking(context: Context) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         val locationRequest =
-            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, gpsUpdateTimeTargetMillis)
+            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
                 .build()
 
         if (ActivityCompat.checkSelfPermission(
@@ -71,9 +70,9 @@ class LocationService : Service() {
         override fun onLocationResult(locationResult: LocationResult) {
             try {
                 locationResult.locations.forEach { location ->
-                    Log.d("Check", "Sending Location Info")
                     val speed = location.speed.toDouble()
                     val distance = location.distanceTo(lastLocation ?: location).toDouble()
+                    Log.d("Check", "Sending Location Info : speed($speed), distance($distance)")
                     sendLocationBroadcast(distance, speed)
                     lastLocation = location
                 }

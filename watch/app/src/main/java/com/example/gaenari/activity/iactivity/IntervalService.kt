@@ -353,6 +353,7 @@ class IntervalService : Service(), SensorEventListener {
         sensorManager?.unregisterListener(this)
         timerHandler.removeCallbacks(timerRunnable)
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
+        rangeHandler.removeCallbacks(rangeRunnable)
         unregisterBroadcastReceiver()
         Log.d("IRunningService", "Service destroyed")
 
