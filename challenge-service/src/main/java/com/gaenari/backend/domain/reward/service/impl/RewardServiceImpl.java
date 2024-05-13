@@ -152,7 +152,10 @@ public class RewardServiceImpl implements RewardService {
                 .build();
 
         // 마이크로 서비스 간 통신을 통해 회원의 코인 증가시키기
-        ResponseEntity<?> response = memberServiceClient.updateCoin(memberCoinDto);
+        ResponseEntity<GenericResponse<?>> response = memberServiceClient.updateCoin(memberCoinDto);
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new ConnectFeignFailException();
+        }
     }
 
     // 마이크로 서비스 간 통신을 통해서 애정도 보상 받게 하기
@@ -165,7 +168,10 @@ public class RewardServiceImpl implements RewardService {
                 .build();
 
         // 마이크로 서비스 간 통신을 통해 반려견의 애정도 증가시키기
-        ResponseEntity<?> response = memberServiceClient.updateHeart(heartChangeDto);
+        ResponseEntity<GenericResponse<?>> response = memberServiceClient.updateHeart(heartChangeDto);
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new ConnectFeignFailException();
+        }
     }
 
     // 도전과제 아이디에 해당하는 멤버챌린지 조회해서 받을 수 있는 보상 개수 리셋하기
