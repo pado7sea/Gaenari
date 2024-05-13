@@ -154,7 +154,7 @@ public class MemberController {
         }
 
         String authNum = memberService.issuedAuthCode(memberEmail);
-        return ApiResponse.getInstance().success(ResponseCode.ISSUED_WATCH_AUTH_CODE_SUCCESS, authNum);
+        return response.success(ResponseCode.ISSUED_WATCH_AUTH_CODE_SUCCESS, authNum);
     }
 
     @Operation(summary = "워치 연동인증번호 등록", description = "워치 연동인증번호 등록")
@@ -199,7 +199,7 @@ public class MemberController {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         int weight = memberService.getWeight(memberEmail);
-        return ResponseEntity.ok(weight);
+        return response.success(ResponseCode.MEMBER_INFO_GET_SUCCESS, weight);
     }
 
 }

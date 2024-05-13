@@ -62,7 +62,7 @@ public class CoinController {
                 .coinAmount(memberCoinIncrease.getCoinAmount())
                 .build();
         coinService.updateCoin(memberCoin);
-        return ApiResponse.getInstance().success(ResponseCode.COIN_UPDATE_SUCCESS);
+        return response.success(ResponseCode.COIN_UPDATE_SUCCESS);
     }
 
     @Operation(summary = "[Feign] 회원 코인 증/감", description = "Feign API")
@@ -73,7 +73,7 @@ public class CoinController {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         coinService.updateCoin(memberCoin);
-        return ResponseEntity.ok().build();
+        return response.success(ResponseCode.COIN_UPDATE_SUCCESS);
     }
 
     @Operation(summary = "[Feign] 회원보유코인 조회", description = "Feign API")
@@ -83,7 +83,7 @@ public class CoinController {
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        int Coin = coinService.getCoin(memberEmail);
-        return ResponseEntity.ok(Coin);
+        int coin = coinService.getCoin(memberEmail);
+        return response.success(ResponseCode.COIN_FETCH_SUCCESS, coin);
     }
 }

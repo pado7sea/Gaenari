@@ -24,6 +24,7 @@ public enum ResponseCode {
     PASSWORD_UPDATE_SUCCESS(HttpStatus.OK, "비밀번호 업데이트가 성공적으로 이루어졌습니다."),
     MEMBER_NICKNAME_UPDATE_SUCCESS(HttpStatus.OK, "회원 닉네임이 성공적으로 업데이트되었습니다."),
     MEMBER_PWD_UPDATE_SUCCESS(HttpStatus.OK, "회원 비밀번호가 성공적으로 업데이트되었습니다."),
+    MEMBER_INFO_GET_SUCCESS(HttpStatus.OK, "회원 정보를 성공적으로 불러왔습니다."),
     MEMBER_INFO_UPDATE_SUCCESS(HttpStatus.OK, "회원 정보가 성공적으로 업데이트되었습니다."),
     MATES_SUCCESS(HttpStatus.OK, "친구 목록을 성공적으로 불러왔습니다."),
     MATE_SENT_SUCCESS(HttpStatus.OK, "친구신청 발신 리스트를 성공적으로 불러왔습니다."),
@@ -44,7 +45,9 @@ public enum ResponseCode {
     ADOPT_NEW_PET_SUCCESS(HttpStatus.OK, "새로운 반려견이 성공적으로 입양되었습니다."),
     PARTNER_PET_CHANGE_SUCCESS(HttpStatus.OK, "파트너 반려견이 성공적으로 변경되었습니다."),
     PARTNER_PET_GET_SUCCESS(HttpStatus.OK, "파트너 반려견을 성공적으로 불러왔습니다."),
-    PARTNER_PET_AFFECTION_INCREASE_SUCCESS(HttpStatus.OK, "파트너 반려견의 애정도가 성공적으로 증가하였습니다.");
+    DOG_PRICE_GET_SUCCESS(HttpStatus.OK, "강아지의 가격을 성공적으로 불러왔습니다."),
+    ALL_PET_GET_SUCCESS(HttpStatus.OK, "모든 반려견들을 성공적으로 불러왔습니다."),
+    PARTNER_PET_AFFECTION_INCREASE_SUCCESS(HttpStatus.OK, "파트너 반려견의 애정도가 성공적으로 변경되었습니다.");
     private final HttpStatus status;
     private final String message;
 }

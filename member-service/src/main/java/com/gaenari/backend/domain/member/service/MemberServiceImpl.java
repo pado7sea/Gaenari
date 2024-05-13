@@ -14,6 +14,7 @@ import com.gaenari.backend.domain.mypet.entity.MyPet;
 import com.gaenari.backend.domain.mypet.repository.DogRepository;
 import com.gaenari.backend.domain.mypet.repository.MyPetRepository;
 import com.gaenari.backend.global.exception.member.*;
+import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -75,9 +76,8 @@ public class MemberServiceImpl implements MemberService{
         MyPet registMyPet = myPetRepository.save(myPet);
 
         // 기본 아이템 생성
-        ResponseEntity<?> res = inventoryServiceClient.createNormalItems(requestDto.getEmail());
-        int code = res.getStatusCode().value();
-        if(code != 200){
+        GenericResponse<?> createItemRes = inventoryServiceClient.createNormalItems(requestDto.getEmail()).getBody();
+        if(!createItemRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
 
@@ -152,9 +152,8 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.delete(mem);
 
         // 회원 아이템 삭제
-        ResponseEntity<?> res = inventoryServiceClient.deleteItems(memberEmail);
-        int code = res.getStatusCode().value();
-        if(code != 200){
+        GenericResponse<?> deleteItemRes = inventoryServiceClient.deleteItems(memberEmail).getBody();
+        if(!deleteItemRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
     }
