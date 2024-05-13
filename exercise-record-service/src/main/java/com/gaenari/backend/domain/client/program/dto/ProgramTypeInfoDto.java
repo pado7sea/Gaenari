@@ -2,7 +2,10 @@ package com.gaenari.backend.domain.client.program.dto;
 
 import com.gaenari.backend.domain.recordDetail.dto.IntervalDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder

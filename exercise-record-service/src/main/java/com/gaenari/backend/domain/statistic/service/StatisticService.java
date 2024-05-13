@@ -1,6 +1,5 @@
 package com.gaenari.backend.domain.statistic.service;
 
-import com.gaenari.backend.domain.record.entity.Record;
 import com.gaenari.backend.domain.statistic.dto.responseDto.MonthStatisticDto;
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
 import com.gaenari.backend.domain.statistic.dto.responseDto.WeekStatisticDto;
