@@ -47,17 +47,18 @@ class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
             Navigator.of(context).push(SlidePageRoute(nextPage: CoinScreen()));
           },
           child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 15, 5),
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 5),
               child: coin
                   ? Row(
                       children: [
+                        Text16(text: '20.000  ', bold: true),
                         Image(
                           image: AssetImage('assets/color_icons/icon_coin.png'),
-                          width: 20,
-                          height: 20,
+                          width: 18,
+                          height: 18,
                           fit: BoxFit.cover,
-                        ),
-                        Text16(text: '  20.000', bold: true)
+                          filterQuality: FilterQuality.none,
+                        )
                       ],
                     )
                   : null),
