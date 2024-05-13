@@ -58,8 +58,6 @@ class ResultActivity : AppCompatActivity() {
         val saveBtn = findViewById<Button>(R.id.end_btn)
         saveBtn.setOnClickListener {
             saveExerciseRecordData()
-            val intent = Intent(this@ResultActivity, HomeActivity::class.java)
-            startActivity(intent)
             finish()
         }
     }
