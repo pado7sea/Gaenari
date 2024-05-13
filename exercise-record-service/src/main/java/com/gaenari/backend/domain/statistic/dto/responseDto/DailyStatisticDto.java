@@ -1,13 +1,16 @@
 package com.gaenari.backend.domain.statistic.dto.responseDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeekStatisticDto {
+public class DailyStatisticDto {
     @Schema(description = "운동 총 시간", example = "150.0", type = "double")
     private Double time;
 
