@@ -14,6 +14,7 @@ import com.gaenari.backend.domain.item.repository.ItemRepository;
 import com.gaenari.backend.global.exception.inventory.ChangeItemFailException;
 import com.gaenari.backend.global.exception.inventory.ConnectFeignFailException;
 import com.gaenari.backend.global.exception.inventory.NotEnoughCoinException;
+import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,16 @@ public class InventoryServiceImpl implements InventoryService{
     private final ItemRepository itemRepository;
     private final InventoryRepository inventoryRepository;
     private final MemberServiceClient memberServiceClient;
+
+    @Override // [Feign] 회원 이메일 조회
+    public String getMateEmail(Long mateId) {
+        GenericResponse<?> getEmailRes = memberServiceClient.getMateEmail(mateId).getBody();
+        if(!getEmailRes.getStatus().equals("SUCCESS")){
+            throw new ConnectFeignFailException();
+        }
+        String mateEmail = getEmailRes.getData().toString();
+        return mateEmail;
+    }
 
     @Override // 회원가입시 기본 아이템 생성
     public void createNormalItems(String memberEmail) {
@@ -137,10 +148,11 @@ public class InventoryServiceImpl implements InventoryService{
     @Override // 나의 보관함 펫 조회
     public List<MyInventoryPets> getMyPets(String memberEmail) {
         // 회원이 가지고 있는 펫 조회
-        List<Pets> res = memberServiceClient.getPets(memberEmail);
-        if(res == null){
+        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(memberEmail).getBody();
+        if(!getPetsRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
+        List<Pets> res = getPetsRes.getData();
         List<MyInventoryPets> myInventoryItemsList = new ArrayList<>();
         for(int i=1; i<=10; i++){
             Pets resPets = null;
@@ -165,7 +177,9 @@ public class InventoryServiceImpl implements InventoryService{
                         .price(havePet.getPrice())
                         .build();
             }else{
-                int dogPrice = memberServiceClient.getDogPrice(i);
+                // 강아지 가격 조회
+                GenericResponse<?> getDogPriceRes = memberServiceClient.getDogPrice(i).getBody();
+                int dogPrice = Integer.parseInt(getDogPriceRes.getData().toString());
                 resPets = Pets.builder()
                         .id((long)i)
                         .name(null)
@@ -203,10 +217,11 @@ public class InventoryServiceImpl implements InventoryService{
     @Override // 회원 적용 아이템(펫, 아이템) 조회
     public MyEquipItems getEquipItems(String memberEmail) {
         // 회원이 가지고 있는 펫 조회
-        List<Pets> res = memberServiceClient.getPets(memberEmail);
-        if(res == null){
+        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(memberEmail).getBody();
+        if(!getPetsRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
+        List<Pets> res = getPetsRes.getData();
         // 회원 파트너 반려견 조회
         FriendPet friendPet = null;
         for(Pets pet : res){
@@ -242,15 +257,6 @@ public class InventoryServiceImpl implements InventoryService{
                 .build();
 
         return myEquipItems;
-    }
-
-    @Override // 회원 이메일 조회
-    public String getMateEmail(Long mateId) {
-        String mateEmail = memberServiceClient.getMateEmail(mateId);
-        if(mateEmail == null){
-            throw new ConnectFeignFailException();
-        }
-        return mateEmail;
     }
 
     @Override // 아이템 적용
@@ -297,7 +303,8 @@ public class InventoryServiceImpl implements InventoryService{
     @Override // 아이템 랜덤 구매
     public Items randomItem(String memberEmail) {
         // 기존 코인 조회후, 아이템 구매가 가능한지 확인
-        int haveCoin = memberServiceClient.getMemberCoin(memberEmail);
+        GenericResponse<?> getCoinRes = memberServiceClient.getMemberCoin(memberEmail).getBody();
+        int haveCoin = Integer.parseInt(getCoinRes.getData().toString());
         if(haveCoin < 1000){
             throw new NotEnoughCoinException();
         }
@@ -308,9 +315,8 @@ public class InventoryServiceImpl implements InventoryService{
                 .coinAmount(1000)
                 .isIncreased(false)
                 .build();
-        ResponseEntity<?> res = memberServiceClient.updateCoin(memberCoin);
-        int code = res.getStatusCode().value();
-        if(code != 200){
+        GenericResponse<?> updateCoinRes = memberServiceClient.updateCoin(memberCoin).getBody();
+        if(!updateCoinRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
         // 모든 아이템 다 가져오기

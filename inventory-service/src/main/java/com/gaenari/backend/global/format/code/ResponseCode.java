@@ -43,6 +43,8 @@ public enum ResponseCode {
     PARTNER_PET_AFFECTION_INCREASE_SUCCESS(HttpStatus.OK, "파트너 반려견의 애정도가 성공적으로 증가하였습니다."),
 
     // 인벤토리
+    EQUIP_ITEMS_SUCCESS(HttpStatus.OK, "기본 아이템들을 성공적으로 적용하였습니다."),
+    DELETE_MEMBER_ITEMS_SUCCESS(HttpStatus.OK, "가지고 있는 아이템들을 성공적으로 삭제하였습니다."),
     GET_MY_ITEMS_SUCCESS(HttpStatus.OK, "나의 보관함의 아이템들을 성공적으로 조회하였습니다."),
     GET_MY_PETS_SUCCESS(HttpStatus.OK, "나의 보관함의 강아지들을 성공적으로 조회하였습니다."),
     GET_EQUIP_ITEMS_SUCCESS(HttpStatus.OK, "적용된 나의 아이템들을 성공적으로 조회하였습니다."),
