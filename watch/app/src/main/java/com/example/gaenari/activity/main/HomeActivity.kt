@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,16 +33,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class HomeActivity : AppCompatActivity(), SensorEventListener {
+class HomeActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
     private lateinit var adapter: MyFragmentStateAdapter
-    private lateinit var sensorManager: SensorManager
-    private var stepCounterSensor: Sensor? = null
-    private var initialStepCount = -1
     private lateinit var viewModel: StepCounterViewModel
-    private val PERMISSION_REQUEST_CODE = 100 // 권한 요청 코드
 
     //즐겨찾기 데이터를 여기에 담아서 프래그먼트에서 보여줄예정
     private lateinit var sharedViewModel: SharedViewModel
@@ -49,7 +46,6 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
-        setupLocationService()
         setContentView(R.layout.activity_home)
         prefs = PreferencesUtil.getEncryptedSharedPreferences(applicationContext)
 
@@ -90,13 +86,25 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
                 }
             }
         })
-
         getFavoriteProgram();
 
-        requestPermissionsIfNeeded()
-
+        this.onBackPressedDispatcher.addCallback(this, callback)
         // ViewModel 초기화
         viewModel = ViewModelProvider(this).get(StepCounterViewModel::class.java)
+
+        setupLocationService()
+    }
+
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            // 뒤로 버튼 이벤트 처리
+            Log.d("Check", "On BackPressedCallback : position(${viewPager.currentItem})")
+
+            if(viewPager.currentItem == 2)
+                finish()
+            else
+                viewPager.setCurrentItem(2, true)
+        }
     }
 
     private fun setupLocationService(){
@@ -137,105 +145,8 @@ class HomeActivity : AppCompatActivity(), SensorEventListener {
         })
     }
 
-    private fun requestPermissionsIfNeeded() {
-        val permissionsToRequest = mutableListOf<String>()
-
-        // Activity Recognition 권한 확인
-        if (ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACTIVITY_RECOGNITION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsToRequest.add(Manifest.permission.ACTIVITY_RECOGNITION)
-        }
-
-        // Fine Location 권한 확인
-        if (ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-
-        //백그라운드에서 동작할수있게 권환 확인
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionsToRequest.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        }
-
-        if (permissionsToRequest.isNotEmpty()) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissionsToRequest.toTypedArray(),
-                PERMISSION_REQUEST_CODE
-            )
-        } else {
-            initializeSensor()  // 권한이 모두 부여되었을 때 센서 초기화
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            var allPermissionsGranted = true
-
-            for (result in grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    allPermissionsGranted = false
-                    break
-                }
-            }
-
-            if (allPermissionsGranted) {
-                initializeSensor()  // 권한 부여 시 센서 초기화
-            } else {
-                Toast.makeText(this, "필요한 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()  // 권한 거부 시
-            }
-        }
-    }
-
-    private fun initializeSensor() {
-        sensorManager = getSystemService(SensorManager::class.java)
-        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-    }
-
     override fun onResume() {
+        viewPager.setCurrentItem(2, false)
         super.onResume()
-        clearIntent()
-        stepCounterSensor?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)  // 센서 리스너 등록
-        }
-    }
-
-    private fun clearIntent() {
-        intent = null  // Intent를 비움
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(this, stepCounterSensor)  // 센서 리스너 해제
-    }
-
-    override fun onSensorChanged(event: SensorEvent) {
-        if (initialStepCount == -1) {
-            initialStepCount = event.values[0].toInt()  // 초기 걸음 수 설정
-        }
-
-        val currentStepCount = event.values[0].toInt()
-        val steps = currentStepCount - initialStepCount
-
-        viewModel.updateStepCount(steps)  // ViewModel로 데이터 업데이트
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // 센서 정확도 변경 시 처리
     }
 }
