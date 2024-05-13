@@ -20,8 +20,8 @@ class SmallAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: myBackground,
-      // 뒤로가기 버튼
 
+      // 뒤로가기 버튼
       leading: Padding(
         padding: const EdgeInsets.all(15),
         child: back
