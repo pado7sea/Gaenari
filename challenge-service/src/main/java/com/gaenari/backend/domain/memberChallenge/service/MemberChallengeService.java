@@ -7,16 +7,52 @@ import java.util.List;
 
 public interface MemberChallengeService {
 
-    // 회원 업적 조회
+    /**
+     * 지정된 회원의 모든 업적을 조회한다.
+     *
+     * @param memberId String 형태로, 조회할 회원의 고유 식별자.
+     * @return List<MemberTrophyDto> 회원이 달성한 모든 업적에 대한 정보 목록을 반환한다.
+     */
+    List<MemberTrophyDto> getAllMemberTrophies(String memberId);
+
+    /**
+     * 지정된 회원의 모든 미션을 조회한다.
+     *
+     * @param memberId String 형태로, 조회할 회원의 고유 식별자.
+     * @return List<MemberMissionDto> 회원이 달성한 모든 미션에 대한 정보 목록을 반환한다.
+     */
+    List<MemberMissionDto> getAllMemberMissions(String memberId);
+
+    /**
+     * 지정된 회원이 달성한 업적만을 조회한다.
+     *
+     * @param memberId String 형태로, 조회할 회원의 고유 식별자.
+     * @return List<MemberTrophyDto> 회원이 달성한 업적에 대한 정보 목록을 반환한다.
+     */
     List<MemberTrophyDto> getMemberTrophies(String memberId);
 
-    // 회원 미션 조회
+    /**
+     * 지정된 회원이 달성한 미션만을 조회한다.
+     *
+     * @param memberId String 형태로, 조회할 회원의 고유 식별자.
+     * @return List<MemberMissionDto> 회원이 달성한 미션에 대한 정보 목록을 반환한다.
+     */
     List<MemberMissionDto> getMemberMissions(String memberId);
 
-    // 회원 도전과제 업데이트
+    /**
+     * 지정된 회원의 특정 도전과제를 업데이트한다.
+     *
+     * @param memberId String 형태로, 업데이트할 회원의 고유 식별자.
+     * @param challengeId Integer 형태로, 업데이트할 도전과제의 고유 식별자.
+     */
     void updateMemberChallenge(String memberId, Integer challengeId);
 
-    // 회원 미션 달성 횟수 초기화
+    /**
+     * 지정된 회원의 특정 미션의 달성 횟수를 초기화한다.
+     *
+     * @param memberId String 형태로, 초기화할 회원의 고유 식별자.
+     * @param challengeId Integer 형태로, 초기화할 미션의 고유 식별자.
+     */
     void resetMemberMissionAchievement(String memberId, Integer challengeId);
 
 }
