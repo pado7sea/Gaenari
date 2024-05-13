@@ -4,8 +4,7 @@ import com.gaenari.backend.domain.client.challenge.dto.enumType.ChallengeCategor
 import com.gaenari.backend.domain.record.dto.enumType.ChallengeType;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

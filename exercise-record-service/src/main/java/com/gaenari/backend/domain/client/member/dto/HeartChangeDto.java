@@ -2,8 +2,7 @@ package com.gaenari.backend.domain.client.member.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

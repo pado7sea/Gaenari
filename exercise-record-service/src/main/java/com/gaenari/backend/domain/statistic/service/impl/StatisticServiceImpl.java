@@ -8,7 +8,6 @@ import com.gaenari.backend.domain.statistic.dto.responseDto.WeekStatisticDto;
 import com.gaenari.backend.domain.statistic.entity.Statistic;
 import com.gaenari.backend.domain.statistic.repository.StatisticRepository;
 import com.gaenari.backend.domain.statistic.service.StatisticService;
-import com.gaenari.backend.global.exception.statistic.StatisticNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     private TotalStatisticDto calculateTotalStatistics(List<Record> records) {
-        double totalTime = 0, totalDistance = 0, totalCalories = 0, totalPace = 0, totalHeartRate = 0;
+        double totalTime = 0, totalDistance = 0, totalCalories = 0, totalPace = 0;
         int count = records.size();
 
         for (Record record : records) {
@@ -41,7 +40,6 @@ public class StatisticServiceImpl implements StatisticService {
             totalDistance += record.getDistance();
             totalCalories += record.getCal();
             totalPace += record.getAveragePace();
-            totalHeartRate += record.getAverageHeartRate();
         }
 
         LocalDateTime mostRecentDate = getMostRecentDate(records);
@@ -135,10 +133,10 @@ public class StatisticServiceImpl implements StatisticService {
         List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(startDate),
                 atEndOfDay(endDate).plusSeconds(1));
 
-        return buildWeekStatistics(records, startDate);
+        return buildWeekStatistics(records);
     }
 
-    private WeekStatisticDto buildWeekStatistics(List<Record> records, LocalDate startDate) {
+    private WeekStatisticDto buildWeekStatistics(List<Record> records) {
         double totalTime = 0, totalDistance = 0, totalCalories = 0, totalPace = 0, totalHeartRate = 0;
         int count = records.size();
 
