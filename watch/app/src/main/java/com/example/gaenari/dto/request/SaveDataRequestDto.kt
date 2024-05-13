@@ -8,8 +8,8 @@ import java.time.LocalDateTime
 data class SaveDataRequestDto(
     val date: LocalDateTime = LocalDateTime.now(),
     val exerciseType: String,
-    val programType: String,
-    val program: Program,
+    val programType: String?,
+    val program: Program?,
     val record: Record,
     val speeds: Speeds,
     val heartrates: HeartRates

@@ -25,5 +25,10 @@
     <color name="resultred">#F61E1E</color>
     <color name="dd2">#FFC979</color>
     <color name="dd5">#00FFFFFF</color>
+    <color name="run1">#BF6EFF</color>
+    <color name="run2">#7D0D72</color>
+    <color name="walk1">#FFFCAB</color>
+    <color name="walk2">#FFCE22</color>
+
 
 </resources>

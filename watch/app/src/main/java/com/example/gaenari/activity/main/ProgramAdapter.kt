@@ -76,6 +76,12 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
                     if (program.type == "I") {
                         putExtra("programData", program)
                     }
+                    if (program.type == "R") {
+                        putExtra("programData", program)
+                    }
+                    if (program.type == "W") {
+                        putExtra("programData", program)
+                    }
                 }
                 if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)

@@ -1,11 +1,10 @@
-package com.example.gaenari.activity.iactivity
+package com.example.gaenari.activity.runandwalk.run
 
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -16,29 +15,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
-import com.example.gaenari.CircularProgressButton
+import androidx.fragment.app.Fragment
 import com.example.gaenari.R
+import com.example.gaenari.CircularProgressButton
 import kotlin.math.max
 import kotlin.math.min
 
-class IsecondFragment : Fragment() {
+class RSecondFragment : Fragment() {
     private lateinit var pauseButton: Button
     private lateinit var stopButton: Button
     private lateinit var circularProgressButton: CircularProgressButton
-    private var service: IntervalService? = null
+    private var service: RService? = null
     private var isPaused = false
     private val pauseTargetTimeMillis = 500L
     private val stopTargetTimeMillis = 1500L
 
-    companion object{
-        fun ewInstance(): IsecondFragment = IsecondFragment()
+    companion object {
+        fun newInstance(): RSecondFragment = RSecondFragment()
     }
-    @SuppressLint("ClickableViewAccessibility")
+
+    @SuppressLint("ClickableViewAccessibility", "MissingInflatedId")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle? //
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_isecond, container, false)
+        val view = inflater.inflate(R.layout.fragment_r_second, container, false)
         pauseButton = view.findViewById(R.id.pauseButton)
         stopButton = view.findViewById(R.id.stopButton)
         circularProgressButton = view.findViewById(R.id.circularProgressButton)
@@ -134,15 +134,15 @@ class IsecondFragment : Fragment() {
     }
 
     private fun bindService() {
-        Intent(context, IntervalService::class.java).also { intent ->
+        Intent(context, RService::class.java).also { intent ->
             context?.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as IntervalService.LocalBinder
-            this@IsecondFragment.service = binder.getService()
+            val binder = service as RService.LocalBinder
+            this@RSecondFragment.service = binder.getService()
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
