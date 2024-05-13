@@ -60,6 +60,7 @@ class ResultActivity : AppCompatActivity() {
             saveExerciseRecordData()
             val intent = Intent(this@ResultActivity, HomeActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 

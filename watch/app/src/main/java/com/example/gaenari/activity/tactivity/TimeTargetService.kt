@@ -219,6 +219,7 @@ class TimeTargetService : Service(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         Log.d("Check", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
+            if(event.values[0] < 40) return
             currentHeartRate = event.values[0]
             oneMinuteHeartRate += currentHeartRate
             heartRateCount++
@@ -229,8 +230,8 @@ class TimeTargetService : Service(), SensorEventListener {
         remainInfoSave()
 
         /* 분 당 정보 누적합을 누적 개수로 나누어 전체 평균 계산 */
-        requestDto.speeds.average.div(requestDto.speeds.arr.size)
-        requestDto.heartrates.average.div(requestDto.heartrates.arr.size)
+        requestDto.speeds.average /= requestDto.speeds.arr.size
+        requestDto.heartrates.average /= requestDto.heartrates.arr.size
 
         /* record 정보 추가 */
         requestDto.record.distance = totalDistance
