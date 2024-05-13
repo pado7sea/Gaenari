@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/screens/coin/coin_screen.dart';
 import 'package:forsythia/theme/color.dart';
+import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
 
 class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String sentence;
+  final bool coin;
 
   const LargeAppBar({
     super.key,
     required this.title,
     required this.sentence,
+    this.coin = false,
   });
 
   // 앱바 높이 지정
@@ -19,6 +24,7 @@ class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: myBackground,
+
       // 뒤로가기 버튼
       leading: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -33,6 +39,30 @@ class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ), // 여기에 네가 사용하는 이미지 경로 넣어줘
         ),
       ),
+
+      // 코인
+      actions: [
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(SlidePageRoute(nextPage: CoinScreen()));
+          },
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 15, 5),
+              child: coin
+                  ? Row(
+                      children: [
+                        Image(
+                          image: AssetImage('assets/color_icons/icon_coin.png'),
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.cover,
+                        ),
+                        Text16(text: '  20.000', bold: true)
+                      ],
+                    )
+                  : null),
+        )
+      ],
 
       // 앱바 이미지
       centerTitle: true,
