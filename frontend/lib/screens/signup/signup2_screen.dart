@@ -258,7 +258,8 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                 selectedBorderColor: myMainGreen,
                 borderRadius: BorderRadius.circular(10),
                 borderWidth: 2,
-                constraints: BoxConstraints.expand(width: 110),
+                constraints: BoxConstraints.expand(
+                    width: (MediaQuery.of(context).size.width - 40) / 4),
                 children: const <Widget>[
                   Text('남자'),
                   Text('여자'),
