@@ -23,6 +23,12 @@ public abstract class ProgramBaseService {
     protected final ProgramRepository programRepository;
     protected final RecordServiceClient recordServiceClient;
 
+    /**
+     * 프로그램의 정보를 ProgramTypeInfoDto 형식으로 변환합니다.
+     *
+     * @param program 프로그램 엔티티
+     * @return 프로그램 정보 DTO
+     */
     protected ProgramTypeInfoDto convertToProgramTypeInfoDto(Program program) {
         switch (program.getType()) {
             case D:  // 거리 목표 프로그램
@@ -59,7 +65,13 @@ public abstract class ProgramBaseService {
         }
     }
 
-    // 마이크로 서비스간 통신을 통해 운동 기록 정보 가져오기
+    /**
+     * 프로그램의 운동 기록을 마이크로 서비스로부터 가져옵니다.
+     *
+     * @param programId 프로그램 ID
+     * @return 프로그램의 운동 기록
+     * @throws ConnectFeignFailException 마이크로 서비스 연결 실패 예외
+     */
     protected List<ProgramDetailDto.UsageLogDto> fetchUsageLog(Long programId) {
         ResponseEntity<GenericResponse<List<ProgramDetailDto.UsageLogDto>>> response = recordServiceClient.getUsageLog(programId);
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {

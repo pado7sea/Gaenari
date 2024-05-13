@@ -5,10 +5,13 @@ import com.gaenari.backend.domain.program.dto.responseDto.ProgramDetailDto;
 import com.gaenari.backend.domain.program.dto.responseDto.ProgramDto;
 import com.gaenari.backend.domain.program.service.impl.ProgramServiceImpl;
 import com.gaenari.backend.global.format.code.ResponseCode;
-import com.gaenari.backend.global.format.response.ApiResponse;
+import com.gaenari.backend.global.format.response.ApiResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +26,14 @@ import java.util.List;
 @RequestMapping("/program")
 public class ProgramController {
 
-    private final ApiResponse response;
+    private final ApiResponseCustom response;
     private final ProgramServiceImpl programService;
 
     @Operation(summary = "운동 프로그램 목록 조회", description = "운동 프로그램 목록 조회")
     @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "운동 프로그램 목록 조회 성공", content = @Content(schema = @Schema(implementation = ProgramDto.class))),
+    })
     public ResponseEntity<?> getAllPrograms(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         List<ProgramDto> programList = programService.getProgramList(memberId);
 
@@ -36,6 +42,9 @@ public class ProgramController {
 
     @Operation(summary = "운동 프로그램 상세 조회", description = "운동 프로그램 상세 조회")
     @GetMapping("/{programId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "운동 프로그램 상세 조회 성공", content = @Content(schema = @Schema(implementation = ProgramDetailDto.class))),
+    })
     public ResponseEntity<?> getProgramDetail(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                               @Parameter(description = "운동 프로그램 ID") @PathVariable(name = "programId") Long programId) {
         ProgramDetailDto programDetail = programService.getProgramDetail(memberId, programId);
@@ -45,6 +54,9 @@ public class ProgramController {
 
     @Operation(summary = "운동 프로그램 생성", description = "운동 프로그램 생성")
     @PostMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "운동 프로그램 생성 성공", content = @Content(schema = @Schema(implementation = Long.class))),
+    })
     public ResponseEntity<?> createProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                            @Valid @RequestBody ProgramCreateDto programDto) {
         Long programId = programService.createProgram(memberId, programDto);

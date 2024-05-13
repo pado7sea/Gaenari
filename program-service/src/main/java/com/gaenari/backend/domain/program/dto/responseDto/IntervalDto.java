@@ -1,5 +1,6 @@
 package com.gaenari.backend.domain.program.dto.responseDto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
@@ -10,8 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IntervalDto {
-    private Double duration;  // 인터벌 총 소요 시간
-    private Integer setCount;  // 세트 수
-    private Integer rangeCount; // 세트 당 구간 수
-    private List<RangeDto> ranges; // 구간 리스트
+    @Schema(description = "인터벌 총 소요 시간", example = "360.0")
+    private Double duration;
+
+    @Schema(description = "세트 수", example = "3")
+    private Integer setCount;
+
+    @Schema(description = "세트 당 구간 수", example = "4")
+    private Integer rangeCount;
+
+    @Schema(description = "구간 리스트")
+    private List<RangeDto> ranges;
 }

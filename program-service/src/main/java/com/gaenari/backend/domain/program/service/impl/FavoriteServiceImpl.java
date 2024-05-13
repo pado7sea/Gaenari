@@ -48,7 +48,7 @@ public class FavoriteServiceImpl extends ProgramBaseService implements FavoriteS
     }
 
     @Override
-    public Boolean updaterFavoriteStatus(String memberId, Long programId) {
+    public Boolean updateFavoriteStatus(String memberId, Long programId) {
         Program program = programRepository.findByMemberIdAndId(memberId, programId);
 
         if (program == null) {
