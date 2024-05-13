@@ -196,11 +196,11 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 마이크로 서비스 간 통신을 통해 체중 가져오기
     private double fetchMemberWeight(String memberId) {
-        ResponseEntity<?> response = memberServiceClient.getWeight(memberId);
+        ResponseEntity<GenericResponse<Integer>> response = memberServiceClient.getWeight(memberId);
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new ConnectFeignFailException();
         }
-        return response.getStatusCode().value();
+        return response.getBody().getData();
     }
 
     // 운동 완주 여부 판단 메서드
