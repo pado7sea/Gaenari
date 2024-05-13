@@ -24,10 +24,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +89,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
     }
 
     private IntervalDto constructIntervalDto(Record record) {
-        if (record.getProgramType() != ProgramType.I || record.getRanges() == null) {
+        if (record.getProgramType() == ProgramType.I || record.getRanges() == null) {
             throw new IntervalInfoNotFoundException();
         }
 
