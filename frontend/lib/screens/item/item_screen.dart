@@ -29,7 +29,7 @@ class _ItemScreenState extends State<ItemScreen>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 200),
     );
 
     _animation = Tween(begin: 0.00, end: 0.08).animate(
@@ -43,6 +43,12 @@ class _ItemScreenState extends State<ItemScreen>
       });
   }
 
+  List<String> images = [
+    'assets/item_tier/tier_e.png',
+    'assets/item_tier/tier_l.png',
+    'assets/item_tier/tier_r.png',
+  ];
+
   @override
   void dispose() {
     _controller.dispose();
@@ -55,6 +61,7 @@ class _ItemScreenState extends State<ItemScreen>
       appBar: LargeAppBar(
         title: '뽑기',
         sentence: '엄청난 아이템을 뽑아보자!',
+        coin: true,
       ),
       body: Column(
         children: [
@@ -89,12 +96,12 @@ class _ItemScreenState extends State<ItemScreen>
           child: Row(
             children: [
               Image(
-                image: AssetImage('assets/emoji/ruler.png'),
+                image: AssetImage('assets/emoji/drawer.png'),
                 width: 20,
                 height: 20,
                 fit: BoxFit.cover,
               ),
-              Text20(text: '  보관함이동  ', bold: true),
+              Text16(text: '  보관함이동  ', bold: true),
             ],
           ),
         ),
@@ -129,8 +136,13 @@ class _ItemScreenState extends State<ItemScreen>
         _controller.forward(); // 애니메이션을 시작합니다.
 
         // 애니메이션을 멈추도록 예약
-        Timer(Duration(milliseconds: 3200), () {
-          _controller.stop();
+        Timer(Duration(milliseconds: 3100), () {
+          setState(() {
+            _animation = Tween(begin: 0.00, end: 0.0).animate(
+              CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+            );
+          });
+          _controller.stop(); // 애니메이션 중지
         });
       },
       child: Stack(
@@ -218,7 +230,6 @@ class _ItemScreenState extends State<ItemScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text36(text: _new ? '새로운!' : '꽝', bold: true),
-                        SizedBox(height: 50),
                         Image(
                           image: AssetImage('assets/images/goldbox.png'),
                           width: 200,
@@ -230,15 +241,15 @@ class _ItemScreenState extends State<ItemScreen>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image(
-                              image: AssetImage('assets/images/goldbox.png'),
-                              width: 30,
-                              height: 30,
+                              image: AssetImage(images[0]),
+                              width: 25,
+                              height: 25,
                               fit: BoxFit.cover,
                             ),
                             Text16(text: ' 냄새나는 어쩌구', bold: true)
                           ],
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 20),
                         Stack(
                           alignment: Alignment.center,
                           children: [

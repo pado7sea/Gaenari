@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/screens/coin/coin_screen.dart';
 import 'package:forsythia/screens/item/item_screen.dart';
+import 'package:forsythia/widgets/dog_app_bar.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,9 +16,7 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('강아지집'),
-      ),
+      appBar: DogAppBar(),
       body: Column(
         children: [
           ElevatedButton(
