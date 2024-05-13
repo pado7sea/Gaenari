@@ -3,9 +3,13 @@ package com.gaenari.backend.domain.program.controller;
 import com.gaenari.backend.domain.program.dto.responseDto.FavoriteDto;
 import com.gaenari.backend.domain.program.service.FavoriteService;
 import com.gaenari.backend.global.format.code.ResponseCode;
-import com.gaenari.backend.global.format.response.ApiResponse;
+import com.gaenari.backend.global.format.response.ApiResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +23,7 @@ import java.util.List;
 @RequestMapping("/program/favorite")
 public class FavoriteController {
 
-    private final ApiResponse response;
+    private final ApiResponseCustom response;
     private final FavoriteService favoriteService;
 
     @Operation(summary = "즐겨찾기 목록 조회", description = "즐겨찾기 목록 조회")
@@ -32,9 +36,12 @@ public class FavoriteController {
 
     @Operation(summary = "즐겨찾기 등록/해제", description = "즐겨찾기 등록/해제")
     @PutMapping("/{programId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "즐겨찾기 등록/해제 성공", content = @Content(schema = @Schema(implementation = boolean.class))),
+    })
     public ResponseEntity<?> updaterFavoriteStatus(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
                                                    @Parameter(description = "운동 프로그램 ID")  @PathVariable(name = "programId") Long programId) {
-        Boolean isSuccess = favoriteService.updaterFavoriteStatus(memberId, programId);
+        Boolean isSuccess = favoriteService.updateFavoriteStatus(memberId, programId);
 
         if (isSuccess) {
             return response.success(ResponseCode.FAVORITE_PROGRAM_UPDATED, isSuccess);
