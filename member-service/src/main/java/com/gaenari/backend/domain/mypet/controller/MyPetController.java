@@ -82,7 +82,7 @@ public class MyPetController {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         myPetService.changeHeart(heartChange);
-        return ResponseEntity.ok().build();
+        return response.success(ResponseCode.PARTNER_PET_AFFECTION_INCREASE_SUCCESS);
     }
 
     @Operation(summary = "[Feign] 반려견 전체 조회", description = "Feign API")
@@ -93,14 +93,14 @@ public class MyPetController {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         List<Pets> petsList = myPetService.getPets(memberEmail);
-        return ResponseEntity.ok(petsList);
+        return response.success(ResponseCode.ALL_PET_GET_SUCCESS, petsList);
     }
 
     @Operation(summary = "[Feign] 강아지 가격 조회", description = "Feign API")
     @GetMapping("/dog/{dogId}")
     public ResponseEntity<?> getDogPrice(@PathVariable int dogId){
         int dogPrice = myPetService.getDogPrice(dogId);
-        return ResponseEntity.ok(dogPrice);
+        return response.success(ResponseCode.DOG_PRICE_GET_SUCCESS, dogPrice);
     }
 
 }
