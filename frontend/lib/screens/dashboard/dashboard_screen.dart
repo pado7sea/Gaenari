@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/challenge/challenge_screen.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
+import 'package:forsythia/screens/watch/watch_screen.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -131,17 +132,22 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                       ),
                     ),
                     Expanded(
-                      flex: 6,
-                      child: Container(
-                        height: 256,
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 40),
-                        margin: EdgeInsets.only(left: 16),
-                        decoration: myBoxDecoration,
-                        child: Text16(
-                          text: "워치 or 날씨",
-                        ),
-                      ),
-                    ),
+                        flex: 6,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(SlidePageRoute(nextPage: WatchScreen()));
+                          },
+                          child: Container(
+                            height: 256,
+                            padding: EdgeInsets.fromLTRB(10, 10, 10, 40),
+                            margin: EdgeInsets.only(left: 16),
+                            decoration: myBoxDecoration,
+                            child: Text16(
+                              text: "워치 or 날씨",
+                            ),
+                          ),
+                        )),
                   ],
                 ),
               ],
