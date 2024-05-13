@@ -31,14 +31,14 @@ public class InventoryController {
     @PostMapping("/items/{memberEmail}")
     public ResponseEntity<?> createNormalItems(@PathVariable String memberEmail){
         inventoryService.createNormalItems(memberEmail);
-        return ResponseEntity.ok().build();
+        return response.success(ResponseCode.EQUIP_ITEMS_SUCCESS);
     }
 
     @Operation(summary = "[Feign] 아이템 삭제", description = "회원탈퇴시 아이템 삭제")
     @DeleteMapping("/items/{memberEmail}")
     public ResponseEntity<?> deleteItems(@PathVariable String memberEmail){
         inventoryService.deleteItems(memberEmail);
-        return ResponseEntity.ok().build();
+        return response.success(ResponseCode.DELETE_MEMBER_ITEMS_SUCCESS);
     }
 
     @Operation(summary = "나의 보관함 보유 아이템 개수", description = "보관함 첫 화면 구성")
