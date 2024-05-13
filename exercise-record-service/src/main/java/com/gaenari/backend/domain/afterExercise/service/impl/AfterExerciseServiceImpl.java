@@ -42,16 +42,17 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 프로그램 사용 횟수 업데이트
     @Override
-    public Integer updateProgramUsageCount(String memberId, SaveExerciseRecordDto exerciseDto) {
-        validateProgramInfo(exerciseDto);
-
-        return programServiceClient.updateProgramUsageCount(exerciseDto.getProgram().getProgramId()).getBody().getData();
+    public void updateProgramUsageCount(String memberId, SaveExerciseRecordDto exerciseDto) {
+        if(validateProgramInfo(exerciseDto)) {
+          programServiceClient.updateProgramUsageCount(exerciseDto.getProgram().getProgramId()).getBody().getData();
+        }
     }
 
-    private void validateProgramInfo(SaveExerciseRecordDto dto) {
-        if (dto.getExerciseType() != ExerciseType.P || dto.getProgram() == null) {
+    private Boolean validateProgramInfo(SaveExerciseRecordDto dto) {
+        if(dto.getExerciseType() == ExerciseType.P && dto.getProgram() == null){
             throw new ProgramNotFoundException();
         }
+        return dto.getExerciseType() == ExerciseType.P;
     }
 
     private void validateIntervalInfo(SaveExerciseRecordDto dto) {
@@ -63,7 +64,6 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     // 운동 후 기록 저장 메서드
     @Override
     public Long saveExerciseRecord(String memberId, SaveExerciseRecordDto exerciseDto) {
-        validateProgramInfo(exerciseDto);
         validateIntervalInfo(exerciseDto);
         Record record = createRecordFromDto(memberId, exerciseDto);
         recordRepository.save(record);
