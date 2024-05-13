@@ -25,9 +25,26 @@
         android:theme="@style/Theme.Sibal"
         tools:targetApi="31">
         <service
+            android:name=".activity.runandwalk.walk.WService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name=".activity.runandwalk.run.RService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".activity.runandwalk.walk.WalkingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.runandwalk.run.RunningActivity"
+            android:exported="false" />
+
+        <service
             android:name=".service.LocationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name=".activity.dactivity.DistTargetService"
             android:enabled="true"

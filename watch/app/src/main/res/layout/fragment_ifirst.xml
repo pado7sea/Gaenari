@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/interback121">
+    android:background="@drawable/interbackdark">
 
     <com.example.gaenari.activity.iactivity.ICircleProgress
         android:id="@+id/circleProgress"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/thejamsil_medium"
         android:text="set"
-        android:textColor="@color/black"
+        android:textColor="@color/whitegreen"
         android:textSize="9sp"
         app:layout_constraintBottom_toTopOf="@+id/setname"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
         android:layout_marginTop="24dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="현재세트"
-        android:textColor="@color/black"
+        android:textColor="@color/whitegreen"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
