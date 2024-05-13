@@ -4,7 +4,10 @@ import com.gaenari.backend.domain.client.member.MemberServiceClient;
 import com.gaenari.backend.domain.client.member.dto.HeartChangeDto;
 import com.gaenari.backend.domain.statistic.entity.Statistic;
 import com.gaenari.backend.domain.statistic.repository.StatisticRepository;
+import com.gaenari.backend.global.exception.feign.ConnectFeignFailException;
+import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +41,10 @@ public class ScheduledTasks {
     }
 
     private void decreaseHeartForMember(String memberId, int amount) {
-        memberServiceClient.updateHeart(new HeartChangeDto(memberId, false, amount));
+        ResponseEntity<GenericResponse<?>> response = memberServiceClient.updateHeart(new HeartChangeDto(memberId, false, amount));
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new ConnectFeignFailException();
+        }
         System.out.println("Heart decreased for: " + memberId + ", amount: " + amount);
     }
 }
