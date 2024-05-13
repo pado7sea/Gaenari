@@ -1,19 +1,32 @@
 package com.gaenari.backend.domain.memberChallenge.dto.responseDto;
 
 import com.gaenari.backend.domain.challenge.dto.enumType.ChallengeType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberMissionDto {
+    @Schema(description = "도전 과제 ID", example = "1")
     private Integer challengeId;
-    private ChallengeType type;     // enum: D(거리), T(시간)
-    private Integer challengeValue; // 목표 수치
-    private Integer coin;           // 코인
-    private Integer heart;          // 애정도
-    private Integer count;          // 미션 달성 횟수
-    private Integer obtainable;     // 획득하지 않은 보상 개수
+
+    @Schema(description = "도전 과제 유형", allowableValues = {"D", "T"})
+    private ChallengeType type;
+
+    @Schema(description = "도전 과제 목표 수치")
+    private Integer challengeValue;
+
+    @Schema(description = "획득 코인")
+    private Integer coin;
+
+    @Schema(description = "획득 하트")
+    private Integer heart;
+
+    @Schema(description = "미션 달성 횟수")
+    private Integer count;
+
+    @Schema(description = "획득하지 않은 보상 개수")
+    private Integer obtainable;
 }

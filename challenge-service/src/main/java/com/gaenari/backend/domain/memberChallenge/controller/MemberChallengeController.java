@@ -4,9 +4,13 @@ import com.gaenari.backend.domain.memberChallenge.dto.responseDto.MemberMissionD
 import com.gaenari.backend.domain.memberChallenge.dto.responseDto.MemberTrophyDto;
 import com.gaenari.backend.domain.memberChallenge.service.MemberChallengeService;
 import com.gaenari.backend.global.format.code.ResponseCode;
-import com.gaenari.backend.global.format.response.ApiResponse;
+import com.gaenari.backend.global.format.response.ApiResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +24,47 @@ import java.util.List;
 @RequestMapping("/achieve")
 public class MemberChallengeController {
 
-    private final ApiResponse response;
+    private final ApiResponseCustom response;
     private final MemberChallengeService memberChallengeService;
 
-    @Operation(summary = "회원 업적 조회", description = "회원 업적 조회")
+    @Operation(summary = "회원 모든 업적 조회", description = "회원 업적 조회")
     @GetMapping("/trophy")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 모든 업적 조회 성공", content = @Content(schema = @Schema(implementation = MemberTrophyDto.class)))
+    })
+    public ResponseEntity<?> getAllMemberTrophies(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
+        List<MemberTrophyDto> trophyDtos = memberChallengeService.getAllMemberTrophies(memberId);
+
+        return response.success(ResponseCode.ACHIEVED_TROPHY_FETCHED, trophyDtos);
+    }
+
+    @Operation(summary = "회원 모든 미션 조회", description = "회원 미션 조회")
+    @GetMapping("/mission")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 모든 미션 조회 성공", content = @Content(schema = @Schema(implementation = MemberMissionDto.class)))
+    })
+    public ResponseEntity<?> getAllMemberMissions(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
+        List<MemberMissionDto> missionDtos = memberChallengeService.getAllMemberMissions(memberId);
+
+        return response.success(ResponseCode.ACHIEVED_MISSION_FETCHED, missionDtos);
+    }
+
+    @Operation(summary = "회원 달성 업적 조회", description = "회원 업적 조회")
+    @GetMapping("/trophy/only")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 달성 업적 조회 성공", content = @Content(schema = @Schema(implementation = MemberTrophyDto.class)))
+    })
     public ResponseEntity<?> getMemberTrophies(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         List<MemberTrophyDto> trophyDtos = memberChallengeService.getMemberTrophies(memberId);
 
         return response.success(ResponseCode.ACHIEVED_TROPHY_FETCHED, trophyDtos);
     }
 
-    @Operation(summary = "회원 미션 조회", description = "회원 미션 조회")
-    @GetMapping("/mission")
+    @Operation(summary = "회원 달성 미션 조회", description = "회원 미션 조회")
+    @GetMapping("/mission/only")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 달성 미션 조회 성공", content = @Content(schema = @Schema(implementation = MemberMissionDto.class)))
+    })
     public ResponseEntity<?> getMemberMissions(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         List<MemberMissionDto> missionDtos = memberChallengeService.getMemberMissions(memberId);
 
