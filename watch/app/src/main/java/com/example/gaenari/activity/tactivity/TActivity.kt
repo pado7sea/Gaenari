@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gaenari.R
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 
 class TActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager2
@@ -22,9 +23,16 @@ class TActivity : AppCompatActivity() {
         programTitle = intent.getStringExtra("programTitle") ?: "기본값"
         programType = intent.getStringExtra("programType") ?: "기본값"
         programTarget = intent.getIntExtra("programTarget", 0) // Intent에서 programTarget 가져오기
+        this.onBackPressedDispatcher.addCallback(this, callback)
         setupViewPager()
-        Log.d("jinzza", "programTarget: ${programTarget}")
+    }
 
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            // 뒤로 버튼 이벤트 처리
+            Log.d("Check", "On BackPressedCallback : position(${viewPager.currentItem} == 1) ? 2 : 1")
+            viewPager.setCurrentItem(if(viewPager.currentItem == 1) 2 else 1, true)
+        }
     }
 
     private fun setupViewPager() {
