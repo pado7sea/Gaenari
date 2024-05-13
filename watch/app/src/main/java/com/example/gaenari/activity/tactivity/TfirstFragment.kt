@@ -194,7 +194,17 @@ class TFirstFragment : Fragment() {
         val hours = (millis / 3600000) % 24
         val minutes = (millis / 60000) % 60
         val seconds = (millis / 1000) % 60
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        val formattedTime = StringBuilder()
+
+        if (hours > 0) {
+            formattedTime.append("${hours}h ")
+        }
+        if (minutes > 0 || hours > 0) { // 시간이 있는 경우 0분도 표시
+            formattedTime.append("${minutes}m ")
+        }
+        formattedTime.append("${seconds}s") // 초는 항상 표시
+
+        return formattedTime.toString().trim()
     }
 
     private fun sendResultsAndFinish(context: Context) {
