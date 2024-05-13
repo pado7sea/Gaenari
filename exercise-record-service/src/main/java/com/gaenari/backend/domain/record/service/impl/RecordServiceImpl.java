@@ -43,6 +43,7 @@ public class RecordServiceImpl implements RecordService {
                 .recordTime(record.getTime())
                 .recordDist(record.getDistance())
                 .recordPace(record.getAveragePace())
+                .recordCal(record.getCal())
                 .build();
 
         return RecordDto.builder()
@@ -83,6 +84,7 @@ public class RecordServiceImpl implements RecordService {
                             .recordTime(r.getTime())
                             .recordDist(r.getDistance())
                             .recordPace(r.getAveragePace())
+                            .recordCal(r.getCal())
                             .build())
                     .toList();
 
@@ -150,6 +152,7 @@ public class RecordServiceImpl implements RecordService {
                 .recordTime(record.getTime())
                 .recordDist(record.getDistance())
                 .recordPace(record.getAveragePace())
+                .recordPace(record.getCal())
                 .build();
     }
 
