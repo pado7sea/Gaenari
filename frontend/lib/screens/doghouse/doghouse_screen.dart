@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/screens/coin/coin_screen.dart';
+import 'package:forsythia/screens/inventory/inventory_screen.dart';
 import 'package:forsythia/screens/item/item_screen.dart';
 import 'package:forsythia/widgets/dog_app_bar.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
@@ -31,6 +32,12 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
                     .push(SlidePageRoute(nextPage: ItemScreen()));
               },
               child: Text('뽑기')),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(SlidePageRoute(nextPage: InventoryScreen()));
+              },
+              child: Text('보관함')),
         ],
       ),
     );

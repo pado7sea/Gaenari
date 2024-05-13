@@ -13,16 +13,16 @@ class RecordSevice {
       SecureStorageService();
 
   // 월간기록 조회 - 년과 월을 파라미터로 받음
-  static Future<RecordList> fetchMonthlyRecordList(year, month) async {
+  static Future<MonthlyRecordList> fetchMonthlyRecordList(year, month) async {
     return fetchGetData('record/month/$year/$month')
-        .then((data) => RecordList.fromJson(data));
+        .then((data) => MonthlyRecordList.fromJson(data));
   }
 
-  // 주간기록 조회 - 현재시간의 년,월,일을 파라미터로 받음
-  static Future<RecordList> fetchWeeklyRecordList(year, month, day) async {
-    return fetchGetData('record/week/$year/$month/$day')
-        .then((data) => RecordList.fromJson(data));
-  }
+  // // 주간기록 조회 - 현재시간의 년,월,일을 파라미터로 받음
+  // static Future<RecordList> fetchWeeklyRecordList(year, month, day) async {
+  //   return fetchGetData('record/week/$year/$month/$day')
+  //       .then((data) => RecordList.fromJson(data));
+  // }
 
   // 월간통계 조회 - 년과 월을 파라미터로 받음
   static Future<StatisticList> fetchMonthlyStatisticList(year, month) async {

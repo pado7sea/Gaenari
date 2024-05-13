@@ -30,19 +30,19 @@ class SetList {
 
 class Set {
   int? setId;
-  int? setCnt;
+  int? itemCnt;
 
-  Set({this.setId, this.setCnt});
+  Set({this.setId, this.itemCnt});
 
   Set.fromJson(Map<String, dynamic> json) {
     setId = json['setId'];
-    setCnt = json['setCnt'];
+    itemCnt = json['itemCnt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['setId'] = setId;
-    data['setCnt'] = setCnt;
+    data['itemCnt'] = itemCnt;
     return data;
   }
 }

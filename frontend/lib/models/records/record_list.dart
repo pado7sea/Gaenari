@@ -1,61 +1,84 @@
-// 기록 모델클래스
-
-class RecordList {
+class MonthlyRecordList {
   String? status;
   String? message;
-  List<Record>? data;
+  Monthly? data;
 
-  RecordList({this.status, this.message, this.data});
+  MonthlyRecordList({this.status, this.message, this.data});
 
-  RecordList.fromJson(Map<String, dynamic> json) {
+  MonthlyRecordList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    if (json['data'] != null) {
-      data = <Record>[];
-      json['data'].forEach((v) {
-        data!.add(Record.fromJson(v));
-      });
-    }
+    data = json['data'] != null ? new Monthly.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
-class Record {
+class Monthly {
+  int? year;
+  int? month;
+  List<ExerciseRecords>? exerciseRecords;
+
+  Monthly({this.year, this.month, this.exerciseRecords});
+
+  Monthly.fromJson(Map<String, dynamic> json) {
+    year = json['year'];
+    month = json['month'];
+    if (json['exerciseRecords'] != null) {
+      exerciseRecords = <ExerciseRecords>[];
+      json['exerciseRecords'].forEach((v) {
+        exerciseRecords!.add(new ExerciseRecords.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['year'] = this.year;
+    data['month'] = this.month;
+    if (this.exerciseRecords != null) {
+      data['exerciseRecords'] =
+          this.exerciseRecords!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ExerciseRecords {
   int? year;
   int? month;
   int? day;
   List<DailyRecords>? dailyRecords;
 
-  Record({this.year, this.month, this.day, this.dailyRecords});
+  ExerciseRecords({this.year, this.month, this.day, this.dailyRecords});
 
-  Record.fromJson(Map<String, dynamic> json) {
+  ExerciseRecords.fromJson(Map<String, dynamic> json) {
     year = json['year'];
     month = json['month'];
     day = json['day'];
     if (json['dailyRecords'] != null) {
       dailyRecords = <DailyRecords>[];
       json['dailyRecords'].forEach((v) {
-        dailyRecords!.add(DailyRecords.fromJson(v));
+        dailyRecords!.add(new DailyRecords.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['year'] = year;
-    data['month'] = month;
-    data['day'] = day;
-    if (dailyRecords != null) {
-      data['dailyRecords'] = dailyRecords!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['year'] = this.year;
+    data['month'] = this.month;
+    data['day'] = this.day;
+    if (this.dailyRecords != null) {
+      data['dailyRecords'] = this.dailyRecords!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -64,9 +87,9 @@ class Record {
 class DailyRecords {
   int? recordId;
   String? recordDate;
-  int? recordTime;
-  int? recordDist;
-  int? recordPace;
+  double? recordTime;
+  double? recordDist;
+  double? recordPace;
 
   DailyRecords(
       {this.recordId,
@@ -84,12 +107,12 @@ class DailyRecords {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['recordId'] = recordId;
-    data['recordDate'] = recordDate;
-    data['recordTime'] = recordTime;
-    data['recordDist'] = recordDist;
-    data['recordPace'] = recordPace;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['recordId'] = this.recordId;
+    data['recordDate'] = this.recordDate;
+    data['recordTime'] = this.recordTime;
+    data['recordDist'] = this.recordDist;
+    data['recordPace'] = this.recordPace;
     return data;
   }
 }

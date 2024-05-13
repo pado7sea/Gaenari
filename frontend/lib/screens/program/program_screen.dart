@@ -51,16 +51,6 @@ class _ProgramScreenState extends State<ProgramScreen> {
       list = activeList[activeNum];
     });
   }
-  // getListNum() async {
-  //   ProgramList response = await ProgramService.fetchProgramList();
-  //   setState(() {
-  //     alist = response.data!;
-  //     tlist = response.data!.where((e) => e.type == "T").toList();
-  //     dlist = response.data!.where((e) => e.type == "D").toList();
-  //     ilist = response.data!.where((e) => e.type == "I").toList();
-  //     list = alist;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {

@@ -27,8 +27,8 @@ class StatisticList {
 class Statistic {
   double? time;
   double? dist;
-  int? cal;
-  int? pace;
+  double? cal;
+  double? pace;
   String? date;
   int? count;
 
