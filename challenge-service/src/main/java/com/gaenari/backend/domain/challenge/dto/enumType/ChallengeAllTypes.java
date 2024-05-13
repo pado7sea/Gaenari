@@ -32,7 +32,7 @@ public enum ChallengeAllTypes {
     T_TIME_16H(T, 16 * 60 * 60, 7000, 0),
     T_TIME_64H(T, 64 * 60 * 60, 10000, 0),
     T_TIME_256H(T, 256 * 60 * 60, 15000, 0),
-    T_TIME_1024H(T, 1024 * 60 * 60, 200000, 0);
+    T_TIME_1024H(T, 1024 * 60 * 60, 20000, 0);
 
     private final ChallengeType type;
     private final Integer value;
