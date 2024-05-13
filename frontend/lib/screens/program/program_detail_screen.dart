@@ -235,8 +235,8 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                       children: [
                         SizedBox(height: 10),
                         Text20(
-                            text:
-                                programDetail.totalRecord!.distance.toString(),
+                            text: programDetail.totalRecord!.distance!
+                                .toStringAsFixed(0),
                             bold: true),
                         Text12(text: 'km')
                       ],
@@ -272,7 +272,8 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                       children: [
                         SizedBox(height: 10),
                         Text20(
-                            text: programDetail.totalRecord!.cal.toString(),
+                            text: programDetail.totalRecord!.cal!
+                                .toStringAsFixed(0),
                             bold: true),
                         Text12(text: 'kcal')
                       ],

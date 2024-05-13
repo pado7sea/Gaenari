@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:forsythia/provider/footer_provider.dart';
 import 'package:forsythia/provider/login_info_provider.dart';
@@ -117,21 +118,21 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  const MainNavigation({Key? key}) : super(key: key);
 
   @override
-  State<MainNavigation> createState() => _MainNavigationState();
+  _MainNavigationState createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
 
   final List<Widget> _widgetOptions = [
-    DashBoardScreen(),
-    RecordScreen(),
-    ProgramScreen(),
-    DogHouseScreen(),
-    SettingScreen(),
+    const DashBoardScreen(),
+    const RecordScreen(),
+    const ProgramScreen(),
+    const DogHouseScreen(),
+    const SettingScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -143,10 +144,7 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedIndexedStack(
-        index: _selectedIndex,
-        children: _widgetOptions,
-      ),
+      body: _widgetOptions[_selectedIndex], // 선택된 인덱스에 따라 해당 페이지 위젯을 표시
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedIndex: _selectedIndex,
         onItemSelected: (index) {
