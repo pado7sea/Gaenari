@@ -67,8 +67,17 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public TotalStatisticDto getTotalStatistics(String memberId) {
        Statistic statistic = statisticRepository.findByMemberId(memberId);
-        if (statistic == null) {
-            throw new StatisticNotFoundException();
+
+       // 데이터가 없는 경우 빈 객체 반환
+       if (statistic == null) {
+            return TotalStatisticDto.builder()
+                    .time(0.0)
+                    .dist(0.0)
+                    .cal(0.0)
+                    .pace(0.0)
+                    .date(null)  // 또는 적절한 기본 날짜
+                    .count(0)
+                    .build();
         }
 
         return TotalStatisticDto.builder()

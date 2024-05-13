@@ -23,7 +23,7 @@ public class StatisticController {
     private final StatisticService statisticService;
 
     @Operation(summary = "전체 통계 조회 (test)", description = "운동기록 전체 순회돌아서 누적값 계산(아래거랑 값 같은지 비교용)")
-    @GetMapping("/v1")
+    @GetMapping("/test")
     public ResponseEntity<?> getAllStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         TotalStatisticDto statistic = statisticService.getWholeExerciseStatistics(memberId);
 
@@ -31,7 +31,7 @@ public class StatisticController {
     }
 
     @Operation(summary = "전체 통계 조회", description = "저장 되어있는 누적값 조회")
-    @GetMapping("/v2")
+    @GetMapping
     public ResponseEntity<?> getTotalStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
         TotalStatisticDto statistic = statisticService.getTotalStatistics(memberId);
 
