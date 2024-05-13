@@ -17,7 +17,8 @@ class _ChallengePageState extends State<ChallengePage> {
 
   bool mission = false; // 미션 or 업적
   bool clear = false; // 달성했는지
-  bool reword = false; // 보상 받았는지
+  bool trophyreword = true; // 보상 받을게 있는지
+  bool missionreword = true; // 보상 받을게 있는지
 
   List<String> run = [
     '1km',
@@ -102,9 +103,8 @@ class _ChallengePageState extends State<ChallengePage> {
                 ),
                 Column(
                   children: [
-                    reword
-                        ? Container()
-                        : Padding(
+                    trophyreword
+                        ? Padding(
                             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                             child: Container(
                               width: 8,
@@ -114,7 +114,8 @@ class _ChallengePageState extends State<ChallengePage> {
                                 color: myRed,
                               ),
                             ),
-                          ),
+                          )
+                        : Container(),
                     SizedBox(height: 20)
                   ],
                 )
@@ -150,9 +151,8 @@ class _ChallengePageState extends State<ChallengePage> {
                 ),
                 Column(
                   children: [
-                    reword
-                        ? Container()
-                        : Padding(
+                    missionreword
+                        ? Padding(
                             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                             child: Container(
                               width: 8,
@@ -162,7 +162,8 @@ class _ChallengePageState extends State<ChallengePage> {
                                 color: myRed,
                               ),
                             ),
-                          ),
+                          )
+                        : Container(),
                     SizedBox(height: 20)
                   ],
                 )
@@ -338,8 +339,7 @@ class _ChallengePageState extends State<ChallengePage> {
                 ),
                 backgroundColor: myMainGreen),
             child: Container(
-              height: 60,
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(6.0),
               child: Column(
                 children: const [
                   Row(
@@ -421,11 +421,11 @@ class _ChallengePageState extends State<ChallengePage> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    reword = true;
+                    missionreword = false;
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: reword ? myLightGreen : myLightGrey,
+                  backgroundColor: missionreword ? myLightGreen : myLightGrey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
