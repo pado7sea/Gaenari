@@ -24,4 +24,8 @@ public class DailyRecordDto {
 
     @Schema(description = "운동 페이스", example = "3600.0")
     private Double recordPace;
+
+    @Schema(description = "운동 총 소모 칼로리", example = "400.0")
+    private Double recordCal;
+
 }
