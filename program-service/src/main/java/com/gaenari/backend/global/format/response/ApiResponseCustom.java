@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ApiResponse {
+public class ApiResponseCustom {
 
-    private static ApiResponse instance;
+    private static ApiResponseCustom instance;
 
-    public static ApiResponse getInstance() {
+    public static ApiResponseCustom getInstance() {
         if (instance == null) {
-            instance = new ApiResponse();
+            instance = new ApiResponseCustom();
         }
         return instance;
     }
