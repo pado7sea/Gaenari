@@ -1,30 +1,34 @@
 package com.example.gaenari.activity.iactivity
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gaenari.R
-import com.example.gaenari.activity.main.Program
 import com.example.gaenari.dto.response.FavoriteResponseDto
 
 class IActivity : AppCompatActivity() {
-
     //프로그램 객체를 받아서왔다
-    private lateinit var program : FavoriteResponseDto
+    private lateinit var program: FavoriteResponseDto
     private lateinit var viewPager: ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         program = intent.getParcelableExtra("programData", FavoriteResponseDto::class.java)!!
         Log.d("인터벌", "onCreate: $program")
         setContentView(R.layout.activity_iactivity)
+        this.onBackPressedDispatcher.addCallback(this, callback)
         setupViewPager()
+    }
+
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            // 뒤로 버튼 이벤트 처리
+            Log.d("Check", "On BackPressedCallback : position(${viewPager.currentItem} == 1) ? 2 : 1")
+            viewPager.setCurrentItem(if(viewPager.currentItem == 1) 2 else 1, true)
+        }
     }
 
     private fun setupViewPager() {
@@ -40,9 +44,12 @@ class IActivity : AppCompatActivity() {
             }
         })
     }
+
     private fun handlePageChange(position: Int) {
         when (position) {
-            0 -> viewPager.setCurrentItem(2, false)
+            0 -> {
+                viewPager.setCurrentItem(2, false)
+            }
         }
     }
 }
