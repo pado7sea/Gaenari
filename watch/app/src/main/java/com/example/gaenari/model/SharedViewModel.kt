@@ -15,7 +15,7 @@ class SharedViewModel : ViewModel() {
         val defaultData = listOf(
             FavoriteResponseDto(
                 programId = 0L, // ID는 임의로 0으로 설정, 실제 환경에 따라 적절히 조정 필요
-                programTitle = "자유달리기",
+                programTitle = "달리기",
                 usageCount = 0,
                 finishedCount = 0,
                 type = "R", // 러닝
@@ -23,7 +23,7 @@ class SharedViewModel : ViewModel() {
             ),
             FavoriteResponseDto(
                 programId = 0L,
-                programTitle = "자유걷기",
+                programTitle = "걷기",
                 usageCount = 0,
                 finishedCount = 0,
                 type = "W", // 워킹

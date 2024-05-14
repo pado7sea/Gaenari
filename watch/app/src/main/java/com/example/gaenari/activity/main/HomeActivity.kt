@@ -1,5 +1,6 @@
 package com.example.gaenari.activity.main
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -103,7 +104,7 @@ class HomeActivity : AppCompatActivity() {
         startForegroundService(intent)
     }
 
-    private fun getFavoriteProgram() {
+    public  fun getFavoriteProgram() {
         if (AccessToken.getInstance().accessToken == null)
             AccessToken.getInstance().accessToken = prefs!!.getString("accessToken", null)
 

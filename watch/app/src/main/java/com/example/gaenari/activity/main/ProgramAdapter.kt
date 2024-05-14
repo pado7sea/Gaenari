@@ -38,10 +38,11 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
 
         // 텍스트 뷰 업데이트
         val text = when (program.type) {
-            "D" -> "거리"
-            "T" -> "시간"
-            "I" -> "인터벌"
-            "W" -> "걷기"
+            "D" -> "${program.program.targetValue} KM"
+            "T" -> "${program.program.targetValue?.toInt()?.div(60)} 분"
+            "I" -> "${program.program.intervalInfo!!.setCount} 구간\n${program.program.intervalInfo!!.rangeCount} set"
+            "W" -> "이번달\n걷기횟수"
+            "R" -> "이번달\n달리기횟수"
             else -> "기본"
         }
 

@@ -9,7 +9,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
@@ -22,9 +22,9 @@
         android:layout_height="0dp"
         android:fontFamily="@font/thejamsil_medium"
         android:gravity="center"
-        android:text="프로그램 상세 정보"
+        android:text="프로그램이름"
         android:textColor="#061D40"
-        android:textSize="18sp"
+        android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/guidecontextbottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
@@ -37,9 +37,9 @@
         android:layout_height="0dp"
         android:fontFamily="@font/thejamsil_medium"
         android:gravity="center"
-        android:text="프로그램타이틀임"
+        android:text="거리 목표"
         android:textColor="@color/blue"
-        android:textSize="11sp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toTopOf="@+id/guidetitlebottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
@@ -85,7 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.7604167" />
+        app:layout_constraintGuide_percent="0.68" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -113,14 +113,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.34895834" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidetitlebottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4375" />
+        app:layout_constraintGuide_percent="0.52" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
@@ -129,4 +129,18 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.036458332" />
 
+    <ImageButton
+        android:id="@+id/rebutton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="4dp"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
+        android:src="@drawable/rebutton88"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline8"
+        app:layout_constraintHorizontal_bias="0.585"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidecontextbottom"
+        app:layout_constraintVertical_bias="0.863" />
 </androidx.constraintlayout.widget.ConstraintLayout>
