@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:forsythia/models/watch/watch.dart';
+import 'package:forsythia/service/watch_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/large_app_bar.dart';
-import 'package:forsythia/widgets/slide_page_route.dart';
 
 class WatchScreen extends StatefulWidget {
   const WatchScreen({super.key});
@@ -15,7 +15,7 @@ class WatchScreen extends StatefulWidget {
 }
 
 class _WatchScreenState extends State<WatchScreen> {
-  List<int> tokennumber = [1, 1, 1, 1];
+  List<String> tokennumber = ["1", "1", "1", "1"];
 
   bool again = false;
 
@@ -26,10 +26,11 @@ class _WatchScreenState extends State<WatchScreen> {
     again = true;
   }
 
-  void _generateRandomNumbers() {
-    final random = Random();
+  void _generateRandomNumbers() async {
+    Watch watch = await WatchService.fetchWatch();
+    print(watch.data!.split("").toList());
     setState(() {
-      tokennumber = List.generate(4, (index) => random.nextInt(10));
+      tokennumber = watch.data!.split("").toList();
     });
   }
 
@@ -48,7 +49,7 @@ class _WatchScreenState extends State<WatchScreen> {
   }
 
   Widget _text() {
-    return Row(children: [
+    return Row(children: const [
       Image(
         image: AssetImage('assets/emoji/pensil.png'),
         width: 20,
@@ -71,37 +72,37 @@ class _WatchScreenState extends State<WatchScreen> {
                 height: 70,
                 width: 50,
                 alignment: Alignment.center,
-                child: Text20(text: '${tokennumber[0]}'),
                 decoration: BoxDecoration(
                     border: Border.all(color: myMainGreen, width: 2),
                     borderRadius: BorderRadius.circular(10)),
+                child: Text20(text: tokennumber[0]),
               ),
               Container(
                 height: 70,
                 width: 50,
                 alignment: Alignment.center,
-                child: Text20(text: '${tokennumber[1]}'),
                 decoration: BoxDecoration(
                     border: Border.all(color: myMainGreen, width: 2),
                     borderRadius: BorderRadius.circular(10)),
+                child: Text20(text: tokennumber[1]),
               ),
               Container(
                 height: 70,
                 width: 50,
                 alignment: Alignment.center,
-                child: Text20(text: '${tokennumber[2]}'),
                 decoration: BoxDecoration(
                     border: Border.all(color: myMainGreen, width: 2),
                     borderRadius: BorderRadius.circular(10)),
+                child: Text20(text: tokennumber[2]),
               ),
               Container(
                 height: 70,
                 width: 50,
                 alignment: Alignment.center,
-                child: Text20(text: '${tokennumber[3]}'),
                 decoration: BoxDecoration(
                     border: Border.all(color: myMainGreen, width: 2),
                     borderRadius: BorderRadius.circular(10)),
+                child: Text20(text: tokennumber[3]),
               )
             ],
           ),
@@ -145,12 +146,14 @@ class _WatchScreenState extends State<WatchScreen> {
   }
 }
 
+// ignore: must_be_immutable
 class CountdownTimer extends StatefulWidget {
   bool again;
 
-  CountdownTimer({Key? key, required this.again}) : super(key: key);
+  CountdownTimer({super.key, required this.again});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CountdownTimerState createState() => _CountdownTimerState();
 }
 
