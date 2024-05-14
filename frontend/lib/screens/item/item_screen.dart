@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/inventory/inventory_screen.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/large_app_bar.dart';
@@ -23,10 +23,12 @@ class _ItemScreenState extends State<ItemScreen>
   late Animation<double> _animation;
 
   bool _new = true;
+  int coin = 0;
 
   @override
   void initState() {
     super.initState();
+    loadCoin();
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -41,6 +43,14 @@ class _ItemScreenState extends State<ItemScreen>
           _controller.forward();
         }
       });
+  }
+
+  Future<void> loadCoin() async {
+    SecureStorageService storageService = SecureStorageService();
+    LoginInfo? info = await storageService.getLoginInfo();
+    setState(() {
+      coin = info?.coin ?? 0;
+    });
   }
 
   List<String> images = [
@@ -62,6 +72,7 @@ class _ItemScreenState extends State<ItemScreen>
         title: '뽑기',
         sentence: '엄청난 아이템을 뽑아보자!',
         coin: true,
+        coinvalue: coin,
       ),
       body: Column(
         children: [
