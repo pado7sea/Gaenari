@@ -17,6 +17,6 @@ public class MemberCoinDto {
     @Schema(description = "코인 증가 여부")
     private Boolean isIncreased;
 
-    @Schema(description = "코인 제목", allowableValues = {"GOLD", "SILVER", "BRONZE"})
+    @Schema(description = "코인 제목", allowableValues = {"REWARD", "PETCARE", "PET_PURCHASE", "ITEM_PURCHASE"})
     private CoinTitle coinTitle;
 }
