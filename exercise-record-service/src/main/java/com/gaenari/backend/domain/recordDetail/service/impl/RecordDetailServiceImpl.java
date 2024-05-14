@@ -67,8 +67,12 @@ public class RecordDetailServiceImpl implements RecordDetailService {
     // ProgramDto, IntervalDto, RangeDto 는 programType 에 따라 설정
     private ProgramInfoDto buildProgramInfo(Record record) {
         if (record.getExerciseType() == ExerciseType.P && record.getProgramId() != null) {
+
+            ProgramDetailAboutRecordDto program = fetchProgramDetail(record.getProgramId());
+
             return ProgramInfoDto.builder()
                     .programId(record.getProgramId())
+                    .programTitle(program.getProgramTitle())
                     .targetValue(determineTargetValue(record))
                     .intervalInfo(constructIntervalDto(record))
                     .build();
