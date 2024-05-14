@@ -3,17 +3,20 @@ import 'package:forsythia/screens/coin/coin_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
+import 'package:intl/intl.dart';
 
 class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String sentence;
   final bool coin;
+  final int? coinvalue;
 
   const LargeAppBar({
     super.key,
     required this.title,
     required this.sentence,
     this.coin = false,
+    this.coinvalue = 0,
   });
 
   // 앱바 높이 지정
@@ -51,14 +54,16 @@ class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: coin
                   ? Row(
                       children: [
-                        Text16(text: '20.000  ', bold: true),
+                        Text16(
+                            text: NumberFormat('#,###,###').format(coinvalue),
+                            bold: true),
+                        SizedBox(width: 5),
                         Image(
                           image: AssetImage('assets/color_icons/icon_coin.png'),
                           width: 18,
                           height: 18,
                           fit: BoxFit.cover,
-                          filterQuality: FilterQuality.none,
-                        )
+                        ),
                       ],
                     )
                   : null),

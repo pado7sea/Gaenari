@@ -90,13 +90,15 @@ class DailyRecords {
   double? recordTime;
   double? recordDist;
   double? recordPace;
+  double? recordCal;
 
   DailyRecords(
       {this.recordId,
       this.recordDate,
       this.recordTime,
       this.recordDist,
-      this.recordPace});
+      this.recordPace,
+      this.recordCal});
 
   DailyRecords.fromJson(Map<String, dynamic> json) {
     recordId = json['recordId'];
@@ -104,6 +106,7 @@ class DailyRecords {
     recordTime = json['recordTime'];
     recordDist = json['recordDist'];
     recordPace = json['recordPace'];
+    recordCal = json['recordCal'];
   }
 
   Map<String, dynamic> toJson() {
@@ -113,6 +116,7 @@ class DailyRecords {
     data['recordTime'] = this.recordTime;
     data['recordDist'] = this.recordDist;
     data['recordPace'] = this.recordPace;
+    data['recordCal'] = this.recordCal;
     return data;
   }
 }

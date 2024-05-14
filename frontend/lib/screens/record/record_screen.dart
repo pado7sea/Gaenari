@@ -369,7 +369,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordPace!.toInt()}pace',
+                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordCal!.toInt()}kcal',
                                               bold: true),
                                           SizedBox(width: 10),
                                           Container(

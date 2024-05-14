@@ -22,3 +22,12 @@ const myRed = Color(0xffFF6D7F);
 
 // 파랑
 const myBlue = Color(0xff5D7BC7);
+
+// 그래프 그라데이션
+const mygradient = [
+  Color(0xffFFFA86),
+  Color(0xffFFDD86),
+  Color(0xffFFB986),
+  Color(0xffFF8686),
+  Color(0xffFF86B2)
+];
