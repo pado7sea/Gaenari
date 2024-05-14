@@ -92,7 +92,7 @@ public class MyPetServiceImpl implements MyPetService{
         LocalDateTime currentTime = LocalDateTime.now();
         Duration duration = Duration.between(changeTime, currentTime);
         // 차이가 3분 초과인지 확인
-        Boolean timeCheck = duration.getSeconds() < 180; // 3분은 180초
+        Boolean timeCheck = duration.getSeconds() < 1; // 3분은 180초 -> 1초로 변경
         if(timeCheck){
             throw new NotTimeChangePartnerException();
         }
