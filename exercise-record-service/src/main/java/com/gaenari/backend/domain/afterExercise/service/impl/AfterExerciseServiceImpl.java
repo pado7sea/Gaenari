@@ -88,7 +88,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .memberId(memberId)
                 .exerciseType(exerciseDto.getExerciseType())
                 .programType(exerciseDto.getProgramType())
-                .programId(exerciseDto.getProgram().getProgramId())
+                .programId(exerciseDto.getExerciseType() == ExerciseType.P ? exerciseDto.getProgram().getProgramId() : null)
                 .date(exerciseDto.getDate())
                 .time(exerciseDto.getRecord().getTime())
                 .distance(exerciseDto.getRecord().getDistance())
@@ -112,7 +112,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     // DTO -> Interval Range Record 정보 설정
     private List<IntervalRangeRecord> buildIntervalRangeRecords(String memberId, SaveExerciseRecordDto exerciseDto) {
         List<IntervalRangeRecord> ranges = new ArrayList<>();
-        if (exerciseDto.getProgram().getIntervalInfo() != null) {
+        if (exerciseDto.getExerciseType() == ExerciseType.P && exerciseDto.getProgram().getIntervalInfo() != null) {
             exerciseDto.getProgram().getIntervalInfo().getRanges().forEach(rangeDto ->
                     ranges.add(IntervalRangeRecord.builder()
                             .memberId(memberId)
