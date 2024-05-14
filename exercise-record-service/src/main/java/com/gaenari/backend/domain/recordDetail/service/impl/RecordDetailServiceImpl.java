@@ -141,8 +141,8 @@ public class RecordDetailServiceImpl implements RecordDetailService {
     }
 
     // Record 관련 정보 설정
-    private RecordDetailDto.RecordDto buildRecordDto(Record record) {
-        return RecordDetailDto.RecordDto.builder()
+    private RecordDetailDto.DetailRecordDto buildRecordDto(Record record) {
+        return RecordDetailDto.DetailRecordDto.builder()
                 .distance(record.getDistance())
                 .time(record.getTime())
                 .cal(record.getCal())
