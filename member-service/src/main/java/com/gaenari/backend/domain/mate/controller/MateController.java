@@ -109,7 +109,8 @@ public class MateController {
 
     @Operation(summary = "친구검색", description = "친구 닉네임으로 검색")
     @GetMapping("/search")
-    public ResponseEntity<?> searchMember(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestParam String nickName){
+    public ResponseEntity<?> searchMember(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail,
+                                          @RequestParam String nickName){
         // memberId가 null이면 인증 실패
         if (memberEmail == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());

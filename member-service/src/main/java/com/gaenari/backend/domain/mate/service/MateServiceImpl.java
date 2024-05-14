@@ -251,7 +251,10 @@ public class MateServiceImpl implements MateService{
         // 멤버 엔티티 조회
         Member me = memberRepository.findById(memId).orElseThrow(MemberNotFoundException::new);
         // 검색목록 조회
-        List<Member> searchMembers = memberRepository.findByNicknameContaining(nickName);
+        List<Member> searchMembers = new ArrayList<>();
+        if(!nickName.contains("_")){
+            searchMembers = memberRepository.findByNicknameContaining(nickName);
+        }
 
         // 검색 결과가 회원 1명도 없으면 빈리스트 반환
         if(searchMembers.size()==0){
