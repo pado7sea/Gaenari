@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:forsythia/screens/coin/coin_screen.dart';
 import 'package:forsythia/screens/setting/edit_bodyinfo_screen.dart';
 import 'package:forsythia/screens/setting/edit_nickname_screen.dart';
 import 'package:forsythia/screens/setting/edit_password_screen.dart';
@@ -35,6 +36,7 @@ class _SettingScreenState extends State<SettingScreen> {
           _password(),
           _body(),
           _notification(),
+          _coinHistory(),
           _logout(context),
         ],
       ),
@@ -59,7 +61,7 @@ class _SettingScreenState extends State<SettingScreen> {
               height: 20,
               fit: BoxFit.cover,
             ),
-            Text16(text: '  닉네임')
+            Text16(text: '  닉네임변경')
           ],
         ),
       ),
@@ -84,7 +86,7 @@ class _SettingScreenState extends State<SettingScreen> {
               height: 20,
               fit: BoxFit.cover,
             ),
-            Text16(text: '  비밀번호')
+            Text16(text: '  비밀번호변경')
           ],
         ),
       ),
@@ -111,6 +113,31 @@ class _SettingScreenState extends State<SettingScreen> {
               fit: BoxFit.cover,
             ),
             Text16(text: '  알림')
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _coinHistory() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(SlidePageRoute(nextPage: CoinScreen()));
+      },
+      child: Container(
+        decoration: myBoxDecoration,
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        margin: EdgeInsets.fromLTRB(20, 16, 20, 0),
+        child: Row(
+          children: const [
+            Image(
+              image: AssetImage('assets/emoji/money.png'),
+              width: 20,
+              height: 20,
+              fit: BoxFit.cover,
+            ),
+            Text16(text: '  코인내역')
           ],
         ),
       ),

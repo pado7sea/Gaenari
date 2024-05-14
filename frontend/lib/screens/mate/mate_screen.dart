@@ -219,9 +219,19 @@ class _MatePageState extends State<MatePage> {
                                     bold: true,
                                   ),
                                   SizedBox(height: 10),
-                                  Text12(
-                                      text:
-                                          '${list[index].petTier!}  ${list[index].petName!}'),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "assets/dog_tier/tier_${list[index].petTier!}.png",
+                                        width: 18,
+                                        height: 20,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.none,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text12(text: ' ${list[index].petName!}'),
+                                    ],
+                                  ),
                                 ],
                               )
                             ],

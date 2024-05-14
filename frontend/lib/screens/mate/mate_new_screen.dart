@@ -130,19 +130,29 @@ class _NewMatePageState extends State<NewMatePage> {
                                 width: 16,
                               ),
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text16(
-                                      text: list[index].nickName!,
-                                      bold: true,
-                                    ),
-                                    Text12(
-                                        text:
-                                            '${list[index].petTier!}  ${list[index].petName!}'),
-                                  ],
-                                ),
-                              )
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text16(
+                                    text: list[index].nickName!,
+                                    bold: true,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "assets/dog_tier/tier_${list[index].petTier!}.png",
+                                        width: 18,
+                                        height: 20,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.none,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Text12(text: ' ${list[index].petName!}'),
+                                    ],
+                                  ),
+                                ],
+                              ))
                             ],
                           ),
                         ),
@@ -252,9 +262,19 @@ class _NewMatePageState extends State<NewMatePage> {
                                   bold: true,
                                 ),
                                 SizedBox(height: 10),
-                                Text12(
-                                    text:
-                                        '${list[index].petTier!}  ${list[index].petName!}'),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/dog_tier/tier_${list[index].petTier!}.png",
+                                      width: 18,
+                                      height: 20,
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.none,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text12(text: ' ${list[index].petName!}'),
+                                  ],
+                                ),
                               ],
                             )
                           ],

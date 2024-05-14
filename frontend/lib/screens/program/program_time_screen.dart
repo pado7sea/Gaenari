@@ -20,10 +20,13 @@ class AddTimeProgramPage extends StatefulWidget {
 class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
   final TextEditingController _programName = TextEditingController();
   final TextEditingController _time = TextEditingController();
+  final TextEditingController _time2 = TextEditingController();
   String check = "";
   String _errorText = '';
   List<String> timelist = [];
   int timeIndex = 0;
+  List<String> timelist2 = ["0", "1", "2", "3", "4"];
+  int timeIndex2 = 0;
 
   @override
   void initState() {
@@ -33,7 +36,7 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
 
   void initializeLists() {
     timelist = ["0"];
-    timelist.addAll([for (int i = 5; i <= 240; i += 5) i.toString()]);
+    timelist.addAll([for (int i = 1; i < 60; i += 1) i.toString()]);
   }
 
   @override
@@ -107,7 +110,10 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 150, child: _timePicker()),
+                  SizedBox(width: 100, child: _timePicker2()),
+                  Text16(text: '시간'),
+                  SizedBox(width: 20),
+                  SizedBox(width: 100, child: _timePicker()),
                   Text16(text: '분')
                 ],
               ),
@@ -123,11 +129,11 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
             ProgramAdd program = ProgramAdd(
               programTitle: _programName.text,
               programType: "T",
-              programTargetValue: double.parse(_time.text) * 60,
+              programTargetValue: double.parse(_time.text) * 60 +
+                  double.parse(_time2.text) * 3600,
             );
-            print(program.toJson());
+            print(program.programTargetValue);
             await ProgramService.fetchProgramAdd(program);
-            Navigator.pop(context);
             Navigator.pop(context, "update");
           }
         },
@@ -177,6 +183,42 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
                       return Center(
                           child: Text36(
                         text: timelist[index],
+                        bold: true,
+                      ));
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _timePicker2() {
+    return CupertinoPageScaffold(
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 80,
+                  child: CupertinoPicker(
+                    itemExtent: 50.0,
+                    onSelectedItemChanged: (int index) {
+                      setState(() {
+                        timeIndex = index;
+                        _time2.text = timelist2[timeIndex];
+                      });
+                    },
+                    children:
+                        List<Widget>.generate(timelist2.length, (int index) {
+                      return Center(
+                          child: Text36(
+                        text: timelist2[index],
                         bold: true,
                       ));
                     }),

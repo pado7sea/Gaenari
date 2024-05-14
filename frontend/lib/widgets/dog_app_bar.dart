@@ -1,44 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/screens/coin/coin_screen.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
+import 'package:intl/intl.dart';
 
-class DogAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const DogAppBar({super.key});
+class DogAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String? tier;
+  final String? name;
+  final int? affection;
+  final int? coinvalue;
 
-  @override
-  State<DogAppBar> createState() => _DogAppBarState();
+  const DogAppBar({
+    super.key,
+    this.tier = "BRONZE",
+    this.name = "만득이",
+    this.affection = 0,
+    this.coinvalue = 0,
+  });
 
   // 앱바 높이 지정
   @override
   Size get preferredSize => Size.fromHeight(55);
-}
 
-List<String> dogs = [
-  'assets/gif/shepherd_standandlook.gif',
-  'assets/gif/grayhound_standandlook.gif',
-  'assets/gif/husky_standandlook.gif',
-  'assets/gif/pomeranian1_standandlook.gif',
-  'assets/gif/pomeranian2_standandlook.gif',
-  'assets/gif/shiba_standandlook.gif',
-  'assets/gif/pug_standandlook.gif',
-  'assets/gif/retriever1_standandlook.gif',
-  'assets/gif/retriever2_standandlook.gif',
-  'assets/gif/wolf_standandlook.gif',
-];
-
-List<String> dogtier = [
-  'assets/dog_tier/tier_BRONZE.png',
-  'assets/dog_tier/tier_c.png',
-  'assets/dog_tier/tier_d.png',
-  'assets/dog_tier/tier_g.png',
-  'assets/dog_tier/tier_p.png',
-  'assets/dog_tier/tier_s.png',
-];
-
-class _DogAppBarState extends State<DogAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -75,7 +59,31 @@ class _DogAppBarState extends State<DogAppBar> {
                       _doginfo(),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [_heart(), _coin()],
+                        children: [
+                          _heart(),
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                    SlidePageRoute(nextPage: CoinScreen()));
+                              },
+                              child: Row(
+                                children: [
+                                  SizedBox(width: 25),
+                                  Text16(
+                                      text: NumberFormat('#,###,###')
+                                          .format(coinvalue),
+                                      bold: true),
+                                  SizedBox(width: 5),
+                                  Image(
+                                    image: AssetImage(
+                                        'assets/color_icons/icon_coin.png'),
+                                    width: 18,
+                                    height: 18,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ],
+                              ))
+                        ],
                       )
                     ],
                   ),
@@ -92,13 +100,13 @@ class _DogAppBarState extends State<DogAppBar> {
     return Row(
       children: [
         Image(
-          image: AssetImage(dogtier[0]),
+          image: AssetImage("assets/dog_tier/tier_$tier.png"),
           width: 22,
           height: 25,
           fit: BoxFit.cover,
           filterQuality: FilterQuality.none,
         ),
-        Text20(text: '  만득이', bold: true)
+        Text20(text: '  $name', bold: true)
       ],
     );
   }
@@ -106,7 +114,7 @@ class _DogAppBarState extends State<DogAppBar> {
   Widget _heart() {
     return Row(
       children: [
-        Text16(text: '30  ', bold: true),
+        Text16(text: '$affection  ', bold: true),
         Image(
           image: AssetImage('assets/color_icons/icon_love.png'),
           width: 18,
@@ -116,24 +124,5 @@ class _DogAppBarState extends State<DogAppBar> {
         ),
       ],
     );
-  }
-
-  Widget _coin() {
-    return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(SlidePageRoute(nextPage: CoinScreen()));
-        },
-        child: Row(
-          children: [
-            Text16(text: '  20.000  ', bold: true),
-            Image(
-              image: AssetImage('assets/color_icons/icon_coin.png'),
-              width: 18,
-              height: 18,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.none,
-            ),
-          ],
-        ));
   }
 }

@@ -127,7 +127,6 @@ class _AddDistanceProgramPageState extends State<AddDistanceProgramPage> {
             );
             await ProgramService.fetchProgramAdd(program);
             Navigator.pop(context, "update");
-            Navigator.pop(context, "update");
           }
         },
         child: Padding(

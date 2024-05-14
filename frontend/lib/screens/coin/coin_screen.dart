@@ -29,25 +29,18 @@ class _CoinScreenState extends State<CoinScreen> {
   @override
   void initState() {
     super.initState();
-    monthlyCoinRecord();
+    monthlyCoinRecord(_selectedMonth);
   }
 
-  void monthlyCoinRecord() async {
+  void monthlyCoinRecord(selectedMonth) async {
+    int year = selectedMonth.year;
+    int month = selectedMonth.month;
     MonthlyCoinRecord monthlyCoinRecord;
-    monthlyCoinRecord =
-        await CoinService.fetchMonthlyCoinRecord(_pickerYear, _pickerMonth);
+    monthlyCoinRecord = await CoinService.fetchMonthlyCoinRecord(year, month);
     setState(() {
       coinRecord = monthlyCoinRecord.data!;
       active = true;
     });
-    // print('아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ아아아ㅏ아');
-    // print(coinRecord.memberCoinRecordList![0].day);
-    // print(coinRecord.memberCoinRecordList![0].isIncreased);
-    // print(coinRecord.memberCoinRecordList![0].coinTitle);
-    // print(coinRecord.memberCoinRecordList![0].coinAmount);
-    // print(coinRecord.memberCoinRecordList![0].balance);
-    // print('아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ아아아ㅏ아');
-    // print(coinRecord.memberCoinRecordList!.length);
   }
 
   @override
@@ -57,14 +50,7 @@ class _CoinScreenState extends State<CoinScreen> {
       body: active
           ? Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                _monthPicker(),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(DateFormat.yMMMM().format(_selectedMonth)),
-                _coin()
-              ],
+              children: [_monthPicker(), _coin()],
             )
           : Center(
               child: CircularProgressIndicator(),
@@ -74,7 +60,7 @@ class _CoinScreenState extends State<CoinScreen> {
 
   Widget _monthPicker() {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 5),
       child: Column(
         children: [
           Row(
@@ -87,30 +73,40 @@ class _CoinScreenState extends State<CoinScreen> {
                         _pickerMonth == 12 ? _pickerYear - 1 : _pickerYear;
                     _selectedMonth = DateTime(_pickerYear, _pickerMonth, 1);
                   });
+                  monthlyCoinRecord(_selectedMonth);
                 },
                 icon: Icon(Icons.navigate_before_rounded),
               ),
               Expanded(
                 child: Center(
                     child: Text16(
-                  text: _pickerYear.toString() +
-                      '년 ' +
-                      _pickerMonth.toString() +
-                      '월',
+                  text: '$_pickerYear년 $_pickerMonth월',
                   bold: true,
                 )),
               ),
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _pickerMonth = _pickerMonth == 12 ? 1 : _pickerMonth + 1;
-                    _pickerYear =
-                        _pickerMonth == 1 ? _pickerYear + 1 : _pickerYear;
-                    _selectedMonth = DateTime(_pickerYear, _pickerMonth, 1);
-                  });
-                },
-                icon: Icon(Icons.navigate_next_rounded),
-              ),
+              _pickerYear == DateTime.now().year &&
+                      _pickerMonth == DateTime.now().month
+                  ? IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.navigate_next_rounded,
+                        color: myGrey,
+                      ),
+                    )
+                  : IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _pickerMonth =
+                              _pickerMonth == 12 ? 1 : _pickerMonth + 1;
+                          _pickerYear =
+                              _pickerMonth == 1 ? _pickerYear + 1 : _pickerYear;
+                          _selectedMonth =
+                              DateTime(_pickerYear, _pickerMonth, 1);
+                        });
+                        monthlyCoinRecord(_selectedMonth);
+                      },
+                      icon: Icon(Icons.navigate_next_rounded),
+                    ),
             ],
           ),
         ],
@@ -137,6 +133,7 @@ class _CoinScreenState extends State<CoinScreen> {
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
               child: Container(
                 width: MediaQuery.of(context).size.width - 40,
+                decoration: myBoxDecoration,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: Column(
@@ -145,19 +142,15 @@ class _CoinScreenState extends State<CoinScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text12(
-                            text: coinRecord.month.toString() +
-                                '.' +
-                                coinRecord.memberCoinRecordList![index].day
-                                    .toString(),
+                            text:
+                                '${coinRecord.month}.${coinRecord.memberCoinRecordList![index].day}',
                             textColor: myGrey,
                           ),
                           Row(
                             children: [
                               Text12(
-                                text: coinRecord
-                                        .memberCoinRecordList![index].balance
-                                        .toString() +
-                                    '  ',
+                                text:
+                                    '${coinRecord.memberCoinRecordList![index].balance}  ',
                                 textColor: myGrey,
                               ),
                               Image(
@@ -185,18 +178,14 @@ class _CoinScreenState extends State<CoinScreen> {
                                   .memberCoinRecordList![index].isIncreased ==
                               true)
                             Text16(
-                                text: '+' +
-                                    coinRecord
-                                        .memberCoinRecordList![index].coinAmount
-                                        .toString(),
+                                text:
+                                    '+${coinRecord.memberCoinRecordList![index].coinAmount}',
                                 textColor: myMainGreen,
                                 bold: true)
                           else
                             Text16(
-                                text: '-' +
-                                    coinRecord
-                                        .memberCoinRecordList![index].coinAmount
-                                        .toString(),
+                                text:
+                                    '-${coinRecord.memberCoinRecordList![index].coinAmount}',
                                 textColor: myRed,
                                 bold: true)
                         ],
@@ -204,7 +193,6 @@ class _CoinScreenState extends State<CoinScreen> {
                     ],
                   ),
                 ),
-                decoration: myBoxDecoration,
               ),
             );
           },

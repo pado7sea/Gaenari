@@ -2,12 +2,15 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:forsythia/models/challenges/reward_notice.dart';
 import 'package:forsythia/models/inventory/item_info.dart';
 import 'package:forsythia/models/inventory/pet_list.dart';
 import 'package:forsythia/models/inventory/set_list.dart';
 import 'package:forsythia/models/pet/pet_adopt.dart';
 import 'package:forsythia/models/pet/pet_res.dart';
 import 'package:forsythia/models/users/login_user.dart';
+import 'package:forsythia/screens/challenge/challenge_screen.dart';
+import 'package:forsythia/service/challenge_service.dart';
 import 'package:forsythia/service/inventory_service.dart';
 import 'package:forsythia/service/pet_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
@@ -17,7 +20,7 @@ import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/button_widgets.dart';
 import 'package:forsythia/widgets/large_app_bar.dart';
 import 'package:forsythia/widgets/modal.dart';
-import 'package:provider/provider.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
 import 'inventory_info.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -52,11 +55,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   Future<void> loadCoin() async {
-    // SecureStorageService를 사용해서 로그인 정보를 불러오고, 닉네임을 설정해줘
     SecureStorageService storageService = SecureStorageService();
     LoginInfo? info = await storageService.getLoginInfo();
     setState(() {
-      coin = info?.coin ?? 0; // 만약 닉네임이 없으면 빈 문자열로 설정해줘
+      coin = info?.coin ?? 0;
     });
   }
 
@@ -268,7 +270,19 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   Widget _buildDogTile(String itemInfo, int index) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        SecureStorageService storageService = SecureStorageService();
+        LoginInfo? info = await storageService.getLoginInfo();
+        RewardNotice rewardNotice = await ChallengeService.fetchRewardNotice();
+        bool reward = false;
+        setState(() {
+          if (rewardNotice.data! == true) {
+            reward = true;
+          } else {
+            reward = false;
+          }
+        });
+        print(info?.myPetDto!.id);
         !pet[index].isHave! && coin >= 20000
             ? showModalBottomSheet(
                 isScrollControlled: true,
@@ -310,10 +324,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 pet[index].pets?.tier = "BRONZE";
                                 _petnamecontroller = TextEditingController();
                               });
-                              SecureStorageService secureStorageService =
-                                  SecureStorageService();
+
                               info?.coin = (info.coin! - 20000);
-                              secureStorageService.saveLoginInfo(info!);
+                              storageService.saveLoginInfo(info!);
                               loadCoin();
                               Navigator.of(context).pop();
                             },
@@ -354,45 +367,117 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       return BackdropFilter(
                         filter:
                             ImageFilter.blur(sigmaX: 3, sigmaY: 3), // 블러 효과 설정
-                        child: ModalContent(
-                          height: 300,
-                          customWidget: Column(
-                            children: [
-                              SizedBox(height: 20),
-                              Text16(text: '$itemInfo를', bold: true),
-                              Text16(text: ' 새로 입양하시겠어요?', bold: true),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SmallButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    text: "취소",
-                                    active: false,
-                                    widthPadding: 50,
-                                  ),
-                                  SizedBox(
-                                    width: 16,
-                                  ),
-                                  SmallButton(
-                                    onPressed: () {
-                                      // _dogAdd(index);
-                                    },
-                                    text: "입양",
-                                    active: true,
-                                    widthPadding: 50,
-                                  ),
-                                ],
+                        child: !reward
+                            ? ModalContent(
+                                height: 350,
+                                customWidget: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          images[index],
+                                          width: 100,
+                                          height: 100,
+                                          filterQuality: FilterQuality.none,
+                                          fit: BoxFit.fitHeight,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text25(
+                                            text: pet[index].pets!.name!,
+                                            bold: true),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20),
+                                    Text16(
+                                        text:
+                                            ' 파트너를 ${pet[index].pets!.name}으로 변경할까요?',
+                                        bold: true),
+                                    SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SmallButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          text: "취소",
+                                          active: false,
+                                          widthPadding: 50,
+                                        ),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        SmallButton(
+                                          onPressed: () async {
+                                            PetRes petRes = await PetService
+                                                .fetchPetPartner(
+                                                    pet[index].pets!.id);
+                                            SecureStorageService
+                                                storageService =
+                                                SecureStorageService();
+                                            LoginInfo? info =
+                                                await storageService
+                                                    .getLoginInfo();
+
+                                            setState(() {
+                                              pet[index].pets!.isPartner = true;
+                                              pet[info!.myPetDto!.id! - 1]
+                                                  .pets!
+                                                  .isPartner = false;
+                                            });
+                                            info!.myPetDto!.affection =
+                                                pet[index].pets!.affection!;
+                                            info.myPetDto!.id =
+                                                pet[index].pets!.id!;
+                                            info.myPetDto!.name =
+                                                pet[index].pets!.name!;
+                                            info.myPetDto!.tier =
+                                                pet[index].pets!.tier!;
+
+                                            storageService.saveLoginInfo(info);
+                                            Navigator.of(context).pop();
+                                          },
+                                          text: "변경",
+                                          active: true,
+                                          widthPadding: 50,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text12(text: "", textColor: myGrey),
+                                  ],
+                                ),
+                              )
+                            : ModalContent(
+                                height: 250,
+                                customWidget: Column(
+                                  children: [
+                                    SizedBox(height: 20),
+                                    Text16(
+                                      text: '이전 보상을 전부 받은 후 파트너 변경 가능',
+                                      bold: true,
+                                    ),
+                                    SizedBox(height: 20),
+                                    SmallButton(
+                                      text: "보상받으러 가기",
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).push(
+                                            SlidePageRoute(
+                                                nextPage: ChallengePage()));
+                                      },
+                                      active: true,
+                                      widthPadding: 70,
+                                    ),
+                                    SizedBox(height: 20),
+                                  ],
+                                ),
                               ),
-                              SizedBox(height: 10),
-                              Text12(
-                                  text: "친구신청 후 요청취소가 불가합니다.",
-                                  textColor: myGrey),
-                            ],
-                          ),
-                        ),
                       );
                     },
                   )
@@ -413,7 +498,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Text16(
                       text: pet[index].pets!.isPartner!
                           ? "파트너"
@@ -494,14 +579,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
             decoration: InputDecoration(
                 hintText: '강아지의 이름을 입력해주세요.',
                 hintStyle: TextStyle(color: Colors.grey),
-                // tap 시 borderline 색상 지정
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: myBlack))),
             controller: _petnamecontroller,
-            // inputFormatters: [
-            //   FilteringTextInputFormatter.allow(RegExp(
-            //       "[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣!@#<>?\":_`~;[\\]\\|=+)(*&^%£€.{}'`-s/]")),
-            // ],
             maxLength: 8,
           ),
         ],
