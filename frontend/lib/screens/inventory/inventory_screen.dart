@@ -414,9 +414,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                         ),
                                         SmallButton(
                                           onPressed: () async {
-                                            PetRes petRes = await PetService
-                                                .fetchPetPartner(
-                                                    pet[index].pets!.id);
+                                            await PetService.fetchPetPartner(
+                                                pet[index].pets!.id);
                                             SecureStorageService
                                                 storageService =
                                                 SecureStorageService();

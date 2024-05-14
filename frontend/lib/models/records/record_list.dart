@@ -8,13 +8,13 @@ class MonthlyRecordList {
   MonthlyRecordList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Monthly.fromJson(json['data']) : null;
+    data = json['data'] != null ? Monthly.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -35,18 +35,18 @@ class Monthly {
     if (json['exerciseRecords'] != null) {
       exerciseRecords = <ExerciseRecords>[];
       json['exerciseRecords'].forEach((v) {
-        exerciseRecords!.add(new ExerciseRecords.fromJson(v));
+        exerciseRecords!.add(ExerciseRecords.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['year'] = this.year;
-    data['month'] = this.month;
-    if (this.exerciseRecords != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['year'] = year;
+    data['month'] = month;
+    if (exerciseRecords != null) {
       data['exerciseRecords'] =
-          this.exerciseRecords!.map((v) => v.toJson()).toList();
+          exerciseRecords!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -67,18 +67,18 @@ class ExerciseRecords {
     if (json['dailyRecords'] != null) {
       dailyRecords = <DailyRecords>[];
       json['dailyRecords'].forEach((v) {
-        dailyRecords!.add(new DailyRecords.fromJson(v));
+        dailyRecords!.add(DailyRecords.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['year'] = this.year;
-    data['month'] = this.month;
-    data['day'] = this.day;
-    if (this.dailyRecords != null) {
-      data['dailyRecords'] = this.dailyRecords!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['year'] = year;
+    data['month'] = month;
+    data['day'] = day;
+    if (dailyRecords != null) {
+      data['dailyRecords'] = dailyRecords!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -110,13 +110,13 @@ class DailyRecords {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['recordId'] = this.recordId;
-    data['recordDate'] = this.recordDate;
-    data['recordTime'] = this.recordTime;
-    data['recordDist'] = this.recordDist;
-    data['recordPace'] = this.recordPace;
-    data['recordCal'] = this.recordCal;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['recordId'] = recordId;
+    data['recordDate'] = recordDate;
+    data['recordTime'] = recordTime;
+    data['recordDist'] = recordDist;
+    data['recordPace'] = recordPace;
+    data['recordCal'] = recordCal;
     return data;
   }
 }
