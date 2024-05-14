@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/models/coins/coin_history.dart';
 import 'package:forsythia/service/coin_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
-import 'package:intl/intl.dart';
 
 class CoinScreen extends StatefulWidget {
   const CoinScreen({super.key});

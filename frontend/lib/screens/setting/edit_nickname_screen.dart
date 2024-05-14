@@ -9,7 +9,6 @@ import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:forsythia/service/member_service.dart';
-import 'package:provider/provider.dart';
 
 class EditNickName extends StatefulWidget {
   const EditNickName({super.key});

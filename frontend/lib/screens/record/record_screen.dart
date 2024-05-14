@@ -295,6 +295,7 @@ class _RecordScreenState extends State<RecordScreen> {
                   monthlyRecordList();
                 },
                 eventLoader: _getEventsForDay,
+                pageJumpingEnabled: true,
               ),
             ],
           ),
@@ -394,9 +395,9 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! ~/ 60}분',
+                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! ~/ 60}',
                                               bold: true),
-                                          Text12(text: ' 분', bold: true),
+                                          Text12(text: ' min', bold: true),
                                         ],
                                       ),
                                     ],

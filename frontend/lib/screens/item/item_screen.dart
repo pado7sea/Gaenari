@@ -11,9 +11,10 @@ import 'package:forsythia/widgets/large_app_bar.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 
 class ItemScreen extends StatefulWidget {
-  const ItemScreen({Key? key}) : super(key: key);
+  const ItemScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ItemScreenState createState() => _ItemScreenState();
 }
 
@@ -22,7 +23,7 @@ class _ItemScreenState extends State<ItemScreen>
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  bool _new = true;
+  final bool _new = true;
   int coin = 0;
 
   @override
@@ -105,7 +106,7 @@ class _ItemScreenState extends State<ItemScreen>
                 .push(SlidePageRoute(nextPage: InventoryScreen()));
           },
           child: Row(
-            children: [
+            children: const [
               Image(
                 image: AssetImage('assets/emoji/drawer.png'),
                 width: 20,

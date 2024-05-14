@@ -118,9 +118,10 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({Key? key}) : super(key: key);
+  const MainNavigation({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MainNavigationState createState() => _MainNavigationState();
 }
 

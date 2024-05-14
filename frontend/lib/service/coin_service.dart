@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:forsythia/models/coins/coin_history.dart';
-import 'package:forsythia/models/inventory/change_item.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:http/http.dart' as http;
 

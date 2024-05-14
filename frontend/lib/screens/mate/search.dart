@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // 이 부분을 추가해줘야 해
+
 import 'package:forsythia/widgets/box_dacoration.dart';
 
 class MateSearchBar extends StatefulWidget {
@@ -23,6 +25,10 @@ class MateSearchBarState extends State<MateSearchBar> {
           Expanded(
             child: TextField(
               controller: _controller,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                    RegExp(r'[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣\s]')), // 특수문자 제한
+              ],
               onSubmitted: (value) {
                 widget.onSearch(value); // 검색어 전달
               },

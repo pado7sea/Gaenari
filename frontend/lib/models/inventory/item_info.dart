@@ -11,17 +11,17 @@ class ItemInfo {
     if (json['item'] != null) {
       item = <Item>[];
       json['item'].forEach((v) {
-        item!.add(new Item.fromJson(v));
+        item!.add(Item.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['setId'] = this.setId;
-    data['setName'] = this.setName;
-    if (this.item != null) {
-      data['item'] = this.item!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['setId'] = setId;
+    data['setName'] = setName;
+    if (item != null) {
+      data['item'] = item!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -41,10 +41,10 @@ class Item {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['itemId'] = this.itemId;
-    data['itemName'] = this.itemName;
-    data['category'] = this.category;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['itemId'] = itemId;
+    data['itemName'] = itemName;
+    data['category'] = category;
     return data;
   }
 }
