@@ -292,6 +292,7 @@ class _RecordScreenState extends State<RecordScreen> {
                 onDaySelected: _onDaySelected,
                 onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
+                  monthlyRecordList();
                 },
                 eventLoader: _getEventsForDay,
               ),
@@ -393,7 +394,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${(monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! / 60).toInt()}',
+                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! ~/ 60}분',
                                               bold: true),
                                           Text12(text: ' 분', bold: true),
                                         ],
