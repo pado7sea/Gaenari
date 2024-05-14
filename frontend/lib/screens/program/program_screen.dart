@@ -4,8 +4,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:forsythia/models/programs/program_list.dart';
-import 'package:forsythia/screens/program/program_add_screen.dart';
 import 'package:forsythia/screens/program/program_detail_screen.dart';
+import 'package:forsythia/screens/program/program_distance_screen.dart';
+import 'package:forsythia/screens/program/program_interval_screen.dart';
+import 'package:forsythia/screens/program/program_time_screen.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -24,6 +26,7 @@ class ProgramScreen extends StatefulWidget {
 }
 
 class _ProgramScreenState extends State<ProgramScreen> {
+  bool _isExpanded = false; // 확장 여부를 나타내는 변수
   late List<ProgramItem> list = [];
   late List<ProgramItem> alist = [];
   late List<ProgramItem> tlist = [];
@@ -56,13 +59,171 @@ class _ProgramScreenState extends State<ProgramScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SmallAppBar(title: '운동프로그램'),
-      body: Column(
+      body: Stack(
         children: [
-          _topButtons(),
-          _programs(),
-          SizedBox(
-            height: 10,
-          )
+          Column(
+            children: [
+              _topButtons(),
+              _programs(),
+              SizedBox(
+                height: 10,
+              )
+            ],
+          ),
+          // 여기서 배경을 만들어
+          GestureDetector(
+            onTap: () {
+              if (_isExpanded) {
+                setState(() {
+                  _isExpanded = false;
+                });
+              }
+            },
+            child: Container(
+              color: _isExpanded
+                  ? Colors.black.withOpacity(0.5)
+                  : Colors.transparent,
+            ),
+          ),
+          // 이제 원래의 내용을 넣어
+        ],
+      ),
+      floatingActionButton: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 300),
+            right: _isExpanded ? 0 : 0,
+            bottom: _isExpanded ? 230 : 0,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(SlidePageRoute(nextPage: AddTimeProgramPage()));
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Container(
+                decoration: myActiveBoxDecoration,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(7),
+                height: 60,
+                width: 60,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/emoji/clock.png",
+                      width: 30,
+                      height: 30,
+                    ),
+                    Text12(
+                      text: "시간목표",
+                      bold: true,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 300),
+            right: _isExpanded ? 0 : 0,
+            bottom: _isExpanded ? 160 : 0,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(SlidePageRoute(nextPage: AddDistanceProgramPage()));
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Container(
+                decoration: myYellowBoxDecoration,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(7),
+                height: 60,
+                width: 60,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/emoji/running.png",
+                      width: 30,
+                      height: 30,
+                    ),
+                    Text12(
+                      text: "거리목표",
+                      bold: true,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 300),
+            right: _isExpanded ? 0 : 0,
+            bottom: _isExpanded ? 90 : 0,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(SlidePageRoute(nextPage: AddIntervalProgramPage()));
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Container(
+                decoration: myRedBoxDecoration,
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(7),
+                height: 60,
+                width: 60,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/emoji/fire.png",
+                      width: 30,
+                      height: 30,
+                    ),
+                    Text12(
+                      text: "인터벌",
+                      bold: true,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 300),
+            right: _isExpanded ? 0 : 0,
+            bottom: _isExpanded ? 0 : 0,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Container(
+                decoration: myActiveBoxDecoration,
+                padding: EdgeInsets.all(25),
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300), // 회전 애니메이션 지속 시간
+                  transform: Matrix4.identity()
+                    ..translate(!_isExpanded ? 12.2 : 12.5,
+                        !_isExpanded ? -22.5 : 12.5) // 이미지의 중심으로 이동
+                    ..rotateZ(_isExpanded ? 6.28 : 3.14 / 4) // Z축을 기준으로 회전
+                    ..translate(!_isExpanded ? 12.5 : -12.5,
+                        !_isExpanded ? 12.5 : -12.5), // 이동한 이미지를 다시 원래 위치로 이동
+                  child: Image.asset(
+                    "assets/icons/common_close.png",
+                    width: 25,
+                    height: 25,
+                    filterQuality: FilterQuality.none,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ), // 확장 상태에 따라 아이콘 변경
+            ),
+          ),
         ],
       ),
     );
@@ -185,37 +346,6 @@ class _ProgramScreenState extends State<ProgramScreen> {
                   ],
                 ),
               )),
-              SizedBox(
-                width: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(SlidePageRoute(nextPage: AddProgramPage()))
-                      .then((result) {
-                    // 돌아올 때 데이터를 수신하고 처리
-                    if (result == "update") {
-                      // 리스트 업데이트 메서드 호출
-                      getList();
-                    }
-                  });
-                },
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text16(
-                      text: "추가 ",
-                    ),
-                    Image.asset(
-                      "assets/icons/mate_new.png",
-                      filterQuality: FilterQuality.none,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.cover,
-                    ),
-                  ],
-                ),
-              ),
               SizedBox(width: 8),
             ],
           ),

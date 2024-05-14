@@ -181,7 +181,6 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
               );
               await ProgramService.fetchProgramAdd(program);
               Navigator.pop(context, "update");
-              Navigator.pop(context, "update");
             } else {
               Fluttertoast.showToast(
                 msg: '적절하지 않은 값(0)이 있어요!!!',
@@ -316,27 +315,31 @@ class _AddIntervalProgramPageState extends State<AddIntervalProgramPage> {
                   ? SizedBox(
                       height: 0,
                     )
-                  : GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          speedIndexList.add(0);
-                          timeIndexList.add(0);
-                          typeIndexList.add(0);
-                          active.add(true);
-                        });
-                      },
-                      child: Container(
-                        decoration: myActiveBoxDecoration,
-                        margin: EdgeInsets.fromLTRB(10, 0, 10, 16),
-                        padding: EdgeInsets.all(20),
-                        child: Center(
-                          child: Text16(
-                            text: "루틴추가",
-                            bold: true,
+                  : active.where((element) => element == true).length <= 7
+                      ? GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              speedIndexList.add(0);
+                              timeIndexList.add(0);
+                              typeIndexList.add(0);
+                              active.add(true);
+                            });
+                          },
+                          child: Container(
+                            decoration: myActiveBoxDecoration,
+                            margin: EdgeInsets.fromLTRB(10, 0, 10, 16),
+                            padding: EdgeInsets.all(20),
+                            child: Center(
+                              child: Text16(
+                                text: "루틴추가",
+                                bold: true,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    );
+                        )
+                      : SizedBox(
+                          height: 0,
+                        );
         });
   }
 
