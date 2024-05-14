@@ -35,7 +35,7 @@ public class CoinServiceImpl implements CoinService {
         // 회원 조회
         Member member = memberRepository.findByEmail(memberEmail);
         // 코인 내역 조회
-        List<Coin> coinList = coinRepository.findByMemberAndYearAndMonthOrderByTimeDesc(member, year, month);
+        List<Coin> coinList = coinRepository.findByMemberAndYearAndMonthOrderByDayAndTimeDesc(member, year, month);
         // MemberCoinRecord Dto로 변환
         List<MemberCoinRecord> memberCoinRecordList = new ArrayList<>();
         for(Coin coin : coinList){
@@ -93,7 +93,7 @@ public class CoinServiceImpl implements CoinService {
 
         // 코인 내역 테이블에 변동 정보가 저장되어야함
         LocalDate currentDate = LocalDate.now();
-        LocalTime currentTime = LocalTime.now(); // 시,분,초만 저장
+        LocalTime currentTime = LocalTime.now().withNano(0); // 시,분,초만 저장
 
         // 현재 날짜의 년, 월, 일을 각각 저장
         int year = currentDate.getYear();
