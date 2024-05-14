@@ -43,6 +43,9 @@ class WFirstFragment : Fragment() {
     private var isPaused: Boolean = false
     private var timesize : Int = 1
 
+
+
+
     companion object {
         fun newInstance(): WFirstFragment {
             return WFirstFragment()
@@ -60,6 +63,7 @@ class WFirstFragment : Fragment() {
         speedView = view.findViewById(R.id.속력)
         circleProgress = view.findViewById(R.id.circleProgress)
         gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
+
 
         setupUpdateReceiver()
         return view
@@ -111,8 +115,9 @@ class WFirstFragment : Fragment() {
                         totalSpeedAvg = requestDto.speeds.average
                         sendResultsAndFinish(context)
                     }
-                    "com.example.siball.PAUSE_PROGRAM" -> {
+                    "com.example.sibal.PAUSE_PROGRAM" -> {
                         isPaused = intent.getBooleanExtra("isPause", false)
+                        updateGifForpause(context = context,isPaused)
                     }
                 }
             }
@@ -124,7 +129,7 @@ class WFirstFragment : Fragment() {
             addAction("com.example.sibal.UPDATE_ONE_MINUTE")
             addAction("com.example.sibal.UPDATE_HEART_RATE")
             addAction("com.example.sibal.EXIT_PROGRAM")
-            addAction("com.example.siball.PAUSE_PROGRAM")
+            addAction("com.example.sibal.PAUSE_PROGRAM")
         }
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(updateReceiver, intentFilter)
     }
@@ -135,6 +140,26 @@ class WFirstFragment : Fragment() {
 //        distanceView.text = formatTime(remainingTime)
         timeView.text = String.format("%.2f", distance / 1000)
         speedView.text = String.format("%.2f", speed)
+    }
+
+    @SuppressLint("ResourceType")
+    fun updateGifForpause(context: Context,isPaused:Boolean) {
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+
+        val resourceId = if (isPaused) {
+            context.resources.getIdentifier("stop${petId}", "raw", context.packageName)
+        } else {
+            context.resources.getIdentifier("run${petId}", "raw", context.packageName)
+        }
+
+        // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
+        if (resourceId != 0) {
+            gifImageView.setImageResource(resourceId)
+        } else {
+            // 예를 들어 기본 이미지로 설정
+            gifImageView.setImageResource(R.raw.doghome)
+        }
     }
 
     @SuppressLint("ResourceType")
