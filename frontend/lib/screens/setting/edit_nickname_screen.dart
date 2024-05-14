@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/users/nickname_check.dart';
 import 'package:forsythia/models/users/login_user.dart';
-import 'package:forsythia/provider/login_info_provider.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
@@ -19,10 +19,10 @@ class EditNickName extends StatefulWidget {
 }
 
 class _EditNickNameState extends State<EditNickName> {
-  late LoginInfoProvider _loginInfoProvider;
   final TextEditingController _nicknamecontroller = TextEditingController();
 
   String check = "";
+  String nickname2 = "";
 
   bool _showErrorMessage = false;
 
@@ -32,14 +32,21 @@ class _EditNickNameState extends State<EditNickName> {
     super.initState();
     _errorText = '';
     _showErrorMessage = false;
-    _loginInfoProvider = Provider.of<LoginInfoProvider>(context, listen: false);
+    loadNickname();
+  }
+
+  Future<void> loadNickname() async {
+    // SecureStorageService를 사용해서 로그인 정보를 불러오고, 닉네임을 설정해줘
+    SecureStorageService storageService = SecureStorageService();
+    LoginInfo? info = await storageService.getLoginInfo();
+    setState(() {
+      nickname2 = info?.nickname ?? ''; // 만약 닉네임이 없으면 빈 문자열로 설정해줘
+    });
+    print("sdfadfsdf$nickname2");
   }
 
   @override
   Widget build(BuildContext context) {
-    var nickName = Provider.of<LoginInfoProvider>(context).loginInfo?.nickname;
-    print(nickName);
-
     return Scaffold(
       appBar: SmallAppBar(
         title: '닉네임',
@@ -51,7 +58,7 @@ class _EditNickNameState extends State<EditNickName> {
             SizedBox(height: 30),
             maintext,
             SizedBox(height: 30),
-            _nickname(nickName),
+            _nickname(nickname2),
           ],
         ),
       ),
@@ -87,8 +94,6 @@ class _EditNickNameState extends State<EditNickName> {
   );
 
   Widget _nickname(nickname) {
-    final nickname = _loginInfoProvider.loginInfo?.nickname;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 10, 30, 20),
       child: Column(
@@ -176,38 +181,18 @@ class _EditNickNameState extends State<EditNickName> {
     );
   }
 
-  // _fetcheditnickname() async {
-  //   print(_nicknamecontroller.text);
-  //   await MemberService.fetchPutData(_nicknamecontroller.text).then((data) {
-  //     Navigator.of(context).push(SlidePageRoute(nextPage: EditNickName()));
-  //   }).catchError((error) {
-  //     print(error);
-  //   });
-  // }
-
   void _fetcheditnickname() async {
     String newNickname = _nicknamecontroller.text;
+    SecureStorageService storageService = SecureStorageService();
+    LoginInfo? info = await storageService.getLoginInfo();
 
     try {
       // 닉네임 업데이트 요청 보내기
       await MemberService.fetchEditNickName(newNickname);
 
       // 프로바이더에 업데이트된 닉네임 반영
-      LoginInfoProvider loginInfoProvider =
-          Provider.of<LoginInfoProvider>(context, listen: false);
-      loginInfoProvider.updateLoginInfo(
-        LoginInfo(
-          memberId: loginInfoProvider.loginInfo?.memberId,
-          email: loginInfoProvider.loginInfo?.email,
-          nickname: newNickname, // 변경된 닉네임 설정
-          birthday: loginInfoProvider.loginInfo?.birthday,
-          gender: loginInfoProvider.loginInfo?.gender,
-          height: loginInfoProvider.loginInfo?.height,
-          weight: loginInfoProvider.loginInfo?.weight,
-          coin: loginInfoProvider.loginInfo?.coin,
-          myPetDto: loginInfoProvider.loginInfo?.myPetDto,
-        ),
-      );
+      info?.nickname = newNickname;
+      storageService.saveLoginInfo(info!);
 
       // 업데이트 성공 시 EditNickName 화면으로 이동
       Navigator.of(context).pop();
