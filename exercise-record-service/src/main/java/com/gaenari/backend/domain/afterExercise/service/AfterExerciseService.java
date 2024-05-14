@@ -10,9 +10,8 @@ public interface AfterExerciseService {
      *
      * @param memberId 사용자의 식별자입니다.
      * @param exerciseDto 운동 기록에 대한 상세 정보를 담은 DTO입니다.
-     * @return 업데이트된 프로그램 사용 횟수를 반환합니다.
      */
-    Integer updateProgramUsageCount(String memberId, SaveExerciseRecordDto exerciseDto);
+    void updateProgramUsageCount(String memberId, SaveExerciseRecordDto exerciseDto);
 
     /**
      * 사용자의 운동 기록을 저장합니다.
