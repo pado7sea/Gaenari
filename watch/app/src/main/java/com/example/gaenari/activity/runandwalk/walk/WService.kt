@@ -123,7 +123,7 @@ class WService : Service(), SensorEventListener {
                 powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
             wakeLock?.acquire() // WakeLock 활성화
             try {
-                Log.d("IRunningService", "Service started")
+                Log.d("Check Walking Service", "Service started")
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupHeartRateSensor()
@@ -132,7 +132,7 @@ class WService : Service(), SensorEventListener {
                 timerHandler.postDelayed(timerRunnable, 1000) // 타이머 시작
                 oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000) // 1분 평균 계산 타이머 시작
             } catch (e: Exception) {
-                Log.e("TimeTargetService", "Error in onCreate: ${e.message}")
+                Log.e("Check Walking Service", "Error in onCreate: ${e.message}")
             }
         }
     }
@@ -141,9 +141,7 @@ class WService : Service(), SensorEventListener {
      * saveRequestDto 초기화
      */
     private fun initRequestDto() {
-        Log.d("Check", "ProgramData in InitRequestDto Method : $programData")
-//        val timeTargetInfo = TimeTargetInfo(ArrayList())
-        val program = Program(programData?.programId!!, null)
+        Log.d("Check Walking Service", "ProgramData in InitRequestDto Method : $programData")
         val record = Record(0.0, 0.0)
         val speed = Speeds(0.0, ArrayList())
         val heartRate = HeartRates(0, ArrayList())
@@ -154,7 +152,7 @@ class WService : Service(), SensorEventListener {
             record = record, speeds = speed, heartrates = heartRate
         )
 
-        Log.d("Check", "Init RequestDto : $requestDto")
+        Log.d("Check Walking Service", "Init RequestDto : $requestDto")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -169,12 +167,12 @@ class WService : Service(), SensorEventListener {
      * 분 당 운동 기록 계산
      */
     private fun calculateOneMinuteAverages() {
-        Log.d("Check", "1분 당 평균 값 계산 시작")
+        Log.d("Check Walking Service", "1분 당 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
         Log.d(
-            "Check",
+            "Check Walking Service",
             "OneMinuteAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
         )
 
@@ -196,12 +194,12 @@ class WService : Service(), SensorEventListener {
      * 1분 이전 조기 종료 시 남은 정보 저장
      */
     private fun remainInfoSave(){
-        Log.d("Check", "조기 종료 시 평균 값 계산 시작")
+        Log.d("Check Walking Service", "조기 종료 시 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
         Log.d(
-            "Check",
+            "Check Walking Service",
             "RemainInfoAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
         )
 
@@ -214,7 +212,7 @@ class WService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        Log.d("Check", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
+        Log.d("Check Walking Service", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
             if(event.values[0] < 40) return
             currentHeartRate = event.values[0]
@@ -240,7 +238,7 @@ class WService : Service(), SensorEventListener {
         timerHandler.removeCallbacks(timerRunnable)
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
         unregisterBroadcastReceiver()
-        Log.d("IRunningService", "Service destroyed")
+        Log.d("Check Walking Service", "Walking Service destroyed")
 
         sendEndProgramBroadcast()
     }
@@ -358,7 +356,7 @@ class WService : Service(), SensorEventListener {
                         if(!isPaused) {
                             val distance = intent.getDoubleExtra("distance", 0.0)
                             val speed = intent.getDoubleExtra("speed", 0.0)
-                            Log.d("Check", "Update Location : dist($distance), speed($speed)")
+                            Log.d("Check Walking Service", "Update Location : dist($distance), speed($speed)")
                             // 분 당 속도
                             oneMinuteSpeed += speed
                             speedCount++
@@ -392,6 +390,7 @@ class WService : Service(), SensorEventListener {
      * Broadcast Receive 해제
      */
     private fun unregisterBroadcastReceiver() {
+        Log.d("Check Walking Service", "Walking Service Unregister Broadcast Receiver")
         LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver)
     }
 }

@@ -133,7 +133,7 @@ class TimeTargetService : Service(), SensorEventListener {
      * saveRequestDto 초기화
      */
     private fun initRequestDto() {
-        Log.d("Check", "ProgramData in InitRequestDto Method : $programData")
+        Log.d("Check Time Service", "ProgramData in InitRequestDto Method : $programData")
 //        val timeTargetInfo = TimeTargetInfo(ArrayList())
         val program = Program(programData?.programId!!, null)
         val record = Record(0.0, 0.0)
@@ -146,7 +146,7 @@ class TimeTargetService : Service(), SensorEventListener {
             record = record, speeds = speed, heartrates = heartRate
         )
 
-        Log.d("Check", "Init RequestDto : $requestDto")
+        Log.d("Check Time Service", "Init RequestDto : $requestDto")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -161,12 +161,12 @@ class TimeTargetService : Service(), SensorEventListener {
      * 분 당 운동 기록 계산
      */
     private fun calculateOneMinuteAverages() {
-        Log.d("Check", "1분 당 평균 값 계산 시작")
+        Log.d("Check Time Service", "1분 당 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
         Log.d(
-            "Check",
+            "Check Time Service",
             "OneMinuteAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
         )
 
@@ -190,12 +190,12 @@ class TimeTargetService : Service(), SensorEventListener {
      * 1분 이전 조기 종료 시 남은 정보 저장
      */
     private fun remainInfoSave(){
-        Log.d("Check", "조기 종료 시 평균 값 계산 시작")
+        Log.d("Check Time Service", "조기 종료 시 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
         Log.d(
-            "Check",
+            "Check Time Service",
             "RemainInfoAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
         )
 
@@ -207,7 +207,7 @@ class TimeTargetService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        Log.d("Check", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
+        Log.d("Check Time Service", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
             if(event.values[0] < 40) return
             currentHeartRate = event.values[0]
@@ -351,7 +351,7 @@ class TimeTargetService : Service(), SensorEventListener {
                         if(!isPaused) {
                             val distance = intent.getDoubleExtra("distance", 0.0)
                             val speed = intent.getDoubleExtra("speed", 0.0)
-                            Log.d("Check", "Update Location : dist($distance), speed($speed)")
+                            Log.d("Check Time Service", "Time Update Location : dist($distance), speed($speed)")
                             // 분 당 속도
                             oneMinuteSpeed += speed
                             speedCount++

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gaenari.R
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 
 class RunningActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager2
@@ -14,9 +15,17 @@ class RunningActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_running)
-
+        this.onBackPressedDispatcher.addCallback(this, callback)
         setupViewPager()
 
+    }
+
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            // 뒤로 버튼 이벤트 처리
+            Log.d("Check", "On BackPressedCallback : position(${viewPager.currentItem} == 1) ? 2 : 1")
+            viewPager.setCurrentItem(if(viewPager.currentItem == 1) 2 else 1, true)
+        }
     }
 
     private fun setupViewPager() {

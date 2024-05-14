@@ -160,8 +160,8 @@ class IntervalService : Service(), SensorEventListener {
      * saveRequestDto 초기화
      */
     private fun initRequestDto() {
-        Log.d("Check", "initRequestDto() 들어옴")
-        Log.d("Check", "ProgramData in InitRequestDto Method : $programData")
+        Log.d("Check Interval Service", "initRequestDto() 들어옴")
+        Log.d("Check Interval Service", "ProgramData in InitRequestDto Method : $programData")
         val intervalInfo = IntervalInfo(ArrayList())
         val program = Program(programData?.programId!!, intervalInfo)
         val record = Record(0.0, 0.0)
@@ -174,7 +174,7 @@ class IntervalService : Service(), SensorEventListener {
             record = record, speeds = speed, heartrates = heartRate
         )
 
-        Log.d("Check", "Init RequestDto : $requestDto")
+        Log.d("Check Interval Service", "Init RequestDto : $requestDto")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -199,12 +199,12 @@ class IntervalService : Service(), SensorEventListener {
      * 분 당 운동 기록 계산
      */
     private fun calculateOneMinuteAverages() {
-        Log.d("Check", "1분 당 평균 값 계산 시작")
+        Log.d("Check Interval Service", "1분 당 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
         Log.d(
-            "Check",
+            "Check Interval Service",
             "OneMinuteAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
         )
 
@@ -229,7 +229,7 @@ class IntervalService : Service(), SensorEventListener {
         val isRunning = currentRunningType
         val rangeTime = currentRangeTime
         val averageSpeed = if (rangeSpeedCnt > 0) rangeSpeed / rangeSpeedCnt else 0.0
-        Log.d("Check", "Calculate Range Average : $isRunning, ${rangeTime}, $averageSpeed")
+        Log.d("Check Interval Service", "Calculate Range Average : $isRunning, ${rangeTime}, $averageSpeed")
 
         /* Update requestDto Range Info */
         val range = Ranges(
@@ -238,9 +238,9 @@ class IntervalService : Service(), SensorEventListener {
             speed = averageSpeed
         )
 
-        Log.d("Check", "Input Range Info to RequestDto : $range")
+        Log.d("Check Interval Service", "Input Range Info to RequestDto : $range")
         requestDto.program!!.intervalInfo?.addRange(range)
-        Log.d("Check", "RequestDto Status : $requestDto")
+        Log.d("Check Interval Service", "RequestDto Status : $requestDto")
 
         // 속도 정보 초기화
         rangeSpeed = 0.0
@@ -256,7 +256,7 @@ class IntervalService : Service(), SensorEventListener {
     private fun isEndOfProgram() {
         /* 모든 세트의 완료 여부 확인 */
         if (currentSetCount == programData?.program?.intervalInfo?.setCount) {
-            Log.d("Check", "Interval Service Stop")
+            Log.d("Check Interval Service", "Interval Service Stop")
             onDestroy()
         }
     }
@@ -265,7 +265,7 @@ class IntervalService : Service(), SensorEventListener {
      * 다음 인터벌 구간 정보 Update
      */
     private fun updateNextRangeInfo() {
-        Log.d("Check", "Before Update Range Info Index : $currentRangeIndex")
+        Log.d("Check Interval Service", "Before Update Range Info Index : $currentRangeIndex")
 
         /* 다음 구간 정보 */
         currentRangeTime =
@@ -278,8 +278,8 @@ class IntervalService : Service(), SensorEventListener {
         currentRangeIndex += 1
 
         Log.d(
-            "Check",
-            "Check Range Count : current($currentRangeIndex), total(${programData?.program?.intervalInfo?.rangeCount})"
+            "Check Interval Service",
+            "Range Count : current($currentRangeIndex), total(${programData?.program?.intervalInfo?.rangeCount})"
         )
 
         /* 세트 종료 시 구간 정보 초기화 */
@@ -289,8 +289,8 @@ class IntervalService : Service(), SensorEventListener {
         }
 
         Log.d(
-            "Check",
-            "Check Set Count : current($currentSetCount), total(${programData?.program?.intervalInfo?.setCount})"
+            "Check Interval Service",
+            "Set Count : current($currentSetCount), total(${programData?.program?.intervalInfo?.setCount})"
         )
     }
 
@@ -311,12 +311,12 @@ class IntervalService : Service(), SensorEventListener {
      * 1분 이전 조기 종료 시 남은 정보 저장
      */
     private fun remainInfoSave(){
-        Log.d("Check", "조기 종료 시 평균 값 계산 시작")
+        Log.d("Check Interval Service", "조기 종료 시 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
         Log.d(
-            "Check",
+            "Check Interval Service",
             "RemainInfoAverage Info : $averageSpeed , $averageHeartRate ,$oneMinuteDistance"
         )
 
@@ -329,7 +329,7 @@ class IntervalService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        Log.d("Check", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
+        Log.d("Check Interval Service", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
             if(event.values[0] < 40) return
             currentHeartRate = event.values[0]
@@ -474,7 +474,7 @@ class IntervalService : Service(), SensorEventListener {
                         if(!isPaused) {
                             val distance = intent.getDoubleExtra("distance", 0.0)
                             val speed = intent.getDoubleExtra("speed", 0.0)
-                            Log.d("Check", "Update Location : dist($distance), speed($speed)")
+                            Log.d("Check Interval Service", "Update Location : dist($distance), speed($speed)")
                             // 분 당 속도
                             oneMinuteSpeed += speed
                             speedCount++
