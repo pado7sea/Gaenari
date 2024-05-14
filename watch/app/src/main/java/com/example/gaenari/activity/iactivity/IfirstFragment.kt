@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Rect
 import android.os.Build
 import androidx.fragment.app.Fragment
 import android.os.Bundle
@@ -23,6 +22,7 @@ import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.util.PreferencesUtil
 
 class IFirstFragment : Fragment() {
     private lateinit var nowProgram: FavoriteResponseDto
@@ -165,7 +165,7 @@ class IFirstFragment : Fragment() {
                         Log.d("Interval Activity", "UPDATE_RANGE_INFO: $nowecercisetime")
                         //이게 다음세트꺼 시간을 의미하는건가 ?
                         realtime=0
-                        updateDataUI(nowisRunning,nowSetCount)
+                        updateDataUI(context = context,nowisRunning,nowSetCount)
                         adapter.updateIndex(nowExerciseCount)
                         vibrate(context)
                     }
@@ -196,7 +196,7 @@ class IFirstFragment : Fragment() {
     private fun firstUI(setCount:Int, nowisRunning:Boolean){
         setView.text = "1 / $setCount"
         val resourceId = if (nowisRunning) {
-            R.raw.run6  // 사용자가 달리기를 시작한 경우
+            R.raw.run7  // 사용자가 달리기를 시작한 경우
         } else {
             R.raw.walk4 // 사용자가 달리기를 멈춘 경우
         }
@@ -237,12 +237,15 @@ class IFirstFragment : Fragment() {
     }
 
     @SuppressLint("ResourceType")
-    private fun updateDataUI(nowisRunning:Boolean, nowSetCount : Int){
+    private fun updateDataUI(context: Context, nowisRunning:Boolean, nowSetCount : Int){
         setView.text = "$nowSetCount / $setCount"
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+
         val resourceId = if (nowisRunning) {
-            R.raw.run8  // 사용자가 달리기를 시작한 경우
+            context.resources.getIdentifier("run${petId}", "raw", context.packageName)
         } else {
-            R.raw.walk8 // 사용자가 달리기를 멈춘 경우
+            context.resources.getIdentifier("walk${petId}", "raw", context.packageName)
         }
         gifImageView.setImageResource(resourceId)
     }

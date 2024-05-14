@@ -12,7 +12,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="fitCenter"
-        android:src="@raw/dog98"
+        android:src="@raw/doghome"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleProgress"
         app:layout_constraintHorizontal_bias="0.504"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/thejamsil_medium"
-        android:text="자유달리기"
+        android:text="자유걷기"
         android:textColor="@color/black"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +47,7 @@
         android:id="@+id/달린거리"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="77dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="0.65"
         android:textColor="@color/black"
@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="74dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="0.00"
         android:textColor="@color/black"
@@ -156,7 +156,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.64" />
+        app:layout_constraintGuide_percent="0.63" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

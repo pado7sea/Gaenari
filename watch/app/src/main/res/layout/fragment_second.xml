@@ -48,15 +48,14 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:scaleType="centerCrop"
         android:src="@raw/runningj"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/걸음수"
