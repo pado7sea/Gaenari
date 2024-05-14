@@ -12,8 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gaenari.R
 import com.example.gaenari.StepCounterViewModel
+import com.example.gaenari.dto.response.ApiResponseDto
 import com.example.gaenari.dto.response.ApiResponseListDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.dto.response.MyPetResponseDto
 import com.example.gaenari.model.SharedViewModel
 import com.example.gaenari.service.LocationService
 import com.example.gaenari.util.AccessToken
@@ -40,7 +42,7 @@ class HomeActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         setContentView(R.layout.activity_home)
         prefs = PreferencesUtil.getEncryptedSharedPreferences(applicationContext)
-
+        getMyPetInfo()
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
 
@@ -90,7 +92,7 @@ class HomeActivity : AppCompatActivity() {
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             // 뒤로 버튼 이벤트 처리
-            Log.d("Check", "On BackPressedCallback : position(${viewPager.currentItem})")
+            Log.d("Check Home Activity", "On BackPressedCallback : position(${viewPager.currentItem})")
 
             if (viewPager.currentItem == 2)
                 finish()
@@ -119,8 +121,8 @@ class HomeActivity : AppCompatActivity() {
                 call: Call<ApiResponseListDto<FavoriteResponseDto?>>,
                 response: Response<ApiResponseListDto<FavoriteResponseDto?>>
             ) {
-                Log.d("Response", "Favorite Response : $response")
-                Log.d("Check", "Favorite program : " + response.body()?.data)
+                Log.d("Check Home Activity", "Favorite Response : $response")
+                Log.d("Check Home Activity", "Favorite program : " + response.body()?.data)
                 if (response.body()?.status == "ERROR") {
                     Toast.makeText(this@HomeActivity, "즐겨찾기 목록 조회 실패.", Toast.LENGTH_SHORT).show()
                 } else {
@@ -133,6 +135,34 @@ class HomeActivity : AppCompatActivity() {
 
             override fun onFailure(
                 call: Call<ApiResponseListDto<FavoriteResponseDto?>>,
+                t: Throwable
+            ) {
+                Toast.makeText(this@HomeActivity, "API 연결 실패.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun getMyPetInfo(){
+        val call = Retrofit.getApiService()
+            .getMyPetInfo(AccessToken.getInstance().accessToken)
+
+        call.enqueue(object : Callback<ApiResponseDto<MyPetResponseDto?>> {
+            override fun onResponse(
+                call: Call<ApiResponseDto<MyPetResponseDto?>>,
+                response: Response<ApiResponseDto<MyPetResponseDto?>>
+            ) {
+                Log.d("Check Home Activity", "Update MemberInfo : $response")
+
+                val edit = prefs?.edit()!!
+                edit.putLong("petId", response.body()?.data?.id!!)
+                edit.putString("petName", response.body()?.data?.name!!)
+                edit.apply()
+
+                Log.d("Check Home Activity", "Complete Update Member Info")
+            }
+
+            override fun onFailure(
+                call: Call<ApiResponseDto<MyPetResponseDto?>>,
                 t: Throwable
             ) {
                 Toast.makeText(this@HomeActivity, "API 연결 실패.", Toast.LENGTH_SHORT).show()

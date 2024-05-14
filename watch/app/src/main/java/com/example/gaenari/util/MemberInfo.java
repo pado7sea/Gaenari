@@ -5,13 +5,14 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.gaenari.dto.response.AuthResponseDto;
+import com.example.gaenari.dto.response.MyPetResponseDto;
 
 public class MemberInfo {
 
     private SharedPreferences prefs;
 
     public void getMemberInfo(Context context, AuthResponseDto responseDto){
-        Log.i("Check", "Save MemberInfo : " + responseDto.toString());
+        Log.i("Check Member Info", "Save MemberInfo : " + responseDto.toString());
 
         prefs = PreferencesUtil.getEncryptedSharedPreferences(context);
         SharedPreferences.Editor edit = prefs.edit();
@@ -26,6 +27,6 @@ public class MemberInfo {
         edit.putString("petName", responseDto.getPetName());
         edit.apply();
 
-        Log.v("Check", "Complete Save MemberInfo");
+        Log.d("Check", "Complete Save MemberInfo");
     }
 }
