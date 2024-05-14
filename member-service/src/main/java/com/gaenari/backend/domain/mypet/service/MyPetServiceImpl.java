@@ -1,6 +1,9 @@
 package com.gaenari.backend.domain.mypet.service;
 
 import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
+import com.gaenari.backend.domain.coin.dto.requestDto.MemberCoin;
+import com.gaenari.backend.domain.coin.entity.CoinTitle;
+import com.gaenari.backend.domain.coin.service.CoinService;
 import com.gaenari.backend.domain.member.entity.Member;
 import com.gaenari.backend.domain.member.repository.MemberRepository;
 import com.gaenari.backend.domain.mypet.dto.requestDto.Adopt;
@@ -27,6 +30,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class MyPetServiceImpl implements MyPetService{
+    private final CoinService coinService;
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
     private final MyPetRepository myPetRepository;
@@ -39,7 +43,7 @@ public class MyPetServiceImpl implements MyPetService{
         // 현재 가지고 있는 반려견 종류들과 겹치는지 확인
         List<MyPet> myPetList = myPetRepository.findByMemberId(member.getId());
         for(MyPet myPet : myPetList){
-            if(myPet.getDog().getId() == adopt.getId()){
+            if(myPet.getDog().getId().equals(adopt.getId())){
                 throw new AlreadyHavePetException();
             }
         }
@@ -70,6 +74,14 @@ public class MyPetServiceImpl implements MyPetService{
                 .isPartner(false)
                 .build();
         myPetRepository.save(myPet);
+        // 코인 내역 테이블에 변동 정보 저장
+        MemberCoin memberCoin = MemberCoin.builder()
+                .memberEmail(memberEmail)
+                .isIncreased(false) // 감소
+                .coinTitle(CoinTitle.PET_PURCHASE)
+                .coinAmount(dog.getPrice())
+                .build();
+        coinService.updateCoin(memberCoin);
     }
 
     @Override // 파트너 반려견 변경
