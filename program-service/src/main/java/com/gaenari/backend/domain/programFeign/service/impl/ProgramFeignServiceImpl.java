@@ -43,6 +43,8 @@ public class ProgramFeignServiceImpl implements ProgramFeignService {
 
         return ProgramDetailAboutRecordDto.builder()
                 .programId(program.getId())
+                .programTitle(program.getTitle())
+                .isFavorite(program.getIsFavorite())
                 .type(program.getType())
                 .program(ProgramTypeInfoDto.builder()
                         .targetValue(program.getTargetValue())
