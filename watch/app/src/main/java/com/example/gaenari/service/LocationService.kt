@@ -70,7 +70,7 @@ class LocationService : Service() {
         override fun onLocationResult(locationResult: LocationResult) {
             try {
                 locationResult.locations.forEach { location ->
-                    val speed = location.speed.toDouble()
+                    val speed = location.speed.toDouble() * 3.6
                     val distance = location.distanceTo(lastLocation ?: location).toDouble()
                     Log.d("Check", "Sending Location Info : speed($speed), distance($distance)")
                     sendLocationBroadcast(distance, speed)

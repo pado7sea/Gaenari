@@ -22,6 +22,7 @@ import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.activity.runandwalk.run.RFirstFragment
 import com.example.gaenari.dto.request.SaveDataRequestDto
+import com.example.gaenari.util.PreferencesUtil
 
 class WFirstFragment : Fragment() {
     private lateinit var distanceView: TextView
@@ -40,6 +41,7 @@ class WFirstFragment : Fragment() {
     private var heartRateCount: Int = 0
     private var totalTime: Long = 0
     private var isPaused: Boolean = false
+    private var timesize : Int = 1
 
     companion object {
         fun newInstance(): WFirstFragment {
@@ -70,10 +72,10 @@ class WFirstFragment : Fragment() {
                         val distance = intent.getDoubleExtra("distance", 0.0)
                         val speed = intent.getFloatExtra("speed", 0f)
                         val time = intent.getLongExtra("time", 0)
-                        if(speed>0.6){
-                            updateGifForActivity(true)
+                        if(speed>6){
+                            updateGifForActivity(context = context,true)
                         }else{
-                            updateGifForActivity(false)
+                            updateGifForActivity(context = context,false)
                         }
 
                         totalDistance = distance
@@ -96,11 +98,11 @@ class WFirstFragment : Fragment() {
                     }
                     "com.example.sibal.UPDATE_HEART_RATE" -> {
                         val heartRate = intent.getFloatExtra("heartRate", 0f)
-                        totalHeartRate += heartRate
                         if (heartRate > 40) {
+                            totalHeartRate += heartRate
                             heartRateCount++
+                            updateheartUI(heartRate)
                         }
-                        updateheartUI(heartRate)
                     }
                     "com.example.sibal.EXIT_PROGRAM" -> {
                         Log.d("Check", "Receive Exit BroadCast")
@@ -132,17 +134,27 @@ class WFirstFragment : Fragment() {
     private fun updateUI(distance: Double,  speed: Float) {
 //        distanceView.text = formatTime(remainingTime)
         timeView.text = String.format("%.2f", distance / 1000)
-        speedView.text = String.format("%.2f", speed * 3.6)
+        speedView.text = String.format("%.2f", speed)
     }
 
     @SuppressLint("ResourceType")
-    fun updateGifForActivity(isRunning: Boolean) {
+    fun updateGifForActivity(context: Context, isRunning: Boolean) {
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+
         val resourceId = if (isRunning) {
-            R.raw.run4  // 사용자가 달리기를 시작한 경우
+            context.resources.getIdentifier("run${petId}", "raw", context.packageName)
         } else {
-            R.raw.stop4 // 사용자가 달리기를 멈춘 경우
+            context.resources.getIdentifier("walk${petId}", "raw", context.packageName)
         }
-        gifImageView.setImageResource(resourceId)
+
+        // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
+        if (resourceId != 0) {
+            gifImageView.setImageResource(resourceId)
+        } else {
+            // 예를 들어 기본 이미지로 설정
+            gifImageView.setImageResource(R.raw.doghome)
+        }
     }
 
 
@@ -155,6 +167,11 @@ class WFirstFragment : Fragment() {
         val progress = 100 * (1 - (time/ 3600000).toFloat())
         circleProgress.setProgress(progress)
         distanceView.text = formatTime(time)
+        distanceView.textSize = when (timesize) {
+            1 -> 11f
+            3 -> 7f
+            else -> distanceView.textSize // 기존 사이즈 유지
+        }
     }
 
     private fun formatTime(millis: Long): String {
@@ -165,6 +182,7 @@ class WFirstFragment : Fragment() {
 
         if (hours > 0) {
             formattedTime.append("${hours}h ")
+            timesize=3
         }
         if (minutes > 0 || hours > 0) { // 시간이 있는 경우 0분도 표시
             formattedTime.append("${minutes}m ")

@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
+import com.example.gaenari.util.PreferencesUtil
 
 class DFirstFragment : Fragment() {
     private lateinit var distanceView: TextView
@@ -29,6 +30,7 @@ class DFirstFragment : Fragment() {
     private lateinit var speedView: TextView
     private lateinit var circleProgress: DCircleProgress
     private lateinit var updateReceiver: BroadcastReceiver
+    private lateinit var gifImageView : pl.droidsonroids.gif.GifImageView
     private lateinit var requestDto: SaveDataRequestDto
 
     private var totalHeartRateAvg: Int = 0
@@ -69,14 +71,8 @@ class DFirstFragment : Fragment() {
         heartRateView = view.findViewById(R.id.심박수)
         speedView = view.findViewById(R.id.속력)
         circleProgress = view.findViewById(R.id.circleProgress)
-        val gifImageView = view.findViewById<ImageView>(R.id.gifImageView)
-        context?.let {
-            Glide.with(it)
-                .asGif()
-                .load(R.raw.dog98)
-                .dontTransform()
-                .into(gifImageView)
-        }
+        gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
+
 
         val programTarget = arguments?.getDouble("programTarget") ?: 0
         Log.d("first", "onCreateView: ${programTarget}")
@@ -93,6 +89,12 @@ class DFirstFragment : Fragment() {
                         val remainingdistance = intent.getDoubleExtra("remainDistance", 0.0)
                         val speed = intent.getFloatExtra("speed", 0f)
                         val time = intent.getLongExtra("time", 0)
+                        if(speed>6){
+                            updateGifForActivity(context = context,true)
+                        }else{
+                            updateGifForActivity(context = context,false)
+                        }
+
                         Log.d(
                             "d프래그먼트",
                             "distance: ${remainingdistance}, programtarget : ${programTarget}"
@@ -124,11 +126,11 @@ class DFirstFragment : Fragment() {
 
                     "com.example.sibal.UPDATE_HEART_RATE" -> {
                         val heartRate = intent.getFloatExtra("heartRate", 0f)
-                        totalHeartRate += heartRate
                         if (heartRate > 40) {
+                            totalHeartRate += heartRate
                             heartRateCount++
+                            updateheartUI(heartRate)
                         }
-                        updateheartUI(heartRate)
                     }
                     "com.example.sibal.EXIT_PROGRAM" -> {
                         requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
@@ -168,7 +170,7 @@ class DFirstFragment : Fragment() {
         val progress = 100 * (1 - (remainingdistance / totalMillis))
         circleProgress.setProgress(progress.toFloat())
         distanceView.text = String.format("%.2f km", (remainingdistance / 1000))
-        speedView.text = String.format("%.2f", speed * 3.6)
+        speedView.text = String.format("%.2f", speed )
     }
 
     private fun updateheartUI(heartRate: Float) {
@@ -196,6 +198,26 @@ class DFirstFragment : Fragment() {
         formattedTime.append("${seconds}s") // 초는 항상 표시
 
         return formattedTime.toString().trim()
+    }
+
+    @SuppressLint("ResourceType")
+    fun updateGifForActivity(context: Context, isRunning: Boolean) {
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+
+        val resourceId = if (isRunning) {
+            context.resources.getIdentifier("run${petId}", "raw", context.packageName)
+        } else {
+            context.resources.getIdentifier("walk${petId}", "raw", context.packageName)
+        }
+
+        // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
+        if (resourceId != 0) {
+            gifImageView.setImageResource(resourceId)
+        } else {
+            // 예를 들어 기본 이미지로 설정
+            gifImageView.setImageResource(R.raw.doghome)
+        }
     }
 
     private fun sendResultsAndFinish(context: Context) {

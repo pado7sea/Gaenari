@@ -9,10 +9,10 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
         android:scaleType="fitCenter"
-        android:src="@raw/dog98"
+        android:src="@raw/doghome"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleProgress"
         app:layout_constraintHorizontal_bias="0.504"
@@ -38,7 +38,7 @@
         android:fontFamily="@font/thejamsil_medium"
         android:text="자유걷기"
         android:textColor="@color/black"
-        android:textSize="13sp"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -47,11 +47,11 @@
         android:id="@+id/달린거리"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="79dp"
         android:fontFamily="@font/thejamsil_medium"
-        android:text="0.65"
+        android:text="0s"
         android:textColor="@color/black"
-        android:textSize="13sp"
+        android:textSize="11sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline27"
         app:layout_constraintStart_toStartOf="@+id/guideline26"
         app:layout_constraintTop_toTopOf="parent" />
@@ -61,11 +61,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="76dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="0.00"
         android:textColor="@color/black"
-        android:textSize="11sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline26"
         app:layout_constraintStart_toStartOf="@+id/guideline25"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,11 +73,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="89dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="km"
         android:textColor="@color/black"
-        android:textSize="10sp"
+        android:textSize="8sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline26"
         app:layout_constraintStart_toStartOf="@+id/guideline25"
         app:layout_constraintTop_toTopOf="parent" />
@@ -91,7 +91,7 @@
         android:fontFamily="@font/thejamsil_medium"
         android:text="3.75"
         android:textColor="@color/black"
-        android:textSize="11sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline29" />
@@ -100,11 +100,11 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="127dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="km/h"
         android:textColor="@color/black"
-        android:textSize="10sp"
+        android:textSize="8sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline29"
         app:layout_constraintTop_toTopOf="parent" />
@@ -114,21 +114,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/달린거리"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="75dp"
         android:fontFamily="@font/thejamsil_medium"
-        android:text="20"
+        android:text="85"
         android:textColor="@color/black"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline28"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:fontFamily="@font/thejamsil_medium"
+        android:text="BPM"
+        android:textColor="@color/black"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline28"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/심박수" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline25"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.20" />
+        app:layout_constraintGuide_percent="0.214" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline26"
@@ -156,7 +169,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.64" />
+        app:layout_constraintGuide_percent="0.63" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

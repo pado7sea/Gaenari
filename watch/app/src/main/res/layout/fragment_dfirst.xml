@@ -7,12 +7,12 @@
     android:background="@drawable/disback121">
 
 
-    <ImageView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
         android:layout_width="73dp"
         android:layout_height="73dp"
         android:scaleType="fitCenter"
-        android:src="@raw/dog98"
+        android:src="@raw/doghome"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/circleProgress"
         app:layout_constraintHorizontal_bias="0.504"
