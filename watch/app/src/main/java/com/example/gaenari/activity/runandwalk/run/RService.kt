@@ -113,8 +113,7 @@ class RService : Service(), SensorEventListener {
         }
 
     @SuppressLint("ForegroundServiceType")
-    override fun onCreate() {
-        super.onCreate()
+    private fun initService() {
         startTime = SystemClock.elapsedRealtime()
         if (!isServiceRunning) {
             isServiceRunning = true
@@ -128,6 +127,7 @@ class RService : Service(), SensorEventListener {
                 startForeground(1, notification)
                 setupHeartRateSensor()
                 setupUpdateReceiver()
+                initRequestDto()
                 startTime = SystemClock.elapsedRealtime()
                 timerHandler.postDelayed(timerRunnable, 1000) // 타이머 시작
                 oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000) // 1분 평균 계산 타이머 시작
@@ -156,10 +156,8 @@ class RService : Service(), SensorEventListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        initService()
         programData = intent?.getParcelableExtra("programData", FavoriteResponseDto::class.java)
-
-        initRequestDto()
-
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -167,7 +165,7 @@ class RService : Service(), SensorEventListener {
      * 분 당 운동 기록 계산
      */
     private fun calculateOneMinuteAverages() {
-        Log.d("Check", "1분 당 평균 값 계산 시작")
+        Log.d("Check Running Service", "1분 당 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
@@ -194,7 +192,7 @@ class RService : Service(), SensorEventListener {
      * 1분 이전 조기 종료 시 남은 정보 저장
      */
     private fun remainInfoSave(){
-        Log.d("Check", "조기 종료 시 평균 값 계산 시작")
+        Log.d("Check Running Service", "조기 종료 시 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
             if (heartRateCount > 0) (oneMinuteHeartRate / heartRateCount).toInt() else 0
@@ -212,7 +210,7 @@ class RService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        Log.d("Check Running Service", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
+        Log.d("Check Running Service", "HeartRate onSensorChanged")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
             if(event.values[0] < 40) return
             currentHeartRate = event.values[0]
@@ -241,6 +239,7 @@ class RService : Service(), SensorEventListener {
         Log.d("Check Running Service", "Running Service destroyed")
 
         sendEndProgramBroadcast()
+        super.onDestroy()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}

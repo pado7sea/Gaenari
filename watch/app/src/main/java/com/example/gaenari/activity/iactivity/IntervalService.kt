@@ -132,8 +132,7 @@ class IntervalService : Service(), SensorEventListener {
         }
 
     @SuppressLint("ForegroundServiceType")
-    override fun onCreate() {
-        super.onCreate()
+    private fun initService(){
         startTime = SystemClock.elapsedRealtime()
         if (!isServiceRunning) {
             isServiceRunning = true
@@ -142,16 +141,17 @@ class IntervalService : Service(), SensorEventListener {
                 powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
             wakeLock?.acquire() // WakeLock 활성화
             try {
-                Log.d("IRunningService", "Service started")
+                Log.d("Check Interval Service", "Service started")
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupHeartRateSensor()
                 setupUpdateReceiver()
+                initRequestDto()
                 startTime = SystemClock.elapsedRealtime()
                 timerHandler.postDelayed(timerRunnable, 1000) // 타이머 시작
                 oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000) // 1분 평균 계산 타이머 시작
             } catch (e: Exception) {
-                Log.e("IRunningService", "Error in onCreate: ${e.message}")
+                Log.e("Check Interval Service", "Error in onCreate: ${e.message}")
             }
         }
     }
@@ -179,8 +179,7 @@ class IntervalService : Service(), SensorEventListener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         programData = intent?.getParcelableExtra("programData", FavoriteResponseDto::class.java)
-
-        initRequestDto()
+        initService()
 
         currentRangeTime =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.time?.toLong()!! * 1000
@@ -329,7 +328,7 @@ class IntervalService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        Log.d("Check Interval Service", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
+        Log.d("Check Interval Service", "HeartRate onSensorChanged")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
             if(event.values[0] < 40) return
             currentHeartRate = event.values[0]

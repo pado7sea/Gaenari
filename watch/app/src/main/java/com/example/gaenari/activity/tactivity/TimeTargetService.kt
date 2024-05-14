@@ -105,8 +105,7 @@ class TimeTargetService : Service(), SensorEventListener {
         }
 
     @SuppressLint("ForegroundServiceType")
-    override fun onCreate() {
-        super.onCreate()
+    private fun initService() {
         startTime = SystemClock.elapsedRealtime()
         if (!isServiceRunning) {
             isServiceRunning = true
@@ -115,16 +114,17 @@ class TimeTargetService : Service(), SensorEventListener {
                 powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
             wakeLock?.acquire() // WakeLock 활성화
             try {
-                Log.d("IRunningService", "Service started")
+                Log.d("Check Time Service", "Service started")
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupHeartRateSensor()
                 setupUpdateReceiver()
+                initRequestDto()
                 startTime = SystemClock.elapsedRealtime()
                 timerHandler.postDelayed(timerRunnable, 1000) // 타이머 시작
                 oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000) // 1분 평균 계산 타이머 시작
             } catch (e: Exception) {
-                Log.e("TimeTargetService", "Error in onCreate: ${e.message}")
+                Log.e("Check Time Service", "Error in onCreate: ${e.message}")
             }
         }
     }
@@ -151,8 +151,7 @@ class TimeTargetService : Service(), SensorEventListener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         programData = intent?.getParcelableExtra("programData", FavoriteResponseDto::class.java)
-
-        initRequestDto()
+        initService()
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -207,7 +206,7 @@ class TimeTargetService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        Log.d("Check Time Service", "onSensorChanged: 님아됨 ? ㅋㅋㅋㅋ ")
+        Log.d("Check Time Service", "HeartRate onSensorChanged")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
             if(event.values[0] < 40) return
             currentHeartRate = event.values[0]
@@ -233,7 +232,7 @@ class TimeTargetService : Service(), SensorEventListener {
         timerHandler.removeCallbacks(timerRunnable)
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
         unregisterBroadcastReceiver()
-        Log.d("IRunningService", "Service destroyed")
+        Log.d("Check Time Service", "Service destroyed")
 
         sendEndProgramBroadcast()
     }
