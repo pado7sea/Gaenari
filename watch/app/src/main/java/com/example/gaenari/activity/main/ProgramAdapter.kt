@@ -26,11 +26,11 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
 
         // 배경 리소스 설정
         val backgroundResource = when (program.type) {
-            "D" -> R.drawable.circle98d
-            "T" -> R.drawable.circle98t
-            "I" -> R.drawable.circle98i
-            "R" -> R.drawable.circle98r
-            "W" -> R.drawable.circle98w
+            "D" -> R.drawable.circle97d
+            "T" -> R.drawable.circle97t
+            "I" -> R.drawable.circle97i
+            "R" -> R.drawable.circle97r
+            "W" -> R.drawable.circle97w
             else -> R.drawable.circular_background
         }
 
