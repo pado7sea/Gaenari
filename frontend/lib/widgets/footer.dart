@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forsythia/theme/color.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -13,7 +14,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(15, 0, 15, 20),
+      margin: EdgeInsets.fromLTRB(15, 5, 15, 10),
+      padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
       decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.7),
           borderRadius: BorderRadius.circular(100.0),
@@ -24,92 +26,91 @@ class CustomBottomNavigationBar extends StatelessWidget {
               offset: Offset(0, 10),
             ),
           ]),
-      height: 70.0,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100.0),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.transparent,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset(
-                  selectedIndex == 0
-                      ? 'assets/bottom/active_dashboard.png'
-                      : 'assets/bottom/none_dashboard.png',
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.none,
-                ),
+      child: BottomNavigationBar(
+        selectedItemColor: myBlack,
+        unselectedItemColor: myGrey,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.transparent,
+        // showSelectedLabels: false,
+        // showUnselectedLabels: false,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 30,
+              height: 30,
+              child: Image.asset(
+                selectedIndex == 0
+                    ? 'assets/bottom/active_dashboard.png'
+                    : 'assets/bottom/none_dashboard.png',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
               ),
-              label: '',
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset(
-                  selectedIndex == 1
-                      ? 'assets/bottom/active_record.png'
-                      : 'assets/bottom/none_record.png',
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.none,
-                ),
+            label: '대시보드',
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 30,
+              height: 30,
+              child: Image.asset(
+                selectedIndex == 1
+                    ? 'assets/bottom/active_record.png'
+                    : 'assets/bottom/none_record.png',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
               ),
-              label: '',
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset(
-                  selectedIndex == 2
-                      ? 'assets/bottom/active_program.png'
-                      : 'assets/bottom/none_program.png',
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.none,
-                ),
+            label: '운동기록',
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 30,
+              height: 30,
+              child: Image.asset(
+                selectedIndex == 2
+                    ? 'assets/bottom/active_program.png'
+                    : 'assets/bottom/none_program.png',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
               ),
-              label: '',
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset(
-                  selectedIndex == 3
-                      ? 'assets/bottom/active_doghouse.png'
-                      : 'assets/bottom/none_doghouse.png',
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.none,
-                ),
+            label: '프로그램',
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 30,
+              height: 30,
+              child: Image.asset(
+                selectedIndex == 3
+                    ? 'assets/bottom/active_doghouse.png'
+                    : 'assets/bottom/none_doghouse.png',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
               ),
-              label: '',
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset(
-                  selectedIndex == 4
-                      ? 'assets/bottom/active_setting.png'
-                      : 'assets/bottom/none_setting.png',
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.none,
-                ),
+            label:
+                '내새끼집', // 혹시 내새끼라 적혀있어서 킹받으셨나요? 그렇다면 성공입니다. 그래서 말인데 여기 이름 뭘로 해야함? 민지님 헬프
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 30,
+              height: 30,
+              child: Image.asset(
+                selectedIndex == 4
+                    ? 'assets/bottom/active_setting.png'
+                    : 'assets/bottom/none_setting.png',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
               ),
-              label: '',
             ),
-          ],
-          currentIndex: selectedIndex,
-          // selectedItemColor: mainWhite,
-          // unselectedItemColor: mainWhite,
-          onTap: onItemSelected,
-          elevation: 0,
-        ),
+            label: '환경설정',
+          ),
+        ],
+        currentIndex: selectedIndex,
+        // selectedItemColor: mainWhite,
+        // unselectedItemColor: mainWhite,
+        onTap: onItemSelected,
+        elevation: 0,
       ),
     );
   }
