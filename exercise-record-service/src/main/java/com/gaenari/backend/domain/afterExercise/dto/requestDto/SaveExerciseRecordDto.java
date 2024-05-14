@@ -26,7 +26,7 @@ public class SaveExerciseRecordDto {
     private ProgramInfoDto program;
 
     @Schema(description = "누적 거리, 시간")
-    private RecordDto record;
+    private SaveRecordDto record;
 
     @Schema(description = "속도")
     private SpeedDto speeds;
@@ -77,7 +77,7 @@ public class SaveExerciseRecordDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class RecordDto {
+    public static class SaveRecordDto {
         @Schema(description = "누적 거리 (km)", example = "10")
         private Double distance;
 
