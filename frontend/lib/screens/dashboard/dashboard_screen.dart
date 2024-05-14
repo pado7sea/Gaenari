@@ -82,17 +82,29 @@ class DashBoardScreenState extends State<DashBoardScreen> {
           } else {
             var nickName = snapshot.data?.nickname ?? 'Unknown';
             return active
-                ? SlidingUpPanel(
-                    defaultPanelState: PanelState.OPEN,
-                    panel: _panelWidget(),
-                    collapsed: _collapsed(),
-                    body: _backgroundWidget(nickName),
-                    minHeight: 50,
-                    maxHeight: MediaQuery.of(context).size.height - 250,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
-                  )
+                ? reward
+                    ? SlidingUpPanel(
+                        defaultPanelState: PanelState.OPEN,
+                        panel: _panelWidget(),
+                        collapsed: _collapsed(),
+                        body: _backgroundWidget(nickName),
+                        minHeight: 50,
+                        maxHeight: MediaQuery.of(context).size.height - 250,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20)),
+                      )
+                    : SlidingUpPanel(
+                        defaultPanelState: PanelState.OPEN,
+                        panel: _panelWidget(),
+                        collapsed: _collapsed(),
+                        body: _backgroundWidget(nickName),
+                        minHeight: 50,
+                        maxHeight: MediaQuery.of(context).size.height - 320,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20)),
+                      )
                 : Center(
                     child: CircularProgressIndicator(),
                   );
@@ -127,71 +139,114 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                !reward
-                    ? Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.only(bottom: 16),
-                        decoration: myBoxDecoration,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  "assets/emoji/bell.png",
-                                  width: 30,
-                                  height: 30,
-                                ),
-                                SizedBox(width: 20),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
-                                    Text16(
-                                      text: "아직 받지않은 보상이 있어요!",
-                                      bold: true,
-                                    ),
-                                    SizedBox(height: 3),
-                                    Text12(
-                                      text: "코인과 애정도를 받으세요.",
-                                      textColor: myGrey,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                Reward rewards =
-                                    await ChallengeService.fetchReward();
-                                print(rewards.data!.coin!);
-                                print(rewards.data!.heart!);
-                                setState(() {
-                                  reward = false;
-                                });
-                                Fluttertoast.showToast(
-                                  msg:
-                                      '${rewards.data!.coin!}개의 코인과 \n ${rewards.data!.heart!}의 애정도를 얻었어요!',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.TOP,
-                                  backgroundColor: myMainGreen,
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: myLightGreen,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                child: Text16(
-                                  text: "받기",
-                                  textColor: Colors.white,
-                                ),
+                reward
+                    ?
+                    // ? Container(
+                    //     width: double.infinity,
+                    //     padding: EdgeInsets.all(10),
+                    //     margin: EdgeInsets.only(bottom: 16),
+                    //     decoration: myBoxDecoration,
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       children: [
+                    // Row(
+                    //   children: [
+                    //     Image.asset(
+                    //       "assets/emoji/bell.png",
+                    //       width: 30,
+                    //       height: 30,
+                    //     ),
+                    //     SizedBox(width: 20),
+                    //     Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: const [
+                    //         Text16(
+                    //           text: "아직 받지않은 보상이 있어요!",
+                    //           bold: true,
+                    //         ),
+                    //         SizedBox(height: 3),
+                    //         Text12(
+                    //           text: "코인과 애정도를 받으세요.",
+                    //           textColor: myGrey,
+                    //         )
+                    //       ],
+                    //     ),
+                    //   ],
+                    // ),
+                    GestureDetector(
+                        onTap: () async {
+                          Reward rewards = await ChallengeService.fetchReward();
+                          print(rewards.data!.coin!);
+                          print(rewards.data!.heart!);
+                          setState(() {
+                            reward = false;
+                          });
+                          Fluttertoast.showToast(
+                            msg:
+                                '${rewards.data!.coin!}개의 코인과 \n ${rewards.data!.heart!}의 애정도를 얻었어요!',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.TOP,
+                            backgroundColor: myMainGreen,
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: myLightYellow, // 배경색
+                            borderRadius:
+                                BorderRadius.circular(15), // 박스의 모서리를 둥글게
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xffBFC2C8)
+                                    .withOpacity(0.25), // 그림자 색 (투명도 25%)
+                                blurRadius: 15, // 그림자 흐림 정도
+                                offset: Offset(0, 10), // 그림자의 위치 (x, y)
                               ),
-                            )
-                          ],
-                        ),
-                      )
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 10),
+                              Image.asset(
+                                "assets/emoji/bell.png",
+                                width: 30,
+                                height: 30,
+                              ),
+                              SizedBox(width: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text16(
+                                    text: "아직 받지않은 보상이 있어요!",
+                                    bold: true,
+                                  ),
+                                  SizedBox(height: 3),
+                                  Text12(
+                                    text: "코인과 애정도를 받으세요.",
+                                    textColor: myGrey,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //       color: myLightGreen,
+                        //       borderRadius:
+                        //           BorderRadius.all(Radius.circular(5))),
+                        //   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        //   child: Text16(
+                        //     text: "받기",
+                        //     textColor: Colors.white,
+                        //   ),
+                        // ),
+                        )
+                    //     ],
+                    //   ),
+                    // )
                     : SizedBox(
                         height: 0,
                       ),
@@ -211,13 +266,14 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                   SlidePageRoute(nextPage: ChallengePage()));
                             },
                             child: Container(
-                              height: 120,
+                              height: 90,
                               width: double.infinity,
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(20),
                               margin: EdgeInsets.only(bottom: 16),
                               decoration: myBoxDecoration,
                               child: Text16(
                                 text: "도전과제",
+                                bold: true,
                               ),
                             ),
                           ),
@@ -227,13 +283,14 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                   .push(SlidePageRoute(nextPage: MatePage()));
                             },
                             child: Container(
-                              height: 120,
+                              height: 90,
                               width: double.infinity,
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(20),
                               // margin: EdgeInsets.only(bottom: 10),
                               decoration: myBoxDecoration,
                               child: Text16(
                                 text: "친구",
+                                bold: true,
                               ),
                             ),
                           ),
@@ -248,12 +305,13 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                 .push(SlidePageRoute(nextPage: WatchScreen()));
                           },
                           child: Container(
-                            height: 256,
-                            padding: EdgeInsets.fromLTRB(10, 10, 10, 40),
+                            height: 196,
+                            padding: EdgeInsets.all(20),
                             margin: EdgeInsets.only(left: 16),
                             decoration: myBoxDecoration,
                             child: Text16(
                               text: "워치 or 날씨",
+                              bold: true,
                             ),
                           ),
                         )),
@@ -288,7 +346,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             ),
             const SizedBox(height: 8),
             Text12(
-              text: "스크롤을 올려 대시보드를 확인하세요",
+              text: "스크롤을 올려 대시보드를 확인하세요.",
               textColor: myGrey,
             ),
           ],
@@ -309,13 +367,15 @@ class DashBoardScreenState extends State<DashBoardScreen> {
         height: double.infinity,
         width: double.infinity,
         child: Container(
-          margin: EdgeInsets.fromLTRB(20, 50, 0, 0),
-          child: Text20(
-            // text: ' ${Provider.of<TokenProvider>(context).token}',
-            text: '$nickName님, 반가워요! \n오늘도 운동 시작해 볼까요?',
-            bold: true,
-          ),
-        ),
+            margin: EdgeInsets.fromLTRB(20, 60, 0, 0),
+            child: Text(
+              '$nickName님, 반가워요! \n오늘도 운동 시작해 볼까요?',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                height: 1.7,
+              ),
+            )),
       ),
     );
   }

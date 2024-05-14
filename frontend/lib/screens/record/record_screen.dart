@@ -100,12 +100,10 @@ class _RecordScreenState extends State<RecordScreen> {
           ? SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: _monthrecord(),
                   ),
-                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: _calendar(),
@@ -147,8 +145,11 @@ class _RecordScreenState extends State<RecordScreen> {
                       children: [
                         SizedBox(height: 10),
                         Text20(
-                            text: statistic.dist!.toStringAsFixed(0),
-                            bold: true),
+                          text: statistic.dist! >= 999
+                              ? '999'
+                              : statistic.dist!.toStringAsFixed(0),
+                          bold: true,
+                        ),
                         Text12(text: 'km')
                       ],
                     ),
@@ -259,6 +260,7 @@ class _RecordScreenState extends State<RecordScreen> {
                 focusedDay: _focusedDay,
                 calendarFormat: CalendarFormat.month,
                 availableGestures: AvailableGestures.none,
+                daysOfWeekHeight: 20,
                 // 달력 스타일
                 calendarStyle: CalendarStyle(
                     markersAlignment: Alignment.bottomCenter,
@@ -333,12 +335,13 @@ class _RecordScreenState extends State<RecordScreen> {
                                             .recordDate!
                                             .split("T")[1]
                                             .split(".")[0],
-                                        bold: true,
                                       ),
                                       SizedBox(
                                         height: 5,
                                       ),
                                       Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
                                           Image(
                                             image: AssetImage(
@@ -350,15 +353,16 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordDist!.toInt()}km',
+                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordDist!.toInt()}',
                                               bold: true),
-                                          SizedBox(width: 10),
+                                          Text12(text: ' km', bold: true),
+                                          SizedBox(width: 15),
                                           Container(
                                             width: 1,
                                             height: 25,
                                             color: myBlack,
                                           ),
-                                          SizedBox(width: 10),
+                                          SizedBox(width: 15),
                                           Image(
                                             image: AssetImage(
                                                 'assets/emoji/fire.png'),
@@ -369,15 +373,16 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordCal!.toInt()}kcal',
+                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordCal!.toInt()}',
                                               bold: true),
-                                          SizedBox(width: 10),
+                                          Text12(text: ' kcal', bold: true),
+                                          SizedBox(width: 15),
                                           Container(
                                             width: 1,
                                             height: 25,
                                             color: myBlack,
                                           ),
-                                          SizedBox(width: 10),
+                                          SizedBox(width: 15),
                                           Image(
                                             image: AssetImage(
                                                 'assets/emoji/clock.png'),
@@ -388,8 +393,9 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${(monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! / 60).toInt()}분',
+                                                  '${(monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! / 60).toInt()}',
                                               bold: true),
+                                          Text12(text: ' 분', bold: true),
                                         ],
                                       ),
                                     ],

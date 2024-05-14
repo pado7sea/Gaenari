@@ -23,7 +23,7 @@ class _WeeklyStatisticsWidgetState extends State<WeeklyStatisticsWidget> {
     return Container(
       height: 200,
       width: double.infinity,
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
       margin: EdgeInsets.only(bottom: 16),
       decoration:
           myBoxDecoration, // 이 부분은 해당 위젯에서 사용하는 BoxDecoration에 맞게 수정해야 합니다.
@@ -42,15 +42,14 @@ class _WeeklyStatisticsWidgetState extends State<WeeklyStatisticsWidget> {
               Row(
                 children: [
                   _buildStatisticButton(0, "운동시간"),
-                  SizedBox(width: 5),
+                  SizedBox(width: 8),
                   _buildStatisticButton(1, "소모칼로리"),
-                  SizedBox(width: 5),
+                  SizedBox(width: 8),
                   _buildStatisticButton(2, "운동거리"),
                 ],
               )
             ],
           ),
-          SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(
@@ -75,8 +74,8 @@ class _WeeklyStatisticsWidgetState extends State<WeeklyStatisticsWidget> {
           borderRadius: BorderRadius.all(Radius.circular(5)),
           color: activeNum == index ? myLightGreen : myLightGrey,
         ),
-        padding: EdgeInsets.all(4),
-        child: Text16(
+        padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
+        child: Text12(
           text: text,
           textColor: activeNum == index ? Colors.white : myBlack,
         ),
@@ -90,7 +89,7 @@ class _WeeklyStatisticsWidgetState extends State<WeeklyStatisticsWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text16(
+          Text12(
             text: widget.weekly[i].date!.split("-")[2],
             bold: true,
           ),
@@ -128,7 +127,7 @@ class _WeeklyStatisticsWidgetState extends State<WeeklyStatisticsWidget> {
                   SizedBox(height: 3),
                   Text12(
                       text:
-                          "${(activeNum == 0 ? widget.weekly[i].dailyStatistic!.time! / 60 : activeNum == 1 ? widget.weekly[i].dailyStatistic!.cal! : widget.weekly[i].dailyStatistic!.dist!).toInt()}${activeNum == 0 ? "분" : activeNum == 1 ? "kcal" : "km"}")
+                          "${(activeNum == 0 ? widget.weekly[i].dailyStatistic!.time! / 60 : activeNum == 1 ? widget.weekly[i].dailyStatistic!.cal! : widget.weekly[i].dailyStatistic!.dist!).toInt()}${activeNum == 0 ? "분" : activeNum == 1 ? "kcal" : "km"}"),
                 ],
               )
             ],
