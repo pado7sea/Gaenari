@@ -96,7 +96,7 @@ class DRunningService : Service(), SensorEventListener {
             wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
             wakeLock?.acquire() // WakeLock 활성화
             try {
-                Log.d("DRunningService", "Service started")
+                Log.d("Check", "Dist Service started")
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupLocationTracking()
@@ -105,7 +105,7 @@ class DRunningService : Service(), SensorEventListener {
                 timerHandler.post(timerRunnable) // 타이머 시작
                 oneMinuteHandler.post(oneMinuteRunnable) // 1분 평균 계산 타이머 시작
             } catch (e: Exception) {
-                Log.e("DRunningService", "Error in onCreate: ${e.message}")
+                Log.e("Check", "Error in onCreate Dist Target: ${e.message}")
             }
         }
     }

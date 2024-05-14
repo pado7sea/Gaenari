@@ -1,21 +1,12 @@
 package com.example.gaenari.activity.main
 
-import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gaenari.R
@@ -100,19 +91,22 @@ class HomeActivity : AppCompatActivity() {
             // 뒤로 버튼 이벤트 처리
             Log.d("Check", "On BackPressedCallback : position(${viewPager.currentItem})")
 
-            if(viewPager.currentItem == 2)
+            if (viewPager.currentItem == 2)
                 finish()
             else
                 viewPager.setCurrentItem(2, true)
         }
     }
 
-    private fun setupLocationService(){
+    private fun setupLocationService() {
         val intent = Intent(this@HomeActivity, LocationService::class.java)
         startForegroundService(intent)
     }
 
     private fun getFavoriteProgram() {
+        if (AccessToken.getInstance().accessToken == null)
+            AccessToken.getInstance().accessToken = prefs!!.getString("accessToken", null)
+
         Log.d("Check", "Access Token : " + AccessToken.getInstance().accessToken)
 
         val call = Retrofit.getApiService()
