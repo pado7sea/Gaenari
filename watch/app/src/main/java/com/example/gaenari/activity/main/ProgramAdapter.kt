@@ -26,9 +26,11 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
 
         // 배경 리소스 설정
         val backgroundResource = when (program.type) {
-            "D" -> R.drawable.distancecircle
-            "T" -> R.drawable.timecircle
-            "I" -> R.drawable.intercircle
+            "D" -> R.drawable.circle98d
+            "T" -> R.drawable.circle98t
+            "I" -> R.drawable.circle98i
+            "R" -> R.drawable.circle98r
+            "W" -> R.drawable.circle98w
             else -> R.drawable.circular_background
         }
 
@@ -39,6 +41,7 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
             "D" -> "거리"
             "T" -> "시간"
             "I" -> "인터벌"
+            "W" -> "걷기"
             else -> "기본"
         }
 
