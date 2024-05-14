@@ -248,6 +248,7 @@ class _RecordScreenState extends State<RecordScreen> {
               TableCalendar(
                 headerStyle: HeaderStyle(
                     formatButtonVisible: false,
+                    headerMargin: EdgeInsets.symmetric(vertical: 10),
                     titleCentered: true,
                     titleTextStyle:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -258,7 +259,6 @@ class _RecordScreenState extends State<RecordScreen> {
                 focusedDay: _focusedDay,
                 calendarFormat: CalendarFormat.month,
                 availableGestures: AvailableGestures.none,
-                daysOfWeekHeight: 30,
                 // 달력 스타일
                 calendarStyle: CalendarStyle(
                     markersAlignment: Alignment.bottomCenter,
