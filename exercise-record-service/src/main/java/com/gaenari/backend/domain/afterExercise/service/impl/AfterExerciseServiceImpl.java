@@ -82,20 +82,21 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         List<IntervalRangeRecord> ranges = buildIntervalRangeRecords(memberId, exerciseDto);
         List<Moment> moments = buildMoments(exerciseDto);
         List<RecordChallenge> recordChallenges = buildRecordChallenges(memberId, exerciseDto);
+        Boolean isProgram = validateProgramInfo(exerciseDto);
 
         // Record 객체 생성
         Record record = Record.builder()
                 .memberId(memberId)
                 .exerciseType(exerciseDto.getExerciseType())
                 .programType(exerciseDto.getProgramType())
-                .programId(exerciseDto.getExerciseType() == ExerciseType.P ? exerciseDto.getProgram().getProgramId() : null)
+                .programId(isProgram ? exerciseDto.getProgram().getProgramId() : null)
                 .date(exerciseDto.getDate())
                 .time(exerciseDto.getRecord().getTime())
                 .distance(exerciseDto.getRecord().getDistance())
                 .averagePace(exerciseDto.getSpeeds().getAverage() != 0 ? (3600 / exerciseDto.getSpeeds().getAverage()) : 0)
                 .averageHeartRate(exerciseDto.getHeartrates().getAverage())
                 .cal(calculateCal(memberId, exerciseDto))
-                .isFinished(determineFinish(exerciseDto)) // 완주 여부
+                .isFinished(isProgram ? determineFinish(exerciseDto) : false) // 완주 여부
                 .ranges(ranges)
                 .moments(moments)
                 .recordChallenges(recordChallenges) // 달성한 도전 과제
