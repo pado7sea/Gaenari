@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:forsythia/models/challenges/reward.dart';
+import 'package:forsythia/models/challenges/reward_notice.dart';
+import 'package:forsythia/models/records/weekly_statistic_list.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/challenge/challenge_screen.dart';
+import 'package:forsythia/screens/dashboard/weekly_statistics.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/screens/watch/watch_screen.dart';
+import 'package:forsythia/service/challenge_service.dart';
+import 'package:forsythia/service/record_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -26,7 +33,42 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class DashBoardScreenState extends State<DashBoardScreen> {
-  bool a = false;
+  List<Weekly> weekly = [];
+  bool active = false;
+  bool reward = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getWeeklyStatisticList();
+    _getRewardNotice();
+  }
+
+  // 보상있는지 없는지
+  _getRewardNotice() async {
+    RewardNotice rewardNotice = await ChallengeService.fetchRewardNotice();
+    print(rewardNotice.data!);
+    setState(() {
+      if (rewardNotice.data! == true) {
+        reward = true;
+      } else {
+        reward = false;
+      }
+    });
+  }
+
+  // 주간기록
+  _getWeeklyStatisticList() async {
+    DateTime now = DateTime.now();
+    WeeklyStatisticList weeklyStatisticList =
+        await RecordSevice.fetchWeeklyStatisticList(
+            now.year, now.month, now.day);
+    setState(() {
+      weekly = weeklyStatisticList.data!;
+      active = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<LoginInfo?>(
@@ -39,15 +81,21 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             var nickName = snapshot.data?.nickname ?? 'Unknown';
-            return SlidingUpPanel(
-              panel: _panelWidget(),
-              collapsed: _collapsed(),
-              body: _backgroundWidget(nickName),
-              minHeight: a ? 150 : 50,
-              maxHeight: MediaQuery.of(context).size.height - 270,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            );
+            return active
+                ? SlidingUpPanel(
+                    defaultPanelState: PanelState.OPEN,
+                    panel: _panelWidget(),
+                    collapsed: _collapsed(),
+                    body: _backgroundWidget(nickName),
+                    minHeight: 50,
+                    maxHeight: MediaQuery.of(context).size.height - 250,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
           }
         }
       },
@@ -79,15 +127,76 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10),
-                  margin: EdgeInsets.only(bottom: 16),
-                  decoration: myBoxDecoration,
-                  child: Text16(
-                    text: "주간기록",
-                  ),
+                !reward
+                    ? Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.only(bottom: 16),
+                        decoration: myBoxDecoration,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Image.asset(
+                                  "assets/emoji/bell.png",
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                SizedBox(width: 20),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Text16(
+                                      text: "아직 받지않은 보상이 있어요!",
+                                      bold: true,
+                                    ),
+                                    SizedBox(height: 3),
+                                    Text12(
+                                      text: "코인과 애정도를 받으세요.",
+                                      textColor: myGrey,
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                Reward rewards =
+                                    await ChallengeService.fetchReward();
+                                print(rewards.data!.coin!);
+                                print(rewards.data!.heart!);
+                                setState(() {
+                                  reward = false;
+                                });
+                                Fluttertoast.showToast(
+                                  msg:
+                                      '${rewards.data!.coin!}개의 코인과 \n ${rewards.data!.heart!}의 애정도를 얻었어요!',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  backgroundColor: myMainGreen,
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: myLightGreen,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                child: Text16(
+                                  text: "받기",
+                                  textColor: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+                WeeklyStatisticsWidget(
+                  weekly: weekly, // 주간 통계 데이터
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,21 +291,6 @@ class DashBoardScreenState extends State<DashBoardScreen> {
               text: "스크롤을 올려 대시보드를 확인하세요",
               textColor: myGrey,
             ),
-            SizedBox(height: a ? 16 : 0),
-            a
-                ? Container(
-                    height: 60,
-                    width: double.infinity,
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: myBoxDecoration,
-                    child: Text16(
-                      text: "아직 받지않은 보상이 있다요",
-                    ),
-                  )
-                : SizedBox(
-                    height: 0,
-                  ),
           ],
         ));
   }

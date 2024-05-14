@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:forsythia/models/records/record_list.dart';
 import 'package:forsythia/models/records/statistic_list.dart';
+import 'package:forsythia/models/records/weekly_statistic_list.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,10 +32,10 @@ class RecordSevice {
   }
 
   // 주간통계 조회 - 현재시간의 년,월,일을 파라미터로 받음
-  static Future<StatisticList> fetchWeeklyStatisticList(
+  static Future<WeeklyStatisticList> fetchWeeklyStatisticList(
       year, month, day) async {
     return fetchGetData('statistic/week/$year/$month/$day')
-        .then((data) => StatisticList.fromJson(data));
+        .then((data) => WeeklyStatisticList.fromJson(data));
   }
 
   // 기록 상세 - 레코드아이디를 파라미터로 받음 - 스웨거이슈로 모델클래스 못만듦
