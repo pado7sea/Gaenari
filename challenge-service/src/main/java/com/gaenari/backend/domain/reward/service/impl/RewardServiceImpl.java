@@ -30,12 +30,8 @@ public class RewardServiceImpl implements RewardService {
     // 회원 ID로 보상을 받지 않은 도전과제가 있는지 찾기
     @Override
     public boolean findObtainableChallenge(String memberId) {
-        long count = memberChallengeRepository.findByMemberIdAndObtainableGreaterThan(memberId, 0).stream().count();
-        if (count == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        long count = memberChallengeRepository.findByMemberIdAndObtainableGreaterThan(memberId, 0).size();
+        return count != 0;
     }
 
     // 회원 ID로 도전과제 ID 리스트 찾기
@@ -58,7 +54,7 @@ public class RewardServiceImpl implements RewardService {
     // 마이크로 서비스간 통신을 통해 운동 기록 ID로 도전과제 ID 리스트 조회
     @Override
     public List<Integer> getChallengeIdsByRecordId(String memberId, Long recordId) {
-        ResponseEntity<GenericResponse<List<Integer>>> response =recordServiceClient.getChallengeIdsByRecordId(memberId, recordId);
+        ResponseEntity<GenericResponse<List<Integer>>> response = recordServiceClient.getChallengeIdsByRecordId(memberId, recordId);
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new ConnectFeignFailException();
         }
@@ -71,7 +67,7 @@ public class RewardServiceImpl implements RewardService {
         // 도전 과제 아이디로 모든 멤버 챌린지 조회
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
 
-        // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount가 0 이하인 경우
+        // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
         if (memberChallenge.getObtainable() <= 0) {
             return null;
         }
@@ -108,7 +104,7 @@ public class RewardServiceImpl implements RewardService {
         // 도전 과제 아이디로 모든 멤버 챌린지 조회
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
 
-        // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount가 0 이하인 경우
+        // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
         if (memberChallenge.getObtainable() <= 0) {
             return null;
         }
