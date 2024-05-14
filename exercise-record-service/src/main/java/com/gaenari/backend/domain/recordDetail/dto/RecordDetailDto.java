@@ -29,8 +29,8 @@ public class RecordDetailDto {
     @Schema(description = "프로그램 정보")
     private ProgramInfoDto program;
 
-    @Schema(description = "운동 기록 정보")
-    private RecordDto record;
+    @Schema(description = "운동 기록 정보", implementation = DetailRecordDto.class)
+    private DetailRecordDto record;
 
     @Schema(description = "페이스 정보")
     private PaceDto paces;
@@ -51,7 +51,7 @@ public class RecordDetailDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class RecordDto {
+    public static class DetailRecordDto {
         @Schema(description = "거리", example = "5.0")
         private Double distance;
 
