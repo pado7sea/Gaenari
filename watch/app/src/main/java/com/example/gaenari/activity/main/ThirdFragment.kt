@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,7 @@ class ThirdFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var programDetails: TextView
     private lateinit var programTitle: TextView
+    private lateinit var rebutton : ImageButton
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -34,7 +36,7 @@ class ThirdFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerView)
         programDetails = view.findViewById(R.id.programDetails)
         programTitle = view.findViewById(R.id.programTitle)
-
+        rebutton = view.findViewById(R.id.rebutton)
         // 리사이클러 뷰 레이아웃 및 스냅 도우미 설정
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val snapHelper = PagerSnapHelper()
@@ -68,40 +70,47 @@ class ThirdFragment : Fragment() {
                 }
             })
         }
+        rebutton.setOnClickListener {
+            (activity as? HomeActivity)?.getFavoriteProgram()
+        }
 
         return view
     }
 
+
     private fun updateProgramDetails(program: FavoriteResponseDto) {
-        programTitle.text = program.programTitle ?: "제목 없음"
+
 
         val programTypeInfo = program.program
-
-        val programDetailsText = when (program.type) {
+        val programType = when (program.type) {
             "D" -> {
-                val targetValue = programTypeInfo?.targetValue ?: "정보 없음"
-                "목표 거리\n${targetValue} KM"
+                "거리 목표"
             }
             "T" -> {
-                // null이 아닐 때만 연산하도록 변경
-                val targetValueInMinutes = programTypeInfo?.targetValue?.toInt()?.div(60) ?: "정보 없음"
-                "목표 시간\n${targetValueInMinutes} 분"
+                "시간 목표"
             }
             "I" -> {
-                val rangeCount = programTypeInfo?.intervalInfo?.rangeCount ?: "정보 없음"
-                val setCount = programTypeInfo?.intervalInfo?.setCount ?: "정보 없음"
-                "${setCount} 세트\n세트당 ${rangeCount}구간"
+                "인터벌"
+            }
+            "R" -> {
+                "자유 목표"
+            }
+            "W" -> {
+                "자유 목표"
             }
             else -> "타입 알 수 없음"
         }
+
+        val programDetailsText = program.programTitle
         val programTextSize = when (program.type) {
             "D", "T" -> 8.5f
             "I" -> 7.5f
             else -> 9f // 또는 기본값
         }
 
+        programTitle.text = programType ?: "제목 없음"
         programDetails.text = programDetailsText
-        programDetails.textSize = convertSpToPx(programTextSize, requireContext())
+//        programDetails.textSize = convertSpToPx(programTextSize, requireContext())
     }
     private fun convertSpToPx(sp: Float, context: Context): Float {
         return sp * context.resources.displayMetrics.scaledDensity
