@@ -72,12 +72,15 @@ class LocationService : Service() {
                 locationResult.locations.forEach { location ->
                     val speed = location.speed.toDouble() * 3.6
                     val distance = location.distanceTo(lastLocation ?: location).toDouble()
-                    Log.d("Check", "Sending Location Info : speed($speed), distance($distance)")
+                    Log.d(
+                        "Check Location Service",
+                        "Sending Location Info : speed($speed), distance($distance)"
+                    )
                     sendLocationBroadcast(distance, speed)
                     lastLocation = location
                 }
             } catch (e: Exception) {
-                Log.e("Check", "Error processing location update: ${e.message}")
+                Log.e("Check Location Service", "Error processing location update: ${e.message}")
             }
         }
     }

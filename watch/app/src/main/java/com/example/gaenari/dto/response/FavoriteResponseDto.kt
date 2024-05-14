@@ -3,7 +3,6 @@ package com.example.gaenari.dto.response
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 data class FavoriteResponseDto(
     val programId: Long,

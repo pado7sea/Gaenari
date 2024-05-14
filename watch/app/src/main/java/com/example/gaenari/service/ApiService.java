@@ -1,11 +1,11 @@
 package com.example.gaenari.service;
 
-import com.example.gaenari.dto.request.AuthRequestDto;
 import com.example.gaenari.dto.request.SaveDataRequestDto;
 import com.example.gaenari.dto.response.ApiResponseDto;
 import com.example.gaenari.dto.response.ApiResponseListDto;
 import com.example.gaenari.dto.response.AuthResponseDto;
 import com.example.gaenari.dto.response.FavoriteResponseDto;
+import com.example.gaenari.dto.response.MyPetResponseDto;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -27,4 +27,6 @@ public interface ApiService {
     @POST("exercise-record-service/exercise/save")
     Call<ApiResponseDto<String>> saveRunningData(@Header("Authorization") String token, @Body SaveDataRequestDto data);
 
+    @GET("member-service/pet/partner")
+    Call<ApiResponseDto<MyPetResponseDto>> getMyPetInfo(@Header("Authorization") String token);
 }

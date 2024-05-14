@@ -20,6 +20,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gaenari.R;
+import com.example.gaenari.dto.response.ApiResponseDto;
+import com.example.gaenari.dto.response.MyPetResponseDto;
 import com.example.gaenari.util.AccessToken;
 import com.example.gaenari.util.PreferencesUtil;
 
@@ -51,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     /* ====권한 정보 확인==== */
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private void requestPermission(int permissionIdx) {
         if (permissionIdx < permissions.size()) {
             String permission = permissions.get(permissionIdx);
-            Log.d("Check", "Request Permission : " + permission);
+            Log.d("Check Main Activity", "Request Permission : " + permission);
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{permission}, permissionIdx);
             } else {
@@ -137,11 +138,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasAccessToken() {
         String token = AccessToken.getInstance().getAccessToken();
         String subToken = prefs.getString("accessToken", null);
-        Log.d("Check", "AccessToken : " + token);
+        Log.d("Check Main Activity", "AccessToken : " + token);
         if (token != null)
             return true;
         else if (subToken != null) {
-            Log.d("Check", "SubAccessToken : " + subToken);
+            Log.d("Check Main Activity", "SubAccessToken : " + subToken);
             AccessToken.getInstance().setAccessToken(subToken);
             return true;
         }
