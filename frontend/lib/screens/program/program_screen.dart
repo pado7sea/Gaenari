@@ -253,7 +253,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                       child: Container(
                         decoration: activeNum == 0
                             ? BoxDecoration(
-                                color: myBlue,
+                                color: myLightBlue,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
@@ -278,7 +278,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                       child: Container(
                         decoration: activeNum == 1
                             ? BoxDecoration(
-                                color: myMainGreen,
+                                color: myWhiteGreen,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
@@ -303,7 +303,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                       child: Container(
                         decoration: activeNum == 2
                             ? BoxDecoration(
-                                color: myYellow,
+                                color: myLightYellow,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
@@ -328,7 +328,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                       child: Container(
                         decoration: activeNum == 3
                             ? BoxDecoration(
-                                color: myRed,
+                                color: myLightRed,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)))
                             : BoxDecoration(
@@ -440,14 +440,15 @@ class _ProgramScreenState extends State<ProgramScreen> {
                       padding: EdgeInsets.all(13),
                       child: Column(
                         children: const [
-                          Image(
-                            image:
-                                AssetImage("assets/color_icons/icon_star.png"),
-                            width: 30,
-                            height: 30,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.none,
-                          ),
+                          // Image(
+                          //   image:
+                          //       AssetImage("assets/color_icons/icon_star.png"),
+                          //   width: 30,
+                          //   height: 30,
+                          //   fit: BoxFit.cover,
+                          //   filterQuality: FilterQuality.none,
+                          // ),
+                          Icon(Icons.star_rounded, size: 30, color: myYellow),
                           SizedBox(height: 9),
                           Text12(text: "즐겨찾기")
                         ],
@@ -508,15 +509,20 @@ class _ProgramScreenState extends State<ProgramScreen> {
                                     ],
                                   ),
                                 ),
-                                Image.asset(
-                                  list[index].isFavorite!
-                                      ? "assets/color_icons/icon_star.png"
-                                      : "assets/color_icons/icon_nonestar.png",
-                                  width: 40,
-                                  height: 40,
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.none,
-                                ),
+                                // Image.asset(
+                                //   list[index].isFavorite!
+                                //       ? "assets/color_icons/icon_star.png"
+                                //       : "assets/color_icons/icon_nonestar.png",
+                                //   width: 40,
+                                //   height: 40,
+                                //   fit: BoxFit.cover,
+                                //   filterQuality: FilterQuality.none,
+                                // ),
+                                list[index].isFavorite!
+                                    ? Icon(Icons.star_rounded,
+                                        size: 40, color: myYellow)
+                                    : Icon(Icons.star_border_rounded,
+                                        size: 40, color: myYellow),
                                 SizedBox(width: 10),
                               ],
                             ),
@@ -526,7 +532,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                               children: [
                                 Container(
                                   decoration: list[index].type == "T"
-                                      ? myActiveBoxDecoration
+                                      ? myGreenBoxDecoration
                                       : list[index].type == "D"
                                           ? myYellowBoxDecoration
                                           : myRedBoxDecoration,

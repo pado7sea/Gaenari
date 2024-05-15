@@ -407,7 +407,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                     height = 30;
                   }
                   return Container(
-                    height: height + 1,
+                    height: height * 2 + 1,
                     width: 3,
                     margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
                     color: myBlue, // 콘테이너 색상 설정
@@ -617,8 +617,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
               SizedBox(width: 10),
               Text16(
                 text: recordDetail.trophies![index].type == 'D'
-                    ? '누적 ${recordDetail.trophies![index].id}km 달성'
-                    : '누적 ${recordDetail.trophies![index].id}시간 달성',
+                    ? '누적 ${recordDetail.trophies![index].value}km 달성'
+                    : '누적 ${recordDetail.trophies![index].value}시간 달성',
                 bold: true,
               )
             ],
