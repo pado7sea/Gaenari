@@ -85,7 +85,7 @@ public class AchievedChallengeFeignServiceImpl implements AchievedChallengeFeign
                                 .id(challenge.getId())
                                 .category(challenge.getCategory())
                                 .type(challenge.getType())
-                                .value(0)
+                                .value(challenge.getValue())
                                 .coin(challenge.getCoin())
                                 .heart(0)
                                 .build();

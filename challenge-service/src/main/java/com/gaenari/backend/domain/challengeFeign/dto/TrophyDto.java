@@ -9,11 +9,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrophyDto {
-    @Schema(description = "도전 과제 ID", example = "1")
+    @Schema(description = "트로피 ID", example = "1")
     private Integer id;
 
-    @Schema(description = "도전 과제 유형", allowableValues = {"D", "T"})
+    @Schema(description = "트로피 타입", allowableValues = {"D", "T"}, example = "D")
     private ChallengeType type;
+
+    @Schema(description = "목표 값", example = "30")
+    private Integer value;
 
     @Schema(description = "획득 코인", example = "50")
     private Integer coin;
