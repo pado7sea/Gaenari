@@ -15,14 +15,15 @@ const myWhiteGreen = Color(0xffF0FFDE);
 
 // 노랑
 const myYellow = Color(0xffFFCE22);
-const myLightYellow = Color(0xffFFF7CC);
+const myLightYellow = Color.fromARGB(255, 255, 246, 192);
 
 // 빨강
 const myRed = Color(0xffFF6D7F);
-const myLightRed = Color(0xffFF8686);
+const myLightRed = Color.fromARGB(255, 246, 195, 195);
 
 // 파랑
 const myBlue = Color(0xff5D7BC7);
+const myLightBlue = Color.fromARGB(255, 191, 209, 255);
 
 // 운동프로그램 빨 초 노
 
