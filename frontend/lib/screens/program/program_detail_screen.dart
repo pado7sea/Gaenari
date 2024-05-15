@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/programs/program_detail.dart';
+import 'package:forsythia/screens/record/detail_record_screen.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
 
 import 'package:forsythia/widgets/small_app_bar.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +34,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     setState(() {
       programDetail = response.data!;
     });
-    print(programDetail.programTitle);
+    print(programDetail.usageLog![0].recordId);
   }
 
   @override
@@ -333,67 +335,76 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: programDetail.usageLog!.length,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            margin: EdgeInsets.fromLTRB(8, 0, 8, 10),
-            padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
-            decoration: programDetail.usageLog![index].isFinished!
-                ? myBoxDecoration
-                : myNoneBoxDecoration,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text16(
-                        text: DateFormat("y년 M월 d일").format(DateTime.parse(
-                            programDetail.usageLog![index].date!)),
-                        bold: true,
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text12(
-                            text:
-                                "${programDetail.usageLog![index].distance!.toInt().toString()}km",
-                            bold: true,
-                            textColor: myBlue,
-                          ),
-                          _section(),
-                          Text12(
-                            text:
-                                "${programDetail.usageLog![index].cal!.toInt().toString()}kcal",
-                            bold: true,
-                            textColor: myRed,
-                          ),
-                          _section(),
-                          Text12(
-                            text:
-                                "${(programDetail.usageLog![index].time! / 60).floorToDouble().toInt().toString()}분",
-                            bold: true,
-                            textColor: myYellow,
-                          ),
-                          _section(),
-                          Text12(
-                            text:
-                                "${(programDetail.usageLog![index].averagePace! / 60).floorToDouble().toInt().toString()}'${(programDetail.usageLog![index].averagePace! % 60).floorToDouble().toInt().toString()}''/km",
-                            bold: true,
-                            textColor: myMainGreen,
-                          ),
-                        ],
-                      )
-                    ],
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(SlidePageRoute(
+                  nextPage: DetailRecordScreen(
+                recordId: programDetail.usageLog![index].recordId,
+              )));
+            },
+            child: Container(
+              margin: EdgeInsets.fromLTRB(8, 0, 8, 10),
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 8),
+              decoration: programDetail.usageLog![index].isFinished!
+                  ? myBoxDecoration
+                  : myNoneBoxDecoration,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text16(
+                          text: DateFormat("y년 M월 d일").format(DateTime.parse(
+                              programDetail.usageLog![index].date!)),
+                          bold: true,
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Text12(
+                              text:
+                                  "${programDetail.usageLog![index].distance!.toInt().toString()}km",
+                              bold: true,
+                              textColor: myBlue,
+                            ),
+                            _section(),
+                            Text12(
+                              text:
+                                  "${programDetail.usageLog![index].cal!.toInt().toString()}kcal",
+                              bold: true,
+                              textColor: myRed,
+                            ),
+                            _section(),
+                            Text12(
+                              text:
+                                  "${(programDetail.usageLog![index].time! / 60).floorToDouble().toInt().toString()}분",
+                              bold: true,
+                              textColor: myYellow,
+                            ),
+                            _section(),
+                            Text12(
+                              text:
+                                  "${(programDetail.usageLog![index].averagePace! / 60).floorToDouble().toInt().toString()}'${(programDetail.usageLog![index].averagePace! % 60).floorToDouble().toInt().toString()}''/km",
+                              bold: true,
+                              textColor: myMainGreen,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Text16(
-                  text:
-                      programDetail.usageLog![index].isFinished! ? "달성" : "미달성",
-                  bold: true,
-                  textColor: programDetail.usageLog![index].isFinished!
-                      ? myMainGreen
-                      : myRed,
-                )
-              ],
+                  Text16(
+                    text: programDetail.usageLog![index].isFinished!
+                        ? "달성"
+                        : "미달성",
+                    bold: true,
+                    textColor: programDetail.usageLog![index].isFinished!
+                        ? myMainGreen
+                        : myRed,
+                  )
+                ],
+              ),
             ),
           );
         });
