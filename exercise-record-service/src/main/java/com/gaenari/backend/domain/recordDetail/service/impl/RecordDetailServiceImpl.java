@@ -204,6 +204,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .map(challenge -> RecordDetailDto.TrophyDto.builder()
                         .id(challenge.getId())
                         .type(challenge.getType())
+                        .value(challenge.getValue())
                         .coin(challenge.getCoin())
                         .build())
                 .toList();
