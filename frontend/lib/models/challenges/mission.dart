@@ -3,7 +3,7 @@
 class Mission {
   String? status;
   String? message;
-  List<Challenge>? data;
+  List<MissionChallenge>? data;
 
   Mission({this.status, this.message, this.data});
 
@@ -11,9 +11,9 @@ class Mission {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Challenge>[];
+      data = <MissionChallenge>[];
       json['data'].forEach((v) {
-        data!.add(Challenge.fromJson(v));
+        data!.add(MissionChallenge.fromJson(v));
       });
     }
   }
@@ -29,7 +29,7 @@ class Mission {
   }
 }
 
-class Challenge {
+class MissionChallenge {
   int? challengeId;
   String? type;
   int? challengeValue;
@@ -38,7 +38,7 @@ class Challenge {
   int? count;
   int? obtainable;
 
-  Challenge(
+  MissionChallenge(
       {this.challengeId,
       this.type,
       this.challengeValue,
@@ -47,7 +47,7 @@ class Challenge {
       this.count,
       this.obtainable});
 
-  Challenge.fromJson(Map<String, dynamic> json) {
+  MissionChallenge.fromJson(Map<String, dynamic> json) {
     challengeId = json['challengeId'];
     type = json['type'];
     challengeValue = json['challengeValue'];

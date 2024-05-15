@@ -3,7 +3,7 @@
 class Trophy {
   String? status;
   String? message;
-  List<Challenge>? data;
+  List<TrophyChallenge>? data;
 
   Trophy({this.status, this.message, this.data});
 
@@ -11,9 +11,9 @@ class Trophy {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Challenge>[];
+      data = <TrophyChallenge>[];
       json['data'].forEach((v) {
-        data!.add(Challenge.fromJson(v));
+        data!.add(TrophyChallenge.fromJson(v));
       });
     }
   }
@@ -29,16 +29,16 @@ class Trophy {
   }
 }
 
-class Challenge {
+class TrophyChallenge {
   int? challengeId;
   String? type;
   int? challengeValue;
   int? coin;
   bool? isAchieved;
-  int? memberValue;
+  double? memberValue;
   int? obtainable;
 
-  Challenge(
+  TrophyChallenge(
       {this.challengeId,
       this.type,
       this.challengeValue,
@@ -47,7 +47,7 @@ class Challenge {
       this.memberValue,
       this.obtainable});
 
-  Challenge.fromJson(Map<String, dynamic> json) {
+  TrophyChallenge.fromJson(Map<String, dynamic> json) {
     challengeId = json['challengeId'];
     type = json['type'];
     challengeValue = json['challengeValue'];
