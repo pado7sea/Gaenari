@@ -100,8 +100,11 @@ public class RecordDetailDto {
         @Schema(description = "트로피 ID", example = "1")
         private Integer id;
 
-        @Schema(description = "도전 종류", example = "D")
+        @Schema(description = "트로피 타입", allowableValues = {"D", "T"}, example = "D")
         private ChallengeType type;
+
+        @Schema(description = "목표 값", example = "30")
+        private Integer value;
 
         @Schema(description = "획득 코인", example = "50")
         private Integer coin;
@@ -115,16 +118,16 @@ public class RecordDetailDto {
         @Schema(description = "미션 ID", example = "1")
         private Integer id;
 
-        @Schema(description = "도전 종류", example = "T")
+        @Schema(description = "미션 타입", allowableValues = {"D", "T"},  example = "T")
         private ChallengeType type;
 
-        @Schema(description = "목표 값", example = "30")
+        @Schema(description = "목표 값", example = "1000")
         private Integer value;
 
-        @Schema(description = "획득 코인", example = "100")
+        @Schema(description = "획득 코인", example = "50")
         private Integer coin;
 
-        @Schema(description = "획득 하트", example = "20")
+        @Schema(description = "획득 하트", example = "30")
         private Integer heart;
     }
 }
