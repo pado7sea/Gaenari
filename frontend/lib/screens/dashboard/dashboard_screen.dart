@@ -6,6 +6,7 @@ import 'package:forsythia/models/records/weekly_statistic_list.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/challenge/challenge_screen.dart';
 import 'package:forsythia/screens/dashboard/weekly_statistics.dart';
+import 'package:forsythia/screens/doghouse/move_dog.dart';
 import 'package:forsythia/screens/mate/mate_screen.dart';
 import 'package:forsythia/screens/watch/watch_screen.dart';
 import 'package:forsythia/service/challenge_service.dart';
@@ -36,6 +37,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
   List<Weekly> weekly = [];
   bool active = false;
   bool reward = false;
+  SecureStorageService storageService = SecureStorageService();
+  LoginInfo? info = LoginInfo();
 
   @override
   void initState() {
@@ -57,6 +60,23 @@ class DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
+  String getCurrentTimeSlot() {
+    // 현재 시간을 가져옴
+    DateTime now = DateTime.now();
+    // 현재 시간에 따라 조건을 걸어서 반환
+    if (now.hour >= 0 && now.hour < 5) {
+      return "assets/images/background_4.png";
+    } else if (now.hour >= 5 && now.hour < 9) {
+      return "assets/images/background_1.png";
+    } else if (now.hour >= 9 && now.hour < 17) {
+      return "assets/images/background_2.png";
+    } else if (now.hour >= 17 && now.hour < 20) {
+      return "assets/images/background_3.png";
+    } else {
+      return "assets/images/background_4.png";
+    }
+  }
+
   // 주간기록
   _getWeeklyStatisticList() async {
     DateTime now = DateTime.now();
@@ -67,6 +87,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
       weekly = weeklyStatisticList.data!;
       active = true;
     });
+    info = await storageService.getLoginInfo();
   }
 
   @override
@@ -140,40 +161,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 reward
-                    ?
-                    // ? Container(
-                    //     width: double.infinity,
-                    //     padding: EdgeInsets.all(10),
-                    //     margin: EdgeInsets.only(bottom: 16),
-                    //     decoration: myBoxDecoration,
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: [
-                    // Row(
-                    //   children: [
-                    //     Image.asset(
-                    //       "assets/emoji/bell.png",
-                    //       width: 30,
-                    //       height: 30,
-                    //     ),
-                    //     SizedBox(width: 20),
-                    //     Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: const [
-                    //         Text16(
-                    //           text: "아직 받지않은 보상이 있어요!",
-                    //           bold: true,
-                    //         ),
-                    //         SizedBox(height: 3),
-                    //         Text12(
-                    //           text: "코인과 애정도를 받으세요.",
-                    //           textColor: myGrey,
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
-                    GestureDetector(
+                    ? GestureDetector(
                         onTap: () async {
                           Reward rewards = await ChallengeService.fetchReward();
                           print(rewards.data!.coin!);
@@ -181,6 +169,11 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                           setState(() {
                             reward = false;
                           });
+                          SecureStorageService storageService =
+                              SecureStorageService();
+                          LoginInfo? info = await storageService.getLoginInfo();
+                          info?.coin = (info.coin! + (rewards.data!.coin!));
+                          storageService.saveLoginInfo(info!);
                           Fluttertoast.showToast(
                             msg:
                                 '${rewards.data!.coin!}개의 코인과 \n ${rewards.data!.heart!}의 애정도를 얻었어요!',
@@ -231,22 +224,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                               ),
                             ],
                           ),
-                        )
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //       color: myLightGreen,
-                        //       borderRadius:
-                        //           BorderRadius.all(Radius.circular(5))),
-                        //   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        //   child: Text16(
-                        //     text: "받기",
-                        //     textColor: Colors.white,
-                        //   ),
-                        // ),
-                        )
-                    //     ],
-                    //   ),
-                    // )
+                        ))
                     : SizedBox(
                         height: 0,
                       ),
@@ -357,17 +335,28 @@ class DashBoardScreenState extends State<DashBoardScreen> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/dashBoardImg.png'),
-          fit: BoxFit.cover, // 이미지를 화면에 맞게 확장
-        ),
+            image: AssetImage(getCurrentTimeSlot()),
+            fit: BoxFit.cover, // 이미지를 화면에 맞게 확장
+            filterQuality: FilterQuality.none),
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),
-      child: SizedBox(
-        height: double.infinity,
-        width: double.infinity,
-        child: Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xffBFC2C8).withOpacity(0.25),
+                    blurRadius: 15,
+                    offset: Offset(0, 10),
+                  ),
+                ]),
             margin: EdgeInsets.fromLTRB(20, 60, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Text(
               '$nickName님, 반가워요! \n오늘도 운동 시작해 볼까요?',
               style: TextStyle(
@@ -375,7 +364,13 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                 fontWeight: FontWeight.bold,
                 height: 1.7,
               ),
-            )),
+            ),
+          ),
+          SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Stack(children: [ImageMove(id: info!.myPetDto!.id!)])),
+        ],
       ),
     );
   }
