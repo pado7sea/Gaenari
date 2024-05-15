@@ -23,7 +23,7 @@ public class SaveExerciseRecordDto {
     private ProgramType programType;
 
     @Schema(description = "프로그램 정보")
-    private ProgramInfoDto program;
+    private SaveProgramInfoDto program;
 
     @Schema(description = "누적 거리, 시간")
     private SaveRecordDto record;
@@ -39,12 +39,12 @@ public class SaveExerciseRecordDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ProgramInfoDto {
+    public static class SaveProgramInfoDto {
         @Schema(description = "프로그램 ID", example = "3")
         private Long programId;
 
         @Schema(description = "인터벌 프로그램 정보")
-        private IntervalDto intervalInfo;
+        private SaveIntervalDto intervalInfo;
     }
 
     @Data
@@ -52,16 +52,16 @@ public class SaveExerciseRecordDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class IntervalDto {
+    public static class SaveIntervalDto {
         @Schema(description = "구간 리스트")
-        private List<RangeDto> ranges;
+        private List<SaveRangeDto> ranges;
     }
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class RangeDto {
+    public static class SaveRangeDto {
         @Schema(description = "달리기 여부", example = "true")
         private Boolean isRunning;
 
