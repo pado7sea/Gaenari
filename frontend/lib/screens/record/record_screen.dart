@@ -293,7 +293,8 @@ class _RecordScreenState extends State<RecordScreen> {
                 },
                 onDaySelected: _onDaySelected,
                 onPageChanged: (focusedDay) {
-                  _focusedDay = null;
+                  _focusedDay = focusedDay;
+                  _onDaySelected(focusedDay, focusedDay);
                   monthlyRecordList();
                 },
                 eventLoader: _getEventsForDay,

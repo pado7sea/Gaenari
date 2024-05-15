@@ -1,4 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:forsythia/models/challenges/mission.dart';
+import 'package:forsythia/models/challenges/reward.dart';
+import 'package:forsythia/models/challenges/trophy.dart';
+import 'package:forsythia/service/challenge_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
@@ -12,31 +19,88 @@ class ChallengePage extends StatefulWidget {
 }
 
 class _ChallengePageState extends State<ChallengePage> {
-  // int? CompleteRunIndex = null;
-  // int? CompleteTimeIndex = null;
-
+  late int challengeId = 0;
   bool mission = false; // 미션 or 업적
-  bool clear = false; // 달성했는지
   bool trophyreword = true; // 보상 받을게 있는지
   bool missionreword = true; // 보상 받을게 있는지
 
-  List<String> run = [
-    '1km',
-    '4km',
-    '16km',
-    '64km',
-    '256km',
-    '1024km',
-  ];
+  // 업적과 미션 상태를 저장할 Map 생성
+  Map<String, Map<String, dynamic>> trophyStatus = {};
+  Map<String, bool> missionStatus = {};
 
-  List<String> time = [
-    '1시간',
-    '4시간',
-    '16시간',
-    '64시간',
-    '256시간',
-    '1024시간',
-  ];
+  double _completeWidth = 0;
+  double _notCompleteWidth = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    challenge();
+    reward(challengeId);
+  }
+
+  void challenge() async {
+    Mission mission;
+    Trophy trophy;
+
+    mission = await ChallengeService.fetchMission();
+    trophy = await ChallengeService.fetchTrophy();
+
+    setState(() {
+      if (trophy.data != null) {
+        for (var item in trophy.data!) {
+          if (item.type == 'D') {
+            String trophyName = '${item.challengeValue}km';
+            int? challengeId = item.challengeId;
+            String? type = item.type;
+            bool? achieved = item.isAchieved;
+            int? obtainable = item.obtainable;
+            int? challengeValue = item.challengeValue?.toInt();
+            int? memberValue = item.memberValue?.toInt();
+            trophyStatus[trophyName] = {
+              'challengeId': challengeId!,
+              'type': type!,
+              'achieved': achieved!,
+              'obtainable': obtainable!,
+              'challengeValue': challengeValue!,
+              'memberValue': memberValue!,
+            };
+          } else if (item.type == 'T') {
+            String trophyName = '${item.challengeValue! ~/ 3600}시간';
+            int? challengeId = item.challengeId;
+            String? type = item.type;
+            bool? achieved = item.isAchieved;
+            int? obtainable = item.obtainable;
+            int? challengeValue = item.challengeValue?.toInt();
+            int? memberValue = item.memberValue?.toInt();
+            trophyStatus[trophyName] = {
+              'challengeId': challengeId!,
+              'type': type!,
+              'achieved': achieved!,
+              'obtainable': obtainable!,
+              'challengeValue': (challengeValue! / 3600).toInt(),
+              'memberValue': (memberValue! / 3600).toInt(),
+            };
+          }
+        }
+      }
+    });
+    print('챌린지챌린지');
+    print(trophy);
+    print('Trophy Status: $trophyStatus');
+    print('Mission Status: $missionStatus');
+  }
+
+  void reward(int challengeId) async {
+    Reward reward;
+    reward = await ChallengeService.fetchRewardChallenge(challengeId);
+    setState(() {});
+    print('리워드');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,33 +109,26 @@ class _ChallengePageState extends State<ChallengePage> {
         title: "도전과제",
         sentence: "도전과제를 달성하고 \n많은 보상과 강아지를 레벨업",
       ),
-      body: Column(
-        children: [
-          _togglebutton(),
-          mission
-              ? SingleChildScrollView(
-                  child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                    child: Column(
-                      children: [
-                        _complete(),
-                        _notcomplete(),
-                        _notcomplete(),
-                        _notcomplete(),
-                        _clear()
-                      ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _togglebutton(),
+            mission
+                ? Wrap(
+                    children: [
+                      _missioncomplete(),
+                    ],
+                  )
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      child: Column(
+                        children: [_complete(), _notcomplete(), _clear()],
+                      ),
                     ),
-                  ),
-                ))
-              : Wrap(
-                  children: [
-                    _missioncomplete(),
-                    _missioncomplete(),
-                    _missioncomplete(),
-                  ],
-                )
-        ],
+                  )
+          ],
+        ),
       ),
     );
   }
@@ -84,7 +141,7 @@ class _ChallengePageState extends State<ChallengePage> {
           GestureDetector(
             onTap: () {
               setState(() {
-                mission = true;
+                mission = false;
               });
             },
             child: Row(
@@ -99,7 +156,7 @@ class _ChallengePageState extends State<ChallengePage> {
                 Text20(
                   text: '업적',
                   bold: true,
-                  textColor: mission ? myBlack : myGrey,
+                  textColor: mission ? myGrey : myBlack,
                 ),
                 Column(
                   children: [
@@ -132,7 +189,7 @@ class _ChallengePageState extends State<ChallengePage> {
           GestureDetector(
             onTap: () {
               setState(() {
-                mission = false;
+                mission = true;
               });
             },
             child: Row(
@@ -147,7 +204,7 @@ class _ChallengePageState extends State<ChallengePage> {
                 Text20(
                   text: '미션',
                   bold: true,
-                  textColor: mission ? myGrey : myBlack,
+                  textColor: mission ? myBlack : myGrey,
                 ),
                 Column(
                   children: [
@@ -177,128 +234,227 @@ class _ChallengePageState extends State<ChallengePage> {
 
   // 달성한거
   Widget _complete() {
-    setState(() {
-      clear = true;
-    });
-    return Container(
-      width: MediaQuery.of(context).size.width - 40,
-      decoration: myBorderBoxDecoration,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          children: [
-            Flexible(
-              flex: 7,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: const [
-                      Image(
-                        image: AssetImage('assets/emoji/running.png'),
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
+    List<Widget> completedTrophiesWidgets = [];
+    trophyStatus.forEach((key, value) {
+      if (value['achieved'] == true && value['obtainable'] != 0) {
+        completedTrophiesWidgets.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              _completeWidth = constraints.maxWidth;
+              return Container(
+                decoration: myBorderBoxDecoration,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 7,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Image(
+                                  image: AssetImage('assets/emoji/running.png'),
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                ),
+                                SizedBox(width: 10),
+                                Text16(text: '누적 $key 달성', bold: true),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Stack(
+                              children: [
+                                _bar(),
+                                Progressbar(
+                                  clear: false,
+                                  memberValue: value['memberValue'],
+                                  challengeValue: value['challengeValue'],
+                                  barwidth: _completeWidth,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(width: 10),
-                      Text16(text: '4km 달리기', bold: true),
+                      Flexible(
+                          flex: 4,
+                          child: Button(
+                            clear: true,
+                            challengeValue: value['challengeValue'],
+                            memberValue: value['memberValue'],
+                            type: value['type'],
+                            onPressed: () {
+                              reward(value['challengeId']);
+                              challenge();
+                            },
+                          )),
                     ],
                   ),
-                  SizedBox(height: 10),
-                  Stack(
-                    children: [_bar(), _progressbar()],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 10),
-            Flexible(flex: 4, child: _button()),
-          ],
-        ),
+                ),
+              );
+            }),
+          ),
+        );
+      }
+    });
+
+    // completedTrophiesWidgets가 비어있으면 trophyreward를 false로 설정
+    if (completedTrophiesWidgets.isEmpty) {
+      trophyreword = false;
+    } else {
+      trophyreword = true;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: completedTrophiesWidgets.length,
+        itemBuilder: (BuildContext context, int index) {
+          return completedTrophiesWidgets[index];
+        },
       ),
     );
   }
 
   // 달성 못한거
   Widget _notcomplete() {
-    setState(() {
-      clear = false;
-    });
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      child: Container(
-        width: MediaQuery.of(context).size.width - 60,
-        decoration: myBorderBoxDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(children: const [
-                    Image(
-                      image: AssetImage('assets/emoji/running.png'),
-                      width: 40,
-                      height: 40,
-                      fit: BoxFit.cover,
+    List<Widget> notcompletedTrophiesWidgets = [];
+    trophyStatus.forEach((key, value) {
+      if (value['achieved'] == false) {
+        notcompletedTrophiesWidgets.add(Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+          child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            _notCompleteWidth = constraints.maxWidth;
+            return Container(
+              width: MediaQuery.of(context).size.width - 60,
+              decoration: myBorderBoxDecoration,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: [
+                          Image(
+                            image: AssetImage('assets/emoji/running.png'),
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(width: 10),
+                          Text16(text: '누적 $key 달성', bold: true),
+                        ]),
+                        Button(
+                          clear: false,
+                          challengeValue: value['challengeValue'],
+                          memberValue: value['memberValue'],
+                          type: value['type'],
+                          onPressed: () {
+                            reward(value['challengeId']);
+                            challenge();
+                          },
+                        )
+                      ],
                     ),
-                    SizedBox(width: 10),
-                    Text16(text: '4km 달리기', bold: true),
-                  ]),
-                  _button(),
-                ],
+                    SizedBox(height: 10),
+                    Stack(
+                      children: [
+                        _bar(),
+                        Progressbar(
+                            clear: true,
+                            memberValue: value['memberValue'],
+                            challengeValue: value['challengeValue'],
+                            barwidth: _notCompleteWidth)
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 10),
-              Stack(
-                children: [_bar(), _progressbar()],
-              ),
-            ],
-          ),
-        ),
+            );
+          }),
+        ));
+      }
+    });
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: notcompletedTrophiesWidgets.length,
+        itemBuilder: (BuildContext context, int index) {
+          return notcompletedTrophiesWidgets[index];
+        },
       ),
     );
   }
 
   // 보상도 다 받은
   Widget _clear() {
+    List<Widget> clearTrophiesWidgets = [];
+    trophyStatus.forEach((key, value) {
+      if (value['achieved'] == true && value['obtainable'] == 0) {
+        clearTrophiesWidgets.add(Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: myMainGreen,
+              borderRadius: BorderRadius.circular(15), // 박스의 모서리를 둥글게
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xffBFC2C8).withOpacity(0.25), // 그림자 색 (투명도 25%)
+                  blurRadius: 15, // 그림자 흐림 정도
+                  offset: Offset(0, 10), // 그림자의 위치 (x, y)
+                ),
+              ],
+            ),
+            width: MediaQuery.of(context).size.width - 60,
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                  image: AssetImage('assets/emoji/party.png'),
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.cover,
+                ),
+                Text16(
+                  text: ' 누적 $key 달리기 달성 완료 ',
+                  bold: true,
+                ),
+                Image(
+                  image: AssetImage('assets/emoji/party.png'),
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.cover,
+                )
+              ],
+            ),
+          ),
+        ));
+      }
+    });
+
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: myMainGreen,
-          borderRadius: BorderRadius.circular(15), // 박스의 모서리를 둥글게
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xffBFC2C8).withOpacity(0.25), // 그림자 색 (투명도 25%)
-              blurRadius: 15, // 그림자 흐림 정도
-              offset: Offset(0, 10), // 그림자의 위치 (x, y)
-            ),
-          ],
-        ),
-        width: MediaQuery.of(context).size.width - 60,
-        height: 70,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Image(
-              image: AssetImage('assets/emoji/party.png'),
-              width: 20,
-              height: 20,
-              fit: BoxFit.cover,
-            ),
-            Text16(
-              text: ' 1Km 달리기 달성 완료 ',
-              bold: true,
-            ),
-            Image(
-              image: AssetImage('assets/emoji/party.png'),
-              width: 20,
-              height: 20,
-              fit: BoxFit.cover,
-            )
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: clearTrophiesWidgets.length,
+        itemBuilder: (BuildContext context, int index) {
+          return clearTrophiesWidgets[index];
+        },
       ),
     );
   }
@@ -311,33 +467,108 @@ class _ChallengePageState extends State<ChallengePage> {
     );
   }
 
-  Widget _progressbar() {
-    return clear
-        ? Container(
-            height: 6,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3), color: myLightGreen),
-          )
-        : Container(
-            width: 100,
-            height: 6,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3), color: myYellow),
-          );
-  }
+  // 미션 --------------------------------
 
-  Widget _button() {
+  Widget _missioncomplete() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+      child: Container(
+        decoration: myBorderBoxDecoration,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+          child: Column(
+            children: [
+              Text16(text: '1KM', bold: true),
+              SizedBox(height: 10),
+              Image(
+                image: AssetImage('assets/emoji/running.png'),
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    missionreword = false;
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: missionreword ? myLightGreen : myLightGrey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text16(
+                    text: '보상받기',
+                    textColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Progressbar extends StatelessWidget {
+  final bool clear;
+  final int memberValue;
+  final int challengeValue;
+  final double barwidth;
+
+  const Progressbar(
+      {Key? key,
+      required this.clear,
+      required this.memberValue,
+      required this.challengeValue,
+      required this.barwidth})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 6,
+      width: barwidth * (memberValue / challengeValue),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(3),
+        color: clear ? myLightGreen : myYellow,
+      ),
+    );
+  }
+}
+
+class Button extends StatelessWidget {
+  final bool clear;
+  final int memberValue;
+  final int challengeValue;
+  final String type;
+  final VoidCallback onPressed;
+
+  const Button({
+    super.key,
+    required this.clear,
+    required this.memberValue,
+    required this.challengeValue,
+    required this.type,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return clear
         ? ElevatedButton(
-            onPressed: () {
-              // 버튼을 클릭했을 때 실행되는 동작
-            },
+            onPressed: onPressed,
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                backgroundColor: myMainGreen),
+                backgroundColor: myLightGreen),
             child: Container(
               padding: const EdgeInsets.all(6.0),
               child: Column(
@@ -390,58 +621,19 @@ class _ChallengePageState extends State<ChallengePage> {
         : Container(
             alignment: Alignment.centerRight,
             child: Row(
-              children: const [
-                Text16(text: '3.2Km', textColor: myGrey, bold: true),
-                Text12(text: '/5Km', textColor: myGrey, bold: true),
+              children: [
+                Text16(
+                    text:
+                        memberValue.toString() + (type == 'D' ? 'km/' : '시간/'),
+                    textColor: myGrey,
+                    bold: true),
+                Text12(
+                    text:
+                        challengeValue.toString() + (type == 'D' ? 'km' : '시간'),
+                    textColor: myGrey,
+                    bold: true),
                 SizedBox(width: 10)
               ],
             ));
-  }
-
-  // 미션 --------------------------------
-
-  Widget _missioncomplete() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-      child: Container(
-        decoration: myBorderBoxDecoration,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-          child: Column(
-            children: [
-              Text16(text: '1KM', bold: true),
-              SizedBox(height: 10),
-              Image(
-                image: AssetImage('assets/emoji/running.png'),
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    missionreword = false;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: missionreword ? myLightGreen : myLightGrey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text16(
-                    text: '보상받기',
-                    textColor: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
