@@ -193,38 +193,6 @@ class Ranges {
   }
 }
 
-// class Record {
-//   int? year;
-//   int? month;
-//   int? day;
-//   List<DailyRecords>? dailyRecords;
-
-//   Record({this.year, this.month, this.day, this.dailyRecords});
-
-//   Record.fromJson(Map<String, dynamic> json) {
-//     year = json['year'];
-//     month = json['month'];
-//     day = json['day'];
-//     if (json['dailyRecords'] != null) {
-//       dailyRecords = <DailyRecords>[];
-//       json['dailyRecords'].forEach((v) {
-//         dailyRecords!.add(DailyRecords.fromJson(v));
-//       });
-//     }
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = Map<String, dynamic>();
-//     data['year'] = year;
-//     data['month'] = month;
-//     data['day'] = day;
-//     if (dailyRecords != null) {
-//       data['dailyRecords'] = dailyRecords!.map((v) => v.toJson()).toList();
-//     }
-//     return data;
-//   }
-// }
-
 class Record {
   double? distance;
   double? time;
@@ -332,13 +300,15 @@ class Heartrates {
 class Trophies {
   int? id;
   String? type;
+  int? value;
   int? coin;
 
-  Trophies({this.id, this.type, this.coin});
+  Trophies({this.id, this.type, this.value, this.coin});
 
   Trophies.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     type = json['type'];
+    value = json['value'];
     coin = json['coin'];
   }
 
@@ -346,6 +316,7 @@ class Trophies {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['type'] = type;
+    data['value'] = value;
     data['coin'] = coin;
     return data;
   }
