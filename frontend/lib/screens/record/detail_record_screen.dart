@@ -1,61 +1,161 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:forsythia/models/records/record_detail.dart';
+import 'package:forsythia/service/record_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 
 class DetailRecordScreen extends StatefulWidget {
-  final DateTime selectedDate;
+  final int? recordId;
 
-  const DetailRecordScreen({super.key, required this.selectedDate});
+  const DetailRecordScreen({Key? key, required this.recordId})
+      : super(key: key);
 
   @override
   State<DetailRecordScreen> createState() => _DetailRecordScreenState();
 }
 
 class _DetailRecordScreenState extends State<DetailRecordScreen> {
+  late List<String?> Typelist = [];
+  late List<int?> Pacelist = [];
+  late List<int?> Heartlist = [];
+
+  Map<int, bool> missionDList = {1: false, 3: false, 5: false, 10: false};
+  Map<int, bool> missionTList = {
+    10: false,
+    30: false,
+    50: false,
+    100: false,
+  };
+
+  late DateTime _recordDateTime;
+
+  RecordDetail recordDetail = RecordDetail();
+
+  bool active = false;
+
+  @override
+  void initState() {
+    super.initState();
+    detailRecordList();
+    if (recordDetail.date != null) {
+      _recordDateTime = DateTime.parse(recordDetail.date!);
+    } else {
+      _recordDateTime = DateTime.now();
+    }
+  }
+
+  void detailRecordList() async {
+    DetailRecordList recordList;
+
+    recordList = await RecordSevice.fetchDetailRecordDetail(widget.recordId);
+    setState(() {
+      active = true;
+
+      recordDetail = recordList.data!;
+
+      Typelist.add(recordDetail.exerciseType);
+      Typelist.add(recordDetail.programType);
+
+      for (var value in recordDetail.paces!.arr!) {
+        Pacelist.add(value);
+      }
+      for (var value in recordDetail.heartrates!.arr!) {
+        Heartlist.add(value);
+      }
+
+      recordDetail.missions!.forEach((mission) {
+        if (mission.type == 'D') {
+          final value = mission.value as int;
+          if (missionDList.containsKey(value)) {
+            missionDList[value] = true;
+          }
+        }
+      });
+      recordDetail.missions!.forEach((mission) {
+        if (mission.type == 'T') {
+          final value = mission.value as int;
+          if (missionTList.containsKey(value)) {
+            missionTList[value] = true;
+          }
+        }
+      });
+
+      if (recordDetail.date != null) {
+        _recordDateTime = DateTime.parse(recordDetail.date!);
+      } else {
+        _recordDateTime = DateTime.now();
+      }
+    });
+    print('갹ㄴ야ㅐㅓㅁㄴ갸ㅐㅓ ㅑㅐㅔ;ㅁ저ㅐ;');
+    print(recordDetail.date);
+    print(widget.recordId);
+    print(Typelist);
+    // print(recordDetail.record?.dailyRecords?[0]?.recordDist);
+    print(recordDetail.program?.programTitle ?? 'N/A');
+    print(recordDetail.record!.distance);
+    print(Pacelist);
+    print(Heartlist);
+    print(recordDetail.trophies);
+    print(missionDList);
+    print(missionTList);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SmallAppBar(
-        title: '기록 상세',
+        title: _day(),
         back: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _day(),
-              SizedBox(height: 20),
-              _program(),
-              SizedBox(height: 10),
-              _record(),
-              SizedBox(height: 25),
-              _pace(),
-              SizedBox(height: 20),
-              _heart(),
-              SizedBox(height: 25),
-              Trophy(text: '256KM'),
-              SizedBox(height: 10),
-              Trophy(text: '256시간'),
-              SizedBox(height: 25),
-              _mission()
-            ],
-          ),
-        ),
-      ),
+      body: active
+          ? SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    _program(),
+                    SizedBox(height: 10),
+                    _record(),
+                    SizedBox(height: 25),
+                    _pace(),
+                    SizedBox(height: 20),
+                    _heart(),
+                    recordDetail.trophies!.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: Column(
+                              children: List.generate(
+                                  recordDetail.trophies!.length, (index) {
+                                return _trophy(index);
+                              }),
+                            ),
+                          )
+                        : SizedBox(height: 20),
+                    _mission()
+                  ],
+                ),
+              ),
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 
-  Widget _day() {
-    // 요일 문자열을 담을 변수
+  String _day() {
     late String dayOfWeek;
 
-    // selectedDate의 요일을 확인하여 문자열에 저장
-    switch (widget.selectedDate.weekday) {
+    switch (_recordDateTime.weekday) {
       case 1:
         dayOfWeek = '월';
         break;
@@ -81,14 +181,32 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
         dayOfWeek = '';
     }
 
-    return Text20(
-      text:
-          '${widget.selectedDate.year}/${widget.selectedDate.month}/${widget.selectedDate.day}  ($dayOfWeek)  ${widget.selectedDate.hour}:${widget.selectedDate.minute}',
-      bold: true,
-    );
+    return '${_recordDateTime.year}/${_recordDateTime.month}/${_recordDateTime.day} ($dayOfWeek) ${_recordDateTime.hour}시 ${_recordDateTime.minute}분';
   }
 
+  // 맨 상단 운동 프로그램 정보
   Widget _program() {
+    late AssetImage image;
+    late String text;
+
+    switch (recordDetail.exerciseType) {
+      case 'R':
+        image = AssetImage('assets/gif/retriever1_standandlook.gif');
+        text = '자유달리기';
+        break;
+      case 'W':
+        image = AssetImage('assets/gif/retriever1_standandlook.gif');
+        text = '자유걷기';
+        break;
+      case 'P':
+        image = AssetImage('assets/gif/retriever2_standandlook.gif');
+        text = '${recordDetail.program!.programTitle.toString()}';
+        break;
+      default:
+        image = AssetImage('assets/gif/retriever1_standandlook.gif');
+        text = '알 수 없는 운동';
+    }
+
     return Container(
       height: 55,
       width: double.infinity,
@@ -96,22 +214,62 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image(
-              image: AssetImage('assets/gif/retriever1_standandlook.gif'),
-              height: 40,
-              width: 40,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.none,
+            Row(
+              children: [
+                Image(
+                  image: image,
+                  height: 40,
+                  width: 40,
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.none,
+                ),
+                SizedBox(width: 10),
+                Text16(
+                  text: text,
+                  bold: true,
+                )
+              ],
             ),
-            SizedBox(width: 10),
-            Text16(
-              text: '자유걷기',
-              bold: true,
-            ),
+            _ifprogram(),
           ],
         ),
       ),
+    );
+  }
+
+  // 운동프로그램일 때 무슨 목표인지 보여주기
+  Widget _ifprogram() {
+    String? programType = recordDetail.programType;
+    late Color containerColor;
+    late String text;
+
+    switch (programType) {
+      case 'D':
+        containerColor = myLightYellow;
+        text = '거리목표';
+        break;
+      case 'T':
+        containerColor = myLightGreen;
+        text = '시간목표';
+        break;
+      case 'I':
+        containerColor = myLightRed;
+        text = '인터벌목표';
+        break;
+      default:
+        containerColor = Colors.transparent;
+        text = '';
+    }
+
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+        child: Text12(text: text),
+      ),
+      decoration: BoxDecoration(
+          color: containerColor, borderRadius: BorderRadius.circular(10)),
     );
   }
 
@@ -132,10 +290,14 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(height: 10),
-                  Text20(text: '10.9', bold: true),
-                  Text12(text: '총 거리')
+                  Text20(
+                      text: recordDetail.record?.distance?.toStringAsFixed(0) ??
+                          'N/A',
+                      bold: true),
+                  Text12(text: 'km')
                 ],
               ),
             ),
@@ -160,8 +322,11 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 10),
-                  Text20(text: '10.9', bold: true),
-                  Text12(text: '총 칼로리')
+                  Text20(
+                      text:
+                          recordDetail.record?.cal?.toStringAsFixed(0) ?? 'N/A',
+                      bold: true),
+                  Text12(text: 'kcal')
                 ],
               ),
             ),
@@ -186,8 +351,12 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 10),
-                  Text20(text: '10.9', bold: true),
-                  Text12(text: '총 시간')
+                  Text20(
+                      text: (recordDetail.record?.time != null
+                          ? (recordDetail.record!.time! / 60).toStringAsFixed(0)
+                          : 'N/A'),
+                      bold: true),
+                  Text12(text: 'min')
                 ],
               ),
             ),
@@ -199,10 +368,13 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
   Widget _pace() {
     return Container(
+      constraints: BoxConstraints(minHeight: 100),
       decoration: BoxDecoration(
           border: Border.all(color: myWhiteGreen, width: 2),
           borderRadius: BorderRadius.circular(10)),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(15.0),
@@ -211,7 +383,11 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '페이스', bold: true),
                 SizedBox(width: 10),
                 Text12(
-                  text: '평균 페이스',
+                  text: '평균 페이스 ' +
+                      (recordDetail.paces!.average!.toInt() ~/ 60).toString() +
+                      '\'' +
+                      (recordDetail.paces!.average!.toInt() % 60).toString() +
+                      '\'\'',
                   textColor: myGrey,
                 )
               ],
@@ -222,9 +398,16 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: List.generate(50, (index) {
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(Pacelist.length, (index) {
+                  // 리스트의 값에 따라 높이를 동적으로 설정
+                  double height = (Pacelist[index]! ~/ 60).toDouble();
+                  // height가 100을 초과하는 경우 100으로 설정
+                  if (height > 30) {
+                    height = 30;
+                  }
                   return Container(
-                    height: 40,
+                    height: height + 1,
                     width: 3,
                     margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
                     color: myBlue, // 콘테이너 색상 설정
@@ -240,10 +423,13 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
   Widget _heart() {
     return Container(
+      constraints: BoxConstraints(minHeight: 100),
       decoration: BoxDecoration(
           border: Border.all(color: myWhiteGreen, width: 2),
           borderRadius: BorderRadius.circular(10)),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -252,7 +438,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '심박수', bold: true),
                 SizedBox(width: 10),
                 Text12(
-                  text: '평균 심박수',
+                  text: '평균 심박수 ' +
+                      recordDetail.heartrates!.average!.toInt().toString(),
                   textColor: myGrey,
                 )
               ],
@@ -263,9 +450,12 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: List.generate(100, (index) {
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(Heartlist.length, (index) {
+                  // 리스트의 값에 따라 높이를 동적으로 설정
+                  double height = Heartlist[index]!.toDouble();
                   return Container(
-                    height: 40,
+                    height: height / 2 + 1,
                     width: 3,
                     margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
                     color: myRed, // 콘테이너 색상 설정
@@ -350,7 +540,10 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           height: 20,
                           fit: BoxFit.cover,
                         ),
-                        Text16(text: ' + 3', bold: true),
+                        Text16(
+                            text:
+                                ' +' + recordDetail.attainableHeart.toString(),
+                            bold: true),
                         SizedBox(width: 10),
                         Image(
                           image: AssetImage('assets/emoji/money.png'),
@@ -358,7 +551,9 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           height: 20,
                           fit: BoxFit.cover,
                         ),
-                        Text16(text: ' + 500', bold: true)
+                        Text16(
+                            text: ' +' + recordDetail.attainableCoin.toString(),
+                            bold: true)
                       ],
                     ),
                   ),
@@ -370,51 +565,65 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MissionCircle(
-                  done: true,
-                  text: '1KM',
-                ),
-                MissionCircle(
-                  done: false,
-                  text: '3KM',
-                ),
-                MissionCircle(
-                  done: false,
-                  text: '5KM',
-                ),
-                MissionCircle(
-                  done: false,
-                  text: '10KM',
-                )
-              ],
+              children: List.generate(missionDList.length, (index) {
+                final key = missionDList.keys.elementAt(index);
+                final done = missionDList[key] ?? false;
+
+                return MissionCircle(
+                  done: done,
+                  text: '$key km',
+                );
+              }),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MissionCircle(
-                  done: true,
-                  text: '10분',
-                ),
-                MissionCircle(
-                  done: false,
-                  text: '30분',
-                ),
-                MissionCircle(
-                  done: false,
-                  text: '60분',
-                ),
-                MissionCircle(
-                  done: false,
-                  text: '100분',
-                )
-              ],
+              children: List.generate(missionTList.length, (index) {
+                final key = missionTList.keys.elementAt(index);
+                final done = missionTList[key] ?? false;
+
+                return MissionCircle(
+                  done: done,
+                  text: '$key km',
+                );
+              }),
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget _trophy(int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Container(
+        height: 55,
+        decoration: myTrophyBoxDecoration,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image(
+                image: AssetImage('assets/emoji/trophy.png'),
+                width: 25,
+                height: 25,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(width: 10),
+              Text16(
+                text: recordDetail.trophies![index].type == 'D'
+                    ? '누적 ${recordDetail.trophies![index].id}km 달성'
+                    : '누적 ${recordDetail.trophies![index].id}시간 달성',
+                bold: true,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -446,38 +655,6 @@ class MissionCircle extends StatelessWidget {
             color: done ? myLightGreen : myGrey,
             fontWeight: done ? FontWeight.bold : FontWeight.normal,
           )),
-    );
-  }
-}
-
-class Trophy extends StatelessWidget {
-  final String text; // 글씨
-  const Trophy({
-    super.key,
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: myTrophyBoxDecoration,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image(
-              image: AssetImage('assets/emoji/trophy.png'),
-              width: 25,
-              height: 25,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(width: 10),
-            Text16(text: '누적 $text 달성', bold: true)
-          ],
-        ),
-      ),
     );
   }
 }

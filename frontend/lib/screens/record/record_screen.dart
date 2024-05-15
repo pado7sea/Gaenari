@@ -66,7 +66,9 @@ class _RecordScreenState extends State<RecordScreen> {
     });
     // print(recordList.data!.ex);
     // print(statisticList.data!.dist);
+    print('기록기ㅗㄹ기고리ㅗㅓㅁ나ㅣ과ㅣ; ');
     print(monthly.exerciseRecords![3].dailyRecords![0].recordDist);
+    print(monthly.exerciseRecords![3].dailyRecords![0].recordId);
     // print(_focusedDay.year);
     // print(_focusedDay.month);
   }
@@ -315,10 +317,14 @@ class _RecordScreenState extends State<RecordScreen> {
                             borderRadius: BorderRadius.circular(10)),
                         child: ListTile(
                             contentPadding: EdgeInsets.all(0),
-                            onTap: () => Navigator.of(context).push(
-                                SlidePageRoute(
+                            onTap: () =>
+                                Navigator.of(context).push(SlidePageRoute(
                                     nextPage: DetailRecordScreen(
-                                        selectedDate: _selectedDay))),
+                                  recordId: monthly
+                                      .exerciseRecords![_selectedDay.day - 1]
+                                      .dailyRecords![index]
+                                      .recordId,
+                                ))),
                             title: Padding(
                               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                               child: Row(

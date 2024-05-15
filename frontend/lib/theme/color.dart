@@ -19,9 +19,12 @@ const myLightYellow = Color(0xffFFF7CC);
 
 // 빨강
 const myRed = Color(0xffFF6D7F);
+const myLightRed = Color(0xffFF8686);
 
 // 파랑
 const myBlue = Color(0xff5D7BC7);
+
+// 운동프로그램 빨 초 노
 
 // 그래프 그라데이션
 const mygradient = [
