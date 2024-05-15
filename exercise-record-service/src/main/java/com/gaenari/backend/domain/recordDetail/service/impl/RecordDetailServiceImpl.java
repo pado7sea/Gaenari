@@ -93,7 +93,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
     }
 
     private IntervalDto constructIntervalDto(Record record) {
-        if (record.getProgramType() == ProgramType.I || record.getRanges() == null) {
+        if (record.getProgramType() == ProgramType.I && record.getRanges() == null) {
             throw new IntervalInfoNotFoundException();
         }
 
