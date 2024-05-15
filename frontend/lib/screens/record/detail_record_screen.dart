@@ -448,6 +448,9 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 children: List.generate(Heartlist.length, (index) {
                   // 리스트의 값에 따라 높이를 동적으로 설정
                   double height = Heartlist[index]!.toDouble();
+                  if (height > 250) {
+                    height = 250;
+                  }
                   return Container(
                     height: height / 2 + 1,
                     width: 3,
@@ -564,7 +567,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
                 return MissionCircle(
                   done: done,
-                  text: '$key km',
+                  text: '$key' + 'km',
                 );
               }),
             ),
@@ -579,7 +582,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
                 return MissionCircle(
                   done: done,
-                  text: '$key km',
+                  text: '$key분',
                 );
               }),
             ),
@@ -603,8 +606,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             children: [
               Image(
                 image: AssetImage('assets/emoji/trophy.png'),
-                width: 25,
-                height: 25,
+                width: 20,
+                height: 20,
                 fit: BoxFit.cover,
               ),
               SizedBox(width: 10),
@@ -613,7 +616,14 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                     ? '누적 ${recordDetail.trophies![index].value}km 달성'
                     : '누적 ${recordDetail.trophies![index].value}시간 달성',
                 bold: true,
-              )
+              ),
+              SizedBox(width: 10),
+              Image(
+                image: AssetImage('assets/emoji/trophy.png'),
+                width: 20,
+                height: 20,
+                fit: BoxFit.cover,
+              ),
             ],
           ),
         ),
