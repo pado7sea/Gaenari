@@ -20,7 +20,7 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
   // 이미지가 움직이는 중인지 여부를 나타내는 변수
   Random random = Random();
   List<double> dx = [10, 50, 100, 150, 200, 250];
-  List<double> dy = [70, 140, 210, 280, 350, 420];
+  List<double> dy = [90, 140, 210, 280, 350, 400];
   int x = 0;
   int y = 0;
   int act = 0;
@@ -66,16 +66,14 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
                     flipX: true,
                     child: Image.asset(
                       _currentImage,
-                      width: 150.0 - (50 - y * 10),
-                      height: 150.0 - (50 - y * 10),
+                      width: 200.0 - (50 - y * 10),
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.none,
                     ),
                   )
                 : Image.asset(
                     _currentImage,
-                    width: 150.0 - (50 - y * 10),
-                    height: 150.0 - (50 - y * 10),
+                    width: 200.0 - (50 - y * 10),
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none,
                   ),
