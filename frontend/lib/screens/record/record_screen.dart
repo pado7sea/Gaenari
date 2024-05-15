@@ -19,7 +19,7 @@ class RecordScreen extends StatefulWidget {
 }
 
 class _RecordScreenState extends State<RecordScreen> {
-  DateTime _focusedDay = DateTime.now(); // 달력에 오늘 날짜 표시
+  DateTime? _focusedDay = DateTime.now(); // 달력에 오늘 날짜 표시
   DateTime _selectedDay = DateTime.now(); // 선택한 날짜 표시
   Monthly monthly = Monthly();
   Statistic statistic = Statistic();
@@ -45,9 +45,9 @@ class _RecordScreenState extends State<RecordScreen> {
     StatisticList statisticList;
 
     recordList = await RecordSevice.fetchMonthlyRecordList(
-        _focusedDay.year, _focusedDay.month);
+        _focusedDay!.year, _focusedDay!.month);
     statisticList = await RecordSevice.fetchMonthlyStatisticList(
-        _focusedDay.year, _focusedDay.month);
+        _focusedDay!.year, _focusedDay!.month);
     setState(() {
       monthly = recordList.data!;
       statistic = statisticList.data!;
@@ -259,7 +259,7 @@ class _RecordScreenState extends State<RecordScreen> {
                 locale: 'ko-KR', // 로케일 설정 (한국어)
                 firstDay: DateTime.utc(2024, 1, 1),
                 lastDay: DateTime.utc(2030, 3, 14),
-                focusedDay: _focusedDay,
+                focusedDay: _focusedDay!,
                 calendarFormat: CalendarFormat.month,
                 availableGestures: AvailableGestures.none,
                 daysOfWeekHeight: 20,
@@ -293,7 +293,7 @@ class _RecordScreenState extends State<RecordScreen> {
                 },
                 onDaySelected: _onDaySelected,
                 onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
+                  _focusedDay = null;
                   monthlyRecordList();
                 },
                 eventLoader: _getEventsForDay,
