@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:forsythia/models/records/record_detail.dart';
 import 'package:forsythia/service/record_service.dart';
 import 'package:forsythia/theme/color.dart';
@@ -12,8 +11,7 @@ import 'package:forsythia/widgets/small_app_bar.dart';
 class DetailRecordScreen extends StatefulWidget {
   final int? recordId;
 
-  const DetailRecordScreen({Key? key, required this.recordId})
-      : super(key: key);
+  const DetailRecordScreen({super.key, required this.recordId});
 
   @override
   State<DetailRecordScreen> createState() => _DetailRecordScreenState();
@@ -68,22 +66,22 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
         Heartlist.add(value);
       }
 
-      recordDetail.missions!.forEach((mission) {
+      for (var mission in recordDetail.missions!) {
         if (mission.type == 'D') {
           final value = mission.value as int;
           if (missionDList.containsKey(value)) {
             missionDList[value] = true;
           }
         }
-      });
-      recordDetail.missions!.forEach((mission) {
+      }
+      for (var mission in recordDetail.missions!) {
         if (mission.type == 'T') {
           final value = mission.value as int;
           if (missionTList.containsKey(value)) {
             missionTList[value] = true;
           }
         }
-      });
+      }
 
       if (recordDetail.date != null) {
         _recordDateTime = DateTime.parse(recordDetail.date!);
@@ -200,7 +198,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
         break;
       case 'P':
         image = AssetImage('assets/gif/retriever2_standandlook.gif');
-        text = '${recordDetail.program!.programTitle.toString()}';
+        text = recordDetail.program!.programTitle.toString();
         break;
       default:
         image = AssetImage('assets/gif/retriever1_standandlook.gif');
@@ -264,12 +262,12 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     }
 
     return Container(
+      decoration: BoxDecoration(
+          color: containerColor, borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
         child: Text12(text: text),
       ),
-      decoration: BoxDecoration(
-          color: containerColor, borderRadius: BorderRadius.circular(10)),
     );
   }
 
@@ -383,11 +381,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '페이스', bold: true),
                 SizedBox(width: 10),
                 Text12(
-                  text: '평균 페이스 ' +
-                      (recordDetail.paces!.average!.toInt() ~/ 60).toString() +
-                      '\'' +
-                      (recordDetail.paces!.average!.toInt() % 60).toString() +
-                      '\'\'',
+                  text:
+                      '평균 페이스 ${recordDetail.paces!.average!.toInt() ~/ 60}\'${recordDetail.paces!.average!.toInt() % 60}\'\'',
                   textColor: myGrey,
                 )
               ],
@@ -438,8 +433,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '심박수', bold: true),
                 SizedBox(width: 10),
                 Text12(
-                  text: '평균 심박수 ' +
-                      recordDetail.heartrates!.average!.toInt().toString(),
+                  text: '평균 심박수 ${recordDetail.heartrates!.average!.toInt()}',
                   textColor: myGrey,
                 )
               ],
@@ -541,8 +535,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           fit: BoxFit.cover,
                         ),
                         Text16(
-                            text:
-                                ' +' + recordDetail.attainableHeart.toString(),
+                            text: ' +${recordDetail.attainableHeart}',
                             bold: true),
                         SizedBox(width: 10),
                         Image(
@@ -552,7 +545,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           fit: BoxFit.cover,
                         ),
                         Text16(
-                            text: ' +' + recordDetail.attainableCoin.toString(),
+                            text: ' +${recordDetail.attainableCoin}',
                             bold: true)
                       ],
                     ),

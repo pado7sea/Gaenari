@@ -12,7 +12,7 @@ class DetailRecordList {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['message'] = message;
     if (this.data != null) {
@@ -80,7 +80,7 @@ class RecordDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['exerciseId'] = exerciseId;
     data['date'] = date;
     data['exerciseType'] = exerciseType;
@@ -128,11 +128,11 @@ class Program {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['programId'] = this.programId;
-    data['targetValue'] = this.targetValue;
-    if (this.intervalInfo != null) {
-      data['intervalInfo'] = this.intervalInfo!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['programId'] = programId;
+    data['targetValue'] = targetValue;
+    if (intervalInfo != null) {
+      data['intervalInfo'] = intervalInfo!.toJson();
     }
     return data;
   }
@@ -157,12 +157,12 @@ class IntervalInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['duration'] = this.duration;
-    data['setCount'] = this.setCount;
-    data['rangeCount'] = this.rangeCount;
-    if (this.ranges != null) {
-      data['ranges'] = this.ranges!.map((x) => x.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['duration'] = duration;
+    data['setCount'] = setCount;
+    data['rangeCount'] = rangeCount;
+    if (ranges != null) {
+      data['ranges'] = ranges!.map((x) => x.toJson()).toList();
     }
     return data;
   }
@@ -184,7 +184,7 @@ class Ranges {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['isRunning'] = isRunning;
     data['time'] = time;
@@ -242,7 +242,7 @@ class DailyRecords {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['recordId'] = recordId;
     data['recordDate'] = recordDate;
     data['recordTime'] = recordTime;
@@ -265,7 +265,7 @@ class Paces {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['average'] = average;
     data['arr'] = arr;
     return data;
@@ -288,7 +288,7 @@ class Heartrates {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['average'] = average;
     data['max'] = max;
     data['min'] = min;
@@ -313,7 +313,7 @@ class Trophies {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['type'] = type;
     data['value'] = value;
@@ -340,7 +340,7 @@ class Missions {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['type'] = type;
     data['value'] = value;
