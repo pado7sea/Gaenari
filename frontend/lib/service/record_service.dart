@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:forsythia/models/records/record_detail.dart';
 import 'package:forsythia/models/records/record_list.dart';
 import 'package:forsythia/models/records/statistic_list.dart';
 import 'package:forsythia/models/records/weekly_statistic_list.dart';
@@ -38,11 +39,11 @@ class RecordSevice {
         .then((data) => WeeklyStatisticList.fromJson(data));
   }
 
-  // 기록 상세 - 레코드아이디를 파라미터로 받음 - 스웨거이슈로 모델클래스 못만듦
-  // static Future<RecordList> fetchRecordDetail(recordId) async {
-  //   return fetchGetData('record/$recordId')
-  //       .then((data) => RecordList.fromJson(data));
-  // }
+  // 기록 상세 - 레코드아이디를 파라미터로 받음
+  static Future<DetailRecordList> fetchDetailRecordDetail(recordId) async {
+    return fetchGetData('record/$recordId')
+        .then((data) => DetailRecordList.fromJson(data));
+  }
 
   // get요청
   static Future<dynamic> fetchGetData(String endpoint) async {
@@ -60,10 +61,10 @@ class RecordSevice {
       if (data['status'] == "SUCCESS") {
         return data;
       } else {
-        throw Exception('Failed to load data');
+        throw Exception('Failed to load data ${data['message']}');
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception('Failed to load data ${response.reasonPhrase}');
     }
   }
 }
