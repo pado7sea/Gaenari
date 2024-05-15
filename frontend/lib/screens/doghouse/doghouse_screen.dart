@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/inventory/my_item.dart';
 import 'package:forsythia/models/users/login_user.dart';
+import 'package:forsythia/screens/doghouse/move_dog.dart';
 import 'package:forsythia/screens/inventory/inventory_screen.dart';
 import 'package:forsythia/screens/item/item_screen.dart';
 import 'package:forsythia/service/inventory_service.dart';
@@ -9,6 +10,7 @@ import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/dog_app_bar.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
+import 'dart:math';
 
 class DogHouseScreen extends StatefulWidget {
   const DogHouseScreen({super.key});
@@ -24,6 +26,8 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
   String tier = "";
   String name = "";
   bool active = false;
+  Random random = Random();
+  int randomNumber = 0;
 
   @override
   void initState() {
@@ -31,6 +35,23 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
     getItem();
     loadCoin();
   }
+
+  // List<List<String>> moveDog = [
+  //   ["assets/dogs/0_1.gif", "assets/dogs/1_1.gif"],
+  //   ["assets/dogs/0_2.gif", "assets/dogs/1_2.gif"],
+  //   ["assets/dogs/0_3.gif", "assets/dogs/1_3.gif"],
+  //   ["assets/dogs/0_4.gif", "assets/dogs/1_4.gif"],
+  //   ["assets/dogs/0_5.gif", "assets/dogs/1_5.gif"],
+  //   ["assets/dogs/0_6.gif", "assets/dogs/1_6.gif"],
+  //   ["assets/dogs/0_7.gif", "assets/dogs/1_7.gif"],
+  //   ["assets/dogs/0_8.gif", "assets/dogs/1_8.gif"],
+  //   ["assets/dogs/0_9.gif", "assets/dogs/1_9.gif"],
+  //   ["assets/dogs/0_10.gif", "assets/dogs/1_10.gif"],
+  // ];
+
+  // List<List<String>> actDog = [
+  //   ["assets/dogs/1_0_1.gif", "assets/dogs/1_1_1.gif", "assets/dogs/1_2_1.gif", "assets/dogs/1_3_1.gif", "assets/dogs/1_4_1.gif", "assets/dogs/1_5_1.gif"],
+  // ];
 
   getItem() async {
     MyItem myItem = await InventoryService.fetchMyItem();
@@ -50,6 +71,7 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    randomNumber = random.nextInt(6);
     return active
         ? Scaffold(
             appBar: DogAppBar(
@@ -123,6 +145,7 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
+                  ImageMove(id: my.pet!.id!),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -182,7 +205,8 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
                 child: GestureDetector(
                     onTap: () {
                       Navigator.of(context)
-                          .push(SlidePageRoute(nextPage: ItemScreen()));
+                          .push(SlidePageRoute(nextPage: ItemScreen()))
+                          .then((value) => getItem());
                     },
                     child: Row(
                       mainAxisSize:
