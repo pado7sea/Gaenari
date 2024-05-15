@@ -1,6 +1,5 @@
 package com.gaenari.backend.domain.reward.controller;
 
-import com.gaenari.backend.domain.memberChallenge.dto.responseDto.MemberMissionDto;
 import com.gaenari.backend.domain.reward.dto.RewardDto;
 import com.gaenari.backend.domain.reward.service.RewardService;
 import com.gaenari.backend.global.format.code.ErrorCode;

@@ -9,13 +9,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MissionDto {
-    @Schema(description = "도전 과제 ID", example = "1")
+    @Schema(description = "미션 ID", example = "1")
     private Integer id;
 
-    @Schema(description = "도전 과제 유형", allowableValues = {"D", "T"})
+    @Schema(description = "미션 타입", allowableValues = {"D", "T"},  example = "T")
     private ChallengeType type;
 
-    @Schema(description = "도전 과제 값", example = "1000")
+    @Schema(description = "목표 값", example = "1000")
     private Integer value;
 
     @Schema(description = "획득 코인", example = "50")
