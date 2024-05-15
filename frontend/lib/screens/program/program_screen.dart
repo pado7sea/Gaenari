@@ -71,20 +71,21 @@ class _ProgramScreenState extends State<ProgramScreen> {
             ],
           ),
           // 여기서 배경을 만들어
-          GestureDetector(
-            onTap: () {
-              if (_isExpanded) {
-                setState(() {
-                  _isExpanded = false;
-                });
-              }
-            },
-            child: Container(
-              color: _isExpanded
-                  ? Colors.black.withOpacity(0.5)
-                  : Colors.transparent,
+          if (_isExpanded)
+            GestureDetector(
+              onTap: () {
+                if (_isExpanded) {
+                  setState(() {
+                    _isExpanded = false;
+                  });
+                }
+              },
+              child: Container(
+                color: _isExpanded
+                    ? Colors.black.withOpacity(0.5)
+                    : Colors.transparent,
+              ),
             ),
-          ),
           // 이제 원래의 내용을 넣어
         ],
       ),
