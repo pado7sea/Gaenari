@@ -29,7 +29,7 @@ public class MyPetController {
     @Operation(summary = "반려견 입양")
     @PostMapping("/adopt")
     public ResponseEntity<?> adopt(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody Adopt adopt){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -40,7 +40,7 @@ public class MyPetController {
     @Operation(summary = "파트너 반려견 변경")
     @PutMapping("/partner/{dogId}")
     public ResponseEntity<?> changePartner(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @PathVariable Long dogId){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -51,7 +51,7 @@ public class MyPetController {
     @Operation(summary = "파트너 반려견 조회")
     @GetMapping("/partner")
     public ResponseEntity<?> getPartner(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -62,7 +62,7 @@ public class MyPetController {
     @Operation(summary = "반려견 애정도 증가")
     @PostMapping("/heart")
     public ResponseEntity<?> increaseAffection(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody IncreaseAffection increaseAffection){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -77,7 +77,7 @@ public class MyPetController {
     @Operation(summary = "[Feign] 반려견 애정도 증/감", description = "Feign API")
     @PutMapping("/heart")
     public ResponseEntity<?> changeHeart(@RequestBody HeartChange heartChange){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (heartChange.getAccountId() == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -88,7 +88,7 @@ public class MyPetController {
     @Operation(summary = "[Feign] 반려견 전체 조회", description = "Feign API")
     @GetMapping("/{accountId}")
     public ResponseEntity<?> getPets(@PathVariable String accountId){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
