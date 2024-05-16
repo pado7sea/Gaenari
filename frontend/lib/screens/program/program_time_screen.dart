@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forsythia/models/programs/program_add.dart';
+import 'package:forsythia/screens/program/program_screen.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
+import 'package:forsythia/widgets/none_animation_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 
 class AddTimeProgramPage extends StatefulWidget {
@@ -19,7 +21,7 @@ class AddTimeProgramPage extends StatefulWidget {
 
 class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
   final TextEditingController _programName = TextEditingController();
-  final TextEditingController _time = TextEditingController();
+  final TextEditingController _time1 = TextEditingController();
   final TextEditingController _time2 = TextEditingController();
   String check = "";
   String _errorText = '';
@@ -125,33 +127,43 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
       ]),
       bottomNavigationBar: GestureDetector(
         onTap: () async {
-          if (_programName.text != "" && _time.text != "0") {
-            ProgramAdd program = ProgramAdd(
-              programTitle: _programName.text,
-              programType: "T",
-              programTargetValue: double.parse(_time.text) * 60 +
-                  double.parse(_time2.text) * 3600,
-            );
-            print(program.programTargetValue);
-            await ProgramService.fetchProgramAdd(program);
-            Navigator.pop(context, "update");
+          if (_programName.text != "" && _time1.text + _time2.text != "0") {
+            double time1 = double.tryParse(_time1.text) ?? 0;
+            double time2 = double.tryParse(_time2.text) ?? 0;
+
+            if (time1 + time2 != null) {
+              ProgramAdd program = ProgramAdd(
+                programTitle: _programName.text,
+                programType: "T",
+                programTargetValue: time1 * 60 + time2 * 3600,
+              );
+              print(program.programTargetValue);
+              print(_time1.text + _time2.text);
+              await ProgramService.fetchProgramAdd(program);
+              Navigator.pop(context, "update");
+            } else {
+              // 사용자에게 유효한 숫자를 입력하라는 메시지 표시
+              // 예: ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("올바른 숫자를 입력하세요.")));
+            }
           }
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Container(
-            decoration: _programName.text != "" && _time.text != "0"
-                ? myActiveBoxDecoration
-                : myNoneBoxDecoration,
+            decoration:
+                _programName.text != "" && _time1.text + _time2.text != "0"
+                    ? myActiveBoxDecoration
+                    : myNoneBoxDecoration,
             padding: EdgeInsets.all(16),
             height: 55,
             child: Center(
               child: Text16(
                 text: "추가",
                 bold: true,
-                textColor: _programName.text != "" && _time.text != "0"
-                    ? myBlack
-                    : myGrey,
+                textColor:
+                    _programName.text != "" && _time1.text + _time2.text != "0"
+                        ? myBlack
+                        : myGrey,
               ),
             ),
           ),
@@ -175,7 +187,7 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
                     onSelectedItemChanged: (int index) {
                       setState(() {
                         timeIndex = index;
-                        _time.text = timelist[timeIndex];
+                        _time1.text = timelist[timeIndex];
                       });
                     },
                     children:
