@@ -128,6 +128,8 @@ public class MyPetServiceImpl implements MyPetService{
                 .member(newMyPet.getMember())
                 .dog(newMyPet.getDog())
                 .name(newMyPet.getName())
+                .affection(newMyPet.getAffection())
+                .tier(newMyPet.getTier())
                 .isPartner(true) // 변경
                 .changeTime(LocalDateTime.now()) // 변경한 시간 저장
                 .build();
