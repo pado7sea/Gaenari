@@ -246,16 +246,36 @@ public class MateServiceImpl implements MateService{
         mateRepository.save(removeMate);
     }
 
+    // 특수 문자가 있는지 확인하는 함수
+    // 특수문자가 있으면 true 반환
+    public static boolean removeSpecialCharacters(String str) {
+        // 특수 문자를 제외한 문자열을 저장할 그릇
+        boolean haveSpecial = false;
+        // 문자열을 한 글자씩 확인하면서 특수 문자가 아닌 경우에만 추가
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            // 특수 문자가 아닌 경우에만 추가
+            if (!Character.isLetterOrDigit(ch)) {
+                haveSpecial = true;
+                break;
+            }
+        }
+        return haveSpecial;
+    }
+
     @Override // 친구검색
     public List<SearchMates> getMembers(Long memId, String nickName) {
         // 멤버 엔티티 조회
         Member me = memberRepository.findById(memId).orElseThrow(MemberNotFoundException::new);
+        // 검색어 필터링(특수문자 제외)
+        boolean haveSpecial = removeSpecialCharacters(nickName);
         // 검색목록 조회
-        List<Member> searchMembers = new ArrayList<>();
-        if(!nickName.contains("_")){
-            searchMembers = memberRepository.findByNicknameContaining(nickName);
-        }
+        List<Member> searchMembers = memberRepository.findByNicknameContaining(nickName);
 
+        // 특수문자가 있으면 빈리스트 반환
+        if(haveSpecial){
+            return Collections.emptyList();
+        }
         // 검색 결과가 회원 1명도 없으면 빈리스트 반환
         if(searchMembers.size()==0){
             return Collections.emptyList();
