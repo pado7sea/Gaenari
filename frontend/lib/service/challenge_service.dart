@@ -86,10 +86,11 @@ class ChallengeService {
       if (data['status'] == "SUCCESS") {
         return data;
       } else {
-        throw Exception('Failed to load data');
+        throw Exception(
+            'Failed to load data ${response.statusCode}  ${data.toString()}');
       }
     } else {
-      throw Exception('Failed to load data');
+      throw Exception('Failed to load data ${response.statusCode}');
     }
   }
 }
