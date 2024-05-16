@@ -75,12 +75,12 @@ class DogAppBar extends StatelessWidget implements PreferredSizeWidget {
                                       bold: true),
                                   SizedBox(width: 5),
                                   Image(
-                                    image: AssetImage(
-                                        'assets/color_icons/icon_coin.png'),
-                                    width: 18,
-                                    height: 18,
-                                    fit: BoxFit.cover,
-                                  ),
+                                      image: AssetImage(
+                                          'assets/color_icons/icon_coin.png'),
+                                      width: 18,
+                                      height: 18,
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.high),
                                 ],
                               ))
                         ],
