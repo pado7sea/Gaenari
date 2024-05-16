@@ -468,7 +468,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                         Navigator.of(context).pop();
                                         Navigator.of(context)
                                             .push(SlidePageRoute(
-                                                nextPage: ChallengePage(
+                                                nextPage: ChallengeScreen(
                                           mission: false,
                                         )));
                                       },
