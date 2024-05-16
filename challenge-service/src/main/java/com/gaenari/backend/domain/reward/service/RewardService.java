@@ -51,6 +51,15 @@ public interface RewardService {
     RewardDto getAttainableRewardAndUpdate(String accountId, Integer challengeId);
 
     /**
+     * 지정된 도전과제 ID에 대해 받을 수 있는 보상을 조회한다.
+     *
+     * @param accountId String 형태로, 보상을 받을 회원의 고유 식별자.
+     * @param challengeId Integer 형태로, 조회할 도전과제의 고유 식별자.
+     * @return RewardDto 조회된 보상 정보를 담은 DTO 객체를 반환한다.
+     */
+    RewardDto getAttainableReward(String accountId, Integer challengeId);
+
+    /**
      * 마이크로 서비스 간 통신을 통해 지정된 회원의 코인 수를 업데이트한다.
      *
      * @param accountId String 형태로, 코인을 업데이트할 회원의 고유 식별자.
