@@ -120,7 +120,21 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
             - AuthorizationHeaderFilter
-
+        - id: fcm-service
+          uri: http://fcm-service.fcm.svc.cluster.local
+          predicates:
+            - Path=/api/fcm-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/fcm-service/(?<path>.*), /$\{path}
+        - id: fcm-service
+          uri: http://fcm-service.fcm.svc.cluster.local
+          predicates:
+            - Path=/api/fcm-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/fcm-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
 springdoc:
   swagger-ui:
     use-root-path: true
@@ -139,7 +153,9 @@ springdoc:
     urls[4]:
       name: 인벤토리 서비스
       url: https://api.gaenari.kr/api/inventory-service/v3/api-docs
-
+    urls[5]:
+      name: FCM 서비스
+      url: https://api.gaenari.kr/api/fcm-service/v3/api-docs
 token:
   expiration_time: 86400000 # 60*60*24*1000
   secret: member_token_dskjlhfahgiuohauiorheoaihishsodjsafpofjdoadspdoiajfsoisajfdio # 임의의 값
