@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/challenges/mission.dart';
 import 'package:forsythia/models/challenges/reward.dart';
@@ -89,9 +86,8 @@ class _ChallengePageState extends State<ChallengeScreen> {
               'type': type!,
               'achieved': achieved!,
               'obtainable': obtainable!,
-              'challengeValue': (challengeValue! / 3600).toInt(),
-              'memberValue': (memberValue! / 3600).toInt(),
-              'coin': coin!
+              'challengeValue': challengeValue! ~/ 3600,
+              'memberValue': memberValue! ~/ 3600,
             };
           }
         }
@@ -624,12 +620,12 @@ class Progressbar extends StatelessWidget {
   final double barwidth;
 
   const Progressbar({
-    Key? key,
+    super.key,
     required this.clear,
     required this.memberValue,
     required this.challengeValue,
     required this.barwidth,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

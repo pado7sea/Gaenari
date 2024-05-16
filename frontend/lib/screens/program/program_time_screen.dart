@@ -4,12 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forsythia/models/programs/program_add.dart';
-import 'package:forsythia/screens/program/program_screen.dart';
 import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
-import 'package:forsythia/widgets/none_animation_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 
 class AddTimeProgramPage extends StatefulWidget {
@@ -131,20 +129,15 @@ class _AddTimeProgramPageState extends State<AddTimeProgramPage> {
             double time1 = double.tryParse(_time1.text) ?? 0;
             double time2 = double.tryParse(_time2.text) ?? 0;
 
-            if (time1 + time2 != null) {
-              ProgramAdd program = ProgramAdd(
-                programTitle: _programName.text,
-                programType: "T",
-                programTargetValue: time1 * 60 + time2 * 3600,
-              );
-              print(program.programTargetValue);
-              print(_time1.text + _time2.text);
-              await ProgramService.fetchProgramAdd(program);
-              Navigator.pop(context, "update");
-            } else {
-              // 사용자에게 유효한 숫자를 입력하라는 메시지 표시
-              // 예: ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("올바른 숫자를 입력하세요.")));
-            }
+            ProgramAdd program = ProgramAdd(
+              programTitle: _programName.text,
+              programType: "T",
+              programTargetValue: time1 * 60 + time2 * 3600,
+            );
+            print(program.programTargetValue);
+            print(_time1.text + _time2.text);
+            await ProgramService.fetchProgramAdd(program);
+            Navigator.pop(context, "update");
           }
         },
         child: Padding(
