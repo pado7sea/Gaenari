@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class RecordAboutChallengeDto {
     @Schema(description = "회원 ID")
-    private String memberId;
+    private String accountId;
 
     @Schema(description = "운동 기록 ID")
     private Long recordId;

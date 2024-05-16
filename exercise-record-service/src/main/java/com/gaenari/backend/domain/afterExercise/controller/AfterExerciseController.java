@@ -35,19 +35,19 @@ public class AfterExerciseController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "최종 운동 기록 저장 성공", content = @Content(schema = @Schema(implementation = Long.class))),
     })
-    public ResponseEntity<?> saveExerciseRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> saveExerciseRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                                 @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
 
         log.info("SaveExerciseRecordDto: {}", exerciseDto);
 
         // 프로그램 사용 횟수 1 증가
-        afterExerciseService.updateProgramUsageCount(memberId, exerciseDto);
+        afterExerciseService.updateProgramUsageCount(accountId, exerciseDto);
 
         // 운동 기록 저장 -> 미션
-        Long exerciseId = afterExerciseService.saveExerciseRecord(memberId, exerciseDto);
+        Long exerciseId = afterExerciseService.saveExerciseRecord(accountId, exerciseDto);
 
         // 누적 통계 업데이트 -> 업적
-        afterExerciseService.updateExerciseStatistics(memberId, exerciseDto);
+        afterExerciseService.updateExerciseStatistics(accountId, exerciseDto);
 
         return response.success(ResponseCode.EXERCISE_RECORD_SAVE_SUCCESS, exerciseId);
     }

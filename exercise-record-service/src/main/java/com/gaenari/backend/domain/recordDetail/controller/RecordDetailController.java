@@ -29,9 +29,9 @@ public class RecordDetailController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "기록 상세 조회 성공", content = @Content(schema = @Schema(implementation = RecordDetailDto.class))),
     })
-    public ResponseEntity<?> getDetailRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getDetailRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                              @Parameter(description = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId) {
-        RecordDetailDto recordDtos = recordDetailService.getExerciseRecordDetail(memberId, recordId);
+        RecordDetailDto recordDtos = recordDetailService.getExerciseRecordDetail(accountId, recordId);
 
         return response.success(ResponseCode.RECORD_DETAIL_FETCHED, recordDtos);
     }

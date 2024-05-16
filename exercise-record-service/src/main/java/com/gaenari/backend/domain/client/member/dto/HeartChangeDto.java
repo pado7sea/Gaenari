@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HeartChangeDto {
-    String memberEmail;
+    String accountId;
     Boolean isIncreased;
     Integer heart;
 }
