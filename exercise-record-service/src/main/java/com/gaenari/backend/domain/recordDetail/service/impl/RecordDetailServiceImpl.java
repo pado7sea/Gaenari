@@ -2,6 +2,7 @@ package com.gaenari.backend.domain.recordDetail.service.impl;
 
 import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
 import com.gaenari.backend.domain.client.challenge.dto.ChallengeDto;
+import com.gaenari.backend.domain.client.challenge.dto.RewardDto;
 import com.gaenari.backend.domain.client.challenge.dto.enumType.ChallengeCategory;
 import com.gaenari.backend.domain.client.program.ProgramServiceClient;
 import com.gaenari.backend.domain.client.program.dto.ProgramDetailAboutRecordDto;
@@ -59,8 +60,8 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .heartrates(buildHeartrateDto(record))
                 .trophies(extractTrophies(challenges))
                 .missions(extractMissions(challenges))
-                .attainableCoin(challenges.stream().mapToInt(ChallengeDto::getCoin).sum())
-                .attainableHeart(challenges.stream().mapToInt(ChallengeDto::getHeart).sum())
+                .attainableCoin(getAttainableRewards(record.getAccountId(), record.getId()).getCoin())
+                .attainableHeart(getAttainableRewards(record.getAccountId(), record.getId()).getHeart())
                 .build();
     }
 
@@ -176,7 +177,7 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .min() // 최소값 계산
                 .orElse(0); // 만약 값이 없을 경우 0 반환
 
-       return RecordDetailDto.HeartrateDto.builder()
+        return RecordDetailDto.HeartrateDto.builder()
                 .average(record.getAverageHeartRate())
                 .max(maxHeartbeat)
                 .min(minHeartbeat)
@@ -224,6 +225,14 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .toList();
     }
 
+    // 마이크로 서비스 간 통신을 통해 얻을 수 있는 코인, 애정도 값 가져오기
+    private RewardDto getAttainableRewards(String accountId, Long programId) {
+        ResponseEntity<GenericResponse<RewardDto>> response = challengeServiceClient.getAttainableRewards(accountId, programId);
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new ConnectFeignFailException();
+        }
+        return response.getBody().getData();
+    }
 
 
 }
