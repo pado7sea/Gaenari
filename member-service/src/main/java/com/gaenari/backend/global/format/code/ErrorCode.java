@@ -38,13 +38,12 @@ public enum ErrorCode {
 
     // 회원 관련 예외 처리
     SIGNUP_FAILED(HttpStatus.BAD_REQUEST, "회원 가입에 실패했습니다."),
-    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "이메일 혹은 패스워드 정보가 정확하지 않습니다."),
+    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "아이디 혹은 패스워드 정보가 정확하지 않습니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
 
-    EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다."),
-    EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 이메일입니다."),
+    EMAIL_DUPLICATED(HttpStatus.CONFLICT, "이미 사용 중인 아이디입니다."),
+    EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 아이디입니다."),
     INVALID_NICKNAME(HttpStatus.BAD_REQUEST, "유효하지 않은 닉네임입니다."),
-    EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "인증 이메일 전송에 실패했습니다."),
     AUTH_CODE_INVALID(HttpStatus.BAD_REQUEST, "인증 코드가 유효하지 않습니다."),
     OVER_TIME_AUTH_CODE(HttpStatus.BAD_REQUEST, "인증 가능시간을 초과하였습니다."),
     LACK_COIN(HttpStatus.CONFLICT, "소지하고 있는 코인이 부족합니다."),

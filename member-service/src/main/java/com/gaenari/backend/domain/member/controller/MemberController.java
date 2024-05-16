@@ -58,36 +58,36 @@ public class MemberController {
 
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 (삭제처리)")
     @DeleteMapping("/leave")
-    public ResponseEntity<?> withdrawMember(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail) {
+    public ResponseEntity<?> withdrawMember(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         // memberId를 사용하여 회원 탈퇴
-        memberService.deleteMember(memberEmail);
+        memberService.deleteMember(accountId);
         return response.success(ResponseCode.ACCOUNT_SECESSION_SUCCESS);
     }
 
     @Operation(summary = "회원 닉네임 수정", description = "회원 닉네임 수정")
     @PutMapping("/member/nickname")
-    public ResponseEntity<?> updateNick(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestParam String nickName){
+    public ResponseEntity<?> updateNick(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestParam String nickName){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        memberService.updateNick(memberEmail, nickName);
+        memberService.updateNick(accountId, nickName);
         return response.success(ResponseCode.MEMBER_NICKNAME_UPDATE_SUCCESS);
     }
 
     @Operation(summary = "회원 비밀번호 확인", description = "비밀번호 변경 전 비밀번호 확인 진행")
     @PostMapping("/member/password")
-    public ResponseEntity<?> checkPwd(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody String password){
+    public ResponseEntity<?> checkPwd(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody String password){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
 
-        Boolean isRight = memberService.checkPwd(memberEmail, password);
+        Boolean isRight = memberService.checkPwd(accountId, password);
         int num = 0;
         if(isRight){
             num = 1;
@@ -100,22 +100,22 @@ public class MemberController {
 
     @Operation(summary = "회원 비밀번호 수정", description = "회원 비밀번호 수정")
     @PutMapping("/member/password")
-    public ResponseEntity<?> updatePwd(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody String newPassword){
+    public ResponseEntity<?> updatePwd(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody String newPassword){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        memberService.updatePwd(memberEmail, newPassword);
+        memberService.updatePwd(accountId, newPassword);
         return response.success(ResponseCode.MEMBER_PWD_UPDATE_SUCCESS);
     }
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정")
     @PutMapping("/member/info")
-    public ResponseEntity<?> updateInfo(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody MemberUpdate memberUpdate){
+    public ResponseEntity<?> updateInfo(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody MemberUpdate memberUpdate){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        memberService.updateInfo(memberEmail, memberUpdate);
+        memberService.updateInfo(accountId, memberUpdate);
         return response.success(ResponseCode.MEMBER_INFO_UPDATE_SUCCESS);
     }
 
@@ -133,27 +133,27 @@ public class MemberController {
     }
 
     @Operation(summary = "아이디 중복체크", description = "회원가입시 아이디 중복체크")
-    @GetMapping("/dupl/email")
-    public ResponseEntity<?> duplEmail(@RequestParam String email){
-        Boolean isDuplEmail = memberService.duplEmailCheck(email);
-        if(isDuplEmail){
+    @GetMapping("/dupl/accountId")
+    public ResponseEntity<?> duplEmail(@RequestParam String accountId){
+        Boolean isDuplAccountId = memberService.duplAccountIdCheck(accountId);
+        if(isDuplAccountId){
             // true : 사용중
-            return ApiResponse.getInstance().success(ResponseCode.ALREADY_USE_EMAIL, isDuplEmail);
+            return ApiResponse.getInstance().success(ResponseCode.ALREADY_USE_EMAIL, isDuplAccountId);
         }else{
             // false : 사용가능한
-            return ApiResponse.getInstance().success(ResponseCode.AVAILABLE_EMAIL, isDuplEmail);
+            return ApiResponse.getInstance().success(ResponseCode.AVAILABLE_EMAIL, isDuplAccountId);
         }
     }
 
     @Operation(summary = "워치 연동인증번호 발급", description = "워치 연동인증번호 발급")
     @GetMapping("watch")
-    public ResponseEntity<?>  issuedAuthNum(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail){
+    public ResponseEntity<?>  issuedAuthNum(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
 
-        String authNum = memberService.issuedAuthCode(memberEmail);
+        String authNum = memberService.issuedAuthCode(accountId);
         return response.success(ResponseCode.ISSUED_WATCH_AUTH_CODE_SUCCESS, authNum);
     }
 
@@ -168,7 +168,7 @@ public class MemberController {
 
         // JWT 토큰 생성
         String token = Jwts.builder()
-                .subject(memberDetails.getEmail()) // memberEmail로 토큰 생성
+                .subject(memberDetails.getAccountId()) // memberAccountId로 토큰 생성
                 // 암호화 설정
                 .issuedAt(Date.from(now))
                 .signWith(secretKey)
@@ -192,13 +192,13 @@ public class MemberController {
     }
 
     @Operation(summary = "[Feign] 회원 체중 조회", description = "Feign API")
-    @GetMapping("/member/weight/{memberEmail}")
-    public ResponseEntity<?> getWeight(@PathVariable String memberEmail){
+    @GetMapping("/member/weight/{accountId}")
+    public ResponseEntity<?> getWeight(@PathVariable String accountId){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        int weight = memberService.getWeight(memberEmail);
+        int weight = memberService.getWeight(accountId);
         return response.success(ResponseCode.MEMBER_INFO_GET_SUCCESS, weight);
     }
 

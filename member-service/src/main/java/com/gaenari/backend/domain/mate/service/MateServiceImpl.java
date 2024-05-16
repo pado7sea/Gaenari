@@ -30,9 +30,9 @@ public class MateServiceImpl implements MateService{
     private final MyPetRepository myPetRepository;
 
     @Override // 친구신청
-    public void addMate(String memberEmail, Long mateId) {
+    public void addMate(String accountId, Long mateId) {
         // 발신 회원
-        Member existMember = memberRepository.findByEmail(memberEmail);
+        Member existMember = memberRepository.findByAccountId(accountId);
         // 수신 회원
         Member receiveMember = memberRepository.findById(mateId).orElseThrow(MemberNotFoundException::new);
         // 본인이 본인에게 친구신청할 수 없음

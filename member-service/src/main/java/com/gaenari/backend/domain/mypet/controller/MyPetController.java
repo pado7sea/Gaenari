@@ -28,49 +28,49 @@ public class MyPetController {
 
     @Operation(summary = "반려견 입양")
     @PostMapping("/adopt")
-    public ResponseEntity<?> adopt(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody Adopt adopt){
+    public ResponseEntity<?> adopt(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody Adopt adopt){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        myPetService.adopt(memberEmail, adopt);
+        myPetService.adopt(accountId, adopt);
         return response.success(ResponseCode.ADOPT_NEW_PET_SUCCESS);
     }
 
     @Operation(summary = "파트너 반려견 변경")
     @PutMapping("/partner/{dogId}")
-    public ResponseEntity<?> changePartner(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @PathVariable Long dogId){
+    public ResponseEntity<?> changePartner(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @PathVariable Long dogId){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        myPetService.changePartner(memberEmail, dogId);
+        myPetService.changePartner(accountId, dogId);
         return response.success(ResponseCode.PARTNER_PET_CHANGE_SUCCESS);
     }
 
     @Operation(summary = "파트너 반려견 조회")
     @GetMapping("/partner")
-    public ResponseEntity<?> getPartner(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail){
+    public ResponseEntity<?> getPartner(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        FriendPetDetail friendPetDetail = myPetService.getPartner(memberEmail);
+        FriendPetDetail friendPetDetail = myPetService.getPartner(accountId);
         return response.success(ResponseCode.PARTNER_PET_GET_SUCCESS, friendPetDetail);
     }
 
     @Operation(summary = "반려견 애정도 증가")
     @PostMapping("/heart")
-    public ResponseEntity<?> increaseAffection(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody IncreaseAffection increaseAffection){
+    public ResponseEntity<?> increaseAffection(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody IncreaseAffection increaseAffection){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         // 애정도가 0이상이여야함
         if(increaseAffection.getAffection() <= 0){
             return response.error(ErrorCode.NOT_REQUEST_AFFECTION.getMessage());
         }
-        myPetService.increaseAffection(memberEmail, increaseAffection);
+        myPetService.increaseAffection(accountId, increaseAffection);
         return response.success(ResponseCode.PARTNER_PET_AFFECTION_INCREASE_SUCCESS);
     }
 
@@ -78,7 +78,7 @@ public class MyPetController {
     @PutMapping("/heart")
     public ResponseEntity<?> changeHeart(@RequestBody HeartChange heartChange){
         // memberId가 null이면 인증 실패
-        if (heartChange.getMemberEmail() == null) {
+        if (heartChange.getAccountId() == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         myPetService.changeHeart(heartChange);
@@ -86,13 +86,13 @@ public class MyPetController {
     }
 
     @Operation(summary = "[Feign] 반려견 전체 조회", description = "Feign API")
-    @GetMapping("/{memberEmail}")
-    public ResponseEntity<?> getPets(@PathVariable String memberEmail){
+    @GetMapping("/{accountId}")
+    public ResponseEntity<?> getPets(@PathVariable String accountId){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        List<Pets> petsList = myPetService.getPets(memberEmail);
+        List<Pets> petsList = myPetService.getPets(accountId);
         return response.success(ResponseCode.ALL_PET_GET_SUCCESS, petsList);
     }
 
