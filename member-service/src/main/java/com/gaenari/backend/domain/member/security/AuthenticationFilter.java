@@ -52,7 +52,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            creds.getEmail(),
+                            creds.getAccountId(),
                             creds.getPassword(),
                             new ArrayList<>()));
         } catch (IOException e) {
@@ -79,7 +79,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         // JWT 토큰 생성
         String token = Jwts.builder()
-                .subject(memberDetails.getEmail()) // memberEmail로 토큰 생성
+                .subject(memberDetails.getAccountId()) // memberEmail로 토큰 생성
                 // 만료 기한 설정
                 .expiration(
                         Date.from(now.plusMillis(Long.parseLong(env.getProperty("token.expiration_time")))))
