@@ -121,6 +121,31 @@ public class RewardController {
         }
     }
 
+    @Operation(summary = "[Feign] 해당 운동 기록 관련 받을 수 있는 코인, 애정도 조회", description = "운동 기록 하나로 달성한 보상 조회")
+    @GetMapping("/feign/{accountId}/record/{recordId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "[Feign] 해당 운동 기록 관련 받을 수 있는 코인, 애정도 조회", content = @Content(schema = @Schema(implementation = RewardDto.class)))
+    })
+    public ResponseEntity<?> getAttainableRewards(@Parameter(description = "회원 ID") @PathVariable String accountId, @Parameter(description = "운동 기록 ID") @PathVariable Long recordId) {
+        // 운동 기록 ID로 운동 기록에 연결되어 있는 도전과제 ID 리스트 찾기
+        List<Integer> challengeIds = rewardService.getChallengeIdsByRecordId(accountId, recordId);
+
+        Integer coin = 0;
+        Integer heart = 0;
+
+        // 도전 과제 ID로 받을 수 있는 보상 찾기
+        for (Integer challengeId : challengeIds) {
+            RewardDto rewardDto = rewardService.getAttainableReward(accountId, challengeId);
+            if (rewardDto != null) {
+                coin += rewardDto.getCoin();
+                heart += rewardDto.getHeart();
+            }
+        }
+
+        // 받을 수 있는 코인과 애정도를 반환
+        return response.success(ResponseCode.REWARD_RECORD_RECEIVE_SUCCESS, RewardDto.builder().accountId(accountId).coin(coin).heart(heart).build());
+    }
+
     @Operation(summary = "도전과제 보상 받기", description = "개별 도전과제 보상 받기")
     @PutMapping("/challenge/{challengeId}")
     @ApiResponses(value = {
