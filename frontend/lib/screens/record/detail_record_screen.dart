@@ -1,11 +1,19 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:forsythia/models/challenges/reward.dart';
 import 'package:forsythia/models/records/record_detail.dart';
+import 'package:forsythia/models/users/login_user.dart';
+import 'package:forsythia/screens/challenge/challenge_screen.dart';
+import 'package:forsythia/service/challenge_service.dart';
 import 'package:forsythia/service/record_service.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
+import 'package:forsythia/widgets/none_animation_route.dart';
+import 'package:forsythia/widgets/slide_page_route.dart';
 import 'package:forsythia/widgets/small_app_bar.dart';
 
 class DetailRecordScreen extends StatefulWidget {
@@ -90,17 +98,22 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       }
     });
     print('갹ㄴ야ㅐㅓㅁㄴ갸ㅐㅓ ㅑㅐㅔ;ㅁ저ㅐ;');
-    print(recordDetail.date);
-    print(widget.recordId);
-    print(Typelist);
-    // print(recordDetail.record?.dailyRecords?[0]?.recordDist);
-    print(recordDetail.program?.programTitle ?? 'N/A');
-    print(recordDetail.record!.distance);
-    print(Pacelist);
-    print(Heartlist);
-    print(recordDetail.trophies);
-    print(missionDList);
-    print(missionTList);
+    print(recordDetail.exerciseId);
+  }
+
+  void RewardData() async {
+    Reward reward =
+        await ChallengeService.fetchRewardRecord(recordDetail.exerciseId);
+    SecureStorageService storageService = SecureStorageService();
+    LoginInfo? info = await storageService.getLoginInfo();
+    info?.coin = (info.coin! + (reward.data!.coin!));
+    storageService.saveLoginInfo(info!);
+    Fluttertoast.showToast(
+      msg: '${reward.data!.coin!}개의 코인과 \n ${reward.data!.heart!}의 애정도를 얻었어요!',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: myYellow,
+    );
   }
 
   @override
@@ -139,7 +152,9 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                             ),
                           )
                         : SizedBox(height: 20),
-                    _mission()
+                    _mission(),
+                    SizedBox(height: 30),
+                    _reward()
                   ],
                 ),
               ),
@@ -467,328 +482,394 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   }
 
   Widget _mission() {
-    return Container(
-      decoration: BoxDecoration(
-          color: myWhiteGreen, borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(30, 20, 20, 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text16(text: '  미션', bold: true),
-                    IconButton(
-                      icon: Icon(Icons.info_outline), // 정보를 나타내는 아이콘으로 변경 가능
-                      onPressed: () {
-                        showDialog(
-                          context: context, // 현재 컨텍스트를 전달합니다.
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: myBackground,
-                              title: Text('미션'), // 다이얼로그 제목
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Column(children: [
-                                    Row(
-                                      children: [
-                                        Text16(text: '1KM 달성 : 100'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '2'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text16(text: '3KM 달성 : 200'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '3'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text16(text: '5KM 달성 : 100'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '5'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text16(text: '10KM 달성 : 700'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '10'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text16(text: '10분 달성 : 100'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '2'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text16(text: '30분 달성 : 200'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '3'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text16(text: '60분 달성 : 100'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '5'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text16(text: '100분 달성 : 700'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_coin.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high),
-                                        Text16(text: '10'),
-                                        Image(
-                                            image: AssetImage(
-                                                'assets/color_icons/icon_love.png'),
-                                            width: 18,
-                                            height: 18,
-                                            fit: BoxFit.cover,
-                                            filterQuality: FilterQuality.high)
-                                      ],
-                                    ),
-                                  ])
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context)
+            .push(SlidePageRoute(nextPage: ChallengeScreen(mission: true)));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            color: myWhiteGreen, borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(30, 20, 20, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text16(text: '  미션', bold: true),
+                      IconButton(
+                        icon: Icon(Icons.info_outline), // 정보를 나타내는 아이콘으로 변경 가능
+                        onPressed: () {
+                          showDialog(
+                            context: context, // 현재 컨텍스트를 전달합니다.
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                titlePadding:
+                                    EdgeInsets.fromLTRB(30, 30, 0, 10),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(30, 20, 30, 10),
+                                backgroundColor: myBackground,
+                                title: Text('미션 보상'), // 다이얼로그 제목
+                                content: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 30),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Row(
+                                        children: [
+                                          Text16(text: '1KM 달성 : 100  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  2  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text16(text: '3KM 달성 : 200  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  3  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text16(text: '5KM 달성 : 100  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  5  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text16(text: '10KM 달성 : 700  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  10  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text16(text: '10분 달성 : 100  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  2  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text16(text: '30분 달성 : 200  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  3  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text16(text: '60분 달성 : 100  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  5  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Text16(text: '100분 달성 : 700  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_coin.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality:
+                                                  FilterQuality.high),
+                                          Text16(text: '  10  '),
+                                          Image(
+                                              image: AssetImage(
+                                                  'assets/color_icons/icon_love.png'),
+                                              width: 18,
+                                              height: 18,
+                                              fit: BoxFit.cover,
+                                              filterQuality: FilterQuality.high)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(); // 다이얼로그 닫기
+                                      },
+                                      child: Text16(
+                                        text: '닫기',
+                                        textColor: myBlack,
+                                      ) // 닫기 버튼 텍스트
+                                      ),
                                 ],
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop(); // 다이얼로그 닫기
-                                    },
-                                    child: Text16(
-                                      text: '닫기',
-                                      textColor: myBlack,
-                                    ) // 닫기 버튼 텍스트
-                                    ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xffBFC2C8).withOpacity(0.25),
-                        blurRadius: 15,
-                        offset: Offset(0, 10),
+                              );
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
-                    child: Row(
-                      children: [
-                        Image(
-                          image: AssetImage('assets/emoji/heart.png'),
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.cover,
-                        ),
-                        Text16(
-                            text: ' +${recordDetail.attainableHeart}',
-                            bold: true),
-                        SizedBox(width: 10),
-                        Image(
-                          image: AssetImage('assets/emoji/money.png'),
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.cover,
-                        ),
-                        Text16(
-                            text: ' +${recordDetail.attainableCoin}',
-                            bold: true)
-                      ],
-                    ),
-                  ),
-                )
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(missionDList.length, (index) {
-                final key = missionDList.keys.elementAt(index);
-                final done = missionDList[key] ?? false;
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(missionDList.length, (index) {
+                  final key = missionDList.keys.elementAt(index);
+                  final done = missionDList[key] ?? false;
 
-                return MissionCircle(
-                  done: done,
-                  text: '$key' + 'km',
-                );
-              }),
+                  return MissionCircle(
+                    done: done,
+                    text: '$key' + 'km',
+                  );
+                }),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(missionTList.length, (index) {
-                final key = missionTList.keys.elementAt(index);
-                final done = missionTList[key] ?? false;
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(missionTList.length, (index) {
+                  final key = missionTList.keys.elementAt(index);
+                  final done = missionTList[key] ?? false;
 
-                return MissionCircle(
-                  done: done,
-                  text: '$key분',
-                );
-              }),
-            ),
-          )
-        ],
+                  return MissionCircle(
+                    done: done,
+                    text: '$key분',
+                  );
+                }),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _trophy(int index) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Container(
-        height: 55,
-        decoration: myTrophyBoxDecoration,
+  Widget _reward() {
+    return GestureDetector(
+        onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image(
-                image: AssetImage('assets/emoji/trophy.png'),
-                width: 20,
-                height: 20,
-                fit: BoxFit.cover,
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(children: [
+            (recordDetail.attainableCoin == 0 &&
+                    recordDetail.attainableHeart == 0)
+                ? SizedBox()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text16(
+                          text: '${recordDetail.attainableHeart}  ',
+                          bold: true),
+                      Image(
+                        image: AssetImage('assets/color_icons/icon_love.png'),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.cover,
+                        filterQuality: FilterQuality.high,
+                      ),
+                      SizedBox(width: 10),
+                      Text16(
+                          text: '${recordDetail.attainableCoin}  ', bold: true),
+                      Image(
+                        image: AssetImage('assets/color_icons/icon_coin.png'),
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.cover,
+                        filterQuality: FilterQuality.high,
+                      ),
+                      SizedBox(width: 5),
+                      Text16(text: '를 받을 수 있어요!', bold: true),
+                    ],
+                  ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                RewardData();
+                DetailRecordList();
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    NonePageRoute(
+                        nextPage: DetailRecordScreen(
+                            recordId: recordDetail.exerciseId)));
+              },
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                minimumSize: Size(MediaQuery.of(context).size.width - 50, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                backgroundColor: (recordDetail.attainableCoin == 0 &&
+                        recordDetail.attainableHeart == 0)
+                    ? myGrey
+                    : myYellow, // 조건부로 배경색 설정
               ),
-              SizedBox(width: 10),
-              Text16(
-                text: recordDetail.trophies![index].type == 'D'
-                    ? '누적 ${recordDetail.trophies![index].value}km 달성'
-                    : '누적 ${recordDetail.trophies![index].value}시간 달성',
-                bold: true,
+              child: Text16(
+                text: (recordDetail.attainableCoin == 0 &&
+                        recordDetail.attainableHeart == 0)
+                    ? '이미 수령한 보상'
+                    : '운동 보상 받기',
               ),
-              SizedBox(width: 10),
-              Image(
-                image: AssetImage('assets/emoji/trophy.png'),
-                width: 20,
-                height: 20,
-                fit: BoxFit.cover,
+            )
+          ]),
+        ));
+  }
+
+  Widget _trophy(int index) {
+    return GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              SlidePageRoute(
+                  nextPage: ChallengeScreen(
+                mission: false,
+              )));
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Container(
+            height: 55,
+            decoration: myTrophyBoxDecoration,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image(
+                    image: AssetImage('assets/emoji/trophy.png'),
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 10),
+                  Text16(
+                    text: recordDetail.trophies![index].type == 'D'
+                        ? '누적 ${recordDetail.trophies![index].value}km 달성'
+                        : '누적 ${recordDetail.trophies![index].value}시간 달성',
+                    bold: true,
+                  ),
+                  SizedBox(width: 10),
+                  Image(
+                    image: AssetImage('assets/emoji/trophy.png'),
+                    width: 20,
+                    height: 20,
+                    fit: BoxFit.cover,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
 

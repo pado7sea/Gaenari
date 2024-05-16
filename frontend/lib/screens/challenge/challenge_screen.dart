@@ -15,15 +15,15 @@ import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/large_app_bar.dart';
 import 'package:forsythia/widgets/none_animation_route.dart';
 
-class ChallengePage extends StatefulWidget {
+class ChallengeScreen extends StatefulWidget {
   bool mission;
-  ChallengePage({super.key, required this.mission});
+  ChallengeScreen({super.key, required this.mission});
 
   @override
-  State<ChallengePage> createState() => _ChallengePageState();
+  State<ChallengeScreen> createState() => _ChallengePageState();
 }
 
-class _ChallengePageState extends State<ChallengePage> {
+class _ChallengePageState extends State<ChallengeScreen> {
   late int challengeId = 0;
   // bool trophyreword = false; // 보상 받을게 있는지
   // bool missionreword = false; // 보상 받을게 있는지
@@ -699,7 +699,7 @@ class _ButtonState extends State<Button> {
               // Navigator.push(
               //     context,
               //     NonePageRoute(
-              //         nextPage: ChallengePage(
+              //         nextPage: ChallengeScreen(
               //       mission: false,
               //     )));
             },
@@ -822,7 +822,7 @@ class _MissionBtnState extends State<MissionBtn> {
             // Navigator.push(
             //     context,
             //     NonePageRoute(
-            //         nextPage: ChallengePage(
+            //         nextPage: ChallengeScreen(
             //       mission: true,
             //     )));
           }

@@ -242,7 +242,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                             onTap: () {
                               Navigator.of(context)
                                   .push(SlidePageRoute(
-                                      nextPage: ChallengePage(
+                                      nextPage: ChallengeScreen(
                                 mission: false,
                               )))
                                   .then((result) {
