@@ -695,13 +695,13 @@ class _ButtonState extends State<Button> {
                 gravity: ToastGravity.CENTER,
                 backgroundColor: myYellow,
               );
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  NonePageRoute(
-                      nextPage: ChallengePage(
-                    mission: false,
-                  )));
+              // Navigator.pop(context, "update");
+              // Navigator.push(
+              //     context,
+              //     NonePageRoute(
+              //         nextPage: ChallengePage(
+              //       mission: false,
+              //     )));
             },
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.zero,
@@ -818,13 +818,13 @@ class _MissionBtnState extends State<MissionBtn> {
               backgroundColor: myYellow,
             );
 
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                NonePageRoute(
-                    nextPage: ChallengePage(
-                  mission: true,
-                )));
+            // Navigator.pop(context, "update");
+            // Navigator.push(
+            //     context,
+            //     NonePageRoute(
+            //         nextPage: ChallengePage(
+            //       mission: true,
+            //     )));
           }
         },
         child: Container(

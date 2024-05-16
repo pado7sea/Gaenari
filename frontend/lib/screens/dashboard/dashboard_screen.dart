@@ -240,10 +240,18 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(SlidePageRoute(
-                                  nextPage: ChallengePage(
+                              Navigator.of(context)
+                                  .push(SlidePageRoute(
+                                      nextPage: ChallengePage(
                                 mission: false,
-                              )));
+                              )))
+                                  .then((result) {
+                                // 돌아올 때 데이터를 수신하고 처리
+                                if (result == "update") {
+                                  // 리스트 업데이트 메서드 호출
+                                  _getRewardNotice();
+                                }
+                              });
                             },
                             child: Container(
                               height: 90,
