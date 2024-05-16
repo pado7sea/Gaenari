@@ -66,10 +66,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
 //        String userName = ((User)auth.getPrincipal()).getUsername();
-        String memberEmail = ((User)auth.getPrincipal()).getUsername();
+        String accountId = ((User)auth.getPrincipal()).getUsername();
 
 //        UserDto userDetails = memberService.getUserDetailsByEmail(userName); // userName = email
-        MemberDto memberDetails = memberService.getMemberDetailsByEmail(memberEmail);
+        MemberDto memberDetails = memberService.getMemberDetailsByEmail(accountId);
 
 
         byte[] secretKeyBytes = Base64.getEncoder().encode(env.getProperty("token.secret").getBytes());
@@ -79,7 +79,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         // JWT 토큰 생성
         String token = Jwts.builder()
-                .subject(memberDetails.getAccountId()) // memberEmail로 토큰 생성
+                .subject(memberDetails.getAccountId()) // accountId로 토큰 생성
                 // 만료 기한 설정
                 .expiration(
                         Date.from(now.plusMillis(Long.parseLong(env.getProperty("token.expiration_time")))))

@@ -25,7 +25,7 @@ public class CoinController {
     @Operation(summary = "회원보유코인 조회", description = "회원보유코인 조회")
     @GetMapping("")
     public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -38,7 +38,7 @@ public class CoinController {
     public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                      @PathVariable(name = "year") int year,
                                      @PathVariable(name = "month") int month) {
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -50,7 +50,7 @@ public class CoinController {
     @PostMapping("")
     public ResponseEntity<?> createCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                         @RequestBody MemberCoinIncrease memberCoinIncrease){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -68,7 +68,7 @@ public class CoinController {
     @Operation(summary = "[Feign] 회원 코인 증/감", description = "Feign API")
     @PutMapping("")
     public ResponseEntity<?> updateCoin(@RequestBody MemberCoin memberCoin){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (memberCoin.getAccountId() == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -77,9 +77,9 @@ public class CoinController {
     }
 
     @Operation(summary = "[Feign] 회원보유코인 조회", description = "Feign API")
-    @GetMapping("/{memberEmail}")
+    @GetMapping("/{accountId}")
     public ResponseEntity<?> getMemberCoin(@PathVariable String accountId) {
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }

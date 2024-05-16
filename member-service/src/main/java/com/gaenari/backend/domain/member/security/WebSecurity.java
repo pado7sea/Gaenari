@@ -72,10 +72,10 @@ public class WebSecurity {
                     .invalidateHttpSession(true) // HTTP 세션 무효화
                     .deleteCookies("JSESSIONID") // 쿠키 삭제
                     .logoutSuccessHandler((request, response, authentication) -> {
-                        // 헤더에서 memberId 추출
-                        String memberId = request.getHeader("memberId");
+                        // 헤더에서 accountId 추출
+                        String accountId = request.getHeader("memberId");
 
-                        if(memberId == null) {
+                        if(accountId == null) {
                             ApiResponse apiResponse = ApiResponse.getInstance();
                             ResponseEntity<?> responseEntity = apiResponse.error(ErrorCode.AUTHENTICATION_FAILED);
                             response.setCharacterEncoding("UTF-8");
