@@ -178,7 +178,7 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
                 onTap: () {
                   Navigator.of(context)
                       .push(SlidePageRoute(nextPage: InventoryScreen()))
-                      .then((value) => getItem());
+                      .then(getItem());
                 },
                 child: Row(
                   mainAxisSize:
@@ -206,7 +206,7 @@ class _DogHouseScreenState extends State<DogHouseScreen> {
                     onTap: () {
                       Navigator.of(context)
                           .push(SlidePageRoute(nextPage: ItemScreen()))
-                          .then((value) => getItem());
+                          .then(getItem());
                     },
                     child: Row(
                       mainAxisSize:
