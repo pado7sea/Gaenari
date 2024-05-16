@@ -24,8 +24,8 @@ public class StatisticServiceImpl implements StatisticService {
 
     // 저장되어있는 회원의 누적 통계 값 조회
     @Override
-    public TotalStatisticDto getTotalStatistics(String memberId) {
-        Statistic statistic = statisticRepository.findByMemberId(memberId);
+    public TotalStatisticDto getTotalStatistics(String accountId) {
+        Statistic statistic = statisticRepository.findByAccountId(accountId);
 
         // 데이터가 없는 경우 빈 객체 반환
         if (statistic == null) {
@@ -51,11 +51,11 @@ public class StatisticServiceImpl implements StatisticService {
 
     // 월간 통계 조회
     @Override
-    public MonthStatisticDto getMonthlyExerciseStatistics(String memberId, int year, int month) {
+    public MonthStatisticDto getMonthlyExerciseStatistics(String accountId, int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(startDate),
+        List<Record> records = recordRepository.findByAccountIdAndDateBetween(accountId, atStartOfDay(startDate),
                 atEndOfDay(endDate).plusSeconds(1));
 
         return calculatePeriodStatistics(records, year, month);
@@ -86,12 +86,12 @@ public class StatisticServiceImpl implements StatisticService {
 
     // 주간 통계 조회
     @Override
-    public List<StatisticDto> getWeeklyExerciseStatistics(String memberId, int year, int month, int day) {
+    public List<StatisticDto> getWeeklyExerciseStatistics(String accountId, int year, int month, int day) {
         LocalDate baseDate = LocalDate.of(year, month, day);
         LocalDate startDate = baseDate.with(ChronoField.DAY_OF_WEEK, 1);  // 주의 시작 (일요일)
         LocalDate endDate = startDate.plusDays(6);  // 주의 끝 (토요일)
 
-        List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(startDate),
+        List<Record> records = recordRepository.findByAccountIdAndDateBetween(accountId, atStartOfDay(startDate),
                 atEndOfDay(endDate).plusSeconds(1));
 
         List<StatisticDto> weeklyStatistics = new ArrayList<>();

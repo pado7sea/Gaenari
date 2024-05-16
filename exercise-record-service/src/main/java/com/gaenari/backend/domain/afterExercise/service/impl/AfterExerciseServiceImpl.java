@@ -42,7 +42,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 프로그램 사용 횟수 업데이트
     @Override
-    public void updateProgramUsageCount(String memberId, SaveExerciseRecordDto exerciseDto) {
+    public void updateProgramUsageCount(String accountId, SaveExerciseRecordDto exerciseDto) {
         if(validateProgramInfo(exerciseDto)) {
           programServiceClient.updateProgramUsageCount(exerciseDto.getProgram().getProgramId()).getBody().getData();
         }
@@ -63,30 +63,30 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 운동 후 기록 저장 메서드
     @Override
-    public Long saveExerciseRecord(String memberId, SaveExerciseRecordDto exerciseDto) {
+    public Long saveExerciseRecord(String accountId, SaveExerciseRecordDto exerciseDto) {
         validateIntervalInfo(exerciseDto);
-        Record record = createRecordFromDto(memberId, exerciseDto);
+        Record record = createRecordFromDto(accountId, exerciseDto);
         recordRepository.save(record);
         return record.getId();
     }
 
-    private Record createRecordFromDto(String memberId, SaveExerciseRecordDto exerciseDto) {
+    private Record createRecordFromDto(String accountId, SaveExerciseRecordDto exerciseDto) {
         if (exerciseDto.getExerciseType() == ExerciseType.P) {
             ProgramDetailAboutRecordDto programDetail = fetchProgramDetail(exerciseDto.getProgram().getProgramId());
         }
 
-        return buildRecord(memberId, exerciseDto);
+        return buildRecord(accountId, exerciseDto);
     }
 
-    private Record buildRecord(String memberId, SaveExerciseRecordDto exerciseDto) {
-        List<IntervalRangeRecord> ranges = buildIntervalRangeRecords(memberId, exerciseDto);
+    private Record buildRecord(String accountId, SaveExerciseRecordDto exerciseDto) {
+        List<IntervalRangeRecord> ranges = buildIntervalRangeRecords(accountId, exerciseDto);
         List<Moment> moments = buildMoments(exerciseDto);
-        List<RecordChallenge> recordChallenges = buildRecordChallenges(memberId, exerciseDto);
+        List<RecordChallenge> recordChallenges = buildRecordChallenges(accountId, exerciseDto);
         Boolean isProgram = validateProgramInfo(exerciseDto);
 
         // Record 객체 생성
         Record record = Record.builder()
-                .memberId(memberId)
+                .accountId(accountId)
                 .exerciseType(exerciseDto.getExerciseType())
                 .programType(exerciseDto.getProgramType())
                 .programId(isProgram ? exerciseDto.getProgram().getProgramId() : null)
@@ -95,7 +95,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
                 .distance(exerciseDto.getRecord().getDistance())
                 .averagePace(exerciseDto.getSpeeds().getAverage() != 0 ? (3600 / exerciseDto.getSpeeds().getAverage()) : 0)
                 .averageHeartRate(exerciseDto.getHeartrates().getAverage())
-                .cal(calculateCal(memberId, exerciseDto))
+                .cal(calculateCal(accountId, exerciseDto))
                 .isFinished(isProgram ? determineFinish(exerciseDto) : false) // 완주 여부
                 .ranges(ranges)
                 .moments(moments)
@@ -111,12 +111,12 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     }
 
     // DTO -> Interval Range Record 정보 설정
-    private List<IntervalRangeRecord> buildIntervalRangeRecords(String memberId, SaveExerciseRecordDto exerciseDto) {
+    private List<IntervalRangeRecord> buildIntervalRangeRecords(String accountId, SaveExerciseRecordDto exerciseDto) {
         List<IntervalRangeRecord> ranges = new ArrayList<>();
         if (exerciseDto.getExerciseType() == ExerciseType.P && exerciseDto.getProgram().getIntervalInfo() != null) {
             exerciseDto.getProgram().getIntervalInfo().getRanges().forEach(rangeDto ->
                     ranges.add(IntervalRangeRecord.builder()
-                            .memberId(memberId)
+                            .accountId(accountId)
                             .isRunning(rangeDto.getIsRunning())
                             .time(rangeDto.getTime())
                             .speed(rangeDto.getSpeed())
@@ -144,16 +144,16 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     }
 
     // DTO -> RecordChallenge 정보 설정
-    private List<RecordChallenge> buildRecordChallenges(String memberId, SaveExerciseRecordDto exerciseDto) {
+    private List<RecordChallenge> buildRecordChallenges(String accountId, SaveExerciseRecordDto exerciseDto) {
         List<RecordChallenge> recordChallenges = new ArrayList<>();
         if (exerciseDto.getRecord().getDistance() > 0) {
             RecordAboutChallengeDto challengeDto = RecordAboutChallengeDto.builder()
-                    .memberId(memberId)
+                    .accountId(accountId)
                     .recordId(null)
                     .distance(exerciseDto.getRecord().getDistance())
                     .time(exerciseDto.getRecord().getTime())
-                    .statisticDistance(statisticRepository.findByMemberId(memberId).getDist())
-                    .statisticTime(statisticRepository.findByMemberId(memberId).getTime())
+                    .statisticDistance(statisticRepository.findByAccountId(accountId).getDist())
+                    .statisticTime(statisticRepository.findByAccountId(accountId).getTime())
                     .build();
 
             // 마이크로 서비스간 통신을 통해 도전과제(아이디) 가져오기
@@ -186,18 +186,18 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     }
 
     // 칼로리 계산 메서드(메켈스식(Metcalfe's Law))
-    private Double calculateCal(String memberId, SaveExerciseRecordDto exerciseDto) {
+    private Double calculateCal(String accountId, SaveExerciseRecordDto exerciseDto) {
         double timeInHours = exerciseDto.getRecord().getTime() / 3600.0; // 초 단위를 시간 단위로 변환
         double speedInKmPerHour = exerciseDto.getSpeeds().getAverage(); // 평균 속도(km/h)
         double met = speedInKmPerHour * 0.1 + 3.5;
-        double weight = fetchMemberWeight(memberId);
+        double weight = fetchMemberWeight(accountId);
 
         return met * weight * timeInHours; // 칼로리 계산
     }
 
     // 마이크로 서비스 간 통신을 통해 체중 가져오기
-    private double fetchMemberWeight(String memberId) {
-        ResponseEntity<GenericResponse<Integer>> response = memberServiceClient.getWeight(memberId);
+    private double fetchMemberWeight(String accountId) {
+        ResponseEntity<GenericResponse<Integer>> response = memberServiceClient.getWeight(accountId);
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new ConnectFeignFailException();
         }
@@ -252,10 +252,10 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
     // 운동 통계 업데이트
     @Override
-    public TotalStatisticDto updateExerciseStatistics(String memberId, SaveExerciseRecordDto exerciseDto) {
+    public TotalStatisticDto updateExerciseStatistics(String accountId, SaveExerciseRecordDto exerciseDto) {
         // 누적 통계를 찾고, 없다면 첫 기록으로 간주하여 새로운 통계 객체 생성
-        Statistic currentStats = statisticRepository.findByMemberId(memberId);
-        if (currentStats == null) currentStats = createInitialStatistic(memberId);
+        Statistic currentStats = statisticRepository.findByAccountId(accountId);
+        if (currentStats == null) currentStats = createInitialStatistic(accountId);
 
         // 통계 업데이트
         updateStatisticsWithExerciseData(currentStats, exerciseDto);
@@ -268,10 +268,10 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     }
 
     // 초기 통계 생성 메서드
-    private Statistic createInitialStatistic(String memberId) {
+    private Statistic createInitialStatistic(String accountId) {
         // 첫 기록을 위한 새로운 Statistic 객체 생성
         return Statistic.builder()
-                .memberId(memberId)
+                .accountId(accountId)
                 .time(0.0)
                 .dist(0.0)
                 .cal(0.0)
@@ -287,7 +287,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         double averagePace = speed == 0 ? 0 : 3600 / speed;
         stats.setDist(stats.getDist() + exerciseDto.getRecord().getDistance());
         stats.setTime(stats.getTime() + exerciseDto.getRecord().getTime());
-        stats.setCal(stats.getCal() + calculateCal(stats.getMemberId(), exerciseDto));
+        stats.setCal(stats.getCal() + calculateCal(stats.getAccountId(), exerciseDto));
         double newAveragePace = (stats.getPace() * stats.getCount() + averagePace) / (stats.getCount() + 1);
         stats.setPace(newAveragePace);
         stats.setCount(stats.getCount() + 1);

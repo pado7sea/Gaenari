@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 public interface MemberServiceClient {
 
     // 회원 체중 조회
-    @GetMapping("/member/weight/{memberEmail}")
-    ResponseEntity<GenericResponse<Integer>> getWeight(@PathVariable(name = "memberEmail") String memberId);
+    @GetMapping("/member/weight/{accountId}")
+    ResponseEntity<GenericResponse<Integer>> getWeight(@PathVariable(name = "accountId") String accountId);
 
     // 파트너 펫 애정도 업데이트
     @PutMapping("/pet/heart")
