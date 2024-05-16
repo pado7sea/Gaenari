@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HeartChangeDto {
-    @Schema(description = "회원 이메일")
-    private String memberEmail;
+    @Schema(description = "회원 아이디")
+    private String accountId;
 
     @Schema(description = "하트 증가 여부")
     private Boolean isIncreased;

@@ -32,8 +32,8 @@ public class MemberChallengeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 모든 업적 조회 성공", content = @Content(schema = @Schema(implementation = MemberTrophyDto.class)))
     })
-    public ResponseEntity<?> getAllMemberTrophies(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
-        List<MemberTrophyDto> trophyDtos = memberChallengeService.getAllMemberTrophies(memberId);
+    public ResponseEntity<?> getAllMemberTrophies(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
+        List<MemberTrophyDto> trophyDtos = memberChallengeService.getAllMemberTrophies(accountId);
 
         return response.success(ResponseCode.ACHIEVED_TROPHY_FETCHED, trophyDtos);
     }
@@ -43,8 +43,8 @@ public class MemberChallengeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 모든 미션 조회 성공", content = @Content(schema = @Schema(implementation = MemberMissionDto.class)))
     })
-    public ResponseEntity<?> getAllMemberMissions(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
-        List<MemberMissionDto> missionDtos = memberChallengeService.getAllMemberMissions(memberId);
+    public ResponseEntity<?> getAllMemberMissions(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
+        List<MemberMissionDto> missionDtos = memberChallengeService.getAllMemberMissions(accountId);
 
         return response.success(ResponseCode.ACHIEVED_MISSION_FETCHED, missionDtos);
     }
@@ -54,8 +54,8 @@ public class MemberChallengeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 달성 업적 조회 성공", content = @Content(schema = @Schema(implementation = MemberTrophyDto.class)))
     })
-    public ResponseEntity<?> getMemberTrophies(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
-        List<MemberTrophyDto> trophyDtos = memberChallengeService.getMemberTrophies(memberId);
+    public ResponseEntity<?> getMemberTrophies(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
+        List<MemberTrophyDto> trophyDtos = memberChallengeService.getMemberTrophies(accountId);
 
         return response.success(ResponseCode.ACHIEVED_TROPHY_FETCHED, trophyDtos);
     }
@@ -65,8 +65,8 @@ public class MemberChallengeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 달성 미션 조회 성공", content = @Content(schema = @Schema(implementation = MemberMissionDto.class)))
     })
-    public ResponseEntity<?> getMemberMissions(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
-        List<MemberMissionDto> missionDtos = memberChallengeService.getMemberMissions(memberId);
+    public ResponseEntity<?> getMemberMissions(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
+        List<MemberMissionDto> missionDtos = memberChallengeService.getMemberMissions(accountId);
 
         return response.success(ResponseCode.ACHIEVED_MISSION_FETCHED, missionDtos);
     }
