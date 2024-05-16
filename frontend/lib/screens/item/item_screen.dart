@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:forsythia/models/inventory/item_purchase.dart';
 import 'package:forsythia/models/users/login_user.dart';
+import 'package:forsythia/screens/inventory/inventory_info.dart';
 import 'package:forsythia/screens/inventory/inventory_screen.dart';
+import 'package:forsythia/service/inventory_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -22,8 +23,8 @@ class _ItemScreenState extends State<ItemScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-
-  final bool _new = true;
+  Item item = Item();
+  String name = "";
   int coin = 0;
 
   @override
@@ -55,10 +56,41 @@ class _ItemScreenState extends State<ItemScreen>
   }
 
   List<String> images = [
+    'assets/item_tier/tier_r.png',
     'assets/item_tier/tier_e.png',
     'assets/item_tier/tier_l.png',
-    'assets/item_tier/tier_r.png',
   ];
+  getItem() async {
+    ItemPurchase itemPurchase = await InventoryService.fetchItemPurchase();
+    item = itemPurchase.data!;
+    name = findItemNameById(item.id!)!;
+    SecureStorageService storageService = SecureStorageService();
+    LoginInfo? info = await storageService.getLoginInfo();
+    info?.coin = (info.coin! - 1000);
+    storageService.saveLoginInfo(info!);
+    loadCoin();
+  }
+
+  String? findItemNameById(int itemId) {
+    for (var itemInfo in info) {
+      for (var item in itemInfo.item!) {
+        if (item.itemId == itemId) {
+          return item.itemName;
+        }
+      }
+    }
+    return null;
+  }
+
+  int? findItemTierById(int itemId) {
+    if (itemId <= 30) {
+      return 0;
+    } else if (itemId < 42) {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
 
   @override
   void dispose() {
@@ -155,6 +187,7 @@ class _ItemScreenState extends State<ItemScreen>
             );
           });
           _controller.stop(); // 애니메이션 중지
+          getItem();
         });
       },
       child: Stack(
@@ -201,8 +234,14 @@ class _ItemScreenState extends State<ItemScreen>
                 Navigator.of(context)
                     .pop(); // Close the dialog on background tap
               },
+            ),
+            // Dialog content
+            Dialog(
+              backgroundColor: myBackground,
+              insetPadding: EdgeInsets.fromLTRB(30, 120, 30, 120),
               child: Container(
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -212,73 +251,60 @@ class _ItemScreenState extends State<ItemScreen>
                     ],
                   ),
                 ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                      sigmaX: 5.0,
-                      sigmaY:
-                          5.0), // Adjust the sigma values for blur intensity
-                  child: Container(
-                    color: Colors.transparent,
-                  ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [_close(), _goinventory()],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text36(
+                              text: !item.isHave! ? 'NEW!!' : '중복', bold: true),
+                          Image(
+                            image: AssetImage('assets/item/${item.id!}.png'),
+                            width: 200,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image(
+                                image: AssetImage(
+                                    images[findItemTierById(item.id!)!]),
+                                width: 25,
+                                height: 25,
+                                fit: BoxFit.cover,
+                              ),
+                              Text16(text: name, bold: true)
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/pixelbox.png',
+                                width: 250,
+                              ),
+                              Text20(text: '다시 뽑기', bold: true)
+                            ],
+                          ),
+                          SizedBox(height: 50)
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ),
-            // Dialog content
-            Dialog(
-              backgroundColor: myBackground,
-              insetPadding: EdgeInsets.fromLTRB(30, 100, 30, 100),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [_close(), _goinventory()],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text36(text: _new ? '새로운!' : '꽝', bold: true),
-                        Image(
-                          image: AssetImage('assets/images/goldbox.png'),
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image(
-                              image: AssetImage(images[0]),
-                              width: 25,
-                              height: 25,
-                              fit: BoxFit.cover,
-                            ),
-                            Text16(text: ' 냄새나는 어쩌구', bold: true)
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/pixelbox.png',
-                              width: 250,
-                            ),
-                            Text20(text: '다시 뽑기', bold: true)
-                          ],
-                        ),
-                        SizedBox(height: 50)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+            )
           ],
         );
       },
