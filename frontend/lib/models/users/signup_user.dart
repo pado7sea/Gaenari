@@ -1,5 +1,5 @@
 class SignupUser {
-  String? email;
+  String? accountId;
   String? password;
   String? nickName;
   String? birth;
@@ -9,7 +9,7 @@ class SignupUser {
   MyPet? myPet;
 
   SignupUser(
-      {this.email,
+      {this.accountId,
       this.password,
       this.nickName,
       this.birth,
@@ -19,7 +19,7 @@ class SignupUser {
       this.myPet});
 
   SignupUser.fromJson(Map<String, dynamic> json) {
-    email = json['email'];
+    accountId = json['accountId'];
     password = json['password'];
     nickName = json['nickName'];
     birth = json['birth'];
@@ -31,7 +31,7 @@ class SignupUser {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['email'] = email;
+    data['accountId'] = accountId;
     data['password'] = password;
     data['nickName'] = nickName;
     data['birth'] = birth;

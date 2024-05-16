@@ -10,8 +10,8 @@ class SignupProvider with ChangeNotifier {
   MyPet get pet => _pet;
 
   // 이메일 설정
-  void setEmail(String email) {
-    _user.email = email;
+  void setaccountId(String accountId) {
+    _user.accountId = accountId;
     notifyListeners();
   }
 

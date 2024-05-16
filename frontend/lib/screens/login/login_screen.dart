@@ -19,17 +19,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _accountIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _loginStatus = ''; // 로그인 상태를 나타내는 변수
 
   void _fetchLogin() async {
-    String email = _emailController.text;
+    String accountId = _accountIdController.text;
     String password = _passwordController.text;
     final SecureStorageService secureStorageService = SecureStorageService();
 
     // login 모델 객체 생성
-    LoginForm loginInfo = LoginForm(email: email, password: password);
+    LoginForm loginInfo = LoginForm(accountId: accountId, password: password);
     await MemberService.fetchLogin(loginInfo).then((loginUser) {
       LoginUser response = loginUser;
       LoginInfo info = response.data!;
@@ -80,7 +80,7 @@ class LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   TextField(
-                    controller: _emailController,
+                    controller: _accountIdController,
                     decoration: InputDecoration(
                         hintText: '아이디를 입력해주세요.',
                         hintStyle: TextStyle(color: Colors.grey),

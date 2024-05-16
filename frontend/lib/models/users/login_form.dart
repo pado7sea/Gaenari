@@ -1,17 +1,17 @@
 class LoginForm {
-  String? email;
+  String? accountId;
   String? password;
 
-  LoginForm({this.email, this.password});
+  LoginForm({this.accountId, this.password});
 
   LoginForm.fromJson(Map<String, dynamic> json) {
-    email = json['email'];
+    accountId = json['accountId'];
     password = json['password'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['email'] = email;
+    data['accountId'] = accountId;
     data['password'] = password;
     return data;
   }
