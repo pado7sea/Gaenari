@@ -59,11 +59,11 @@ public class MemberController {
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 (삭제처리)")
     @DeleteMapping("/leave")
     public ResponseEntity<?> withdrawMember(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        // memberId를 사용하여 회원 탈퇴
+        // accountId를 사용하여 회원 탈퇴
         memberService.deleteMember(accountId);
         return response.success(ResponseCode.ACCOUNT_SECESSION_SUCCESS);
     }
@@ -71,7 +71,7 @@ public class MemberController {
     @Operation(summary = "회원 닉네임 수정", description = "회원 닉네임 수정")
     @PutMapping("/member/nickname")
     public ResponseEntity<?> updateNick(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestParam String nickName){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -82,7 +82,7 @@ public class MemberController {
     @Operation(summary = "회원 비밀번호 확인", description = "비밀번호 변경 전 비밀번호 확인 진행")
     @PostMapping("/member/password")
     public ResponseEntity<?> checkPwd(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody String password){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -101,7 +101,7 @@ public class MemberController {
     @Operation(summary = "회원 비밀번호 수정", description = "회원 비밀번호 수정")
     @PutMapping("/member/password")
     public ResponseEntity<?> updatePwd(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody String newPassword){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -111,7 +111,7 @@ public class MemberController {
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정")
     @PutMapping("/member/info")
     public ResponseEntity<?> updateInfo(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody MemberUpdate memberUpdate){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -148,7 +148,7 @@ public class MemberController {
     @Operation(summary = "워치 연동인증번호 발급", description = "워치 연동인증번호 발급")
     @GetMapping("watch")
     public ResponseEntity<?>  issuedAuthNum(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
@@ -194,7 +194,7 @@ public class MemberController {
     @Operation(summary = "[Feign] 회원 체중 조회", description = "Feign API")
     @GetMapping("/member/weight/{accountId}")
     public ResponseEntity<?> getWeight(@PathVariable String accountId){
-        // memberId가 null이면 인증 실패
+        // accountId가 null이면 인증 실패
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
