@@ -45,21 +45,20 @@ public class MemberServiceImpl implements MemberService{
     @Override // 회원가입
     public SignupResponse createMember(SignupRequestDto requestDto) {
         // 이메일 중복 검증
-        Member existMember = memberRepository.findByEmail(requestDto.getEmail());
+        Member existMember = memberRepository.findByAccountId(requestDto.getAccountId());
         if (existMember != null) {
             throw new DuplicateEmailException();
         }
 
         // 엔티티에 회원등록
         Member member = Member.builder()
-                .email(requestDto.getEmail())
+                .accountId(requestDto.getAccountId())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .nickname(requestDto.getNickName())
                 .birthday(requestDto.getBirth())
                 .gender(requestDto.getGender())
                 .height(requestDto.getHeight())
                 .weight(requestDto.getWeight())
-
                 .build();
         Member registMember = memberRepository.save(member);
         // 회원 반려견 종류
@@ -76,7 +75,7 @@ public class MemberServiceImpl implements MemberService{
         MyPet registMyPet = myPetRepository.save(myPet);
 
         // 기본 아이템 생성
-        GenericResponse<?> createItemRes = inventoryServiceClient.createNormalItems(requestDto.getEmail()).getBody();
+        GenericResponse<?> createItemRes = inventoryServiceClient.createNormalItems(requestDto.getAccountId()).getBody();
         if(!createItemRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
@@ -109,8 +108,8 @@ public class MemberServiceImpl implements MemberService{
 
     @Override // 이메일로 회원 찾기
     @Transactional(readOnly = true)
-    public MemberDto getMemberDetailsByEmail(String memberEmail) {
-        Member member = memberRepository.findByEmail(memberEmail);
+    public MemberDto getMemberDetailsByEmail(String accountId) {
+        Member member = memberRepository.findByAccountId(accountId);
 
         // 현재 파트너 반려견 조회
         MyPet myPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
@@ -132,7 +131,7 @@ public class MemberServiceImpl implements MemberService{
 
         MemberDto memberDto = MemberDto.builder()
                 .memberId(member.getId())
-                .email(member.getEmail())
+                .accountId(member.getAccountId())
                 .nickname(member.getNickname())
                 .birthday(member.getBirthday())
                 .gender(member.getGender())
@@ -146,29 +145,29 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override // 회원 탈퇴
-    public void deleteMember(String memberEmail) {
+    public void deleteMember(String accountId) {
         // 회원 있는지 확인
-        Member mem = memberRepository.findByEmail(memberEmail);
+        Member mem = memberRepository.findByAccountId(accountId);
         memberRepository.delete(mem);
 
         // 회원 아이템 삭제
-        GenericResponse<?> deleteItemRes = inventoryServiceClient.deleteItems(memberEmail).getBody();
+        GenericResponse<?> deleteItemRes = inventoryServiceClient.deleteItems(accountId).getBody();
         if(!deleteItemRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
     }
 
     @Override // 회원 닉네임 변경
-    public void updateNick(String memberEmail, String nickName) {
+    public void updateNick(String accountId, String nickName) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
+        Member member = memberRepository.findByAccountId(accountId);
 
         if(member==null)
             throw new EmailNotFoundException();
 
         Member updateMember = Member.builder()
                 .Id(member.getId())
-                .email(member.getEmail())
+                .accountId(member.getAccountId())
                 .password(member.getPassword())
                 .nickname(nickName) // 변경
                 .birthday(member.getBirthday())
@@ -184,9 +183,9 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Boolean checkPwd(String memberEmail, String password) {
+    public Boolean checkPwd(String accountId, String password) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
+        Member member = memberRepository.findByAccountId(accountId);
 
         if(member==null)
             throw new EmailNotFoundException();
@@ -199,16 +198,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override // 회원 비밀번호 변경
-    public void updatePwd(String memberEmail, String newPassword) {
+    public void updatePwd(String accountId, String newPassword) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
+        Member member = memberRepository.findByAccountId(accountId);
 
         if(member==null)
             throw new EmailNotFoundException();
 
         Member updateMember = Member.builder()
                 .Id(member.getId())
-                .email(member.getEmail())
+                .accountId(member.getAccountId())
                 .password(passwordEncoder.encode(newPassword)) // 변경
                 .nickname(member.getNickname())
                 .birthday(member.getBirthday())
@@ -223,16 +222,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override // 회원 정보 변경
-    public void updateInfo(String memberEmail, MemberUpdate memberUpdate) {
+    public void updateInfo(String accountId, MemberUpdate memberUpdate) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
+        Member member = memberRepository.findByAccountId(accountId);
 
         if(member==null)
             throw new EmailNotFoundException();
 
         Member updateMember = Member.builder()
                 .Id(member.getId())
-                .email(member.getEmail())
+                .accountId(member.getAccountId())
                 .password(member.getPassword())
                 .nickname(member.getNickname())
                 .birthday(member.getBirthday())
@@ -257,8 +256,8 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override // 이메일 중복확인
-    public Boolean duplEmailCheck(String email) {
-        Member member = memberRepository.findByEmail(email);
+    public Boolean duplAccountIdCheck(String accountId) {
+        Member member = memberRepository.findByAccountId(accountId);
         if(member == null){
             return false;
         }else{
@@ -266,20 +265,20 @@ public class MemberServiceImpl implements MemberService{
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username);
+    @Override // 로그인할때 사용
+    public UserDetails loadUserByUsername(String accountId) throws UsernameNotFoundException {
+        Member member = memberRepository.findByAccountId(accountId);
 
         if(member==null)
             throw new EmailNotFoundException();
 
-        return new User(member.getEmail(), member.getPassword(),
+        return new User(member.getAccountId(), member.getPassword(),
                 true, true, true, true,
                 new ArrayList<>());
     }
     @Override // 워치 인증번호생성
-    public String issuedAuthCode(String memberEmail) {
-        Member member = memberRepository.findByEmail(memberEmail);
+    public String issuedAuthCode(String accountId) {
+        Member member = memberRepository.findByAccountId(accountId);
 
         // 인증번호 생성 로직
         String authCode = generateVerificationCode();
@@ -287,7 +286,7 @@ public class MemberServiceImpl implements MemberService{
         // 생성된 인증번호와 현재 시간을 멤버 엔티티에 저장
         Member saveMember = Member.builder()
                 .Id(member.getId())
-                .email(member.getEmail())
+                .accountId(member.getAccountId())
                 .password(member.getPassword())
                 .nickname(member.getNickname())
                 .birthday(member.getBirthday())
@@ -350,7 +349,7 @@ public class MemberServiceImpl implements MemberService{
 
         MemberDto memberDto = MemberDto.builder()
                 .memberId(member.getId())
-                .email(member.getEmail())
+                .accountId(member.getAccountId())
                 .nickname(member.getNickname())
                 .birthday(member.getBirthday())
                 .gender(member.getGender())
@@ -364,21 +363,21 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override // 체중 조회
-    public int getWeight(String memberEmail) {
+    public int getWeight(String accountId) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
+        Member member = memberRepository.findByAccountId(accountId);
         if(member==null)
             throw new EmailNotFoundException();
         return member.getWeight();
     }
 
-    @Override // 회원 이메일 조회
-    public String getMemberEmail(Long mateId) {
-        Member member = memberRepository.findById(mateId)
+    @Override // 회원 아이디 조회
+    public String getMemberAccountId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
-        String memberEmail = member.getEmail();
+        String memberAccountId = member.getAccountId();
 
-        return memberEmail;
+        return memberAccountId;
     }
 
 
