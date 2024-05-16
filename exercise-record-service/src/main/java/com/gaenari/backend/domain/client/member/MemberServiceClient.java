@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "member-service", url = "${feign.member-service.url}")
+@FeignClient(name = "member-service", url = "${feign.url.member-service}")
 public interface MemberServiceClient {
 
     // 회원 체중 조회
