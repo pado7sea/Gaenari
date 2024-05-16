@@ -13,24 +13,24 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
      * @param programId 회원의 ID
      * @return 프로그램 리스트
      */
-    List<Program> findByMemberIdOrderByIsFavoriteDescUsageCountDesc(String programId);
+    List<Program> findByAccountIdOrderByIsFavoriteDescUsageCountDesc(String programId);
 
     /**
      * 해당 회원이 즐겨찾기한 프로그램 리스트를 사용횟수를 기준으로 내림차순으로 정렬하여 반환합니다.
      *
-     * @param memberId   회원의 ID
+     * @param accountId   회원의 ID
      * @param isFavorite 즐겨찾기 여부
      * @return 프로그램 리스트
      */
-    List<Program> findByMemberIdAndIsFavoriteOrderByUsageCountDesc(String memberId, Boolean isFavorite);
+    List<Program> findByAccountIdAndIsFavoriteOrderByUsageCountDesc(String accountId, Boolean isFavorite);
 
     /**
      * 해당 회원의 ID와 프로그램의 ID를 기준으로 프로그램을 찾아 반환합니다.
      *
-     * @param memberId  회원의 ID
+     * @param accountId  회원의 ID
      * @param programId 프로그램의 ID
      * @return 프로그램 객체
      */
-    Program findByMemberIdAndId(String memberId, Long programId);
+    Program findByAccountIdAndId(String accountId, Long programId);
 
 }

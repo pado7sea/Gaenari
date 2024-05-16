@@ -27,7 +27,7 @@ public class ProgramServiceImpl extends ProgramBaseService implements ProgramSer
 
     // 프로그램 생성
     @Override
-    public Long createProgram(String memberId, ProgramCreateDto programDto) {
+    public Long createProgram(String accountId, ProgramCreateDto programDto) {
         ProgramType type = programDto.getProgramType();
         List<IntervalRange> ranges = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class ProgramServiceImpl extends ProgramBaseService implements ProgramSer
 
         // ProgramCreateDto -> Program Entity 변환
         Program program = Program.builder()
-                .memberId(memberId)
+                .accountId(accountId)
                 .title(programDto.getProgramTitle())
                 .type(type)
                 .targetValue(programDto.getProgramTargetValue())
@@ -69,11 +69,11 @@ public class ProgramServiceImpl extends ProgramBaseService implements ProgramSer
 
     // 프로그램 삭제
     @Override
-    public void deleteProgram(String memberId, Long programId) {
+    public void deleteProgram(String accountId, Long programId) {
         Program program = programRepository.findById(programId).orElseThrow(ProgramNotFoundException::new);
 
         // 프로그램 생성자 ID와 요청한 사용자 ID를 확인
-        if (!program.getMemberId().equals(memberId)) {
+        if (!program.getAccountId().equals(accountId)) {
             throw new ProgramDeleteException();
         }
 
@@ -82,9 +82,9 @@ public class ProgramServiceImpl extends ProgramBaseService implements ProgramSer
 
     // 프로그램 목록 조회
     @Override
-    public List<ProgramDto> getProgramList(String memberId) {
+    public List<ProgramDto> getProgramList(String accountId) {
 
-        return programRepository.findByMemberIdOrderByIsFavoriteDescUsageCountDesc(memberId).stream()
+        return programRepository.findByAccountIdOrderByIsFavoriteDescUsageCountDesc(accountId).stream()
                 .map(program -> {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
@@ -110,8 +110,8 @@ public class ProgramServiceImpl extends ProgramBaseService implements ProgramSer
 
     // 프로그램 상세 정보 조회
     @Override
-    public ProgramDetailDto getProgramDetail(String memberId, Long programId) {
-        Program program = programRepository.findByMemberIdAndId(memberId, programId);
+    public ProgramDetailDto getProgramDetail(String accountId, Long programId) {
+        Program program = programRepository.findByAccountIdAndId(accountId, programId);
 
         if (program == null) {
             throw new ProgramNotFoundException();
