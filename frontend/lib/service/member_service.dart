@@ -18,7 +18,7 @@ class MemberService {
   // 아이디중복체크
   static Future<Check> fetchIdCheck(String endpoint) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/dupl/email?email=$endpoint'),
+      Uri.parse('$baseUrl/dupl/accountId?accountId=$endpoint'),
       headers: {'Content-Type': 'application/json'},
     );
 

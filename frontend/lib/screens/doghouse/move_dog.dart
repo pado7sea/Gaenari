@@ -20,7 +20,7 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
   // 이미지가 움직이는 중인지 여부를 나타내는 변수
   Random random = Random();
   List<double> dx = [10, 50, 100, 150, 200, 250];
-  List<double> dy = [90, 140, 210, 280, 350, 400];
+  List<double> dy = [110, 140, 210, 280, 350, 370];
   int x = 0;
   int y = 0;
   int act = 0;
@@ -39,6 +39,7 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
     _currentImage = "assets/dogs/1_${act}_${widget.id}.gif";
     x = random.nextInt(6);
     y = random.nextInt(6);
+    _moveImage();
   }
 
   @override

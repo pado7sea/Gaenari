@@ -262,7 +262,7 @@ class _BodyinfoScreenState extends State<BodyinfoScreen> {
       loginInfoProvider.updateLoginInfo(
         LoginInfo(
           memberId: loginInfoProvider.loginInfo?.memberId,
-          email: loginInfoProvider.loginInfo?.email,
+          accountId: loginInfoProvider.loginInfo?.accountId,
           nickname: loginInfoProvider.loginInfo?.nickname,
           birthday: loginInfoProvider.loginInfo?.birthday,
           gender: loginInfoProvider.loginInfo?.gender,

@@ -24,7 +24,7 @@ class LoginUser {
 
 class LoginInfo {
   int? memberId;
-  String? email;
+  String? accountId;
   String? nickname;
   String? birthday;
   String? gender;
@@ -35,7 +35,7 @@ class LoginInfo {
 
   LoginInfo(
       {this.memberId,
-      this.email,
+      this.accountId,
       this.nickname,
       this.birthday,
       this.gender,
@@ -46,7 +46,7 @@ class LoginInfo {
 
   LoginInfo.fromJson(Map<String, dynamic> json) {
     memberId = json['memberId'];
-    email = json['email'];
+    accountId = json['accountId'];
     nickname = json['nickname'];
     birthday = json['birthday'];
     gender = json['gender'];
@@ -60,7 +60,7 @@ class LoginInfo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['memberId'] = memberId;
-    data['email'] = email;
+    data['accountId'] = accountId;
     data['nickname'] = nickname;
     data['birthday'] = birthday;
     data['gender'] = gender;

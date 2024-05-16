@@ -353,12 +353,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 setState(() {
                   _showErrorMessage = false; // 에러 메시지 표시
                 });
-                String email = _idcontroller.text;
-                print(email);
+                String accountId = _idcontroller.text;
+                print(accountId);
                 Provider.of<SignupProvider>(context, listen: false)
                     .setPassword(_passwordcontroller.text);
                 Provider.of<SignupProvider>(context, listen: false)
-                    .setEmail(email);
+                    .setaccountId(accountId);
                 Navigator.of(context)
                     .push(SlidePageRoute(nextPage: Signup2Screen()));
               } else {
