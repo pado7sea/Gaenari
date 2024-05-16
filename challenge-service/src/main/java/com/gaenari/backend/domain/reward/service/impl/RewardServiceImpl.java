@@ -70,7 +70,11 @@ public class RewardServiceImpl implements RewardService {
 
         // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
         if (memberChallenge == null || memberChallenge.getObtainable() <= 0) {
-            throw new RewardNotFoundException();
+            return RewardDto.builder()
+                    .accountId(accountId)
+                    .coin(0)
+                    .heart(0)
+                    .build();
         }
 
         // 업적 및 미션 카테고리에 따라 얻을 수 있는 코인 및 애정도 계산
@@ -107,7 +111,11 @@ public class RewardServiceImpl implements RewardService {
 
         // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
         if (memberChallenge == null || memberChallenge.getObtainable() <= 0) {
-            throw new RewardNotFoundException();
+            return RewardDto.builder()
+                    .accountId(accountId)
+                    .coin(0)
+                    .heart(0)
+                    .build();
         }
 
         // 업적 및 미션 카테고리에 따라 얻을 수 있는 코인 및 애정도 계산
@@ -128,6 +136,44 @@ public class RewardServiceImpl implements RewardService {
 
         // 받을 수 있는 보상 횟수를 업데이트
         updateObtainableCount(memberChallenge, 1);
+
+        // 코인과 애정도 반환
+        return RewardDto.builder()
+                .accountId(accountId)
+                .coin(attainableCoin)
+                .heart(attainableHeart)
+                .build();
+    }
+
+    @Override
+    public RewardDto getAttainableReward(String accountId, Integer challengeId) {
+        // 도전 과제 아이디로 모든 멤버 챌린지 조회
+        MemberChallenge memberChallenge = memberChallengeRepository.findByAccountIdAndChallengeId(accountId, challengeId);
+
+        // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
+        if (memberChallenge == null || memberChallenge.getObtainable() <= 0) {
+            return RewardDto.builder()
+                    .accountId(accountId)
+                    .coin(0)
+                    .heart(0)
+                    .build();
+        }
+
+        // 업적 및 미션 카테고리에 따라 얻을 수 있는 코인 및 애정도 계산
+        ChallengeCategory category = memberChallenge.getChallenge().getCategory();
+
+        int attainableCoin = 0;
+        int attainableHeart = 0;
+
+        if (category == ChallengeCategory.TROPHY || category == ChallengeCategory.MISSION) {
+            attainableCoin = memberChallenge.getChallenge().getCoin();
+            System.out.println("attainableCoin = " + attainableCoin);
+        }
+        if (category == ChallengeCategory.MISSION) {
+            // 업적일 경우에는 애정도 계산 x
+            attainableHeart = memberChallenge.getChallenge().getHeart();
+            System.out.println("attainableHeart = " + attainableHeart);
+        }
 
         // 코인과 애정도 반환
         return RewardDto.builder()
