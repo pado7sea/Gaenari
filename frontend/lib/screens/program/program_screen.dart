@@ -98,13 +98,16 @@ class _ProgramScreenState extends State<ProgramScreen> {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context)
-                    .push(SlidePageRoute(nextPage: AddTimeProgramPage()));
+                    .push(SlidePageRoute(nextPage: AddTimeProgramPage()))
+                    .then((_) {
+                  getList();
+                });
                 setState(() {
                   _isExpanded = !_isExpanded;
                 });
               },
               child: Container(
-                decoration: myActiveBoxDecoration,
+                decoration: myGreenBoxDecoration,
                 padding: EdgeInsets.all(5),
                 margin: EdgeInsets.all(7),
                 height: 60,
@@ -132,7 +135,10 @@ class _ProgramScreenState extends State<ProgramScreen> {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context)
-                    .push(SlidePageRoute(nextPage: AddDistanceProgramPage()));
+                    .push(SlidePageRoute(nextPage: AddDistanceProgramPage()))
+                    .then((_) {
+                  getList();
+                });
                 setState(() {
                   _isExpanded = !_isExpanded;
                 });
@@ -166,7 +172,10 @@ class _ProgramScreenState extends State<ProgramScreen> {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context)
-                    .push(SlidePageRoute(nextPage: AddIntervalProgramPage()));
+                    .push(SlidePageRoute(nextPage: AddIntervalProgramPage()))
+                    .then((_) {
+                  getList();
+                });
                 setState(() {
                   _isExpanded = !_isExpanded;
                 });
@@ -204,7 +213,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                 });
               },
               child: Container(
-                decoration: myActiveBoxDecoration,
+                decoration: myLightGreenBoxDecoration,
                 padding: EdgeInsets.all(25),
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 300), // 회전 애니메이션 지속 시간
@@ -518,8 +527,8 @@ class _ProgramScreenState extends State<ProgramScreen> {
                                   decoration: list[index].type == "T"
                                       ? myGreenBoxDecoration
                                       : list[index].type == "D"
-                                          ? myYellowBoxDecoration
-                                          : myRedBoxDecoration,
+                                          ? myNoneYellowBoxDecoration
+                                          : myNoneRedBoxDecoration,
                                   child: Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         10, 2, 10, 2),
