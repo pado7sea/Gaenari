@@ -30,24 +30,24 @@ public class MateController {
 
     @Operation(summary = "친구신청", description = "친구신청")
     @PostMapping("/add/{id}")
-    public ResponseEntity<?> addMate(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @PathVariable(name = "id") Long friendId) {
+    public ResponseEntity<?> addMate(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @PathVariable(name = "id") Long friendId) {
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        mateService.addMate(memberEmail, friendId); // (발신자, 수신자)
+        mateService.addMate(accountId, friendId); // (발신자, 수신자)
         return response.success(ResponseCode.APPLY_MATE_SUCCESS);
     }
 
     @Operation(summary = "친구신청 발신/수신목록", description = "type : sent(발신), received(수신)")
     @GetMapping("/list/{type}")
-    public ResponseEntity<?> getSentMate(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @PathVariable(name = "type") String type) {
+    public ResponseEntity<?> getSentMate(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @PathVariable(name = "type") String type) {
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         // memberId 추출
-        MemberDto mem = memberService.getMemberDetailsByEmail(memberEmail);
+        MemberDto mem = memberService.getMemberDetailsByEmail(accountId);
         Long memId = mem.getMemberId();
         // 서비스로 발신 목록 추출
         List<ApplyMate> notices = mateService.getSentMate(memId, type);
@@ -61,9 +61,9 @@ public class MateController {
 
     @Operation(summary = "친구신청 수락/거부", description = "true : 수락, false : 거부")
     @PostMapping("/check")
-    public ResponseEntity<?> checkMate(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @RequestBody MateCheck mateCheck) {
+    public ResponseEntity<?> checkMate(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @RequestBody MateCheck mateCheck) {
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         mateService.checkMate(mateCheck);
@@ -77,13 +77,13 @@ public class MateController {
     }
     @Operation(summary = "친구목록조회", description = "친구목록조회")
     @GetMapping("")
-    public ResponseEntity<?> getMates(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail){
+    public ResponseEntity<?> getMates(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         // memberId 추출
-        MemberDto mem = memberService.getMemberDetailsByEmail(memberEmail);
+        MemberDto mem = memberService.getMemberDetailsByEmail(accountId);
         Long memId = mem.getMemberId();
         // memId와 친구인 목록 조회
         List<ApplyMate> mates = mateService.getMates(memId);
@@ -93,13 +93,13 @@ public class MateController {
 
     @Operation(summary = "친구삭제", description = "친구삭제")
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> deleteMate(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail, @PathVariable(name = "id") Long friendId){
+    public ResponseEntity<?> deleteMate(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId, @PathVariable(name = "id") Long friendId){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         // memberId 추출
-        MemberDto mem = memberService.getMemberDetailsByEmail(memberEmail);
+        MemberDto mem = memberService.getMemberDetailsByEmail(accountId);
         Long memId = mem.getMemberId();
 
         mateService.deleteMate(memId, friendId);
@@ -109,14 +109,14 @@ public class MateController {
 
     @Operation(summary = "친구검색", description = "친구 닉네임으로 검색")
     @GetMapping("/search")
-    public ResponseEntity<?> searchMember(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail,
+    public ResponseEntity<?> searchMember(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                           @RequestParam String nickName){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         // memberId 추출
-        MemberDto mem = memberService.getMemberDetailsByEmail(memberEmail);
+        MemberDto mem = memberService.getMemberDetailsByEmail(accountId);
         Long memId = mem.getMemberId();
 
         // 해당 검색어를 포함하는 member 조회
@@ -126,11 +126,11 @@ public class MateController {
 
     }
 
-    @Operation(summary = "[Feign] 친구 이메일 조회", description = "Feign API")
-    @GetMapping("/email/{mateId}")
-    public ResponseEntity<?> getMateEmail(@PathVariable Long mateId){
-        String mateEmail = memberService.getMemberEmail(mateId);
-        return response.success(ResponseCode.SEARCH_MEMBER_SUCCESS, mateEmail);
+    @Operation(summary = "[Feign] 친구 아이디 조회", description = "Feign API")
+    @GetMapping("/accountId/{memberId}")
+    public ResponseEntity<?> getMateEmail(@PathVariable Long memberId){
+        String mateAccountId = memberService.getMemberAccountId(memberId);
+        return response.success(ResponseCode.SEARCH_MEMBER_SUCCESS, mateAccountId);
     }
 
 

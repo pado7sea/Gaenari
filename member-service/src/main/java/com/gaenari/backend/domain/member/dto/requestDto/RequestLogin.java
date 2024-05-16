@@ -11,10 +11,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class RequestLogin {
-    @NotEmpty(message = "이메일은 필수 정보입니다.")
-    @Email(message = "올바른 형식의 이메일 주소를 입력해 주십시오.")
-    @Schema(description = "이메일", example = "ssafy123")
-    private String email;
+    @NotEmpty(message = "아이디는 필수 정보입니다.")
+    @Email(message = "올바른 형식의 아이디를 입력해 주십시오.")
+    @Schema(description = "아이디", example = "ssafy123")
+    private String accountId;
 
     @NotEmpty(message = "비밀번호는 필수 정보입니다.")
     @Schema(description = "비밀번호", example = "ssafy123")

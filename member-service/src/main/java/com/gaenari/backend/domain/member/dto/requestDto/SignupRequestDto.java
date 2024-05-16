@@ -14,13 +14,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignupRequestDto {
-    @Email(message = "올바른 형식의 이메일 주소를 입력해 주십시오.")
-    @NotEmpty(message = "이메일은 필수 정보입니다.")
-    @Schema(description = "이메일", example = "ssafy123")
-    private String email;
+    @Email(message = "올바른 형식의 아이디를 입력해 주십시오.")
+    @NotEmpty(message = "아이디는 필수 정보입니다.")
+    @Schema(description = "아이디", example = "ssafy123")
+    private String accountId;
 
-//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\\d).{8,20}$",
-//            message = "비밀번호는 영문 대소문자, 숫자, 특수문자(!, @, #, $, %, ^, &, *)를 조합하여 4~20자 이내여야 합니다.")
     @Schema(description = "비밀번호", example = "ssafy123")
     private String password;
 

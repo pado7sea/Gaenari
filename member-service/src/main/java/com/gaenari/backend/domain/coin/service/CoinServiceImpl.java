@@ -24,16 +24,16 @@ public class CoinServiceImpl implements CoinService {
     private final CoinRepository coinRepository;
 
     @Override // 보유코인 조회
-    public int getCoin(String memberEmail) {
-        Member mem = memberRepository.findByEmail(memberEmail);
+    public int getCoin(String accountId) {
+        Member mem = memberRepository.findByAccountId(accountId);
         int coin = mem.getCoin();
         return coin;
     }
 
     @Override // 회원 코인내역조회
-    public MemberCoinHistory getCoinRecord(String memberEmail, int year, int month) {
+    public MemberCoinHistory getCoinRecord(String accountId, int year, int month) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberEmail);
+        Member member = memberRepository.findByAccountId(accountId);
         // 코인 내역 조회
         List<Coin> coinList = coinRepository.findByMemberAndYearAndMonthOrderByDayAndTimeDesc(member, year, month);
         // MemberCoinRecord Dto로 변환
@@ -61,7 +61,7 @@ public class CoinServiceImpl implements CoinService {
     @Override // 코인 증가/감소
     public void updateCoin(MemberCoin memberCoin) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(memberCoin.getMemberEmail());
+        Member member = memberRepository.findByAccountId(memberCoin.getAccountId());
         if(member==null)
             throw new EmailNotFoundException();
         // 변동코인
@@ -77,7 +77,7 @@ public class CoinServiceImpl implements CoinService {
         // 코인 증/감
         Member registMember = Member.builder()
                 .Id(member.getId())
-                .email(member.getEmail())
+                .accountId(memberCoin.getAccountId())
                 .password(member.getPassword())
                 .nickname(member.getNickname())
                 .birthday(member.getBirthday())

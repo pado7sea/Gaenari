@@ -8,7 +8,7 @@ import com.gaenari.backend.domain.mate.dto.responseDto.SearchMates;
 import java.util.List;
 
 public interface MateService {
-    void addMate(String memberEmail, Long mateId); // 친구신청
+    void addMate(String accountId, Long mateId); // 친구신청
     List<ApplyMate> getSentMate(Long memberId, String type); // 친구신청 발신/수신 목록 조회
     void checkMate(MateCheck mateCheck); // 친구신청 수락/거부
     List<ApplyMate> getMates(Long memberId); // 친구목록 조회

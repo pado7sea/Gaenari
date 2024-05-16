@@ -36,8 +36,8 @@ public class MyPetServiceImpl implements MyPetService{
     private final MyPetRepository myPetRepository;
     private final ChallengeServiceClient challengeServiceClient;
     @Override // 반려견 입양
-    public void adopt(String memberEmail, Adopt adopt) {
-        Member member = memberRepository.findByEmail(memberEmail);
+    public void adopt(String accountId, Adopt adopt) {
+        Member member = memberRepository.findByAccountId(accountId);
         Dog dog = dogRepository.findById(adopt.getId())
                 .orElseThrow(DogNotFoundException::new);
         // 현재 가지고 있는 반려견 종류들과 겹치는지 확인
@@ -54,7 +54,7 @@ public class MyPetServiceImpl implements MyPetService{
         }
         Member updateCoin = Member.builder()
                 .Id(member.getId())
-                .email(member.getEmail())
+                .accountId(member.getAccountId())
                 .password(member.getPassword())
                 .nickname(member.getNickname())
                 .birthday(member.getBirthday())
@@ -76,7 +76,7 @@ public class MyPetServiceImpl implements MyPetService{
         myPetRepository.save(myPet);
         // 코인 내역 테이블에 변동 정보 저장
         MemberCoin memberCoin = MemberCoin.builder()
-                .memberEmail(memberEmail)
+                .accountId(accountId)
                 .isIncreased(false) // 감소
                 .coinTitle(CoinTitle.PET_PURCHASE)
                 .coinAmount(dog.getPrice())
@@ -85,10 +85,10 @@ public class MyPetServiceImpl implements MyPetService{
     }
 
     @Override // 파트너 반려견 변경
-    public void changePartner(String memberEmail, Long dogId) {
-        Member member = memberRepository.findByEmail(memberEmail);
+    public void changePartner(String accountId, Long dogId) {
+        Member member = memberRepository.findByAccountId(accountId);
         // 받지 않은 보상이 있는지 확인
-        GenericResponse<?> getRewardRes = challengeServiceClient.isGetReward(memberEmail).getBody();
+        GenericResponse<?> getRewardRes = challengeServiceClient.isGetReward(accountId).getBody();
         if(!getRewardRes.getStatus().equals("SUCCESS")){
             throw new ExistRewardException();
         }
@@ -137,8 +137,8 @@ public class MyPetServiceImpl implements MyPetService{
     }
 
     @Override // 파트너 반려견 조회
-    public FriendPetDetail getPartner(String memberEmail) {
-        Member member = memberRepository.findByEmail(memberEmail);
+    public FriendPetDetail getPartner(String accountId) {
+        Member member = memberRepository.findByAccountId(accountId);
         // 현재 파트너 반려견 조회
         MyPet currentMyPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
                 .orElseThrow(PartnerPetNotFoundException::new);
@@ -154,8 +154,8 @@ public class MyPetServiceImpl implements MyPetService{
     }
 
     @Override // 반려견 애정도 증가
-    public void increaseAffection(String memberEmail, IncreaseAffection affection) {
-        Member member = memberRepository.findByEmail(memberEmail);
+    public void increaseAffection(String accountId, IncreaseAffection affection) {
+        Member member = memberRepository.findByAccountId(accountId);
         // 펫 조회
         MyPet myPet = myPetRepository.findByMemberIdAndDogId(member.getId(), affection.getId())
                 .orElseThrow(PartnerPetNotFoundException::new);
@@ -204,7 +204,7 @@ public class MyPetServiceImpl implements MyPetService{
     @Override // [Feign] 반려견 애정도 증/감
     public void changeHeart(HeartChange heartChange) {
         // 회원 조회
-        Member member = memberRepository.findByEmail(heartChange.getMemberEmail());
+        Member member = memberRepository.findByAccountId(heartChange.getAccountId());
         // 현재 파트너 반려견 조회
         MyPet currentMyPet = myPetRepository.findByMemberIdAndIsPartner(member.getId(), true)
                 .orElseThrow(PartnerPetNotFoundException::new);
@@ -280,8 +280,8 @@ public class MyPetServiceImpl implements MyPetService{
     }
 
     @Override
-    public List<Pets> getPets(String memberEmail) {
-        Member member = memberRepository.findByEmail(memberEmail);
+    public List<Pets> getPets(String accountId) {
+        Member member = memberRepository.findByAccountId(accountId);
         List<MyPet> myPetList = myPetRepository.findByMemberId(member.getId());
         List<Pets> petsList = new ArrayList<>();
         for(MyPet myPet : myPetList){

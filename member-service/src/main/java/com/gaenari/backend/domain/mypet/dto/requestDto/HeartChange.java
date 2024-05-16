@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HeartChange {
-    @Schema(description = "회원 이메일", example = "ssafy123")
-    private String memberEmail;
+    @Schema(description = "회원 아이디", example = "ssafy123")
+    private String accountId;
 
     @Schema(description = "증가/감소", example = "true")
     private Boolean isIncreased;
