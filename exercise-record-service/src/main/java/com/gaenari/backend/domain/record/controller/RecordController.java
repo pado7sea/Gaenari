@@ -35,8 +35,8 @@ public class RecordController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "전체 기록 조회 성공", content = @Content(schema = @Schema(implementation = RecordDto.class))),
     })
-    public ResponseEntity<?> getAllRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
-        List<RecordDto> recordDtos = recordService.getWholeExerciseRecords(memberId);
+    public ResponseEntity<?> getAllRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
+        List<RecordDto> recordDtos = recordService.getWholeExerciseRecords(accountId);
 
         return response.success(ResponseCode.RECORD_ALL_FETCHED, recordDtos);
     }
@@ -46,10 +46,10 @@ public class RecordController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "월간 기록 조회 성공", content = @Content(schema = @Schema(implementation = MonthRecordDto.class))),
     })
-    public ResponseEntity<?> getMonthlyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getMonthlyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                                @Parameter(description = "연") @PathVariable(name = "year") int year,
                                                @Parameter(description = "월") @PathVariable(name = "month") int month) {
-        MonthRecordDto recordDtos = recordService.getMonthlyExerciseRecords(memberId, year, month);
+        MonthRecordDto recordDtos = recordService.getMonthlyExerciseRecords(accountId, year, month);
 
         return response.success(ResponseCode.RECORD_MONTH_FETCHED, recordDtos);
     }
@@ -59,11 +59,11 @@ public class RecordController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "주간 기록 조회 성공", content = @Content(schema = @Schema(implementation = WeekRecordDto.class))),
     })
-    public ResponseEntity<?> getWeeklyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getWeeklyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                               @Parameter(description = "연") @PathVariable(name = "year") int year,
                                               @Parameter(description = "월") @PathVariable(name = "month") int month,
                                               @Parameter(description = "일주일 중 아무 날짜") @PathVariable(name = "day") int day) {
-        WeekRecordDto recordDtos = recordService.getWeeklyExerciseRecords(memberId, year, month, day);
+        WeekRecordDto recordDtos = recordService.getWeeklyExerciseRecords(accountId, year, month, day);
 
         return response.success(ResponseCode.RECORD_WEEK_FETCHED, recordDtos);
     }
@@ -73,10 +73,10 @@ public class RecordController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일일 기록 조회 성공", content = @Content(schema = @Schema(implementation = RecordDto.class))),
     })
-    public ResponseEntity<?> getDailyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getDailyRecords(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                              @Parameter(description = "연월일 8글자") @PathVariable(name = "date") String date) {
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"));
-        List<RecordDto> recordDtos = recordService.getDailyExerciseRecords(memberId, localDate);
+        List<RecordDto> recordDtos = recordService.getDailyExerciseRecords(accountId, localDate);
 
         return response.success(ResponseCode.RECORD_DAY_FETCHED, recordDtos);
     }

@@ -36,9 +36,9 @@ public class RecordFeignServiceImpl implements RecordFeignService {
     }
 
     @Override
-    public List<Integer> getChallengeIdsByRecordId(String memberId, Long recordId) {
+    public List<Integer> getChallengeIdsByRecordId(String accountId, Long recordId) {
         // 레코드 ID로 레코드 엔티티를 조회
-        Record record = recordRepository.findByMemberIdAndId(memberId, recordId);
+        Record record = recordRepository.findByAccountIdAndId(accountId, recordId);
 
         // 레코드에 연결된 도전 과제들의 ID를 저장할 리스트 생성
         List<Integer> challengeIds = new ArrayList<>();

@@ -26,8 +26,8 @@ public class RecordServiceImpl implements RecordService {
     private final RecordRepository recordRepository;
 
     @Override
-    public List<RecordDto> getWholeExerciseRecords(String memberId) {
-        List<Record> records = recordRepository.findAllByMemberId(memberId);
+    public List<RecordDto> getWholeExerciseRecords(String accountId) {
+        List<Record> records = recordRepository.findAllByaccountId(accountId);
 
         return records.stream()
                 .map(this::convertToRecordDto)
@@ -55,10 +55,10 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public MonthRecordDto getMonthlyExerciseRecords(String memberId, int year, int month) {
+    public MonthRecordDto getMonthlyExerciseRecords(String accountId, int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-        List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(startDate),
+        List<Record> records = recordRepository.findByAccountIdAndDateBetween(accountId, atStartOfDay(startDate),
                 atEndOfDay(endDate).plusSeconds(1));
 
         if (records.isEmpty()) {
@@ -104,11 +104,11 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public WeekRecordDto getWeeklyExerciseRecords(String memberId, int year, int month, int day) {
+    public WeekRecordDto getWeeklyExerciseRecords(String accountId, int year, int month, int day) {
         LocalDate startDate = LocalDate.of(year, month, day).with(ChronoField.DAY_OF_WEEK, 1); // 주의 시작 (일요일)
         LocalDate endDate = startDate.plusDays(6); // 주의 끝 (토요일)
 
-        List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(startDate),
+        List<Record> records = recordRepository.findByAccountIdAndDateBetween(accountId, atStartOfDay(startDate),
                 atEndOfDay(endDate).plusSeconds(1));
 
         if (records.isEmpty()) {
@@ -157,8 +157,8 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<RecordDto> getDailyExerciseRecords(String memberId, LocalDate date) {
-        List<Record> records = recordRepository.findByMemberIdAndDateBetween(memberId, atStartOfDay(date),
+    public List<RecordDto> getDailyExerciseRecords(String accountId, LocalDate date) {
+        List<Record> records = recordRepository.findByAccountIdAndDateBetween(accountId, atStartOfDay(date),
                 atEndOfDay(date).plusSeconds(1));
 
         return records.stream()

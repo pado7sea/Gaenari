@@ -33,8 +33,8 @@ public class StatisticController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "전체 통계 조회 성공", content = @Content(schema = @Schema(implementation = TotalStatisticDto.class))),
     })
-    public ResponseEntity<?> getTotalStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
-        TotalStatisticDto statistic = statisticService.getTotalStatistics(memberId);
+    public ResponseEntity<?> getTotalStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
+        TotalStatisticDto statistic = statisticService.getTotalStatistics(accountId);
 
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistic);
     }
@@ -44,10 +44,10 @@ public class StatisticController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "월간 통계 조회 성공", content = @Content(schema = @Schema(implementation = MonthStatisticDto.class))),
     })
-    public ResponseEntity<?> getMonthlyStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getMonthlyStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                                   @Parameter(description = "연") @PathVariable(name = "year") int year,
                                                   @Parameter(description = "월") @PathVariable(name = "month") int month) {
-        MonthStatisticDto statistic = statisticService.getMonthlyExerciseStatistics(memberId, year, month);
+        MonthStatisticDto statistic = statisticService.getMonthlyExerciseStatistics(accountId, year, month);
 
         return response.success(ResponseCode.STATISTIC_MONTH_FETCHED, statistic);
     }
@@ -57,11 +57,11 @@ public class StatisticController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "주간 통계 조회 성공", content = @Content(schema = @Schema(implementation = StatisticDto.class))),
     })
-    public ResponseEntity<?> getWeeklyStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getWeeklyStatistics(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                                  @Parameter(description = "연") @PathVariable(name = "year") int year,
                                                  @Parameter(description = "월") @PathVariable(name = "month") int month,
                                                  @Parameter(description = "일") @PathVariable(name = "day") int day) {
-        List<StatisticDto> statistic = statisticService.getWeeklyExerciseStatistics(memberId, year, month, day);
+        List<StatisticDto> statistic = statisticService.getWeeklyExerciseStatistics(accountId, year, month, day);
 
         return response.success(ResponseCode.STATISTIC_WEEK_FETCHED, statistic);
     }

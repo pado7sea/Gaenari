@@ -41,13 +41,13 @@ public class RecordFeignController {
     }
 
     @Operation(summary = "[Feign] 운동 기록의 도전과제 ID 리스트 조회", description = "운동 기록 ID로 도전과제 ID 리스트 반환")
-    @GetMapping("/recordChallenge/{memberId}/{recordId}")
+    @GetMapping("/recordChallenge/{accountId}/{recordId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "[Feign] 운동 기록의 도전과제 ID 리스트 조회 성공", content = @Content(schema = @Schema(implementation = Integer.class))),
     })
-    public ResponseEntity<?> getChallengeIdsByRecordId(@Parameter(description = "회원 ID") @PathVariable(name = "memberId") String memberId,
+    public ResponseEntity<?> getChallengeIdsByRecordId(@Parameter(description = "회원 ID") @PathVariable(name = "accountId") String accountId,
                                                        @Parameter(description = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId) {
-        List<Integer> challengeIds = recordFeignService.getChallengeIdsByRecordId(memberId, recordId);
+        List<Integer> challengeIds = recordFeignService.getChallengeIdsByRecordId(accountId, recordId);
 
         return response.success(ResponseCode.RECORD_CHALLENGE_FETCHED, challengeIds);
     }

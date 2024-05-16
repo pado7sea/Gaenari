@@ -28,12 +28,12 @@ public class StatisticFeignController {
     private final StatisticService statisticService;
 
     @Operation(summary = "[Feign] 전체 통계 조회", description = "저장되어있는 누적값 조회")
-    @GetMapping("/{memberId}")
+    @GetMapping("/{accountId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "[Feign] 전체 통계 조회 성공", content = @Content(schema = @Schema(implementation = TotalStatisticDto.class))),
     })
-    public ResponseEntity<?> getTotalStatistics(@Parameter(description = "회원 ID") @PathVariable(name = "memberId") String memberId) {
-        TotalStatisticDto statistics = statisticService.getTotalStatistics(memberId);
+    public ResponseEntity<?> getTotalStatistics(@Parameter(description = "회원 ID") @PathVariable(name = "accountId") String accountId) {
+        TotalStatisticDto statistics = statisticService.getTotalStatistics(accountId);
 
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistics);
     }
