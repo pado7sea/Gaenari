@@ -25,7 +25,7 @@ public class AchievedChallengeFeignServiceImpl implements AchievedChallengeFeign
     @Override
     public List<Integer> getNewlyAchievedChallengeIds(RecordAboutChallengeDto recordDto) {
         // 회원이 기존에 달성한 도전과제 아이디 리스트 조회
-        List<MemberChallenge> achievedChallenges = memberChallengeRepository.findByMemberIdAndIsAchievedIsTrue(recordDto.getMemberId());
+        List<MemberChallenge> achievedChallenges = memberChallengeRepository.findByAccountIdAndIsAchievedIsTrue(recordDto.getAccountId());
         List<Integer> achievedChallengeIds = achievedChallenges.stream()
                 .map(memberChallenge -> memberChallenge.getChallenge().getId())
                 .toList();

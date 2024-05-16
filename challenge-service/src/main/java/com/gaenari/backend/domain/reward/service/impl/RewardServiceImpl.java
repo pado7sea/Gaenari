@@ -30,16 +30,16 @@ public class RewardServiceImpl implements RewardService {
 
     // 회원 ID로 보상을 받지 않은 도전과제가 있는지 찾기
     @Override
-    public boolean findObtainableChallenge(String memberId) {
-        long count = memberChallengeRepository.findByMemberIdAndObtainableGreaterThan(memberId, 0).size();
+    public boolean findObtainableChallenge(String accountId) {
+        long count = memberChallengeRepository.findByAccountIdAndObtainableGreaterThan(accountId, 0).size();
         return count != 0;
     }
 
     // 회원 ID로 도전과제 ID 리스트 찾기
     @Override
-    public List<Integer> getChallengeIdsByMemberId(String memberId) {
+    public List<Integer> getChallengeIdsByAccountId(String accountId) {
         // 멤버가 가지고 있는 완료한 기록 조회
-        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberIdAndObtainableGreaterThan(memberId, 0);
+        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByAccountIdAndObtainableGreaterThan(accountId, 0);
         // 도전 과제 ID를 저장할 리스트 생성
         List<Integer> challengeIds = new ArrayList<>();
 
@@ -54,8 +54,8 @@ public class RewardServiceImpl implements RewardService {
 
     // 마이크로 서비스간 통신을 통해 운동 기록 ID로 도전과제 ID 리스트 조회
     @Override
-    public List<Integer> getChallengeIdsByRecordId(String memberId, Long recordId) {
-        ResponseEntity<GenericResponse<List<Integer>>> response = recordServiceClient.getChallengeIdsByRecordId(memberId, recordId);
+    public List<Integer> getChallengeIdsByRecordId(String accountId, Long recordId) {
+        ResponseEntity<GenericResponse<List<Integer>>> response = recordServiceClient.getChallengeIdsByRecordId(accountId, recordId);
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new ConnectFeignFailException();
         }
@@ -64,9 +64,9 @@ public class RewardServiceImpl implements RewardService {
 
     // 도전 과제 아이디로 받을 수 있는 보상 찾기
     @Override
-    public RewardDto getAttainableRewardAndReset(String memberId, Integer challengeId) {
+    public RewardDto getAttainableRewardAndReset(String accountId, Integer challengeId) {
         // 도전 과제 아이디로 모든 멤버 챌린지 조회
-        MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
+        MemberChallenge memberChallenge = memberChallengeRepository.findByAccountIdAndChallengeId(accountId, challengeId);
 
         // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
         if (memberChallenge == null || memberChallenge.getObtainable() <= 0) {
@@ -94,16 +94,16 @@ public class RewardServiceImpl implements RewardService {
 
         // 코인과 애정도 반환
         return RewardDto.builder()
-                .memberId(memberId)
+                .accountId(accountId)
                 .coin(attainableCoin)
                 .heart(attainableHeart)
                 .build();
     }
 
     @Override
-    public RewardDto getAttainableRewardAndUpdate(String memberId, Integer challengeId) {
+    public RewardDto getAttainableRewardAndUpdate(String accountId, Integer challengeId) {
         // 도전 과제 아이디로 모든 멤버 챌린지 조회
-        MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
+        MemberChallenge memberChallenge = memberChallengeRepository.findByAccountIdAndChallengeId(accountId, challengeId);
 
         // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
         if (memberChallenge == null || memberChallenge.getObtainable() <= 0) {
@@ -131,7 +131,7 @@ public class RewardServiceImpl implements RewardService {
 
         // 코인과 애정도 반환
         return RewardDto.builder()
-                .memberId(memberId)
+                .accountId(accountId)
                 .coin(attainableCoin)
                 .heart(attainableHeart)
                 .build();
@@ -140,9 +140,9 @@ public class RewardServiceImpl implements RewardService {
 
     // 마이크로 서비스 간 통신을 통해서 코인 보상 받게 하기
     @Override
-    public void callFeignUpdateCoin(String memberId, Integer coin) {
+    public void callFeignUpdateCoin(String accountId, Integer coin) {
         MemberCoinDto memberCoinDto = MemberCoinDto.builder()
-                .memberEmail(memberId)
+                .accountId(accountId)
                 .coinAmount(coin)
                 .isIncreased(true)
                 .coinTitle(CoinTitle.REWARD)
@@ -157,9 +157,9 @@ public class RewardServiceImpl implements RewardService {
 
     // 마이크로 서비스 간 통신을 통해서 애정도 보상 받게 하기
     @Override
-    public void callFeignUpdateHeart(String memberId, Integer heart) {
+    public void callFeignUpdateHeart(String accountId, Integer heart) {
         HeartChangeDto heartChangeDto = HeartChangeDto.builder()
-                .memberEmail(memberId)
+                .accountId(accountId)
                 .isIncreased(true)
                 .heart(heart)
                 .build();

@@ -31,14 +31,14 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
 
     // 회원 모든 업적 조회
     @Override
-    public List<MemberTrophyDto> getAllMemberTrophies(String memberId) {
+    public List<MemberTrophyDto> getAllMemberTrophies(String accountId) {
         List<Challenge> allChallenges = challengeRepository.findByCategory(ChallengeCategory.TROPHY); // 모든 업적을 불러옴
-        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId); // 해당 회원의 업적 정보를 불러옴
+        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByAccountId(accountId); // 해당 회원의 업적 정보를 불러옴
 
         Map<Integer, MemberChallenge> achievedMap = memberChallenges.stream()
                 .collect(Collectors.toMap(mc -> mc.getChallenge().getId(), mc -> mc));
 
-        TotalStatisticDto statisticDto = fetchAllStatistics(memberId); // 누적 기록 조회
+        TotalStatisticDto statisticDto = fetchAllStatistics(accountId); // 누적 기록 조회
 
         return allChallenges.stream().map(challenge -> {
             MemberChallenge memberChallenge = achievedMap.get(challenge.getId());
@@ -68,9 +68,9 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
 
     // 회원 모든 미션 조회
     @Override
-    public List<MemberMissionDto> getAllMemberMissions(String memberId) {
+    public List<MemberMissionDto> getAllMemberMissions(String accountId) {
         List<Challenge> allMissions = challengeRepository.findByCategory(ChallengeCategory.MISSION); // 모든 미션을 불러옴
-        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId); // 해당 회원의 미션 정보를 불러옴
+        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByAccountId(accountId); // 해당 회원의 미션 정보를 불러옴
 
         Map<Integer, MemberChallenge> achievedMap = memberChallenges.stream()
                 .collect(Collectors.toMap(mc -> mc.getChallenge().getId(), mc -> mc));
@@ -94,8 +94,8 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
 
     // 회원 달성 업적 조회
     @Override
-    public List<MemberTrophyDto> getMemberTrophies(String memberId) {
-        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId);
+    public List<MemberTrophyDto> getMemberTrophies(String accountId) {
+        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByAccountId(accountId);
         return memberChallenges.stream()
                 .map(this::mapToMemberTrophyDto)
                 .toList();
@@ -103,8 +103,8 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
 
     // 회원 달성 미션 조회
     @Override
-    public List<MemberMissionDto> getMemberMissions(String memberId) {
-        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByMemberId(memberId);
+    public List<MemberMissionDto> getMemberMissions(String accountId) {
+        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByAccountId(accountId);
         return memberChallenges.stream()
                 .map(this::mapToMemberMissionDto)
                 .toList();
@@ -112,15 +112,15 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
 
     // 회원 도전과제 업데이트
     @Override
-    public void updateMemberChallenge(String memberId, Integer challengeId) {
-        MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
+    public void updateMemberChallenge(String accountId, Integer challengeId) {
+        MemberChallenge memberChallenge = memberChallengeRepository.findByAccountIdAndChallengeId(accountId, challengeId);
         Challenge challenge = challengeRepository.findById(challengeId);
 
         // 회원의 도전과제 정보가 있는 경우에만 업데이트를 수행
         if (memberChallenge == null) {
             // 회원의 도전과제 정보가 없는 경우 새로운 도전과제 정보 생성
             memberChallenge = MemberChallenge.builder()
-                    .memberId(memberId)
+                    .accountId(accountId)
                     .challenge(challenge)
                     .isAchieved(false)
                     .count(0)
@@ -141,8 +141,8 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
 
     // 회원 미션 달성 횟수 초기화
     @Override
-    public void resetMemberMissionAchievement(String memberId, Integer challengeId) {
-        MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, 1);
+    public void resetMemberMissionAchievement(String accountId, Integer challengeId) {
+        MemberChallenge memberChallenge = memberChallengeRepository.findByAccountIdAndChallengeId(accountId, 1);
         memberChallenge.updateObtainable(0);
     }
 
@@ -150,7 +150,7 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
         Challenge challenge = memberChallenge.getChallenge();
 
         // 마이크로 서비스 간 통신을 통해 누적 기록 가져오기
-        TotalStatisticDto statisticDto = fetchAllStatistics(memberChallenge.getMemberId());
+        TotalStatisticDto statisticDto = fetchAllStatistics(memberChallenge.getAccountId());
 
         double memberValue = 0.0;
 
@@ -175,8 +175,8 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
     }
 
     // 마이크로 서비스 간 통신을 통해 누적 기록 가져오기
-    private TotalStatisticDto fetchAllStatistics(String memberId) {
-        ResponseEntity<GenericResponse<TotalStatisticDto>> response = recordServiceClient.getAllStatistics(memberId);
+    private TotalStatisticDto fetchAllStatistics(String accountId) {
+        ResponseEntity<GenericResponse<TotalStatisticDto>> response = recordServiceClient.getAllStatistics(accountId);
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new ConnectFeignFailException();
         }
