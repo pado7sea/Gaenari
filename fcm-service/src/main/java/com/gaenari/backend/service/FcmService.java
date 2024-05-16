@@ -27,7 +27,6 @@ public class FcmService {
    * FCM 토큰을 유저에 매칭해서 DB에 저장
    *
    * @param requestDto FcmRegisterRequestDto
-   * @return Boolean
    */
   public void register(FcmRegisterRequestDto requestDto) {
     if (fcmRepository.existsByFcmToken(requestDto.getFcmToken())) {
@@ -35,7 +34,7 @@ public class FcmService {
     }
 
     fcmRepository.save(Fcm.builder()
-        .memberId(requestDto.getMemberId())
+        .memberId(requestDto.getAccountId())
         .fcmToken(requestDto.getFcmToken())
         .build());
   }
