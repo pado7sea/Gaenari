@@ -728,7 +728,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
                   return MissionCircle(
                     done: done,
-                    text: '$key' + 'km',
+                    text: '$key' 'km',
                   );
                 }),
               ),

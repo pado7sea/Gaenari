@@ -67,8 +67,7 @@ class _RecordScreenState extends State<RecordScreen> {
     // print(recordList.data!.ex);
     // print(statisticList.data!.dist);
     print('기록기ㅗㄹ기고리ㅗㅓㅁ나ㅣ과ㅣ; ');
-    print(monthly.exerciseRecords![3].dailyRecords![0].recordDist);
-    print(monthly.exerciseRecords![3].dailyRecords![0].recordId);
+    // print(monthly.exerciseRecords![3].dailyRecords![0].recordId);
     // print(_focusedDay.year);
     // print(_focusedDay.month);
   }

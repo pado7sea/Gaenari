@@ -10,6 +10,7 @@ import 'package:forsythia/models/pet/pet_adopt.dart';
 import 'package:forsythia/models/pet/pet_res.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/challenge/challenge_screen.dart';
+import 'package:forsythia/screens/inventory/inventory_detail_screen.dart';
 import 'package:forsythia/service/challenge_service.dart';
 import 'package:forsythia/service/inventory_service.dart';
 import 'package:forsythia/service/pet_service.dart';
@@ -225,7 +226,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
   Widget _buildItemTile(ItemInfo itemInfo, int index) {
     return InkWell(
       onTap: () {
-        // 각 아이템을 눌렀을 때의 동작 추가 가능
+        Navigator.of(context).push(
+            SlidePageRoute(nextPage: InventoryDetailScreen(setId: index)));
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -233,7 +235,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
         children: [
           Container(
             decoration: myBorderBoxDecoration,
-            height: 160,
+            height: 180,
+            padding: EdgeInsets.all(1),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+              child: Image.asset(
+                "assets/item/set_${index + 1}.png",
+                width: double.infinity,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
+              ),
+            ),
           ),
           SizedBox(height: 8.0), // 아이템 이름과 세트 이름 사이 간격 조정
           Row(
