@@ -14,16 +14,16 @@ import java.util.List;
 public interface RecordServiceClient {
 
     // 회원 ID를 보내고 누적 기록 가져오기
-    @GetMapping("/statistic/feign/{memberId}")
-    ResponseEntity<GenericResponse<TotalStatisticDto>> getAllStatistics(@PathVariable(name = "memberId") String memberId);
+    @GetMapping("/statistic/feign/{accountId}")
+    ResponseEntity<GenericResponse<TotalStatisticDto>> getAllStatistics(@PathVariable(name = "accountId") String accountId);
 
     // 회원의 도전과제 ID 리스트 조회
-    @GetMapping("/record/feign/recordChallenge/{memberId}")
-    ResponseEntity<GenericResponse<List<Integer>>> getChallengeIdsByMemberId(@Parameter(name = "회원 ID") @PathVariable(name = "memberId") String memberId);
+    @GetMapping("/record/feign/recordChallenge/{accountId}")
+    ResponseEntity<GenericResponse<List<Integer>>> getChallengeIdsByAccountId(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId);
 
     // 운동 기록의 도전과제 ID 리스트 조회
-    @GetMapping("/record/feign/recordChallenge/{memberId}/{recordId}")
-    ResponseEntity<GenericResponse<List<Integer>>> getChallengeIdsByRecordId(@Parameter(name = "회원 ID") @PathVariable(name = "memberId") String memberId,
+    @GetMapping("/record/feign/recordChallenge/{accountId}/{recordId}")
+    ResponseEntity<GenericResponse<List<Integer>>> getChallengeIdsByRecordId(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId,
                                                    @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId);
 
 }

@@ -45,7 +45,7 @@ public class AchievedChallengeFeignController {
         List<Integer> challengeIds = achievedChallengeFeignService.getNewlyAchievedChallengeIds(recordDto);
 
         // 도전과제 아이디 리스트로 해당 회원의 회원 운동 기록 업데이트
-        challengeIds.forEach(challengeId -> memberChallengeService.updateMemberChallenge(recordDto.getMemberId(), challengeId));
+        challengeIds.forEach(challengeId -> memberChallengeService.updateMemberChallenge(recordDto.getAccountId(), challengeId));
 
         return response.success(ResponseCode.CHALLENGE_FETCHED, challengeIds);
     }

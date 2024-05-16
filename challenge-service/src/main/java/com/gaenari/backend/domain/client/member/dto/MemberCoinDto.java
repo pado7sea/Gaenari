@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberCoinDto {
-    @Schema(description = "회원 이메일")
-    private String memberEmail;
+    @Schema(description = "회원 아이디")
+    private String accountId;
 
     @Schema(description = "코인 수량")
     private int coinAmount;

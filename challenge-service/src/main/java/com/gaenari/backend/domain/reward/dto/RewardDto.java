@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class RewardDto {
     @Schema(description = "회원 아이디")
-    private String memberId;
+    private String accountId;
 
     @Schema(description = "획득한 코인")
     private Integer coin;
