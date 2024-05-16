@@ -240,8 +240,10 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(
-                                  SlidePageRoute(nextPage: ChallengePage()));
+                              Navigator.of(context).push(SlidePageRoute(
+                                  nextPage: ChallengePage(
+                                mission: false,
+                              )));
                             },
                             child: Container(
                               height: 90,

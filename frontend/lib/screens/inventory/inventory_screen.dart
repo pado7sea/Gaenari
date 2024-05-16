@@ -466,9 +466,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                       text: "보상받으러 가기",
                                       onPressed: () {
                                         Navigator.of(context).pop();
-                                        Navigator.of(context).push(
-                                            SlidePageRoute(
-                                                nextPage: ChallengePage()));
+                                        Navigator.of(context)
+                                            .push(SlidePageRoute(
+                                                nextPage: ChallengePage(
+                                          mission: false,
+                                        )));
                                       },
                                       active: true,
                                       widthPadding: 70,

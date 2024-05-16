@@ -13,9 +13,11 @@ import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/large_app_bar.dart';
+import 'package:forsythia/widgets/none_animation_route.dart';
 
 class ChallengePage extends StatefulWidget {
-  const ChallengePage({super.key});
+  bool mission;
+  ChallengePage({super.key, required this.mission});
 
   @override
   State<ChallengePage> createState() => _ChallengePageState();
@@ -23,13 +25,15 @@ class ChallengePage extends StatefulWidget {
 
 class _ChallengePageState extends State<ChallengePage> {
   late int challengeId = 0;
-  bool mission = false; // 미션 or 업적
-  bool trophyreword = true; // 보상 받을게 있는지
-  bool missionreword = true; // 보상 받을게 있는지
+  // bool trophyreword = false; // 보상 받을게 있는지
+  // bool missionreword = false; // 보상 받을게 있는지
 
   // 업적과 미션 상태를 저장할 Map 생성
   Map<String, Map<String, dynamic>> trophyStatus = {};
   Map<String, Map<String, dynamic>> missionStatus = {};
+
+  List<int> trophyreword = [];
+  List<int> missionreword = [];
 
   double _completeWidth = 0;
   double _notCompleteWidth = 0;
@@ -50,6 +54,9 @@ class _ChallengePageState extends State<ChallengePage> {
     setState(() {
       if (trophy.data != null) {
         for (var item in trophy.data!) {
+          if (item.obtainable != 0) {
+            trophyreword.add(item.obtainable!);
+          }
           if (item.type == 'D') {
             String trophyName = '${item.challengeValue}km';
             int? challengeId = item.challengeId;
@@ -58,6 +65,7 @@ class _ChallengePageState extends State<ChallengePage> {
             int? obtainable = item.obtainable;
             int? challengeValue = item.challengeValue?.toInt();
             int? memberValue = item.memberValue?.toInt();
+            int? coin = item.coin?.toInt();
             trophyStatus[trophyName] = {
               'challengeId': challengeId!,
               'type': type!,
@@ -65,6 +73,7 @@ class _ChallengePageState extends State<ChallengePage> {
               'obtainable': obtainable!,
               'challengeValue': challengeValue!,
               'memberValue': memberValue!,
+              'coin': coin!
             };
           } else if (item.type == 'T') {
             String trophyName = '${item.challengeValue! ~/ 3600}시간';
@@ -74,6 +83,7 @@ class _ChallengePageState extends State<ChallengePage> {
             int? obtainable = item.obtainable;
             int? challengeValue = item.challengeValue?.toInt();
             int? memberValue = item.memberValue?.toInt();
+            int? coin = item.coin?.toInt();
             trophyStatus[trophyName] = {
               'challengeId': challengeId!,
               'type': type!,
@@ -81,6 +91,7 @@ class _ChallengePageState extends State<ChallengePage> {
               'obtainable': obtainable!,
               'challengeValue': (challengeValue! / 3600).toInt(),
               'memberValue': (memberValue! / 3600).toInt(),
+              'coin': coin!
             };
           }
         }
@@ -88,6 +99,9 @@ class _ChallengePageState extends State<ChallengePage> {
 
       if (mission.data != null) {
         for (var item in mission.data!) {
+          if (item.obtainable != 0) {
+            missionreword.add(item.obtainable!);
+          }
           if (item.type == 'D') {
             String missionName = '${item.challengeValue}KM';
             int? challengeId = item.challengeId;
@@ -126,14 +140,8 @@ class _ChallengePageState extends State<ChallengePage> {
     });
     print('챌린지챌린지');
     print('Mission Status: $missionStatus');
+    print(trophyreword);
   }
-
-  // void reward(int challengeId) async {
-  //   Reward reward;
-  //   reward = await ChallengeService.fetchRewardChallenge(challengeId);
-  //   setState(() {});
-  //   print('리워드');
-  // }
 
   @override
   void dispose() {
@@ -151,7 +159,7 @@ class _ChallengePageState extends State<ChallengePage> {
         child: Column(
           children: [
             _togglebutton(),
-            mission
+            widget.mission
                 ? Wrap(
                     children: [
                       _mission(),
@@ -180,7 +188,7 @@ class _ChallengePageState extends State<ChallengePage> {
           GestureDetector(
             onTap: () {
               setState(() {
-                mission = false;
+                widget.mission = false;
               });
               challenge();
             },
@@ -196,26 +204,26 @@ class _ChallengePageState extends State<ChallengePage> {
                 Text20(
                   text: '업적',
                   bold: true,
-                  textColor: mission ? myGrey : myBlack,
+                  textColor: widget.mission ? myGrey : myBlack,
                 ),
-                // Column(
-                //   children: [
-                //     trophyreword
-                //         ? Padding(
-                //             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                //             child: Container(
-                //               width: 8,
-                //               height: 8,
-                //               decoration: BoxDecoration(
-                //                 shape: BoxShape.circle,
-                //                 color: myRed,
-                //               ),
-                //             ),
-                //           )
-                //         : Container(),
-                //     SizedBox(height: 20)
-                //   ],
-                // )
+                Column(
+                  children: [
+                    trophyreword.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: myRed,
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    SizedBox(height: 20)
+                  ],
+                )
               ],
             ),
           ),
@@ -229,7 +237,7 @@ class _ChallengePageState extends State<ChallengePage> {
           GestureDetector(
             onTap: () {
               setState(() {
-                mission = true;
+                widget.mission = true;
               });
               challenge();
             },
@@ -245,26 +253,26 @@ class _ChallengePageState extends State<ChallengePage> {
                 Text20(
                   text: '미션',
                   bold: true,
-                  textColor: mission ? myBlack : myGrey,
+                  textColor: widget.mission ? myBlack : myGrey,
                 ),
-                // Column(
-                //   children: [
-                //     missionreword
-                //         ? Padding(
-                //             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                //             child: Container(
-                //               width: 8,
-                //               height: 8,
-                //               decoration: BoxDecoration(
-                //                 shape: BoxShape.circle,
-                //                 color: myRed,
-                //               ),
-                //             ),
-                //           )
-                //         : Container(),
-                //     SizedBox(height: 20)
-                //   ],
-                // )
+                Column(
+                  children: [
+                    missionreword.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: myRed,
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    SizedBox(height: 20)
+                  ],
+                )
               ],
             ),
           ),
@@ -347,7 +355,7 @@ class _ChallengePageState extends State<ChallengePage> {
                             challengeValue: value['challengeValue'],
                             memberValue: value['memberValue'],
                             type: value['type'],
-                            coin: value['obtainable'],
+                            coin: value['coin'],
                           )),
                     ],
                   ),
@@ -358,18 +366,6 @@ class _ChallengePageState extends State<ChallengePage> {
         );
       }
     });
-
-    // completedTrophiesWidgets가 비어있으면 trophyreward를 false로 설정
-    if (completedTrophiesWidgets.isNotEmpty) {
-      setState(() {
-        trophyreword = true;
-      });
-    } else {
-      setState(() {
-        trophyreword = false;
-      });
-      print(completedTrophiesWidgets);
-    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -545,8 +541,14 @@ class _ChallengePageState extends State<ChallengePage> {
   // 미션 --------------------------------
 
   Widget _mission() {
+    List<Widget> MissionWidgets = [];
     List<Widget> completedMissionWidgets = [];
+
     missionStatus.forEach((key, value) {
+      // reword
+      if (value['obtainable'] != 0) {
+        completedMissionWidgets.add(Container());
+      }
       // 이미지에 대한 변수 선언
       late Widget missionImage;
 
@@ -567,7 +569,7 @@ class _ChallengePageState extends State<ChallengePage> {
         );
       }
 
-      completedMissionWidgets.add(Padding(
+      MissionWidgets.add(Padding(
         padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
         child: Container(
           decoration: myBorderBoxDecoration,
@@ -580,13 +582,15 @@ class _ChallengePageState extends State<ChallengePage> {
                 // value['type']에 따라 다른 이미지 표시
                 missionImage,
                 SizedBox(height: 10),
-                MissionBtn(
-                  obtainable: value['obtainable'],
-                  count: value['count'],
-                  challengeId: value['challengeId'],
-                  onChallenge: () {
-                    challenge();
-                  },
+                Expanded(
+                  child: MissionBtn(
+                    obtainable: value['obtainable'],
+                    count: value['count'],
+                    challengeId: value['challengeId'],
+                    onChallenge: () {
+                      challenge();
+                    },
+                  ),
                 ),
               ],
             ),
@@ -594,17 +598,6 @@ class _ChallengePageState extends State<ChallengePage> {
         ),
       ));
     });
-
-    if (completedMissionWidgets.isNotEmpty) {
-      setState(() {
-        trophyreword = true;
-      });
-    } else {
-      setState(() {
-        trophyreword = false;
-      });
-      print(completedMissionWidgets);
-    }
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -615,11 +608,11 @@ class _ChallengePageState extends State<ChallengePage> {
               crossAxisCount: 2, // 한 줄에 두 개의 아이템을 표시
               crossAxisSpacing: 0.0, // 아이템 간의 가로 간격
               mainAxisSpacing: 0.0, // 아이템 간의 세로 간격
-              childAspectRatio: 1.0, // 각 아이템의 가로 길이와 세로 길이의 비율
+              childAspectRatio: 0.95, // 각 아이템의 가로 길이와 세로 길이의 비율
             ),
             itemCount: missionStatus.length,
             itemBuilder: (BuildContext context, int index) {
-              return completedMissionWidgets[index];
+              return MissionWidgets[index];
             }));
   }
 }
@@ -704,25 +697,11 @@ class _ButtonState extends State<Button> {
               );
               Navigator.pop(context);
               Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (BuildContext context,
-                      Animation<double> animation1,
-                      Animation<double> animation2) {
-                    // 페이지 빌더 함수
-                    return ChallengePage(); // 이동할 페이지 위젯
-                  },
-                  transitionsBuilder: (BuildContext context,
-                      Animation<double> animation1,
-                      Animation<double> animation2,
-                      Widget child) {
-                    // 페이지 전환 애니메이션을 정의하는 함수
-                    return child; // 애니메이션 없이 자식 위젯을 그대로 반환
-                  },
-                  transitionDuration: Duration(
-                      seconds: 0), // 애니메이션 지속 시간을 0으로 설정하여 애니메이션을 비활성화합니다.
-                ),
-              );
+                  context,
+                  NonePageRoute(
+                      nextPage: ChallengePage(
+                    mission: false,
+                  )));
             },
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.zero,
@@ -838,11 +817,17 @@ class _MissionBtnState extends State<MissionBtn> {
               gravity: ToastGravity.CENTER,
               backgroundColor: myYellow,
             );
+
+            Navigator.pop(context);
+            Navigator.push(
+                context,
+                NonePageRoute(
+                    nextPage: ChallengePage(
+                  mission: true,
+                )));
           }
         },
         child: Container(
-            width: 100,
-            height: 40,
             decoration: BoxDecoration(
                 color: active ? myLightGreen : myLightGrey,
                 borderRadius: BorderRadius.circular(10)),
