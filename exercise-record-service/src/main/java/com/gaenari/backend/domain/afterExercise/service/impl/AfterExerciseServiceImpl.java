@@ -65,17 +65,9 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     @Override
     public Long saveExerciseRecord(String accountId, SaveExerciseRecordDto exerciseDto) {
         validateIntervalInfo(exerciseDto);
-        Record record = createRecordFromDto(accountId, exerciseDto);
+        Record record = buildRecord(accountId, exerciseDto);
         recordRepository.save(record);
         return record.getId();
-    }
-
-    private Record createRecordFromDto(String accountId, SaveExerciseRecordDto exerciseDto) {
-        if (exerciseDto.getExerciseType() == ExerciseType.P) {
-            ProgramDetailAboutRecordDto programDetail = fetchProgramDetail(exerciseDto.getProgram().getProgramId());
-        }
-
-        return buildRecord(accountId, exerciseDto);
     }
 
     private Record buildRecord(String accountId, SaveExerciseRecordDto exerciseDto) {
@@ -147,13 +139,17 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
     private List<RecordChallenge> buildRecordChallenges(String accountId, SaveExerciseRecordDto exerciseDto) {
         List<RecordChallenge> recordChallenges = new ArrayList<>();
         if (exerciseDto.getRecord().getDistance() > 0) {
+            Statistic statistic = statisticRepository.findByAccountId(accountId);
+            double statisticDistance = statistic != null ? statistic.getDist() : 0;
+            double statisticTime = statistic != null ? statistic.getTime() : 0;
+
             RecordAboutChallengeDto challengeDto = RecordAboutChallengeDto.builder()
                     .accountId(accountId)
                     .recordId(null)
                     .distance(exerciseDto.getRecord().getDistance())
                     .time(exerciseDto.getRecord().getTime())
-                    .statisticDistance(statisticRepository.findByAccountId(accountId).getDist())
-                    .statisticTime(statisticRepository.findByAccountId(accountId).getTime())
+                    .statisticDistance(statisticDistance)
+                    .statisticTime(statisticTime)
                     .build();
 
             // 마이크로 서비스간 통신을 통해 도전과제(아이디) 가져오기

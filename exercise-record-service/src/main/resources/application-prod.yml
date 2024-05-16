@@ -36,16 +36,12 @@ springdoc:
   default-produces-media-type: application/json
 
 feign:
-  member-service:
-    url: http://member-service.member.svc.cluster.local
-  inventory-service:
-    url: http://inventory-service.inventory.svc.cluster.local
-  program-service:
-    url: http://program-service.program.svc.cluster.local
-  exercise-record-service:
-    url: http://exercise-record-service.exercise-record.svc.cluster.local
-  challenge-service:
-    url: http://challenge-service.challenge.svc.cluster.local
+  url:
+    member-service: http://member-service.member.svc.cluster.local
+    inventory-service: http://inventory-service.inventory.svc.cluster.local
+    program-service: http://program-service.program.svc.cluster.local
+    exercise-record-service: http://exercise-record-service.exercise-record.svc.cluster.local
+    challenge-service: http://challenge-service.challenge.svc.cluster.local
 
 scheduler:
   cron:

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-@FeignClient(name = "program-service", url = "${feign.program-service.url}")
+@FeignClient(name = "program-service", url = "${feign.url.program-service}")
 public interface ProgramServiceClient {
 
     @GetMapping("/program/feign/{programId}")
