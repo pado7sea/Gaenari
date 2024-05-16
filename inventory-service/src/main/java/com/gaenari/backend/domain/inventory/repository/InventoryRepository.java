@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     @Transactional
-    void deleteByMemberEmail(String memberEmail);
-    @Query("SELECT DISTINCT inv FROM Inventory inv JOIN FETCH inv.item item WHERE inv.memberEmail = :memberEmail")
-    List<Inventory> findByMemberEmail(@Param("memberEmail") String memberEmail);
-    List<Inventory> findByMemberEmailAndIsEquip(String memberEmail, Boolean isEquip);
+    void deleteByAccountId(String accountId);
+    @Query("SELECT DISTINCT inv FROM Inventory inv JOIN FETCH inv.item item WHERE inv.accountId = :accountId")
+    List<Inventory> findByAccountId(@Param("accountId") String accountId);
+    List<Inventory> findByAccountIdAndIsEquip(String accountId, Boolean isEquip);
 }
