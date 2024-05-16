@@ -130,7 +130,7 @@ spring:
         - id: fcm-service
           uri: http://fcm-service.fcm.svc.cluster.local
           predicates:
-            - Path=/api/fcm-service/v3/api-docs/**
+            - Path=/api/fcm-service/**
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/api/fcm-service/(?<path>.*), /$\{path}
