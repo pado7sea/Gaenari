@@ -151,15 +151,9 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              programDetail.isFavorite!
-                  ? "assets/color_icons/icon_star.png"
-                  : "assets/color_icons/icon_nonestar.png",
-              width: 40,
-              height: 40,
-              filterQuality: FilterQuality.none,
-              fit: BoxFit.cover,
-            ),
+            child: programDetail.isFavorite!
+                ? Icon(Icons.star_rounded, size: 40, color: myYellow)
+                : Icon(Icons.star_border_rounded, size: 40, color: myYellow),
           ),
         )
       ],

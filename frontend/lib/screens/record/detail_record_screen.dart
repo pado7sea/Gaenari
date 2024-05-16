@@ -189,15 +189,15 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
 
     switch (recordDetail.exerciseType) {
       case 'R':
-        image = AssetImage('assets/gif/retriever1_standandlook.gif');
+        image = AssetImage('assets/emoji/running.png');
         text = '자유달리기';
         break;
       case 'W':
-        image = AssetImage('assets/gif/retriever1_standandlook.gif');
+        image = AssetImage('assets/emoji/running.png');
         text = '자유걷기';
         break;
       case 'P':
-        image = AssetImage('assets/gif/retriever2_standandlook.gif');
+        image = AssetImage('assets/emoji/running.png');
         text = recordDetail.program!.programTitle.toString();
         break;
       default:
@@ -493,8 +493,168 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text('뭐하면 애정도 상승 저쩌구'), // 미션 내용 추가
-                                  // 다른 미션 정보 내용 추가 가능
+                                  Column(children: [
+                                    Row(
+                                      children: [
+                                        Text16(text: '1KM 달성 : 100'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '2'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text16(text: '3KM 달성 : 200'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '3'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text16(text: '5KM 달성 : 100'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '5'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text16(text: '10KM 달성 : 700'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '10'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text16(text: '10분 달성 : 100'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '2'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text16(text: '30분 달성 : 200'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '3'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text16(text: '60분 달성 : 100'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '5'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text16(text: '100분 달성 : 700'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_coin.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high),
+                                        Text16(text: '10'),
+                                        Image(
+                                            image: AssetImage(
+                                                'assets/color_icons/icon_love.png'),
+                                            width: 18,
+                                            height: 18,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.high)
+                                      ],
+                                    ),
+                                  ])
                                 ],
                               ),
                               actions: <Widget>[
