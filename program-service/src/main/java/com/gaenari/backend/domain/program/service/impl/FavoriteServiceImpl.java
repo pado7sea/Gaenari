@@ -22,9 +22,9 @@ public class FavoriteServiceImpl extends ProgramBaseService implements FavoriteS
 
     // 즐겨찾기 목록 조회
     @Override
-    public List<FavoriteDto> getFavoriteList(String memberId) {
+    public List<FavoriteDto> getFavoriteList(String accountId) {
 
-        return programRepository.findByMemberIdAndIsFavoriteOrderByUsageCountDesc(memberId, true).stream()
+        return programRepository.findByAccountIdAndIsFavoriteOrderByUsageCountDesc(accountId, true).stream()
                 .map(program -> {
                     ProgramTypeInfoDto programTypeInfoDto = convertToProgramTypeInfoDto(program);
 
@@ -48,8 +48,8 @@ public class FavoriteServiceImpl extends ProgramBaseService implements FavoriteS
     }
 
     @Override
-    public Boolean updateFavoriteStatus(String memberId, Long programId) {
-        Program program = programRepository.findByMemberIdAndId(memberId, programId);
+    public Boolean updateFavoriteStatus(String accountId, Long programId) {
+        Program program = programRepository.findByAccountIdAndId(accountId, programId);
 
         if (program == null) {
             throw new ProgramNotFoundException();
