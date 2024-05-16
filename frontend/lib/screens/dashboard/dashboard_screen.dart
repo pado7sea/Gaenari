@@ -178,8 +178,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                             msg:
                                 '${rewards.data!.coin!}개의 코인과 \n ${rewards.data!.heart!}의 애정도를 얻었어요!',
                             toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.TOP,
-                            backgroundColor: myMainGreen,
+                            gravity: ToastGravity.CENTER,
+                            backgroundColor: myYellow,
                           );
                         },
                         child: Container(
