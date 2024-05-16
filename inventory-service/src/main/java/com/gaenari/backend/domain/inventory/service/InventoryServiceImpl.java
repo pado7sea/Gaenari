@@ -42,13 +42,13 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override // 회원가입시 기본 아이템 생성
-    public void createNormalItems(String memberEmail) {
+    public void createNormalItems(String accountId) {
         // 1번 세트 아이템 다가지고 오기
         List<Item> itemList = itemRepository.findBySetId(1);
 
         for(Item item : itemList){
             Inventory inventory = Inventory.builder()
-                    .memberEmail(memberEmail)
+                    .accountId(accountId)
                     .item(item)
                     .isEquip(true)
                     .build();
@@ -57,12 +57,12 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override // 회원탈퇴시 아이템 삭제
-    public void deleteItems(String memberEmail) {
-        inventoryRepository.deleteByMemberEmail(memberEmail);
+    public void deleteItems(String accountId) {
+        inventoryRepository.deleteByAccountId(accountId);
     }
 
     @Override // 나의 보관함 보유 아이템 개수
-    public List<MySetsCnt> getSets(String memberEmail) {
+    public List<MySetsCnt> getSets(String accountId) {
         // 세트 개수 가져오기
         int setCnt = itemRepository.countUniqueSetIds();
         List<MySetsCnt> mySetsCntList = new ArrayList<>();
@@ -75,7 +75,7 @@ public class InventoryServiceImpl implements InventoryService{
             mySetsCntList.add(mySetsCnt);
         }
         // 회원이 가지고 있는 아이템들 가져오기
-        List<Inventory> inventoryList = inventoryRepository.findByMemberEmail(memberEmail);
+        List<Inventory> inventoryList = inventoryRepository.findByAccountId(accountId);
         // 가지고 있는 아이템들 확인하면서 해당되는 세트의 카운트 증가시키기
         for(Inventory inventory : inventoryList){
             int setNum = inventory.getItem().getSetId();       // 세트 넘버 가져와
@@ -88,10 +88,10 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override // 나의 보관함 아이템 조회
     @Transactional(readOnly = true)
-    public MyInventoryItems getMyItems(String memberEmail, int setId) {
+    public MyInventoryItems getMyItems(String accountId, int setId) {
 
         // 회원이 가지고 있는 아이템들 가져오기
-        List<Inventory> inventoryList = inventoryRepository.findByMemberEmail(memberEmail);
+        List<Inventory> inventoryList = inventoryRepository.findByAccountId(accountId);
         int i = setId;
         // 한 세트내의 모든 아이템들을 담을 그릇
         List<Items> responseItems = new ArrayList<>();
@@ -146,9 +146,9 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override // 나의 보관함 펫 조회
-    public List<MyInventoryPets> getMyPets(String memberEmail) {
+    public List<MyInventoryPets> getMyPets(String accountId) {
         // 회원이 가지고 있는 펫 조회
-        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(memberEmail).getBody();
+        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(accountId).getBody();
         if(!getPetsRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
@@ -201,9 +201,9 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override // 카테고리 적용 아이템 조회
-    public Long getEquipCategory(String memberEmail, Category category) {
+    public Long getEquipCategory(String accountId, Category category) {
         // 회원이 장착하고 있는 아이템 모두 조회
-        List<Inventory> inventoryList = inventoryRepository.findByMemberEmailAndIsEquip(memberEmail, true);
+        List<Inventory> inventoryList = inventoryRepository.findByAccountIdAndIsEquip(accountId, true);
         // 카테고리에 해당하는 아이템 id 가져오기
         Long equipItemId = null;
         for(Inventory inventory : inventoryList){
@@ -215,9 +215,9 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override // 회원 적용 아이템(펫, 아이템) 조회
-    public MyEquipItems getEquipItems(String memberEmail) {
+    public MyEquipItems getEquipItems(String accountId) {
         // 회원이 가지고 있는 펫 조회
-        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(memberEmail).getBody();
+        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(accountId).getBody();
         if(!getPetsRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
@@ -237,7 +237,7 @@ public class InventoryServiceImpl implements InventoryService{
         }
         // 적용된 아이템 조회
         List<Items> itemsList = new ArrayList<>();
-        List<Inventory> inventoryList = inventoryRepository.findByMemberEmail(memberEmail);
+        List<Inventory> inventoryList = inventoryRepository.findByAccountId(accountId);
         for(Inventory inventory : inventoryList){
             if(inventory.getIsEquip()){
                 Items items = Items.builder()
@@ -260,9 +260,9 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override // 아이템 적용
-    public void updateItems(String memberEmail, Category category, Long itemId) {
+    public void updateItems(String accountId, Category category, Long itemId) {
         // 현재 가지고있는 아이템 조회
-        List<Inventory> inventoryList = inventoryRepository.findByMemberEmail(memberEmail);
+        List<Inventory> inventoryList = inventoryRepository.findByAccountId(accountId);
         boolean cancel = true;
         boolean equip = true;
         for(Inventory inventory : inventoryList){
@@ -274,7 +274,7 @@ public class InventoryServiceImpl implements InventoryService{
                     // 적용된 아이템은 적용 해제
                     Inventory clearItem = Inventory.builder()
                             .Id(inventory.getId())
-                            .memberEmail(inventory.getMemberEmail())
+                            .accountId(inventory.getAccountId())
                             .item(inventory.getItem())
                             .isEquip(false)
                             .build();
@@ -284,7 +284,7 @@ public class InventoryServiceImpl implements InventoryService{
                 if(equip && inventory.getItem().getId().equals(itemId)){
                     Inventory equipItem = Inventory.builder()
                             .Id(inventory.getId())
-                            .memberEmail(inventory.getMemberEmail())
+                            .accountId(inventory.getAccountId())
                             .item(inventory.getItem())
                             .isEquip(true)
                             .build();
@@ -301,16 +301,16 @@ public class InventoryServiceImpl implements InventoryService{
     }
 
     @Override // 아이템 랜덤 구매
-    public Items randomItem(String memberEmail) {
+    public Items randomItem(String accountId) {
         // 기존 코인 조회후, 아이템 구매가 가능한지 확인
-        GenericResponse<?> getCoinRes = memberServiceClient.getMemberCoin(memberEmail).getBody();
+        GenericResponse<?> getCoinRes = memberServiceClient.getMemberCoin(accountId).getBody();
         int haveCoin = Integer.parseInt(getCoinRes.getData().toString());
         if(haveCoin < 1000){
             throw new NotEnoughCoinException();
         }
         // 코인 감소시키기
         MemberCoin memberCoin = MemberCoin.builder()
-                .memberEmail(memberEmail)
+                .accountId(accountId)
                 .coinTitle(CoinTitle.ITEM_PURCHASE)
                 .coinAmount(1000)
                 .isIncreased(false)
@@ -326,7 +326,7 @@ public class InventoryServiceImpl implements InventoryService{
         int randomIndex = random.nextInt(itemList.size());
         Item selectItem = itemList.get(randomIndex);
         // 현재 가지고있는 아이템 조회
-        List<Inventory> inventoryList = inventoryRepository.findByMemberEmail(memberEmail);
+        List<Inventory> inventoryList = inventoryRepository.findByAccountId(accountId);
         // 해당 아이템 소유/장착 여부 확인
         Boolean checkHave = false;
         Boolean checkEquip = false;
@@ -347,7 +347,7 @@ public class InventoryServiceImpl implements InventoryService{
         // 가지고 있지 않다면, 인벤토리에 저장
         if(!checkHave){
             addInventory = Inventory.builder()
-                    .memberEmail(memberEmail)
+                    .accountId(accountId)
                     .item(selectItem)
                     .isEquip(false)
                     .build();

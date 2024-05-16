@@ -14,8 +14,8 @@ import java.util.List;
 
 @FeignClient(name = "member-service", url = "${feign.member-service.url}")
 public interface MemberServiceClient {
-    @GetMapping("/pet/{memberEmail}") // 회원이 가지고 있는 펫 조회
-    ResponseEntity<GenericResponse<List<Pets>>> getPets(@PathVariable String memberEmail);
+    @GetMapping("/pet/{accountId}") // 회원이 가지고 있는 펫 조회
+    ResponseEntity<GenericResponse<List<Pets>>> getPets(@PathVariable String accountId);
 
     @GetMapping("/pet/dog/{dogId}") // 강아지 가격 조회
     ResponseEntity<GenericResponse<?>> getDogPrice(@PathVariable int dogId);
@@ -26,6 +26,6 @@ public interface MemberServiceClient {
     @PutMapping("/coin") // 회원 코인 증/감
     ResponseEntity<GenericResponse<?>> updateCoin(@RequestBody MemberCoin memberCoin);
 
-    @GetMapping("/coin/{memberEmail}") // 회원보유코인 조회
-    ResponseEntity<GenericResponse<?>> getMemberCoin(@PathVariable String memberEmail);
+    @GetMapping("/coin/{accountId}") // 회원보유코인 조회
+    ResponseEntity<GenericResponse<?>> getMemberCoin(@PathVariable String accountId);
 }
