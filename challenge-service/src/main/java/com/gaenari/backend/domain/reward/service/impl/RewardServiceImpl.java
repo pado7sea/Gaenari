@@ -11,6 +11,7 @@ import com.gaenari.backend.domain.memberChallenge.repository.MemberChallengeRepo
 import com.gaenari.backend.domain.reward.dto.RewardDto;
 import com.gaenari.backend.domain.reward.service.RewardService;
 import com.gaenari.backend.global.exception.feign.ConnectFeignFailException;
+import com.gaenari.backend.global.exception.reward.RewardNotFoundException;
 import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -68,8 +69,8 @@ public class RewardServiceImpl implements RewardService {
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
 
         // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
-        if (memberChallenge.getObtainable() <= 0) {
-            return null;
+        if (memberChallenge == null || memberChallenge.getObtainable() <= 0) {
+            throw new RewardNotFoundException();
         }
 
         // 업적 및 미션 카테고리에 따라 얻을 수 있는 코인 및 애정도 계산
@@ -105,8 +106,8 @@ public class RewardServiceImpl implements RewardService {
         MemberChallenge memberChallenge = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
 
         // 도전 과제 아이디로 조회된 멤버 챌린지가 없거나 obtainableCount 가 0 이하인 경우
-        if (memberChallenge.getObtainable() <= 0) {
-            return null;
+        if (memberChallenge == null || memberChallenge.getObtainable() <= 0) {
+            throw new RewardNotFoundException();
         }
 
         // 업적 및 미션 카테고리에 따라 얻을 수 있는 코인 및 애정도 계산
