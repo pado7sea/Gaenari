@@ -1,0 +1,54 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: fcm-service
+
+  datasource:
+    url: jdbc:mysql://${DATABASE_URL}:${DATABASE_PORT}/${DATABASE_USER_DB_NAME}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://eureka.gaenari.kr/eureka
+
+springdoc:
+  api-docs:
+    enabled: true
+    version: openapi_3_1
+  enable-spring-security: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+token:
+  expiration_time: 86400000 # 60*60*24*1000
+  secret: member_token_dskjlhfahgiuohauiorheoaihishsodjsafpofjdoadspdoiajfsoisajfdio # 임의의 값
+
+feign:
+  member-service:
+    url: http://member-service.member.svc.cluster.local
+  inventory-service:
+    url: http://inventory-service.inventory.svc.cluster.local
+  program-service:
+    url: http://program-service.program.svc.cluster.local
+  exercise-record-service:
+    url: http://exercise-record-service.exercise-record.svc.cluster.local
+  challenge-service:
+    url: http://challenge-service.challenge.svc.cluster.local
+  fcm-service:
+    url: http://fcm-service.fcm.svc.cluster.local
