@@ -34,8 +34,8 @@ public class ProgramController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "운동 프로그램 목록 조회 성공", content = @Content(schema = @Schema(implementation = ProgramDto.class))),
     })
-    public ResponseEntity<?> getAllPrograms(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId) {
-        List<ProgramDto> programList = programService.getProgramList(memberId);
+    public ResponseEntity<?> getAllPrograms(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
+        List<ProgramDto> programList = programService.getProgramList(accountId);
 
         return response.success(ResponseCode.PROGRAM_LIST_FETCHED, programList);
     }
@@ -45,9 +45,9 @@ public class ProgramController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "운동 프로그램 상세 조회 성공", content = @Content(schema = @Schema(implementation = ProgramDetailDto.class))),
     })
-    public ResponseEntity<?> getProgramDetail(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> getProgramDetail(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                               @Parameter(description = "운동 프로그램 ID") @PathVariable(name = "programId") Long programId) {
-        ProgramDetailDto programDetail = programService.getProgramDetail(memberId, programId);
+        ProgramDetailDto programDetail = programService.getProgramDetail(accountId, programId);
 
         return response.success(ResponseCode.PROGRAM_INFO_FETCHED, programDetail);
     }
@@ -57,18 +57,18 @@ public class ProgramController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "운동 프로그램 생성 성공", content = @Content(schema = @Schema(implementation = Long.class))),
     })
-    public ResponseEntity<?> createProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> createProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                            @Valid @RequestBody ProgramCreateDto programDto) {
-        Long programId = programService.createProgram(memberId, programDto);
+        Long programId = programService.createProgram(accountId, programDto);
 
         return response.success(ResponseCode.PROGRAM_CREATED, programId);
     }
 
     @Operation(summary = "운동 프로그램 삭제", description = "운동 프로그램 삭제")
     @DeleteMapping("/{programId}")
-    public ResponseEntity<?> deleteProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String memberId,
+    public ResponseEntity<?> deleteProgram(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                            @Parameter(description = "운동 프로그램 ID") @PathVariable(name = "programId") Long programId) {
-        programService.deleteProgram(memberId, programId);
+        programService.deleteProgram(accountId, programId);
 
         return response.success(ResponseCode.PROGRAM_DELETED);
     }
