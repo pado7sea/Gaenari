@@ -30,21 +30,21 @@ public class ScheduledTasks {
 
         // 설정된 기간(inactivity.weeks) 동안 활동하지 않은 사용자들의 ID를 조회하여 그들의 애정도를 감소
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(inactivityWeeks);
-        List<String> inactiveMemberIds = statisticRepository.findByDateBefore(oneWeekAgo)
+        List<String> inactiveAccountIds = statisticRepository.findByDateBefore(oneWeekAgo)
                 .stream()
-                .map(Statistic::getMemberId)
+                .map(Statistic::getAccountId)
                 .toList();
 
-        for (String memberId : inactiveMemberIds) {
-            decreaseHeartForMember(memberId, heartDecreaseAmount);
+        for (String accountId : inactiveAccountIds) {
+            decreaseHeartForMember(accountId, heartDecreaseAmount);
         }
     }
 
-    private void decreaseHeartForMember(String memberId, int amount) {
-        ResponseEntity<GenericResponse<?>> response = memberServiceClient.updateHeart(new HeartChangeDto(memberId, false, amount));
+    private void decreaseHeartForMember(String accountId, int amount) {
+        ResponseEntity<GenericResponse<?>> response = memberServiceClient.updateHeart(new HeartChangeDto(accountId, false, amount));
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new ConnectFeignFailException();
         }
-        System.out.println("Heart decreased for: " + memberId + ", amount: " + amount);
+        System.out.println("Heart decreased for: " + accountId + ", amount: " + amount);
     }
 }

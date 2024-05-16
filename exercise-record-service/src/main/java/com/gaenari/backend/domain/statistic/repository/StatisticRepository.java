@@ -11,10 +11,10 @@ public interface StatisticRepository extends JpaRepository<Statistic, Long> {
     /**
      * 회원 ID에 해당하는 통계를 찾습니다.
      *
-     * @param memberId 회원 ID
+     * @param accountId 회원 ID
      * @return 해당 회원의 통계
      */
-    Statistic findByMemberId(String memberId);
+    Statistic findByAccountId(String accountId);
 
     /**
      * 특정 날짜 이전에 생성된 통계들을 조회합니다.

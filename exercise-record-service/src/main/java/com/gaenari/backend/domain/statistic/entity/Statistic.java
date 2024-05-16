@@ -20,8 +20,8 @@ public class Statistic {
     private Long id;
 
     @NotNull
-    @Column(name = "member_id")
-    private String memberId;
+    @Column(name = "account_id")
+    private String accountId;
 
     @NotNull
     @Builder.Default
