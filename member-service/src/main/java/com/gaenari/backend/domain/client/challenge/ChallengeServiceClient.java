@@ -12,8 +12,8 @@ import java.io.IOException;
 
 @FeignClient(name = "challenge-service", url = "${feign.challenge-service.url}")
 public interface ChallengeServiceClient {
-    @GetMapping("/reward/notice/{memberId}") // 받지 않은 보상 여부
-    ResponseEntity<GenericResponse<Boolean>> isGetReward(@PathVariable String memberId);
+    @GetMapping("/reward/notice/{accountId}") // 받지 않은 보상 여부
+    ResponseEntity<GenericResponse<Boolean>> isGetReward(@PathVariable String accountId);
 
 
 }

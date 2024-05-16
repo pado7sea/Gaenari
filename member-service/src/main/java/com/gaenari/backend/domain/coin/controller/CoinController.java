@@ -24,39 +24,39 @@ public class CoinController {
 
     @Operation(summary = "회원보유코인 조회", description = "회원보유코인 조회")
     @GetMapping("")
-    public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail) {
+    public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId) {
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        int Coin = coinService.getCoin(memberEmail);
+        int Coin = coinService.getCoin(accountId);
         return response.success(ResponseCode.COIN_FETCH_SUCCESS, Coin);
     }
 
     @Operation(summary = "회원코인 내역조회", description = "회원코인 내역조회")
     @GetMapping("/{year}/{month}")
-    public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail,
+    public ResponseEntity<?> getCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                      @PathVariable(name = "year") int year,
                                      @PathVariable(name = "month") int month) {
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        MemberCoinHistory memberCoinHistory = coinService.getCoinRecord(memberEmail, year, month);
+        MemberCoinHistory memberCoinHistory = coinService.getCoinRecord(accountId, year, month);
         return response.success(ResponseCode.COIN_FETCH_SUCCESS, memberCoinHistory);
     }
 
     @Operation(summary = "회원 코인 증/감", description = "회원 코인 증/감")
     @PostMapping("")
-    public ResponseEntity<?> createCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String memberEmail,
+    public ResponseEntity<?> createCoin(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                         @RequestBody MemberCoinIncrease memberCoinIncrease){
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         // MemberCoin Dto로 변환
         MemberCoin memberCoin = MemberCoin.builder()
-                .memberEmail(memberEmail)
+                .accountId(accountId)
                 .isIncreased(memberCoinIncrease.getIsIncreased())
                 .coinTitle(memberCoinIncrease.getCoinTitle())
                 .coinAmount(memberCoinIncrease.getCoinAmount())
@@ -69,7 +69,7 @@ public class CoinController {
     @PutMapping("")
     public ResponseEntity<?> updateCoin(@RequestBody MemberCoin memberCoin){
         // memberId가 null이면 인증 실패
-        if (memberCoin.getMemberEmail() == null) {
+        if (memberCoin.getAccountId() == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
         coinService.updateCoin(memberCoin);
@@ -78,12 +78,12 @@ public class CoinController {
 
     @Operation(summary = "[Feign] 회원보유코인 조회", description = "Feign API")
     @GetMapping("/{memberEmail}")
-    public ResponseEntity<?> getMemberCoin(@PathVariable String memberEmail) {
+    public ResponseEntity<?> getMemberCoin(@PathVariable String accountId) {
         // memberId가 null이면 인증 실패
-        if (memberEmail == null) {
+        if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        int coin = coinService.getCoin(memberEmail);
+        int coin = coinService.getCoin(accountId);
         return response.success(ResponseCode.COIN_FETCH_SUCCESS, coin);
     }
 }

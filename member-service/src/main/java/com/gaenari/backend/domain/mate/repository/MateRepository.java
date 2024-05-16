@@ -16,14 +16,6 @@ public interface MateRepository extends JpaRepository<Mate, Long> {
     Mate findByFriend2AndFriend1(Member friendId1, Member friendId2);
     List<Mate> findByFriend1AndState(Member memberId, State state);
     List<Mate> findByFriend2AndState(Member memberId, State state);
-//    @Query(value = "SELECT * FROM mate WHERE friend1_id = ?1", nativeQuery = true)
-//    List<Mate> findByFriend1(Member member);
-
-//    @Query("SELECT m FROM Mate m WHERE m.friend1.id = :memberId)
-//            List<Mate> findByFriend1Id(@Param("memberId") Long memberId);
-
-//    @Query("SELECT m FROM Mate m WHERE m.friend1.Id = :memberId")
-//    List<Mate> findByFriend1Id(@Param("memberId") Long memberId);
 
     @Query("SELECT m FROM Mate m JOIN FETCH m.friend1 friend1 JOIN FETCH m.friend2 friend2 WHERE friend1.Id = :memberId")
     List<Mate> findByFriend1(@Param("memberId") Long member);

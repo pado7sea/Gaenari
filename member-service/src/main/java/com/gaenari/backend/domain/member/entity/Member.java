@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member", indexes = {
-        @Index(name = "unique_index_email", columnList = "member_email"),
+        @Index(name = "unique_index_account_id", columnList = "member_account_id"),
         @Index(name = "unique_index_nickname", columnList = "member_nickname")
 })
 public class Member {
@@ -28,9 +28,9 @@ public class Member {
     @Column(name = "member_id")
     private Long Id;
 
-    @Column(name = "member_email", length = 50, updatable = false, unique = true)
+    @Column(name = "member_account_id", length = 50, updatable = false, unique = true)
     @NotNull
-    private String email;
+    private String accountId;
 
     @Column(name = "member_password")
     @NotNull
