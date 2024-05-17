@@ -1,5 +1,6 @@
 package com.gaenari.backend.domain.afterExercise.service;
 
+import com.gaenari.backend.domain.afterExercise.dto.requestDto.NoticeInfoDto;
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
 
@@ -31,4 +32,5 @@ public interface AfterExerciseService {
      */
     TotalStatisticDto updateExerciseStatistics(String accountId, SaveExerciseRecordDto exerciseDto);
 
+    void sendFcmNotice(String accountId, NoticeInfoDto infoDto);
 }

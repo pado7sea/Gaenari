@@ -1,10 +1,11 @@
 package com.gaenari.backend.domain.afterExercise.controller;
 
+import com.gaenari.backend.domain.afterExercise.dto.requestDto.NoticeInfoDto;
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
-import com.gaenari.backend.domain.record.dto.responseDto.RecordDto;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponseCustom;
+import com.gaenari.backend.global.util.fcm.FcmServiceClient;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,8 +27,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/exercise")
 public class AfterExerciseController {
 
-    private final ApiResponseCustom response;
-    private final AfterExerciseService afterExerciseService;
+  private final ApiResponseCustom response;
+  private final AfterExerciseService afterExerciseService;
+  private final FcmServiceClient fcmServiceClient;
 
     @Transactional
     @Operation(summary = "최종 운동 기록 저장", description = "최종 운동 기록 저장")
@@ -38,7 +40,7 @@ public class AfterExerciseController {
     public ResponseEntity<?> saveExerciseRecord(@Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
                                                 @Valid @RequestBody SaveExerciseRecordDto exerciseDto) {
 
-        log.info("SaveExerciseRecordDto: {}", exerciseDto);
+    log.info("SaveExerciseRecordDto: {}", exerciseDto);
 
         // 프로그램 사용 횟수 1 증가
         afterExerciseService.updateProgramUsageCount(accountId, exerciseDto);
@@ -49,7 +51,15 @@ public class AfterExerciseController {
         // 누적 통계 업데이트 -> 업적
         afterExerciseService.updateExerciseStatistics(accountId, exerciseDto);
 
-        return response.success(ResponseCode.EXERCISE_RECORD_SAVE_SUCCESS, exerciseId);
-    }
+    return response.success(ResponseCode.EXERCISE_RECORD_SAVE_SUCCESS, exerciseId);
+  }
+
+  @PostMapping("/alert")
+  public ResponseEntity<?> sendExerciseStartNotice(
+      @Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
+      @RequestBody NoticeInfoDto noticeInfoDto) {
+      afterExerciseService.sendFcmNotice(accountId, noticeInfoDto);
+      return response.success();
+  }
 
 }
