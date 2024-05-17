@@ -127,9 +127,9 @@ public class MateController {
     }
 
     @Operation(summary = "[Feign] 친구 아이디 조회", description = "Feign API")
-    @GetMapping("/accountId/{accountId}")
-    public ResponseEntity<?> getMateEmail(@PathVariable Long accountId){
-        String mateAccountId = memberService.getMemberAccountId(accountId);
+    @GetMapping("/accountId/{memberId}")
+    public ResponseEntity<?> getMateAccountId(@PathVariable Long memberId){
+        String mateAccountId = memberService.getMemberAccountId(memberId);
         return response.success(ResponseCode.SEARCH_MEMBER_SUCCESS, mateAccountId);
     }
 
