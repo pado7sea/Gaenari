@@ -115,7 +115,7 @@ class CountdownActivity : AppCompatActivity() {
                         else -> null
                     }
 
-                    sendAlert(intent)
+                    sendAlert()
                     startExerciseService(serviceIntent)
                     startActivity(intent) // 다음 액티비티 시작
                 }
@@ -125,14 +125,20 @@ class CountdownActivity : AppCompatActivity() {
         }.start()
     }
 
-    private fun sendAlert(intent: Intent) {
+    private fun sendAlert() {
         val token = AccessToken.getInstance().accessToken
         val program = intent.getParcelableExtra("programData", FavoriteResponseDto::class.java)!!
+
+        Log.d("Check Countdown Activity", "ProgramData : $program")
+
         val requestDto = AlertStartRequestDto(
             exerciseDateTime = LocalDateTime.now(),
             programTitle = program.programTitle,
             programType = program.type
         )
+
+        Log.d("Check Countdown Activity", "AlertStartRequest : $requestDto")
+
         val call = Retrofit.getApiService().alertStartExercise(token, requestDto)
 
         call.enqueue(object : Callback<ApiResponseDto<String>> {
@@ -150,7 +156,7 @@ class CountdownActivity : AppCompatActivity() {
             override fun onFailure(
                 call: Call<ApiResponseDto<String>>, t: Throwable
             ) {
-                Toast.makeText(this@CountdownActivity, "API 연결 실패.", Toast.LENGTH_SHORT).show()
+                Log.d("Check Countdown Activity", "Send Notice Unforeseen Error")
             }
         })
     }
