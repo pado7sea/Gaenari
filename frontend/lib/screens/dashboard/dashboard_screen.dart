@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/challenges/reward.dart';
 import 'package:forsythia/models/challenges/reward_notice.dart';
@@ -259,9 +260,40 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                               padding: EdgeInsets.all(20),
                               margin: EdgeInsets.only(bottom: 16),
                               decoration: myBoxDecoration,
-                              child: Text16(
-                                text: "도전과제",
-                                bold: true,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text16(
+                                    text: "보상",
+                                    bold: true,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Row(
+                                      children: [
+                                        Image(
+                                          image: AssetImage(
+                                              'assets/color_icons/icon_coin.png'),
+                                          width: 30,
+                                          height: 30,
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.high,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Image(
+                                          image: AssetImage(
+                                              'assets/color_icons/icon_love.png'),
+                                          width: 30,
+                                          height: 28,
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.high,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -276,9 +308,40 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                               padding: EdgeInsets.all(20),
                               // margin: EdgeInsets.only(bottom: 10),
                               decoration: myBoxDecoration,
-                              child: Text16(
-                                text: "친구",
-                                bold: true,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text16(
+                                    text: "친구",
+                                    bold: true,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Row(
+                                      children: [
+                                        Image(
+                                          image: AssetImage(
+                                              'assets/color_icons/icon_mate1.png'),
+                                          width: 27,
+                                          height: 34,
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.high,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Image(
+                                          image: AssetImage(
+                                              'assets/color_icons/icon_mate2.png'),
+                                          width: 27,
+                                          height: 35,
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.high,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),
@@ -297,9 +360,26 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                             padding: EdgeInsets.all(20),
                             margin: EdgeInsets.only(left: 16),
                             decoration: myBoxDecoration,
-                            child: Text16(
-                              text: "워치 or 날씨",
-                              bold: true,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text16(
+                                  text: "워치",
+                                  bold: true,
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Image(
+                                    image:
+                                        AssetImage('assets/images/watch.png'),
+                                    width: 85,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                    filterQuality: FilterQuality.high,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         )),
