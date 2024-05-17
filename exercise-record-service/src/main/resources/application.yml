@@ -49,6 +49,7 @@ feign:
     program-service: http://localhost:8085
     exercise-record-service: http://localhost:8086
     challenge-service: http://localhost:8088
+    fcm-service: http://localhost:8089
   client:
     config:
       default:
