@@ -115,7 +115,7 @@ class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
