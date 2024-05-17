@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
@@ -26,4 +27,8 @@ public interface RecordServiceClient {
     ResponseEntity<GenericResponse<List<Integer>>> getChallengeIdsByRecordId(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId,
                                                    @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId);
 
+    // 운동 기록의 보상 수령 여부 업데이트
+    @PutMapping("/record/feign/obtain/{accountId}/{recordId}")
+    ResponseEntity<GenericResponse<?>> updateRecordObtained(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId,
+                                                            @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId);
 }
