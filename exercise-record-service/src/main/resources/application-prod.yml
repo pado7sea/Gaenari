@@ -42,6 +42,7 @@ feign:
     program-service: http://program-service.program.svc.cluster.local
     exercise-record-service: http://exercise-record-service.exercise-record.svc.cluster.local
     challenge-service: http://challenge-service.challenge.svc.cluster.local
+    fcm-service: http://fcm-service.fcm.svc.cluster.local
 
 scheduler:
   cron:

@@ -1,5 +1,6 @@
 package com.gaenari.backend.domain.afterExercise.service.impl;
 
+import com.gaenari.backend.domain.afterExercise.dto.requestDto.NoticeInfoDto;
 import com.gaenari.backend.domain.afterExercise.dto.requestDto.SaveExerciseRecordDto;
 import com.gaenari.backend.domain.afterExercise.service.AfterExerciseService;
 import com.gaenari.backend.domain.client.challenge.ChallengeServiceClient;
@@ -22,6 +23,8 @@ import com.gaenari.backend.global.exception.program.IntervalInfoNotFoundExceptio
 import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import com.gaenari.backend.global.exception.program.TargetValueNotFoundException;
 import com.gaenari.backend.global.format.response.GenericResponse;
+import com.gaenari.backend.global.util.fcm.dto.FcmMessageRequestDto;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -261,6 +264,17 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
 
         // 총 통계 정보 반환
         return buildTotalStatisticDto(currentStats);
+    }
+
+    @Override
+    public void sendFcmNotice(String accountId, NoticeInfoDto infoDto) {
+        String date = infoDto.getExerciseDateTime().format(DateTimeFormatter.ofPattern("MM월 dd일 HH시 mm분"));
+        String content = infoDto.getProgramTitle() + "를 시작했어요!";
+        FcmMessageRequestDto.builder()
+            .accountId(accountId)
+            .title(date)
+            .content(content)
+            .build();
     }
 
     // 초기 통계 생성 메서드
