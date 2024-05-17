@@ -13,6 +13,7 @@ import com.example.gaenari.activity.dactivity.DActivity
 import com.example.gaenari.activity.iactivity.IActivity
 import com.example.gaenari.activity.tactivity.TActivity
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.gaenari.R
 import com.example.gaenari.activity.dactivity.DistTargetService
@@ -22,7 +23,17 @@ import com.example.gaenari.activity.runandwalk.run.RunningActivity
 import com.example.gaenari.activity.runandwalk.walk.WService
 import com.example.gaenari.activity.runandwalk.walk.WalkingActivity
 import com.example.gaenari.activity.tactivity.TimeTargetService
+import com.example.gaenari.dto.request.AlertStartRequestDto
+import com.example.gaenari.dto.response.ApiResponseDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.util.AccessToken
+import com.example.gaenari.util.Retrofit
+
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+import java.time.LocalDateTime
 
 class CountdownActivity : AppCompatActivity() {
     override fun onCreate(savedCreateState: Bundle?) {
@@ -36,7 +47,7 @@ class CountdownActivity : AppCompatActivity() {
 
         val programType = intent.getStringExtra("programType")
         val programTitle = intent.getStringExtra("programTitle")
-        title.text=programTitle
+        title.text = programTitle
 
         val textSizeStart = 90f
         val textSizeEnd = 75f
@@ -104,6 +115,7 @@ class CountdownActivity : AppCompatActivity() {
                         else -> null
                     }
 
+                    sendAlert(intent)
                     startExerciseService(serviceIntent)
                     startActivity(intent) // 다음 액티비티 시작
                 }
@@ -113,43 +125,45 @@ class CountdownActivity : AppCompatActivity() {
         }.start()
     }
 
+    private fun sendAlert(intent: Intent) {
+        val token = AccessToken.getInstance().accessToken
+        val program = intent.getParcelableExtra("programData", FavoriteResponseDto::class.java)!!
+        val requestDto = AlertStartRequestDto(
+            exerciseDateTime = LocalDateTime.now(),
+            programTitle = program.programTitle,
+            programType = program.type
+        )
+        val call = Retrofit.getApiService().alertStartExercise(token, requestDto)
+
+        call.enqueue(object : Callback<ApiResponseDto<String>> {
+            override fun onResponse(
+                call: Call<ApiResponseDto<String>>,
+                response: Response<ApiResponseDto<String>>
+            ) {
+                if (response.body()?.status == "ERROR") {
+                    Log.d("Check Countdown Activity", "Send Notice Fail")
+                } else {
+                    Log.d("Check Countdown Activity", "Send Notice Success")
+                }
+            }
+
+            override fun onFailure(
+                call: Call<ApiResponseDto<String>>, t: Throwable
+            ) {
+                Toast.makeText(this@CountdownActivity, "API 연결 실패.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     /**
      * 운동 프로그램 서비스 시작
      */
-    private fun startExerciseService(serviceIntent: Intent?){
-        serviceIntent?.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
+    private fun startExerciseService(serviceIntent: Intent?) {
+        serviceIntent?.putExtra(
+            "programData",
+            intent.getParcelableExtra("programData", FavoriteResponseDto::class.java)
+        )
         Log.d("Check Countdown Activity", "StartExerciseService: $serviceIntent")
         startForegroundService(serviceIntent)
     }
-
-//    private fun startDRunningService() {
-//        val serviceIntent = Intent(this, DistTargetService::class.java)
-//        serviceIntent.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
-//        Log.d("Check Countdown Activity", "startDRunningService: DDDD시작?")
-//        startForegroundService(serviceIntent)
-//    }
-//    private fun startTRunningService() {
-//        val serviceIntent = Intent(this, TimeTargetService::class.java)
-//        Log.d("Check Countdown Activity", "startTRunningService: TTT시작?")
-//        serviceIntent.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
-//        startForegroundService(serviceIntent)
-//    }
-//    private fun startIRunningService() {
-//        val serviceIntent = Intent(this, IntervalService::class.java)
-//        Log.d("Check Countdown Activity", "Interval Service Intent : $serviceIntent")
-//        serviceIntent.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
-//        startForegroundService(serviceIntent)
-//    }
-//    private fun startRunService() {
-//        val serviceIntent = Intent(this, RService::class.java)
-//        Log.d("Check Countdown Activity", "Interval Service Intent : $serviceIntent")
-//        serviceIntent.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
-//        startForegroundService(serviceIntent)
-//    }
-//    private fun startWalkService() {
-//        val serviceIntent = Intent(this, WService::class.java)
-//        Log.d("Check Countdown Activity", "Interval Service Intent : $serviceIntent")
-//        serviceIntent.putExtra("programData", intent.getParcelableExtra("programData", FavoriteResponseDto::class.java))
-//        startForegroundService(serviceIntent)
-//    }
 }
