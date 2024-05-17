@@ -255,13 +255,13 @@ class DailyRecords {
 
 class Paces {
   double? average;
-  List<int>? arr;
+  List<double>? arr;
 
   Paces({this.average, this.arr});
 
   Paces.fromJson(Map<String, dynamic> json) {
     average = json['average']?.toDouble();
-    arr = json['arr'].cast<int>();
+    arr = json['arr'].cast<double>();
   }
 
   Map<String, dynamic> toJson() {
