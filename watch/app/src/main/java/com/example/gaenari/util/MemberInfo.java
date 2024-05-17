@@ -18,7 +18,7 @@ public class MemberInfo {
         SharedPreferences.Editor edit = prefs.edit();
 
         edit.putLong("memberId", responseDto.getMemberId());
-        edit.putString("email", responseDto.getEmail());
+        edit.putString("accountId", responseDto.getAccountId());
         edit.putString("nickname", responseDto.getNickname());
         edit.putString("gender", responseDto.getGender());
         edit.putInt("height", responseDto.getHeight());

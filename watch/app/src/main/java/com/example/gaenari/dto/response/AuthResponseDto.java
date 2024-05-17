@@ -4,7 +4,7 @@ public class AuthResponseDto {
 
     private String AccessToken;
     private Long memberId;
-    private String email;
+    private String accountId;
     private String nickname;
     private String birthday;
     private String gender;
@@ -40,12 +40,12 @@ public class AuthResponseDto {
         this.memberId = memberId;
     }
 
-    public String getEmail() {
-        return email;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getNickname() {
@@ -111,7 +111,7 @@ public class AuthResponseDto {
         return "AuthResponseDto{" +
                 "AccessToken='" + AccessToken + '\'' +
                 ", memberId=" + memberId +
-                ", email='" + email + '\'' +
+                ", accountId='" + accountId + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", gender='" + gender + '\'' +
