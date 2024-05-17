@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/mates/mate_list.dart';
 import 'package:forsythia/screens/mate/mate_add_screen.dart';
+import 'package:forsythia/screens/mate/mate_doghouse_screen.dart';
 import 'package:forsythia/screens/mate/mate_new_screen.dart';
 import 'package:forsythia/service/mate_service.dart';
 import 'package:forsythia/theme/color.dart';
@@ -238,7 +239,11 @@ class _MatePageState extends State<MatePage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // 친구 집 입장하는 어쩌구
+                              Navigator.of(context).push(SlidePageRoute(
+                                  nextPage: MateDogHouseScreen(
+                                memberId: list[index].memberId!,
+                                memberName: list[index].nickName!,
+                              )));
                             },
                             child: Container(
                                 width: 70,
