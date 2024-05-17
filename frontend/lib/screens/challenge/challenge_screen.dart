@@ -147,8 +147,8 @@ class _ChallengePageState extends State<ChallengeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: LargeAppBar(
-        title: "도전과제",
-        sentence: "도전과제를 달성하고 \n많은 보상과 강아지를 레벨업",
+        title: "보상",
+        sentence: "업적과 미션을 달성하고 \n보상 받아 강아지를 레벨업하자!",
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -577,14 +577,19 @@ class _ChallengePageState extends State<ChallengeScreen> {
                 // value['type']에 따라 다른 이미지 표시
                 missionImage,
                 SizedBox(height: 10),
-                Expanded(
-                  child: MissionBtn(
-                    obtainable: value['obtainable'],
-                    count: value['count'],
-                    challengeId: value['challengeId'],
-                    onChallenge: () {
-                      challenge();
-                    },
+                Flexible(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 50.0, // 원하는 최대 높이로 설정
+                    ),
+                    child: MissionBtn(
+                      obtainable: value['obtainable'],
+                      count: value['count'],
+                      challengeId: value['challengeId'],
+                      onChallenge: () {
+                        challenge();
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -823,12 +828,13 @@ class _MissionBtnState extends State<MissionBtn> {
           }
         },
         child: Container(
+            // constraints: BoxConstraints(maxHeight: 10),
             decoration: BoxDecoration(
                 color: active ? myLightGreen : myLightGrey,
                 borderRadius: BorderRadius.circular(10)),
             child: Center(
               child: Text16(
-                text: active ? '보상받기' : '${widget.count} 회',
+                text: active ? '보상받기' : '${widget.count} 회 달성',
                 textColor: Colors.white,
               ),
             )));
