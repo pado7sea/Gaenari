@@ -38,22 +38,6 @@ public class RewardController {
         return response.success(ResponseCode.REWARD_EXIST_SUCCESS, isExist);
     }
 
-    @Operation(summary = "[Feign] 받지 않은 보상 여부", description = "받지 않은 보상이 있을 때 true")
-    @GetMapping("/notice/{accountId}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "[Feign] 받지 않은 보상 여부 조회 성공", content = @Content(schema = @Schema(implementation = boolean.class)))
-    })
-    public ResponseEntity<?> feignNoticeReward(@PathVariable String accountId) {
-        // accountId가 null이면 인증 실패
-        if (accountId == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        // 회원 ID로 보상을 받지 않은 도전과제가 있는지 찾기
-        boolean isExist = rewardService.findObtainableChallenge(accountId);
-        return response.success(ResponseCode.REWARD_EXIST_SUCCESS, isExist);
-    }
-
     @Operation(summary = "모든 보상 받기", description = "해당 회원이 받지 않은 모든 보상 받기")
     @PutMapping
     @ApiResponses(value = {
@@ -74,14 +58,14 @@ public class RewardController {
                 heart += rewardDto.getHeart();
             }
         }
-
-        // 마이크로 서비스 간 통신을 통해서 코인 및 애정도 보상 받게 하기
-        rewardService.callFeignUpdateCoin(accountId, coin);
-        rewardService.callFeignUpdateHeart(accountId, heart);
-
+        
         if (coin == 0 && heart == 0) {
             return response.error(ErrorCode.REWARD_NOT_FOUND);
         } else {
+            // 마이크로 서비스 간 통신을 통해서 코인 및 애정도 보상 받게 하기
+            rewardService.callFeignUpdateCoin(accountId, coin);
+            rewardService.callFeignUpdateHeart(accountId, heart);
+
             // 증가한 코인과 애정도를 반환
             return response.success(ResponseCode.REWARD_RECORD_RECEIVE_SUCCESS, RewardDto.builder().accountId(accountId).coin(coin).heart(heart).build());
         }
@@ -109,41 +93,19 @@ public class RewardController {
             }
         }
 
-        // 마이크로 서비스 간 통신을 통해서 코인 및 애정도 보상 받게 하기
-        rewardService.callFeignUpdateCoin(accountId, coin);
-        rewardService.callFeignUpdateHeart(accountId, heart);
-
         if (coin == 0 && heart == 0) {
             return response.error(ErrorCode.REWARD_NOT_FOUND);
         } else {
+            // 마이크로 서비스 간 통신을 통해서 코인 및 애정도 보상 받게 하기
+            rewardService.callFeignUpdateCoin(accountId, coin);
+            rewardService.callFeignUpdateHeart(accountId, heart);
+
+            // 마이크로 서비스 간 통신을 통해서 해당 기록의 보상 수령 여부를 완료로 변경하기
+            rewardService.updateRecordObtained(accountId, recordId);
+
             // 증가한 코인과 애정도를 반환
             return response.success(ResponseCode.REWARD_RECORD_RECEIVE_SUCCESS, RewardDto.builder().accountId(accountId).coin(coin).heart(heart).build());
         }
-    }
-
-    @Operation(summary = "[Feign] 해당 운동 기록 관련 받을 수 있는 코인, 애정도 조회", description = "운동 기록 하나로 달성한 보상 조회")
-    @GetMapping("/feign/{accountId}/record/{recordId}")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "[Feign] 해당 운동 기록 관련 받을 수 있는 코인, 애정도 조회", content = @Content(schema = @Schema(implementation = RewardDto.class)))
-    })
-    public ResponseEntity<?> getAttainableRewards(@Parameter(description = "회원 ID") @PathVariable String accountId, @Parameter(description = "운동 기록 ID") @PathVariable Long recordId) {
-        // 운동 기록 ID로 운동 기록에 연결되어 있는 도전과제 ID 리스트 찾기
-        List<Integer> challengeIds = rewardService.getChallengeIdsByRecordId(accountId, recordId);
-
-        Integer coin = 0;
-        Integer heart = 0;
-
-        // 도전 과제 ID로 받을 수 있는 보상 찾기
-        for (Integer challengeId : challengeIds) {
-            RewardDto rewardDto = rewardService.getAttainableReward(accountId, challengeId);
-            if (rewardDto != null) {
-                coin += rewardDto.getCoin();
-                heart += rewardDto.getHeart();
-            }
-        }
-
-        // 받을 수 있는 코인과 애정도를 반환
-        return response.success(ResponseCode.REWARD_RECORD_RECEIVE_SUCCESS, RewardDto.builder().accountId(accountId).coin(coin).heart(heart).build());
     }
 
     @Operation(summary = "도전과제 보상 받기", description = "개별 도전과제 보상 받기")
