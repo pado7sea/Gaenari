@@ -10,7 +10,7 @@ import lombok.Data;
 public class FcmMessageRequestDto {
 
   @Schema(description = "수신자 아이디")
-  private String memberId;
+  private String accountId;
 
   @Schema(description = "FCM 알림 제목")
   private String title;
