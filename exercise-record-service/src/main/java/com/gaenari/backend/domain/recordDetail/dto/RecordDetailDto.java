@@ -71,7 +71,7 @@ public class RecordDetailDto {
         private Double average;
 
         @Schema(description = "분당 페이스 리스트", type = "array", example = "[5, 6, 7]")
-        private List<Integer> arr;
+        private List<Double> arr;
     }
 
     @Data

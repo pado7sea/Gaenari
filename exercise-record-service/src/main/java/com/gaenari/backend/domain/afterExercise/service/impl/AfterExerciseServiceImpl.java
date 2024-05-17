@@ -126,7 +126,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
         List<Moment> moments = new ArrayList<>();
         if (exerciseDto.getRecord().getTime() != null) {
             for (int i = 0; i < exerciseDto.getSpeeds().getArr().size(); i++) {
-                int speed = exerciseDto.getSpeeds().getArr().get(i);
+                double speed = exerciseDto.getSpeeds().getArr().get(i);
                 Integer heartbeat = exerciseDto.getHeartrates().getArr().size() > i ? exerciseDto.getHeartrates().getArr().get(i) : null;
                 moments.add(Moment.builder()
                         .heartrate(heartbeat)
