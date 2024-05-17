@@ -17,7 +17,7 @@ public interface InventoryService {
     List<MyInventoryPets> getMyPets(String accountId); // 회원 인벤토리(펫) 조회
     Long getEquipCategory(String accountId, Category category); // 카테고리 적용 아이템 조회
     MyEquipItems getEquipItems(String accountId); // 회원 적용 아이템(펫, 아이템) 조회
-    String getMateEmail(Long mateId); // 회원 이메일 조회
+    String getMateAccountId(Long memberId); // 회원 아이디 조회
     void updateItems(String accountId, Category category, Long itemId); // 아이템 적용
     Items randomItem(String accountId); // 아이템 랜덤 구매
 
