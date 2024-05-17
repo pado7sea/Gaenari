@@ -46,7 +46,7 @@ public class FcmService {
    * @throws FirebaseMessagingException 예외
    */
   public void sendNotice(FcmMessageRequestDto fcmMessage) throws FirebaseMessagingException {
-    Optional<Fcm> fcm = fcmRepository.findByMemberId(fcmMessage.getMemberId());
+    Optional<Fcm> fcm = fcmRepository.findByMemberId(fcmMessage.getAccountId());
 
     if (fcm.isEmpty()) {
       throw new FcmTokenNotFoundException();
