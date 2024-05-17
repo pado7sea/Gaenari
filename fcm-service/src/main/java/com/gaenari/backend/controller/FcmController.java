@@ -3,16 +3,13 @@ package com.gaenari.backend.controller;
 import com.gaenari.backend.dto.FcmMessageRequestDto;
 import com.gaenari.backend.dto.FcmRegisterRequestDto;
 import com.gaenari.backend.service.FcmService;
+import com.gaenari.backend.util.format.response.ApiResponseCustom;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/fcm")
 public class FcmController {
 
+  private final ApiResponseCustom response;
   private final FcmService fcmService;
 
   @Operation(summary = "Fcm 토큰 저장", description = "Fcm 토큰 정보 저장")
@@ -36,7 +34,7 @@ public class FcmController {
         .build();
 
     fcmService.register(requestDto);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return response.success("Fcm 토큰 저장 완료");
   }
 
   @Operation(summary = "[Feign] 개인 메세지 전송", description = "Fcm을 활용한 개인 메세지 전송")
@@ -45,6 +43,6 @@ public class FcmController {
   public ResponseEntity<?> sendMessage(@RequestBody FcmMessageRequestDto requestDto)
       throws FirebaseMessagingException {
     fcmService.sendNotice(requestDto);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return response.success("알림 전송 완료");
   }
 }
