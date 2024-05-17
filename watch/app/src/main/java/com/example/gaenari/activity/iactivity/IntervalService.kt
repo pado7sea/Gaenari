@@ -6,16 +6,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Location
 import android.os.*
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.gaenari.dto.request.HeartRates
@@ -25,14 +21,8 @@ import com.example.gaenari.dto.request.Ranges
 import com.example.gaenari.dto.request.Record
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.request.Speeds
-import com.example.gaenari.dto.response.ApiResponseDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
-import com.example.gaenari.util.AccessToken
-import com.example.gaenari.util.Retrofit
-import com.google.android.gms.location.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.gaenari.util.TTSUtil
 import java.time.LocalDateTime
 
 
@@ -143,6 +133,9 @@ class IntervalService : Service(), SensorEventListener {
             wakeLock?.acquire() // WakeLock 활성화
             try {
                 Log.d("Check Interval Service", "Service started")
+
+                TTSUtil.speak("멍!멍!! 운동을  시작한다!")
+
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupHeartRateSensor()
@@ -360,8 +353,8 @@ class IntervalService : Service(), SensorEventListener {
         rangeHandler.removeCallbacks(rangeRunnable)
         unregisterBroadcastReceiver()
         Log.d("IRunningService", "Service destroyed")
-
         sendEndProgramBroadcast()
+        super.onDestroy()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}

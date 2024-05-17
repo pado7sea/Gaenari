@@ -1,6 +1,5 @@
 package com.example.gaenari.activity.main
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -21,6 +20,7 @@ import com.example.gaenari.service.LocationService
 import com.example.gaenari.util.AccessToken
 import com.example.gaenari.util.PreferencesUtil
 import com.example.gaenari.util.Retrofit
+import com.example.gaenari.util.TTSUtil
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Call
@@ -89,6 +89,12 @@ class HomeActivity : AppCompatActivity() {
         setupLocationService()
     }
 
+    override fun onStart() {
+        super.onStart()
+        TTSUtil.initialize(this)
+
+    }
+
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             // 뒤로 버튼 이벤트 처리
@@ -106,7 +112,7 @@ class HomeActivity : AppCompatActivity() {
         startForegroundService(intent)
     }
 
-    public  fun getFavoriteProgram() {
+    public fun getFavoriteProgram() {
         if (AccessToken.getInstance().accessToken == null)
             AccessToken.getInstance().accessToken = prefs!!.getString("accessToken", null)
 
@@ -114,7 +120,6 @@ class HomeActivity : AppCompatActivity() {
 
         val call = Retrofit.getApiService()
             .getFavoriteProgram(AccessToken.getInstance().accessToken)
-
 
         call.enqueue(object : Callback<ApiResponseListDto<FavoriteResponseDto?>> {
             override fun onResponse(
@@ -173,5 +178,10 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         viewPager.setCurrentItem(2, false)
         super.onResume()
+    }
+
+    override fun onDestroy() {
+        TTSUtil.shutdown()
+        super.onDestroy()
     }
 }

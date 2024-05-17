@@ -2,35 +2,34 @@ package com.example.gaenari.activity.result
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.gaenari.R
-import com.example.gaenari.activity.main.HomeActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.response.ApiResponseDto
 import com.example.gaenari.util.AccessToken
 import com.example.gaenari.util.PreferencesUtil
 import com.example.gaenari.util.Retrofit
+import com.example.gaenari.util.TTSUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var requestDto: SaveDataRequestDto
-    private lateinit var gifImageView : pl.droidsonroids.gif.GifImageView
+    private lateinit var gifImageView: pl.droidsonroids.gif.GifImageView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
+
+        // tts 알림
+        TTSUtil.speak("달리기가 종료되었습니다. 결과를 확인해주세요")
 
         // TextViews 찾기
         val titleTextView = findViewById<TextView>(R.id.운동제목)
@@ -58,7 +57,7 @@ class ResultActivity : AppCompatActivity() {
         // TextViews에 값 설정
         titleTextView.text = programTitle
         timeTextView.text = formattedTime
-        distanceTextView.text = String.format("%.2f km", totalDistance/1000)
+        distanceTextView.text = String.format("%.2f km", totalDistance / 1000)
         heartRateTextView.text = String.format("%d bpm", averageHeartRate)
         speedTextView.text = String.format("%.2f km/h", averageSpeed)
 
@@ -90,7 +89,7 @@ class ResultActivity : AppCompatActivity() {
      */
     private fun saveExerciseRecordData() {
         Log.d("Check", "Exercise Record Data : $requestDto")
-                       requestDto.record.distance /= 1000
+        requestDto.record.distance /= 1000
         val call = Retrofit.getApiService()
             .saveRunningData(AccessToken.getInstance().accessToken, requestDto)
 
@@ -121,5 +120,9 @@ class ResultActivity : AppCompatActivity() {
                 ).show()
             }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
