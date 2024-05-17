@@ -156,6 +156,16 @@ final BoxDecoration myRunBoxDecoration = BoxDecoration(
     ),
   ],
 );
+final BoxDecoration myOpacityBoxDecoration = BoxDecoration(
+    color: Colors.white.withOpacity(0.3),
+    borderRadius: BorderRadius.circular(10.0),
+    boxShadow: [
+      BoxShadow(
+        color: Color(0xffBFC2C8).withOpacity(0.25),
+        blurRadius: 15,
+        offset: Offset(0, 10),
+      ),
+    ]);
 
 final Container myContainer = Container(
   decoration: myBoxDecoration,

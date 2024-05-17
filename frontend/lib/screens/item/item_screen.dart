@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/inventory/item_purchase.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/inventory/inventory_info.dart';
@@ -26,6 +27,7 @@ class _ItemScreenState extends State<ItemScreen>
   Item item = Item();
   String name = "";
   int coin = 0;
+  bool active = false;
 
   @override
   void initState() {
@@ -55,19 +57,19 @@ class _ItemScreenState extends State<ItemScreen>
     });
   }
 
-  List<String> images = [
-    'assets/item_tier/tier_r.png',
-    'assets/item_tier/tier_e.png',
-    'assets/item_tier/tier_l.png',
-  ];
-  getItem() async {
+  Future<void> getItem() async {
     ItemPurchase itemPurchase = await InventoryService.fetchItemPurchase();
-    item = itemPurchase.data!;
-    name = findItemNameById(item.id!)!;
+    setState(() {
+      item = itemPurchase.data!;
+      name = findItemNameById(item.id!)!;
+      active = true;
+    });
     SecureStorageService storageService = SecureStorageService();
     LoginInfo? info = await storageService.getLoginInfo();
-    info?.coin = (info.coin! - 1000);
-    storageService.saveLoginInfo(info!);
+    if (info != null) {
+      info.coin = (info.coin! - 1000);
+      storageService.saveLoginInfo(info);
+    }
     loadCoin();
   }
 
@@ -82,6 +84,11 @@ class _ItemScreenState extends State<ItemScreen>
     return null;
   }
 
+  List<String> images = [
+    'assets/item_tier/tier_r.png',
+    'assets/item_tier/tier_e.png',
+    'assets/item_tier/tier_l.png',
+  ];
   int? findItemTierById(int itemId) {
     if (itemId <= 30) {
       return 0;
@@ -110,15 +117,15 @@ class _ItemScreenState extends State<ItemScreen>
       body: Column(
         children: [
           SizedBox(height: 10),
-          _goinventory(),
+          _goinventory(false),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _goldbox(),
                 SizedBox(height: 50),
-                _button(),
-                _coin(),
+                !active ? _button() : SizedBox(width: 0),
+                !active ? _coin() : SizedBox(width: 0),
                 SizedBox(height: 70)
               ],
             ),
@@ -128,12 +135,15 @@ class _ItemScreenState extends State<ItemScreen>
     );
   }
 
-  Widget _goinventory() {
+  Widget _goinventory(pop) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
           onPressed: () {
+            if (pop) {
+              Navigator.pop(context);
+            }
             Navigator.of(context)
                 .push(SlidePageRoute(nextPage: InventoryScreen()));
           },
@@ -157,15 +167,22 @@ class _ItemScreenState extends State<ItemScreen>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
-        return Transform.rotate(
-          angle: _animation.value,
-          child: Image(
-            image: AssetImage('assets/images/goldbox.png'),
-            width: 250,
-            height: 250,
-            fit: BoxFit.cover,
-          ),
-        );
+        return active
+            ? Transform.rotate(
+                angle: _animation.value,
+                child: Image(
+                  image: AssetImage('assets/images/goldbox.png'),
+                  width: 250,
+                  height: 250,
+                  fit: BoxFit.cover,
+                ),
+              )
+            : Image(
+                image: AssetImage('assets/images/goldbox.png'),
+                width: 250,
+                height: 250,
+                fit: BoxFit.cover,
+              );
       },
     );
   }
@@ -173,22 +190,21 @@ class _ItemScreenState extends State<ItemScreen>
   Widget _button() {
     return GestureDetector(
       onTap: () {
-        Timer(Duration(seconds: 3), () {
-          _showmodal(context);
-        });
-        _controller.reset(); // 애니메이션을 초기 상태로 재설정합니다.
-        _controller.forward(); // 애니메이션을 시작합니다.
-
-        // 애니메이션을 멈추도록 예약
-        Timer(Duration(milliseconds: 3100), () {
-          setState(() {
-            _animation = Tween(begin: 0.00, end: 0.0).animate(
-              CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-            );
-          });
-          _controller.stop(); // 애니메이션 중지
+        if (coin >= 1000) {
           getItem();
-        });
+          _controller.reset(); // 애니메이션을 초기 상태로 재설정합니다.
+          _controller.forward(); // 애니메이션을 시작합니다.
+          Timer(Duration(seconds: 2), () {
+            _showmodal(context);
+          });
+        } else {
+          Fluttertoast.showToast(
+            msg: '뽑기를 하기엔 돈이 부족합니다!',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: myMainGreen,
+          );
+        }
       },
       child: Stack(
         alignment: Alignment.center,
@@ -209,33 +225,38 @@ class _ItemScreenState extends State<ItemScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text20(text: '1000', bold: true),
+          SizedBox(width: 5),
           Image.asset(
-            'assets/emoji/money.png',
+            'assets/color_icons/icon_coin.png',
             width: 25,
             height: 25,
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
           ),
-          Text16(text: '100P', bold: true)
         ],
       ),
     );
   }
 
-  void _showmodal(BuildContext context) {
+  void _showmodal(BuildContext parentContext) {
     showDialog(
-      context: context,
+      context: parentContext,
       barrierDismissible: false,
       builder: (BuildContext context) {
+        // dialogContext를 여기서 사용해서 나중에 다시 뽑기 버튼에서 사용해.
         return Stack(
           children: [
-            // Background blur effect
             GestureDetector(
               onTap: () {
-                Navigator.of(context)
-                    .pop(); // Close the dialog on background tap
+                setState(() {
+                  _animation = Tween(begin: 0.00, end: 0.0).animate(
+                    CurvedAnimation(
+                        parent: _controller, curve: Curves.easeInOut),
+                  );
+                });
+                _controller.stop(); // 애니메이션 중지
               },
             ),
-            // Dialog content
             Dialog(
               backgroundColor: myBackground,
               insetPadding: EdgeInsets.fromLTRB(30, 120, 30, 120),
@@ -256,8 +277,8 @@ class _ItemScreenState extends State<ItemScreen>
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [_close(), _goinventory()],
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [_close()],
                       ),
                     ),
                     SizedBox(height: 10),
@@ -270,7 +291,9 @@ class _ItemScreenState extends State<ItemScreen>
                           Image(
                             image: AssetImage('assets/item/${item.id!}.png'),
                             width: 200,
-                            fit: BoxFit.cover,
+                            height: 200,
+                            fit: BoxFit.contain,
+                            filterQuality: FilterQuality.none,
                           ),
                           SizedBox(height: 20),
                           Row(
@@ -283,19 +306,44 @@ class _ItemScreenState extends State<ItemScreen>
                                 height: 25,
                                 fit: BoxFit.cover,
                               ),
+                              SizedBox(width: 5),
                               Text16(text: name, bold: true)
                             ],
                           ),
                           SizedBox(height: 20),
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/images/pixelbox.png',
-                                width: 250,
-                              ),
-                              Text20(text: '다시 뽑기', bold: true)
-                            ],
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context, "update");
+                              setState(() {
+                                active = false;
+                              });
+                              if (coin >= 1000) {
+                                getItem();
+                                _controller.reset(); // 애니메이션을 초기 상태로 재설정합니다.
+                                _controller.forward(); // 애니메이션을 시작합니다.
+                                Timer(Duration(seconds: 2), () {
+                                  _showmodal(
+                                      parentContext); // 다시 parentContext 사용
+                                });
+                              } else {
+                                Fluttertoast.showToast(
+                                  msg: '뽑기를 하기엔 돈이 부족합니다!',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  backgroundColor: myMainGreen,
+                                );
+                              }
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/pixelbox.png',
+                                  width: 250,
+                                ),
+                                Text20(text: '다시 뽑기', bold: true)
+                              ],
+                            ),
                           ),
                           SizedBox(height: 50)
                         ],
@@ -317,7 +365,13 @@ class _ItemScreenState extends State<ItemScreen>
         SizedBox(width: 10),
         InkWell(
           onTap: () {
-            Navigator.of(context).pop();
+            Navigator.pop(context, "update");
+            setState(() {
+              active = false;
+            });
+            // Navigator.pop(context, "update");
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => ItemScreen()));
           },
           child: Image.asset(
             'assets/icons/common_close.png',
@@ -327,7 +381,13 @@ class _ItemScreenState extends State<ItemScreen>
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pop(context, "update");
+            setState(() {
+              active = false;
+            });
+            // Navigator.pop(context, "update");
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => ItemScreen()));
           },
           child: Text16(
             text: "닫기",

@@ -260,6 +260,9 @@ class _DogHouseScreenState extends State<DogHouseScreen>
                       // 리스트 업데이트 메서드 호출
                       getItem();
                       loadCoin();
+                    } else {
+                      getItem();
+                      loadCoin();
                     }
                   });
                 },

@@ -35,3 +35,12 @@ const mygradient = [
   Color(0xffFF8686),
   Color(0xffFF86B2)
 ];
+// 티어색
+const myTier = [
+  Color(0xffEFB488),
+  Color(0xffCDCDCD),
+  Color(0xffFFEF9B),
+  Color(0xff86FFCC),
+  Color(0xff86F8FF),
+  Color(0xffFDB4FF)
+];

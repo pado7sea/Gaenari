@@ -10,7 +10,6 @@ import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/large_app_bar.dart';
-import 'package:forsythia/widgets/none_animation_route.dart';
 
 class ChallengeScreen extends StatefulWidget {
   bool mission;

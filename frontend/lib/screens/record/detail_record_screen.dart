@@ -27,7 +27,7 @@ class DetailRecordScreen extends StatefulWidget {
 
 class _DetailRecordScreenState extends State<DetailRecordScreen> {
   late List<String?> Typelist = [];
-  late List<int?> Pacelist = [];
+  late List<double?> Pacelist = [];
   late List<int?> Heartlist = [];
 
   Map<int, bool> missionDList = {1: false, 3: false, 5: false, 10: false};

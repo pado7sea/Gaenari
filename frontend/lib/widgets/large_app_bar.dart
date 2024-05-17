@@ -32,7 +32,7 @@ class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: Padding(
         padding: const EdgeInsets.all(15.0),
         child: GestureDetector(
-          onTap: () {
+          onTap: () async {
             Navigator.pop(context, "update"); // 이미지 클릭 시 뒤로 가기
           },
           child: Image.asset(
