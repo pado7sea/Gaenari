@@ -6,31 +6,20 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Location
 import android.os.*
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.gaenari.dto.request.HeartRates
-import com.example.gaenari.dto.request.Program
 import com.example.gaenari.dto.request.Record
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.request.Speeds
-import com.example.gaenari.dto.response.ApiResponseDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
-import com.example.gaenari.util.AccessToken
-import com.example.gaenari.util.Retrofit
-import com.google.android.gms.location.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 import java.time.LocalDateTime
 
 

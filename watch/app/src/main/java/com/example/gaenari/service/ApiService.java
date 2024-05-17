@@ -56,6 +56,6 @@ public interface ApiService {
      * @param request AlertStartRequestDto
      * @return ApiResponseDto(String)
      */
-    @GET("exercise-record-service/exercise/alert")
+    @POST("exercise-record-service/exercise/alert")
     Call<ApiResponseDto<String>> alertStartExercise(@Header("Authorization") String token, @Body AlertStartRequestDto request);
 }
