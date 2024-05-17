@@ -148,7 +148,7 @@ class WFirstFragment : Fragment() {
         val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
 
         val resourceId = if (isPaused) {
-            context.resources.getIdentifier("stop${petId}", "raw", context.packageName)
+            context.resources.getIdentifier("sit${petId}", "raw", context.packageName)
         } else {
             context.resources.getIdentifier("run${petId}", "raw", context.packageName)
         }

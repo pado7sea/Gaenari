@@ -1,5 +1,7 @@
 package com.example.gaenari.activity.result
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +17,7 @@ import com.example.gaenari.activity.main.HomeActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.response.ApiResponseDto
 import com.example.gaenari.util.AccessToken
+import com.example.gaenari.util.PreferencesUtil
 import com.example.gaenari.util.Retrofit
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,7 +25,9 @@ import retrofit2.Response
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var requestDto: SaveDataRequestDto
+    private lateinit var gifImageView : pl.droidsonroids.gif.GifImageView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
@@ -33,6 +38,7 @@ class ResultActivity : AppCompatActivity() {
         val distanceTextView = findViewById<TextView>(R.id.거리)
         val heartRateTextView = findViewById<TextView>(R.id.심박수)
         val speedTextView = findViewById<TextView>(R.id.속도)
+        gifImageView = findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
 
         // 인텐트에서 데이터 가져오기
         requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
@@ -41,6 +47,7 @@ class ResultActivity : AppCompatActivity() {
         val totalDistance = intent.getDoubleExtra("totalDistance", 0.0)
         val averageHeartRate = requestDto.heartrates.average
         val averageSpeed = requestDto.speeds.average
+        updateGif(context = applicationContext)
 
         // 시간 포맷 변경
         val hours = totalTime / 3600000
@@ -59,6 +66,22 @@ class ResultActivity : AppCompatActivity() {
         saveBtn.setOnClickListener {
             saveExerciseRecordData()
             finish()
+        }
+    }
+
+    @SuppressLint("ResourceType")
+    fun updateGif(context: Context) {
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+
+        val resourceId = context.resources.getIdentifier("lay${petId}", "raw", context.packageName)
+
+        // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
+        if (resourceId != 0) {
+            gifImageView.setImageResource(resourceId)
+        } else {
+            // 예를 들어 기본 이미지로 설정
+            gifImageView.setImageResource(R.raw.doghome)
         }
     }
 

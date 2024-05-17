@@ -1,15 +1,14 @@
 package com.example.gaenari.activity.iactivity
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.example.gaenari.R
-import android.view.ViewGroup
+import androidx.compose.ui.text.font.FontFamily
 import androidx.core.content.ContextCompat
+import com.example.gaenari.R
 
 class CircleView(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
     var isRunning: Boolean = false
@@ -18,6 +17,12 @@ class CircleView(context: Context, attrs: AttributeSet? = null) : View(context, 
 
     private val orangeDrawable = ContextCompat.getDrawable(context, R.drawable.btn_orange)
     private val greenDrawable = ContextCompat.getDrawable(context, R.drawable.btn_green)
+
+    private val textPaint = Paint().apply {
+        color = Color.BLACK
+        textSize = 18f
+        textAlign = Paint.Align.CENTER
+    }
 
     fun updateView(isRunning: Boolean, isActive: Boolean) {
         this.isRunning = isRunning
@@ -31,7 +36,7 @@ class CircleView(context: Context, attrs: AttributeSet? = null) : View(context, 
 
         val drawable = if (isRunning) greenDrawable else orangeDrawable
         // 활성화 상태에 따라 크기를 조정합니다.
-        val sizeIncrease = if (isActive) 1.3 else 0.7  // 활성화 상태에서는 크기를 25% 늘립니다.
+        val sizeIncrease = if (isActive) 1.3 else 0.7
         val drawableWidth = (width * sizeIncrease).toInt()
         val drawableHeight = (height * sizeIncrease).toInt()
         val left = (width - drawableWidth) / 2
@@ -39,6 +44,13 @@ class CircleView(context: Context, attrs: AttributeSet? = null) : View(context, 
 
         drawable?.setBounds(left, top, left + drawableWidth, top + drawableHeight)
         drawable?.draw(canvas)
+
+        // 텍스트 그리기
+        if(isActive) {
+            val xPos = width / 2f
+            val yPos = (height / 2f) - ((textPaint.descent() + textPaint.ascent()) / 2)
+            canvas.drawText(text, xPos, yPos, textPaint)
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -13,13 +13,14 @@ import com.example.gaenari.util.PreferencesUtil
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.random.Random
 
 class SecondFragment : Fragment() {
     private lateinit var stepCountTextView: TextView
     private lateinit var dateTextView: TextView
     private lateinit var timeTextView: TextView
     private lateinit var viewModel: StepCounterViewModel
-    private lateinit var gifImageView : pl.droidsonroids.gif.GifImageView
+    private lateinit var gifImageView: pl.droidsonroids.gif.GifImageView
 
     private lateinit var updateJob: Job // 코루틴 작업
 
@@ -40,6 +41,11 @@ class SecondFragment : Fragment() {
         }
         updateGifForActivity(context = requireContext())
 
+        // gifImageView 클릭 이벤트 설정
+        gifImageView.setOnClickListener {
+            updateGifRandomly(context = requireContext())
+        }
+
         return view
     }
 
@@ -57,7 +63,7 @@ class SecondFragment : Fragment() {
     fun updateGifForActivity(context: Context) {
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
         val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
-        val resourceId =context.resources.getIdentifier("walk${petId}", "raw", context.packageName)
+        val resourceId = context.resources.getIdentifier("walk${petId}", "raw", context.packageName)
 
         // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
         if (resourceId != 0) {
@@ -67,6 +73,24 @@ class SecondFragment : Fragment() {
             gifImageView.setImageResource(R.raw.doghome)
         }
     }
+
+    @SuppressLint("ResourceType")
+    private fun updateGifRandomly(context: Context) {
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+        val actions = listOf("run", "walk", "sit", "stop", "lay")
+        val randomAction = actions[Random.nextInt(actions.size)]
+        val resourceId = context.resources.getIdentifier("${randomAction}${petId}", "raw", context.packageName)
+
+        // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
+        if (resourceId != 0) {
+            gifImageView.setImageResource(resourceId)
+        } else {
+            // 예를 들어 기본 이미지로 설정
+            gifImageView.setImageResource(R.raw.doghome)
+        }
+    }
+
     private fun startUpdatingTime() {
         updateJob = CoroutineScope(Dispatchers.Main).launch {
             while (isActive) { // 코루틴이 활성화된 동안
@@ -85,9 +109,6 @@ class SecondFragment : Fragment() {
     private fun updateDateAndTime() {
         val koreaTimeZone = TimeZone.getTimeZone("Asia/Seoul") // 한국 시간대 설정
         val calendar = Calendar.getInstance(koreaTimeZone) // 한국 시간대로 캘린더 생성
-
-        // 27초를 빼기
-
 
         // 날짜 포맷 설정
         val dateFormat = SimpleDateFormat("M / d", Locale.getDefault())

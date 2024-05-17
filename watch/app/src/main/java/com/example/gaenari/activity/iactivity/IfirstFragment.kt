@@ -177,7 +177,7 @@ class IFirstFragment : Fragment() {
                     }
                     "com.example.sibal.PAUSE_PROGRAM" -> {
                         isPaused = intent.getBooleanExtra("isPause", false)
-                        updateGifForpause(context)
+                        updateGifForpause(context = context,isPaused)
                     }
                 }
             }
@@ -194,12 +194,15 @@ class IFirstFragment : Fragment() {
     }
 
     @SuppressLint("ResourceType")
-    fun updateGifForpause(context: Context) {
+    fun updateGifForpause(context: Context,isPaused:Boolean) {
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
         val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
 
-        val resourceId = context.resources.getIdentifier("stop${petId}", "raw", context.packageName)
-
+        val resourceId = if (isPaused) {
+            context.resources.getIdentifier("sit${petId}", "raw", context.packageName)
+        } else {
+            context.resources.getIdentifier("run${petId}", "raw", context.packageName)
+        }
 
         // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
         if (resourceId != 0) {
@@ -210,15 +213,20 @@ class IFirstFragment : Fragment() {
         }
     }
 
-    @SuppressLint("SetTextI18n", "ResourceType")
+    @SuppressLint("SetTextI18n", "ResourceType", "UseRequireInsteadOfGet")
     private fun firstUI(setCount:Int, nowisRunning:Boolean){
         setView.text = "1 / $setCount"
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+
         val resourceId = if (nowisRunning) {
-            R.raw.run7  // 사용자가 달리기를 시작한 경우
+            context?.resources?.getIdentifier("run${petId}", "raw", context!!.packageName)
         } else {
-            R.raw.walk4 // 사용자가 달리기를 멈춘 경우
+            context?.resources?.getIdentifier("walk${petId}", "raw", context!!.packageName)
         }
-        gifImageView.setImageResource(resourceId)
+        if (resourceId != null) {
+            gifImageView.setImageResource(resourceId)
+        }
     }
     //심박수 UI업데이트
     private fun updateheartUI(heartRate: Float) {

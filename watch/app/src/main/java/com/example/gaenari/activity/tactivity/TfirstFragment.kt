@@ -74,13 +74,7 @@ class TFirstFragment : Fragment() {
         speedView = view.findViewById(R.id.속력)
         circleProgress = view.findViewById(R.id.circleProgress)
         gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
-//        context?.let {
-//            Glide.with(it)
-//                .asGif()
-//                .load(R.raw.run5)
-//                .dontTransform()
-//                .into(gifImageView)
-//        }
+
 
         val programTarget = arguments?.getInt("programTarget") ?: 0
         Log.d("first", "onCreateView: ${programTarget}")
@@ -140,7 +134,7 @@ class TFirstFragment : Fragment() {
                     }
                     "com.example.sibal.PAUSE_PROGRAM" -> {
                         isPaused = intent.getBooleanExtra("isPause", false)
-                        updateGifForpause(context)
+                        updateGifForpause(context = context,isPaused)
                     }
                 }
             }
@@ -189,12 +183,15 @@ class TFirstFragment : Fragment() {
         }
     }
     @SuppressLint("ResourceType")
-    fun updateGifForpause(context: Context) {
+    fun updateGifForpause(context: Context,isPaused:Boolean) {
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
         val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
 
-        val resourceId = context.resources.getIdentifier("stop${petId}", "raw", context.packageName)
-
+        val resourceId = if (isPaused) {
+            context.resources.getIdentifier("sit${petId}", "raw", context.packageName)
+        } else {
+            context.resources.getIdentifier("run${petId}", "raw", context.packageName)
+        }
 
         // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
         if (resourceId != 0) {
