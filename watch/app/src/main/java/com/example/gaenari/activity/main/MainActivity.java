@@ -20,8 +20,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gaenari.R;
-import com.example.gaenari.dto.response.ApiResponseDto;
-import com.example.gaenari.dto.response.MyPetResponseDto;
 import com.example.gaenari.util.AccessToken;
 import com.example.gaenari.util.PreferencesUtil;
 
@@ -40,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
         prefs = PreferencesUtil.getEncryptedSharedPreferences(getApplicationContext());
 
         /* 권한 설정 확인 */

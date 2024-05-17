@@ -20,6 +20,7 @@ import com.example.gaenari.dto.request.Record
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.request.Speeds
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.util.TTSUtil
 import java.time.LocalDateTime
 
 
@@ -111,6 +112,8 @@ class DistTargetService : Service(), SensorEventListener {
             wakeLock?.acquire() // WakeLock 활성화
             try {
                 Log.d("Dist Target Service", "Service started")
+                TTSUtil.speak("멍!멍!! 운동을  시작한다!")
+
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupHeartRateSensor()
@@ -230,7 +233,6 @@ class DistTargetService : Service(), SensorEventListener {
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
         unregisterBroadcastReceiver()
         Log.d("Check Dist Service", "Service destroyed")
-
         sendEndProgramBroadcast()
     }
 

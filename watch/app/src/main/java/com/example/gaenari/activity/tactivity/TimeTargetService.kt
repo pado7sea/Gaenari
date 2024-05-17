@@ -20,6 +20,7 @@ import com.example.gaenari.dto.request.Record
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.request.Speeds
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.util.TTSUtil
 import java.time.LocalDateTime
 
 
@@ -115,6 +116,8 @@ class TimeTargetService : Service(), SensorEventListener {
             wakeLock?.acquire() // WakeLock 활성화
             try {
                 Log.d("Check Time Service", "Service started")
+                TTSUtil.speak("멍!멍!! 운동을  시작한다!")
+
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupHeartRateSensor()
@@ -233,8 +236,8 @@ class TimeTargetService : Service(), SensorEventListener {
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
         unregisterBroadcastReceiver()
         Log.d("Check Time Service", "Service destroyed")
-
         sendEndProgramBroadcast()
+        super.onDestroy()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}

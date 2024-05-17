@@ -13,7 +13,6 @@ import com.example.gaenari.activity.dactivity.DActivity
 import com.example.gaenari.activity.iactivity.IActivity
 import com.example.gaenari.activity.tactivity.TActivity
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.gaenari.R
 import com.example.gaenari.activity.dactivity.DistTargetService
@@ -28,6 +27,7 @@ import com.example.gaenari.dto.response.ApiResponseDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
 import com.example.gaenari.util.AccessToken
 import com.example.gaenari.util.Retrofit
+import com.example.gaenari.util.TTSUtil
 
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,6 +59,8 @@ class CountdownActivity : AppCompatActivity() {
 
         object : CountDownTimer(6000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
+                TTSUtil.speak("멍!")
+
                 val secondsRemaining = (millisUntilFinished / 1000).toInt()
                 countdownTextView.text = secondsRemaining.toString()
                 // 텍스트 크기 애니메이션

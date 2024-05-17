@@ -19,6 +19,7 @@ import com.example.gaenari.dto.request.Record
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.request.Speeds
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.util.TTSUtil
 
 import java.time.LocalDateTime
 
@@ -112,6 +113,8 @@ class WService : Service(), SensorEventListener {
             wakeLock?.acquire() // WakeLock 활성화
             try {
                 Log.d("Check Walking Service", "Service started")
+                TTSUtil.speak("멍!멍!! 운동을  시작한다!")
+
                 createNotificationChannel()
                 startForeground(1, notification)
                 setupHeartRateSensor()
