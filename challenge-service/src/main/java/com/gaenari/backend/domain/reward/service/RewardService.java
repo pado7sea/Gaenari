@@ -89,5 +89,14 @@ public interface RewardService {
      * @param decreaseValue int 형태로, 줄일 보상 개수.
      */
     void updateObtainableCount(MemberChallenge memberChallenge, int decreaseValue);
+
+    /**
+     * 마이크로 서비스 간 통신을 통해 지정된 회원의 운동기록을 보상 수령 완료로 업데이트한다.
+     *
+     * @param accountId String 형태로, 애정도를 업데이트할 회원의 고유 식별자.
+     * @param recordId Long 형태로, 운동 기록 ID.
+     */
+    void updateRecordObtained(String accountId, Long recordId);
+
 }
 
