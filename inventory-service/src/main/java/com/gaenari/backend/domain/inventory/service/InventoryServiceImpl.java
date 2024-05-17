@@ -32,8 +32,8 @@ public class InventoryServiceImpl implements InventoryService{
     private final MemberServiceClient memberServiceClient;
 
     @Override // [Feign] 회원 이메일 조회
-    public String getMateEmail(Long mateId) {
-        GenericResponse<?> getEmailRes = memberServiceClient.getMateEmail(mateId).getBody();
+    public String getMateAccountId(Long memberId) {
+        GenericResponse<?> getEmailRes = memberServiceClient.getMateAccountId(memberId).getBody();
         if(!getEmailRes.getStatus().equals("SUCCESS")){
             throw new ConnectFeignFailException();
         }
