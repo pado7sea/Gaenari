@@ -23,4 +23,12 @@ public interface RecordFeignService {
      */
     List<Integer> getChallengeIdsByRecordId(String accountId, Long recordId);
 
+    /**
+     * 특정 회원의 운동 기록 ID에 대응하는 도전과제 보상 수령 여부를 완료로 변경합니다.
+     *
+     * @param accountId 회원의 식별자입니다.
+     * @param recordId 운동 기록의 식별자입니다.
+     */
+    void updateRecordObtained(String accountId, Long recordId);
+
 }

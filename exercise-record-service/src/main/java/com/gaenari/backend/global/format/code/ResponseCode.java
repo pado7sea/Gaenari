@@ -19,6 +19,7 @@ public enum ResponseCode {
     RECORD_DAY_FETCHED(HttpStatus.OK, "일일 기록이 성공적으로 조회되었습니다."),
     RECORD_DETAIL_FETCHED(HttpStatus.OK, "기록 상세가 성공적으로 조회되었습니다."),
     RECORD_CHALLENGE_FETCHED(HttpStatus.OK, "운동 기록의 도전과제 ID 리스트가 성공적으로 조회되었습니다."),
+    RECORD_OBTAIN_UPDATED(HttpStatus.OK, "운동 기록의 보상 수령이 성공적으로 완료되었습니다."),
 
     /* 통계 */
     STATISTIC_ALL_FETCHED(HttpStatus.OK, "전체 통계가 성공적으로 조회되었습니다."),
