@@ -35,7 +35,7 @@ public class IntervalInfo {
         private int time;
 
         @Schema(description = "구간 속도 (km/h)", example = "6")
-        private int speed;
+        private double speed;
     }
     
 }
