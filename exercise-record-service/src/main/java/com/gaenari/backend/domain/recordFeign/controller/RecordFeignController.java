@@ -4,6 +4,7 @@ import com.gaenari.backend.domain.client.program.dto.ProgramDetailDto;
 import com.gaenari.backend.domain.recordFeign.service.RecordFeignService;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponseCustom;
+import com.gaenari.backend.global.format.response.GenericResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,10 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -50,6 +48,14 @@ public class RecordFeignController {
         List<Integer> challengeIds = recordFeignService.getChallengeIdsByRecordId(accountId, recordId);
 
         return response.success(ResponseCode.RECORD_CHALLENGE_FETCHED, challengeIds);
+    }
+    
+    @Operation(summary = "[Feign] 운동 기록의 보상 수령 여부 업데이트", description = "운동 기록의 보상 수령 여부를 완료로 변경")
+    @PutMapping("/obtain/{accountId}/{recordId}")
+    ResponseEntity<?> updateRecordObtained(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId,
+                                                            @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId){
+        recordFeignService.updateRecordObtained(accountId,recordId);
+        return response.success(ResponseCode.RECORD_OBTAIN_UPDATED);
     }
 
 }

@@ -61,8 +61,14 @@ public class Record {
     private Double cal;
 
     @NotNull
-    @Column(name = "is_finished")
-    private Boolean isFinished;
+    @Builder.Default
+    @Column(name = "is_finished") // 운동 완주 여부
+    private Boolean isFinished = false;
+
+    @NotNull
+    @Builder.Default
+    @Column(name = "is_obtained") // 보상 수령 여부
+    private Boolean isObtained = false;
 
     /* Record - IntervalRangeRecord 양방향 매핑 */
     @Builder.Default
@@ -78,5 +84,9 @@ public class Record {
     @Builder.Default
     @OneToMany(mappedBy = "record", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<RecordChallenge> recordChallenges = new ArrayList<>();
+
+    public void updateObtained(boolean obtained) {
+        isObtained = obtained;
+    }
 
 }

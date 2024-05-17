@@ -49,6 +49,15 @@ public class RecordDetailServiceImpl implements RecordDetailService {
     // ExerciseDetailDto 객체 구성
     private RecordDetailDto buildRecordDetailDto(Record record) {
         List<ChallengeDto> challenges = fetchChallenges(record);
+
+        int attainableCoin = getAttainableRewards(record.getAccountId(), record.getId()).getCoin();
+        int attainableHeart = getAttainableRewards(record.getAccountId(), record.getId()).getHeart();
+
+        if (record.getIsObtained()) {
+            attainableCoin = 0;
+            attainableHeart = 0;
+        }
+
         return RecordDetailDto.builder()
                 .exerciseId(record.getId())
                 .date(record.getDate())
@@ -60,8 +69,8 @@ public class RecordDetailServiceImpl implements RecordDetailService {
                 .heartrates(buildHeartrateDto(record))
                 .trophies(extractTrophies(challenges))
                 .missions(extractMissions(challenges))
-                .attainableCoin(getAttainableRewards(record.getAccountId(), record.getId()).getCoin())
-                .attainableHeart(getAttainableRewards(record.getAccountId(), record.getId()).getHeart())
+                .attainableCoin(attainableCoin)
+                .attainableHeart(attainableHeart)
                 .build();
     }
 
