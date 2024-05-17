@@ -312,6 +312,7 @@ class WService : Service(), SensorEventListener {
             putExtra("totalSpeedAvg", requestDto.speeds.average)
             putExtra("requestDto", requestDto)
         }
+        Log.d("sendEndProgramBroadcast", "sendEndProgramBroadcast: ${requestDto} , ㅎㅇㅎㅇ1 ${requestDto.speeds.average} , ㅎㅇㅎㅇ2 ${requestDto.heartrates.average}")
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
