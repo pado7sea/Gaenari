@@ -20,8 +20,8 @@ public interface MemberServiceClient {
     @GetMapping("/pet/dog/{dogId}") // 강아지 가격 조회
     ResponseEntity<GenericResponse<?>> getDogPrice(@PathVariable int dogId);
 
-    @GetMapping("/mate/email/{mateId}") // 친구 이메일 조회
-    ResponseEntity<GenericResponse<?>> getMateEmail(@PathVariable Long mateId);
+    @GetMapping("/mate/accountId/{memberId}") // 친구 아이디 조회
+    ResponseEntity<GenericResponse<?>> getMateAccountId(@PathVariable Long memberId);
 
     @PutMapping("/coin") // 회원 코인 증/감
     ResponseEntity<GenericResponse<?>> updateCoin(@RequestBody MemberCoin memberCoin);
