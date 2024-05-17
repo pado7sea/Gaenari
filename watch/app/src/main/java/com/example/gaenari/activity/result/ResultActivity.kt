@@ -90,7 +90,7 @@ class ResultActivity : AppCompatActivity() {
      */
     private fun saveExerciseRecordData() {
         Log.d("Check", "Exercise Record Data : $requestDto")
-
+                       requestDto.record.distance /= 1000
         val call = Retrofit.getApiService()
             .saveRunningData(AccessToken.getInstance().accessToken, requestDto)
 

@@ -2,7 +2,6 @@ package com.example.gaenari.activity.iactivity
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
@@ -10,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,8 +23,10 @@ import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
 import com.example.gaenari.util.PreferencesUtil
+import java.util.Locale
+import android.content.Context as Context
 
-class IFirstFragment : Fragment() {
+class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
     private lateinit var nowProgram: FavoriteResponseDto
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CircleAdapter
@@ -37,7 +39,8 @@ class IFirstFragment : Fragment() {
     private lateinit var updateReceiver: BroadcastReceiver
     private lateinit var requestDto: SaveDataRequestDto
     //gif
-    private lateinit var gifImageView : pl.droidsonroids.gif.GifImageView
+    private lateinit var gifImageView: pl.droidsonroids.gif.GifImageView
+    private lateinit var 목표속력: TextView
 
     private var totalHeartRateAvg: Int = 0
     private var totalSpeedAvg: Double = 0.0
@@ -53,14 +56,17 @@ class IFirstFragment : Fragment() {
     //이번인터벌의 내가 정한 속도
     private var nowExerciseSpeed: Double = 0.0
     //이번인터벌이 뛰니 안뛰니
-    private var nowisRunning : Boolean = false
+    private var nowisRunning: Boolean = false
     //이제 해야할 운동의 시간
-    private var nowecercisetime : Long = 0
+    private var nowecercisetime: Long = 0
     //리얼타임을 계산할거
-    private var realtime : Long = 0
+    private var realtime: Long = 0
 
     private var startTimeOfCurrentInterval: Long = 0
     private var isPaused: Boolean = false
+
+    private lateinit var tts: TextToSpeech
+    private var ttsInitialized = false
 
     companion object {
         fun newInstance(program: FavoriteResponseDto): IFirstFragment {
@@ -68,6 +74,22 @@ class IFirstFragment : Fragment() {
                 arguments = Bundle().apply {
                     putParcelable("program", program)
                 }
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.KOREAN)
+            ttsInitialized = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
+            // TTS 초기화가 완료되면 speak 메서드를 호출합니다.
+            if (ttsInitialized) {
+                speak("멍!멍!! 운동을  시작한다!")
             }
         }
     }
@@ -93,13 +115,14 @@ class IFirstFragment : Fragment() {
         circleProgress = view.findViewById(R.id.circleProgress)
         gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
         setView = view.findViewById(R.id.setname)
+        목표속력 = view.findViewById(R.id.목표속력)
     }
 
     private fun setupRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.rvIntervals)
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerView.addItemDecoration(CustomItemDecoration(10))
+        // recyclerView.addItemDecoration(CustomItemDecoration(10))
         adapter = CircleAdapter(nowProgram.program.intervalInfo!!.ranges!!, 0)
         recyclerView.adapter = adapter
     }
@@ -110,20 +133,18 @@ class IFirstFragment : Fragment() {
         setCount = nowProgram.program.intervalInfo?.setCount!!
         exerciseCount = nowProgram.program.intervalInfo?.rangeCount!!
         nowExerciseSpeed = nowProgram.program.intervalInfo?.ranges!![0].speed!!
-        nowisRunning=nowProgram.program.intervalInfo?.ranges!![0].isRunning!!
-        nowecercisetime= nowProgram.program.intervalInfo?.ranges!![0].time?.toLong()!!*1000
+        nowisRunning = nowProgram.program.intervalInfo?.ranges!![0].isRunning!!
+        nowecercisetime = nowProgram.program.intervalInfo?.ranges!![0].time?.toLong()!! * 1000
         Log.d("인터벌액티비티", "nowecercisetime: $nowecercisetime")
 
-
-        firstUI(setCount,nowisRunning )
+        firstUI(setCount, nowisRunning, nowExerciseSpeed)
         Log.d("인터벌액티비티", "초기데이터 setCount: ${setCount} exerciseCount:$exerciseCount")
-        Log.d("인터벌액티비티", "초기데이터 range: ${nowProgram.program.intervalInfo!!.ranges!![exerciseCount-1]}")
-//        adapter = CircleAdapter(nowProgram.program.intervalInfo?.ranges!!)
-//        recyclerView.adapter = adapter
+        Log.d("인터벌액티비티", "초기데이터 range: ${nowProgram.program.intervalInfo!!.ranges!![exerciseCount - 1]}")
+        // adapter = CircleAdapter(nowProgram.program.intervalInfo?.ranges!!)
+        // recyclerView.adapter = adapter
     }
 
     private fun setupUpdateReceiver() {
-
         updateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
@@ -134,13 +155,13 @@ class IFirstFragment : Fragment() {
                         totalDistance = distance
                         totalTime = time
 
-                        updatedisandspeedUI(distance,speed)
+                        updatedisandspeedUI(distance, speed)
                     }
                     "com.example.sibal.UPDATE_TIMER" -> {
                         val time = intent.getLongExtra("time", 0)
 
                         realtime += 1000
-                            updateTimerUI(realtime, nowecercisetime)
+                        updateTimerUI(realtime, nowecercisetime)
                         Log.d("Interval Activity", "UPDATE_TIMER: $time")
                         //이거는 모든 시간을 다 보여줌
                     }
@@ -164,9 +185,16 @@ class IFirstFragment : Fragment() {
                         nowecercisetime = intent.getLongExtra("rangeTime", 0)
                         Log.d("Interval Activity", "UPDATE_RANGE_INFO: $nowecercisetime")
                         //이게 다음세트꺼 시간을 의미하는건가 ?
-                        realtime=0
-                        updateDataUI(context = context,nowisRunning,nowSetCount)
+                        nowExerciseSpeed = intent.getDoubleExtra("rangeSpeed", 0.0)
+                        realtime = 0
+                        updateDataUI(context = context, nowisRunning, nowSetCount, nowExerciseSpeed)
                         adapter.updateIndex(nowExerciseCount)
+                        if(nowisRunning){
+                            speak("달릴시간이다 멍")
+                        }else{
+                            speak("걸을시간이다 멍")
+                        }
+
                         vibrate(context)
                     }
                     "com.example.sibal.EXIT_PROGRAM" -> {
@@ -177,7 +205,7 @@ class IFirstFragment : Fragment() {
                     }
                     "com.example.sibal.PAUSE_PROGRAM" -> {
                         isPaused = intent.getBooleanExtra("isPause", false)
-                        updateGifForpause(context = context,isPaused)
+                        updateGifForpause(context = context, isPaused)
                     }
                 }
             }
@@ -194,7 +222,7 @@ class IFirstFragment : Fragment() {
     }
 
     @SuppressLint("ResourceType")
-    fun updateGifForpause(context: Context,isPaused:Boolean) {
+    fun updateGifForpause(context: Context, isPaused: Boolean) {
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
         val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
 
@@ -214,7 +242,7 @@ class IFirstFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n", "ResourceType", "UseRequireInsteadOfGet")
-    private fun firstUI(setCount:Int, nowisRunning:Boolean){
+    private fun firstUI(setCount: Int, nowisRunning: Boolean, nowExerciseSpeed: Double) {
         setView.text = "1 / $setCount"
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
         val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
@@ -227,23 +255,44 @@ class IFirstFragment : Fragment() {
         if (resourceId != null) {
             gifImageView.setImageResource(resourceId)
         }
+        목표속력.text = "${nowExerciseSpeed}"
+        vibrate(context!!)
+
+
     }
+
     //심박수 UI업데이트
     private fun updateheartUI(heartRate: Float) {
         heartRateView.text = String.format("%d", heartRate.toInt())
     }
+
     //달린거리랑 속도 업데이트
-    private fun updatedisandspeedUI(distance: Double,speed: Float) {
+    private fun updatedisandspeedUI(distance: Double, speed: Float) {
         distanceView.text = String.format("%.2f", distance / 1000)
-        speedView.text = String.format("%.2f" , speed)
+        speedView.text = String.format("%.2f", speed)
     }
+
     //타임업데이트
-    private fun updateTimerUI(realtime: Long , nowecercisetime: Long) {
-        var time = (nowecercisetime-realtime)
+    private fun updateTimerUI(realtime: Long, nowecercisetime: Long) {
+        val time = (nowecercisetime - realtime)
         val progress = 100 * (1 - (time.toFloat() / nowecercisetime))
         circleProgress.setProgress(progress)
         timeView.text = formatTime(time)
+
+        // TTS 실행 부분 추가
+        if (realtime == nowecercisetime / 2) {
+            speak("멍멍멍멍")
+        }
     }
+
+    // TTS를 실행하는 메서드
+    private fun speak(text: String) {
+        Log.d("tts실행", "speak: 말했음??")
+        if (ttsInitialized) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+    }
+
     //시간이 있는것들만 보이게
     private fun formatTime(millis: Long): String {
         val hours = (millis / 3600000) % 24
@@ -263,7 +312,7 @@ class IFirstFragment : Fragment() {
     }
 
     @SuppressLint("ResourceType")
-    private fun updateDataUI(context: Context, nowisRunning:Boolean, nowSetCount : Int){
+    private fun updateDataUI(context: Context, nowisRunning: Boolean, nowSetCount: Int, nowExerciseSpeed: Double) {
         setView.text = "$nowSetCount / $setCount"
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
         val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
@@ -273,6 +322,7 @@ class IFirstFragment : Fragment() {
         } else {
             context.resources.getIdentifier("walk${petId}", "raw", context.packageName)
         }
+        목표속력.text = "${nowExerciseSpeed}"
         gifImageView.setImageResource(resourceId)
     }
 
@@ -306,7 +356,11 @@ class IFirstFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        if (tts.isSpeaking) {
+            tts.stop()
+        }
+        tts.shutdown()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateReceiver)
+        super.onDestroyView()
     }
 }

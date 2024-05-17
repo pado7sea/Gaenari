@@ -40,7 +40,7 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
         val text = when (program.type) {
             "D" -> "${program.program.targetValue} KM"
             "T" -> "${program.program.targetValue?.toInt()?.div(60)} 분"
-            "I" -> "${program.program.intervalInfo!!.setCount} 구간\n${program.program.intervalInfo!!.rangeCount} set"
+            "I" -> "${program.program.intervalInfo!!.setCount} set\n${program.program.intervalInfo!!.rangeCount} 구간"
             "W" -> "이번달\n걷기횟수"
             "R" -> "이번달\n달리기횟수"
             else -> "기본"

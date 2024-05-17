@@ -18,29 +18,31 @@
     <!-- RecyclerView for displaying circles dynamically -->
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="set"
         android:textColor="@color/black"
         android:textSize="9sp"
-        app:layout_constraintBottom_toTopOf="@+id/setname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.424"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/setname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:fontFamily="@font/thejamsil_medium"
         android:text="현재세트"
         android:textColor="@color/black"
-        android:textSize="13sp"
+        android:textSize="11sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.031"
+        app:layout_constraintStart_toEndOf="@+id/textView2" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
@@ -89,7 +91,7 @@
         android:fontFamily="@font/thejamsil_medium"
         android:text="km"
         android:textColor="@color/black"
-        android:textSize="10sp"
+        android:textSize="7sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline24"
@@ -124,14 +126,56 @@
         app:layout_constraintStart_toStartOf="@+id/guideline22" />
 
     <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/thejamsil_medium"
+        android:text="목표속력 : "
+        android:textColor="@color/black"
+        android:textSize="9sp"
+        app:layout_constraintEnd_toStartOf="@+id/목표속력"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline24"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/목표속력"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/thejamsil_medium"
+        android:text="km/h"
+        android:textColor="@color/black"
+        android:textSize="11sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+        app:layout_constraintEnd_toStartOf="@+id/guideline21"
+        app:layout_constraintHorizontal_bias="0.586"
+        app:layout_constraintStart_toStartOf="@+id/guideline24" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/thejamsil_medium"
         android:text="km/h"
         android:textColor="@color/black"
-        android:textSize="10sp"
+        android:textSize="8sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/목표속력"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toEndOf="@+id/목표속력" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="28dp"
+        android:fontFamily="@font/thejamsil_medium"
+        android:text="km/h"
+        android:textColor="@color/black"
+        android:textSize="7sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="@+id/guideline22"
         app:layout_constraintTop_toBottomOf="@+id/속력" />
 
