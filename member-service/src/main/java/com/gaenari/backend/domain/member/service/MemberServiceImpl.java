@@ -16,6 +16,8 @@ import com.gaenari.backend.domain.mypet.repository.MyPetRepository;
 import com.gaenari.backend.global.exception.member.*;
 import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,6 +43,7 @@ public class MemberServiceImpl implements MemberService{
     private final MyPetRepository myPetRepository;
     private final CoinRepository coinRepository;
     private final InventoryServiceClient inventoryServiceClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Override // 회원가입
     public SignupResponse createMember(SignupRequestDto requestDto) {
@@ -75,10 +78,15 @@ public class MemberServiceImpl implements MemberService{
         MyPet registMyPet = myPetRepository.save(myPet);
 
         // 기본 아이템 생성
-        GenericResponse<?> createItemRes = inventoryServiceClient.createNormalItems(requestDto.getAccountId()).getBody();
-        if(!createItemRes.getStatus().equals("SUCCESS")){
-            throw new ConnectFeignFailException();
-        }
+//        GenericResponse<?> createItemRes = inventoryServiceClient.createNormalItems(requestDto.getAccountId()).getBody();
+//        if(!createItemRes.getStatus().equals("SUCCESS")){
+//            throw new ConnectFeignFailException();
+//        }
+
+        // 써킷브레이커
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitBreaker");
+        GenericResponse<?> createItemRes = circuitBreaker.run(()->inventoryServiceClient.createNormalItems(requestDto.getAccountId()).getBody(),
+                throwable -> new GenericResponse<>());
 
         // LocalDateTime을 String으로 변경
         LocalDateTime changeTime = registMyPet.getChangeTime();
