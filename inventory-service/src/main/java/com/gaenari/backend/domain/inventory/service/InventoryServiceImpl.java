@@ -323,7 +323,8 @@ public class InventoryServiceImpl implements InventoryService{
         List<Item> itemList = itemRepository.findAll();
         // 랜덤으로 아이템 선택
         Random random = new Random();
-        int randomIndex = random.nextInt(itemList.size());
+        // 기본 아이템(1~6번)은 안나오도록
+        int randomIndex = 7 + random.nextInt(itemList.size() - 7);
         Item selectItem = itemList.get(randomIndex);
         // 현재 가지고있는 아이템 조회
         List<Inventory> inventoryList = inventoryRepository.findByAccountId(accountId);
