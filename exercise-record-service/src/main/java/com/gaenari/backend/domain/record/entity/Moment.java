@@ -28,10 +28,10 @@ public class Moment {
     private Integer heartrate; // 분당 심박수
 
     @Column(name = "moment_distance")
-    private Integer distance; // 분당 거리
+    private Double distance; // 분당 거리
 
     @Column(name = "moment_pace")
-    private Integer pace; // 분당 페이스
+    private Double pace; // 분당 페이스
 
 /*
     보류

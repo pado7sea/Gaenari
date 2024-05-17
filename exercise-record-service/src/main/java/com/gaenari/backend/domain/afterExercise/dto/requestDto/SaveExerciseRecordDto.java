@@ -95,7 +95,7 @@ public class SaveExerciseRecordDto {
         private Double average;
 
         @Schema(description = "분당 속도 리스트", example = "[4,6,8,10,4]")
-        private List<Integer> arr;
+        private List<Double> arr;
     }
 
     @Data
