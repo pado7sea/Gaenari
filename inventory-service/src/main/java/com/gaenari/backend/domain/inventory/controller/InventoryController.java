@@ -103,7 +103,7 @@ public class InventoryController {
         if (accountId == null) {
             return response.error(ErrorCode.EMPTY_MEMBER.getMessage());
         }
-        String mateEmail = inventoryService.getMateEmail(memberId);
+        String mateEmail = inventoryService.getMateAccountId(memberId);
         MyEquipItems myEquipItemsList = inventoryService.getEquipItems(mateEmail);
         return response.success(ResponseCode.VISIT_FRIEND_HOME_SUCCESS, myEquipItemsList);
     }
