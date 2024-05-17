@@ -60,6 +60,7 @@ class IntervalService : Service(), SensorEventListener {
     private var currentRangeIndex = 0
     private var currentRangeTime: Long = 60000
     private var currentRunningType: Boolean = false
+    private var currentRangeSpeed : Double =0.0
 
     private var startTime: Long = 0
 
@@ -186,6 +187,7 @@ class IntervalService : Service(), SensorEventListener {
         currentRunningType =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
 //        sendRangeInfoBroadcast()
+        currentRangeSpeed=programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.speed!!
 
         currentRangeIndex += 1
 
@@ -271,6 +273,7 @@ class IntervalService : Service(), SensorEventListener {
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.time?.toLong()!! * 1000
         currentRunningType =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
+        currentRangeSpeed=programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.speed!!
 
         sendRangeInfoBroadcast()
 
@@ -302,6 +305,7 @@ class IntervalService : Service(), SensorEventListener {
             putExtra("setCount", currentSetCount)
             putExtra("isRunning", currentRunningType)
             putExtra("rangeTime", currentRangeTime)
+            putExtra("rangeSpeed",currentRangeSpeed)
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
