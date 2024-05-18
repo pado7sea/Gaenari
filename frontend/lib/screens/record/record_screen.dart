@@ -119,6 +119,18 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   Widget _monthrecord() {
+    String format(double? num) {
+      if (num == null) {
+        return 'N/A';
+      } else if (num >= 100) {
+        return num.toStringAsFixed(0); // 정수 부분만
+      } else if (num >= 10) {
+        return num.toStringAsFixed(1); // 소수점 첫째 자리까지
+      } else {
+        return num.toStringAsFixed(2); // 소수점 둘째 자리까지
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -148,7 +160,7 @@ class _RecordScreenState extends State<RecordScreen> {
                         Text20(
                           text: statistic.dist! >= 999
                               ? '999'
-                              : statistic.dist!.toStringAsFixed(0),
+                              : format(statistic.dist!),
                           bold: true,
                         ),
                         Text12(text: 'km')
@@ -184,9 +196,7 @@ class _RecordScreenState extends State<RecordScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         SizedBox(height: 10),
-                        Text20(
-                            text: statistic.cal!.toStringAsFixed(0),
-                            bold: true),
+                        Text20(text: format(statistic.cal!), bold: true),
                         Text12(text: 'kcal')
                       ],
                     ),
@@ -361,7 +371,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordDist!.toInt()}',
+                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordDist!.toStringAsFixed(1)}',
                                               bold: true),
                                           Text12(text: ' km', bold: true),
                                           SizedBox(width: 15),
@@ -381,7 +391,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                           SizedBox(width: 5),
                                           Text16(
                                               text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordCal!.toInt()}',
+                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordCal!.toStringAsFixed(1)}',
                                               bold: true),
                                           Text12(text: ' kcal', bold: true),
                                           SizedBox(width: 15),
