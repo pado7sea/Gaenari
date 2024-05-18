@@ -291,6 +291,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     String format(double? num) {
       if (num == null) {
         return 'N/A';
+      } else if (num < 0.1) {
+        return num.toStringAsFixed(0);
       } else if (num >= 100) {
         return num.toStringAsFixed(0); // 정수 부분만
       } else if (num >= 10) {
@@ -320,7 +322,10 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 children: [
                   SizedBox(height: 10),
                   Text20(
-                      text: format(recordDetail.record?.distance), bold: true),
+                      text: recordDetail.record!.distance! >= 9999
+                          ? '9999'
+                          : format(recordDetail.record?.distance),
+                      bold: true),
                   Text12(text: 'km')
                 ],
               ),
@@ -346,7 +351,11 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 10),
-                  Text20(text: format(recordDetail.record?.cal), bold: true),
+                  Text20(
+                      text: recordDetail.record!.cal! >= 9999
+                          ? '9999'
+                          : format(recordDetail.record?.cal),
+                      bold: true),
                   Text12(text: 'kcal')
                 ],
               ),
@@ -373,8 +382,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 children: [
                   SizedBox(height: 10),
                   Text20(
-                      text: format(recordDetail.record!.time! / 60),
-                      bold: true),
+                      text: '${recordDetail.record!.time! ~/ 60}', bold: true),
                   Text12(text: 'min')
                 ],
               ),
