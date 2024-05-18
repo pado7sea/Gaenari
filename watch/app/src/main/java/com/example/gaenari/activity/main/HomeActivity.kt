@@ -136,7 +136,7 @@ class HomeActivity : AppCompatActivity() {
                     val dataList: List<FavoriteResponseDto?> = response.body()?.data ?: emptyList()
 
                     // ViewModel에 데이터 전달
-                    sharedViewModel.setFavoritePrograms(dataList)
+                    sharedViewModel.setFavoritePrograms(dataList) // 데이터 추가가 아닌 새로 설정
                 }
             }
 

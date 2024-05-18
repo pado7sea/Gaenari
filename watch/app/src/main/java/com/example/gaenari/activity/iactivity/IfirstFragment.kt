@@ -9,12 +9,12 @@ import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,10 +23,10 @@ import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.dto.response.FavoriteResponseDto
 import com.example.gaenari.util.PreferencesUtil
-import java.util.Locale
+import com.example.gaenari.util.TTSUtil
 import android.content.Context as Context
 
-class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
+class IFirstFragment : Fragment() {
     private lateinit var nowProgram: FavoriteResponseDto
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CircleAdapter
@@ -65,9 +65,6 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
     private var startTimeOfCurrentInterval: Long = 0
     private var isPaused: Boolean = false
 
-    private lateinit var tts: TextToSpeech
-    private var ttsInitialized = false
-
     companion object {
         fun newInstance(program: FavoriteResponseDto): IFirstFragment {
             return IFirstFragment().apply {
@@ -78,21 +75,7 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        tts = TextToSpeech(context, this)
-    }
 
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.KOREAN)
-            ttsInitialized = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
-            // TTS 초기화가 완료되면 speak 메서드를 호출합니다.
-            if (ttsInitialized) {
-                speak("멍!멍!! 운동을  시작한다!")
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -187,15 +170,22 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
                         //이게 다음세트꺼 시간을 의미하는건가 ?
                         nowExerciseSpeed = intent.getDoubleExtra("rangeSpeed", 0.0)
                         realtime = 0
-                        updateDataUI(context = context, nowisRunning, nowSetCount, nowExerciseSpeed)
+                        if(nowSetCount<=setCount) {
+                            updateDataUI(
+                                context = context,
+                                nowisRunning,
+                                nowSetCount,
+                                nowExerciseSpeed
+                            )
+                        }
                         adapter.updateIndex(nowExerciseCount)
                         if(nowisRunning){
-                            speak("달릴시간이다 멍")
+                            TTSUtil.speak("달릴시간이다 멍")
+                            vibraterun(context)
                         }else{
-                            speak("걸을시간이다 멍")
+                            TTSUtil.speak("걸을시간이다 멍")
+                            vibratewalk(context)
                         }
-
-                        vibrate(context)
                     }
                     "com.example.sibal.EXIT_PROGRAM" -> {
                         requestDto = intent.getParcelableExtra("requestDto", SaveDataRequestDto::class.java)!!
@@ -257,8 +247,6 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
         }
         목표속력.text = "${nowExerciseSpeed}"
         vibrate(context!!)
-
-
     }
 
     //심박수 UI업데이트
@@ -270,6 +258,8 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
     private fun updatedisandspeedUI(distance: Double, speed: Float) {
         distanceView.text = String.format("%.2f", distance / 1000)
         speedView.text = String.format("%.2f", speed)
+//        if(speed<nowExerciseSpeed){
+//        }
     }
 
     //타임업데이트
@@ -281,17 +271,11 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
 
         // TTS 실행 부분 추가
         if (realtime == nowecercisetime / 2) {
-            speak("멍멍멍멍")
+            TTSUtil.speak("멍멍멍멍")
         }
     }
 
-    // TTS를 실행하는 메서드
-    private fun speak(text: String) {
-        Log.d("tts실행", "speak: 말했음??")
-        if (ttsInitialized) {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
-        }
-    }
+
 
     //시간이 있는것들만 보이게
     private fun formatTime(millis: Long): String {
@@ -334,6 +318,24 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
             vibrator.vibrate(500)
         }
     }
+    private fun vibraterun(context: Context) {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val pattern = longArrayOf(0, 150, 150, 150, 150, 150) // 딜레이와 진동 지속 시간
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1)) // -1은 반복 없음
+        } else {
+            vibrator.vibrate(pattern, -1) // -1은 반복 없음
+        }
+    }
+    private fun vibratewalk(context: Context) {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(300)
+        }
+    }
 
     private fun sendResultsAndFinish(context: Context) {
         val programTarget = arguments?.getInt("programTarget") ?: 0
@@ -356,10 +358,6 @@ class IFirstFragment : Fragment(), TextToSpeech.OnInitListener {
     }
 
     override fun onDestroyView() {
-        if (tts.isSpeaking) {
-            tts.stop()
-        }
-        tts.shutdown()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateReceiver)
         super.onDestroyView()
     }

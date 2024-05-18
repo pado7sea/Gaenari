@@ -63,7 +63,7 @@ class IntervalService : Service(), SensorEventListener {
     private var totalPausedTime: Long = 0
     private var lastPauseTime: Long = 0
 
-    private var wakeLock: PowerManager.WakeLock? = null
+//    private var wakeLock: PowerManager.WakeLock? = null
     private var isPaused = false
 
     /**
@@ -126,10 +126,10 @@ class IntervalService : Service(), SensorEventListener {
         startTime = SystemClock.elapsedRealtime()
         if (!isServiceRunning) {
             isServiceRunning = true
-            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            wakeLock =
-                powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
-            wakeLock?.acquire() // WakeLock 활성화
+//            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+//            wakeLock =
+//                powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
+//            wakeLock?.acquire() // WakeLock 활성화
             try {
                 Log.d("Check Interval Service", "Service started")
 
@@ -344,7 +344,7 @@ class IntervalService : Service(), SensorEventListener {
         requestDto.record.distance = totalDistance
         requestDto.record.time = programData?.program?.intervalInfo?.duration!!
 
-        wakeLock?.release()
+//        wakeLock?.release()
         isServiceRunning = false
         sensorManager?.unregisterListener(this)
         timerHandler.removeCallbacks(timerRunnable)

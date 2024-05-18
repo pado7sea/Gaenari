@@ -22,6 +22,7 @@ import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.util.PreferencesUtil
+import com.example.gaenari.util.TTSUtil
 
 class RFirstFragment : Fragment() {
     private lateinit var distanceView: TextView
@@ -62,6 +63,7 @@ class RFirstFragment : Fragment() {
 
 
         setupUpdateReceiver()
+        TTSUtil.speak("자유달리기를 시작합니다")
         return view
     }
 
@@ -210,6 +212,7 @@ class RFirstFragment : Fragment() {
     }
 
     private fun sendResultsAndFinish(context: Context) {
+        TTSUtil.speak("운동을 마쳤습니다")
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val vibrationEffect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)

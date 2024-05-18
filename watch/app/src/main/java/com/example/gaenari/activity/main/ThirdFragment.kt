@@ -23,7 +23,7 @@ class ThirdFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var programDetails: TextView
     private lateinit var programTitle: TextView
-    private lateinit var rebutton : ImageButton
+    private lateinit var rebutton: ImageButton
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -46,7 +46,7 @@ class ThirdFragment : Fragment() {
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         sharedViewModel.favoritePrograms.observe(viewLifecycleOwner) { programs ->
             // 어댑터를 업데이트합니다.
-            recyclerView.adapter = ProgramAdapter(programs)
+            recyclerView.adapter = ProgramAdapter(programs, requireContext())
 
             // 아이템 스크롤 리스너 추가
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -77,27 +77,14 @@ class ThirdFragment : Fragment() {
         return view
     }
 
-
     private fun updateProgramDetails(program: FavoriteResponseDto) {
-
-
         val programTypeInfo = program.program
         val programType = when (program.type) {
-            "D" -> {
-                "거리 목표"
-            }
-            "T" -> {
-                "시간 목표"
-            }
-            "I" -> {
-                "인터벌"
-            }
-            "R" -> {
-                "자유 목표"
-            }
-            "W" -> {
-                "자유 목표"
-            }
+            "D" -> "거리 목표"
+            "T" -> "시간 목표"
+            "I" -> "인터벌"
+            "R" -> "자유 목표"
+            "W" -> "자유 목표"
             else -> "타입 알 수 없음"
         }
 
@@ -108,10 +95,11 @@ class ThirdFragment : Fragment() {
             else -> 9f // 또는 기본값
         }
 
-        programTitle.text = programType ?: "제목 없음"
+        programTitle.text = programType
         programDetails.text = programDetailsText
-//        programDetails.textSize = convertSpToPx(programTextSize, requireContext())
+        // programDetails.textSize = convertSpToPx(programTextSize, requireContext())
     }
+
     private fun convertSpToPx(sp: Float, context: Context): Float {
         return sp * context.resources.displayMetrics.scaledDensity
     }

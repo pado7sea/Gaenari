@@ -55,7 +55,7 @@ class DistTargetService : Service(), SensorEventListener {
     private var totalPausedTime: Long = 0
     private var lastPauseTime: Long = 0
 
-    private var wakeLock: PowerManager.WakeLock? = null
+//    private var wakeLock: PowerManager.WakeLock? = null
     private var isPaused = false
 
     /**
@@ -106,10 +106,10 @@ class DistTargetService : Service(), SensorEventListener {
         startTime = SystemClock.elapsedRealtime()
         if (!isServiceRunning) {
             isServiceRunning = true
-            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            wakeLock =
-                powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
-            wakeLock?.acquire() // WakeLock 활성화
+//            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+//            wakeLock =
+//                powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyApp::MyWakeLockTag")
+//            wakeLock?.acquire() // WakeLock 활성화
             try {
                 Log.d("Dist Target Service", "Service started")
                 TTSUtil.speak("멍!멍!! 운동을  시작한다!")
@@ -225,7 +225,7 @@ class DistTargetService : Service(), SensorEventListener {
         requestDto.record.distance = totalDistance
         requestDto.record.time = elapsedTime.toDouble()
 
-        wakeLock?.release()
+//        wakeLock?.release()
         isServiceRunning = false
         sensorManager?.unregisterListener(this)
         timerHandler.removeCallbacks(timerRunnable)

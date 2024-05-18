@@ -1,5 +1,6 @@
 package com.example.gaenari.activity.main
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -13,8 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gaenari.R
 import com.example.gaenari.activity.CountdownActivity
 import com.example.gaenari.dto.response.FavoriteResponseDto
+import com.example.gaenari.util.PreferencesUtil
 
-class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
+class ProgramAdapter(private val programs: List<FavoriteResponseDto>, private val context: Context) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
+
+    private val petName: String by lazy {
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        prefs.getString("petName", "Default Pet Name") ?: "Default Pet Name"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_program, parent, false)
@@ -41,8 +48,8 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
             "D" -> "${program.program.targetValue} KM"
             "T" -> "${program.program.targetValue?.toInt()?.div(60)} 분"
             "I" -> "${program.program.intervalInfo!!.setCount} set\n${program.program.intervalInfo!!.rangeCount} 구간"
-            "W" -> "이번달\n걷기횟수"
-            "R" -> "이번달\n달리기횟수"
+            "W" -> "${petName}\n걷자 !"
+            "R" -> "${petName}\n달리자 !"
             else -> "기본"
         }
 
@@ -69,7 +76,7 @@ class ProgramAdapter(private val programs: List<FavoriteResponseDto>) : Recycler
                     putExtra("programId", program.programId)
                     putExtra("programTitle", program.programTitle)
                     putExtra("programType", program.type)
-                    if (program.type == "D" ) {
+                    if (program.type == "D") {
                         putExtra("programData", program)
                         putExtra("programTarget", program.program.targetValue)
                     }

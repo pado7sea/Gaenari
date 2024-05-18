@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gaenariback1211">
+    android:background="@drawable/gaenariback12345">
 
 <!--    <ImageView-->
 <!--        android:layout_width="wrap_content"-->
@@ -22,14 +22,14 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/thejamsil_medium"
         android:text="Second Fragment"
-        android:textColor="@color/mainyellow"
-        android:textSize="12sp"
+        android:textColor="#1073E9"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.219" />
+        app:layout_constraintVertical_bias="0.189" />
 
     <TextView
         android:id="@+id/time"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/thejamsil_medium"
         android:text="Second Fragment"
-        android:textColor="@color/mainblue"
+        android:textColor="#004698"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,6 +45,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.317" />
+
+    <TextView
+        android:id="@+id/강아지이름"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/thejamsil_extrabold"
+        android:text="강아지이름"
+        android:textColor="#641685"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"

@@ -21,9 +21,11 @@ class SecondFragment : Fragment() {
     private lateinit var timeTextView: TextView
     private lateinit var viewModel: StepCounterViewModel
     private lateinit var gifImageView: pl.droidsonroids.gif.GifImageView
+    private lateinit var 강아지이름: TextView
 
     private lateinit var updateJob: Job // 코루틴 작업
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,6 +35,7 @@ class SecondFragment : Fragment() {
         dateTextView = view.findViewById(R.id.date) // 날짜 텍스트뷰
         timeTextView = view.findViewById(R.id.time) // 시간 텍스트뷰
         gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
+        강아지이름 = view.findViewById(R.id.강아지이름)
 
         // 백엔드 데이터와 함께 ViewModel 설정
         viewModel = ViewModelProvider(requireActivity()).get(StepCounterViewModel::class.java)
@@ -40,6 +43,7 @@ class SecondFragment : Fragment() {
             stepCountTextView.text = "걸음수: $steps" // 데이터 변경 시 UI 업데이트
         }
         updateGifForActivity(context = requireContext())
+        updatePetName(context = requireContext()) // 강아지 이름 업데이트
 
         // gifImageView 클릭 이벤트 설정
         gifImageView.setOnClickListener {
@@ -62,7 +66,7 @@ class SecondFragment : Fragment() {
     @SuppressLint("ResourceType")
     fun updateGifForActivity(context: Context) {
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
-        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+        val petId = prefs.getLong("petId", 0) // Default value as 0 if not found
         val resourceId = context.resources.getIdentifier("walk${petId}", "raw", context.packageName)
 
         // resourceId가 0이 아니면 리소스가 존재하는 것이므로 이미지를 설정하고, 0이면 기본 이미지를 설정
@@ -77,7 +81,7 @@ class SecondFragment : Fragment() {
     @SuppressLint("ResourceType")
     private fun updateGifRandomly(context: Context) {
         val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
-        val petId = prefs.getLong("petId", 0)  // Default value as 0 if not found
+        val petId = prefs.getLong("petId", 0) // Default value as 0 if not found
         val actions = listOf("run", "walk", "sit", "stop", "lay")
         val randomAction = actions[Random.nextInt(actions.size)]
         val resourceId = context.resources.getIdentifier("${randomAction}${petId}", "raw", context.packageName)
@@ -89,6 +93,12 @@ class SecondFragment : Fragment() {
             // 예를 들어 기본 이미지로 설정
             gifImageView.setImageResource(R.raw.doghome)
         }
+    }
+
+    private fun updatePetName(context: Context) {
+        val prefs = PreferencesUtil.getEncryptedSharedPreferences(context)
+        val petName = prefs.getString("petName", "Default Pet Name")
+        강아지이름.text = petName
     }
 
     private fun startUpdatingTime() {
