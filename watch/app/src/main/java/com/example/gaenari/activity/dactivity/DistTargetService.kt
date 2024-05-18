@@ -223,7 +223,7 @@ class DistTargetService : Service(), SensorEventListener {
         Log.d("Check Dist Service", "elapsedTime : ${elapsedTime.toDouble()}")
         /* record 정보 추가 */
         requestDto.record.distance = totalDistance
-        requestDto.record.time = elapsedTime.toDouble()
+        requestDto.record.time = (elapsedTime / 1000).toDouble()
 
 //        wakeLock?.release()
         isServiceRunning = false
