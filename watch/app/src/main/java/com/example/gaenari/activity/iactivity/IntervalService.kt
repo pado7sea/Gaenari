@@ -49,6 +49,7 @@ class IntervalService : Service(), SensorEventListener {
     private var currentSetCount = 0
     private var currentRangeIndex = 0
     private var currentRangeTime: Long = 60000
+    private var currentRangeRemainTime: Long = 60000
     private var currentRunningType: Boolean = false
     private var currentRangeSpeed: Double = 0.0
 
@@ -74,7 +75,7 @@ class IntervalService : Service(), SensorEventListener {
             if (!isPaused) {
                 elapsedTime = SystemClock.elapsedRealtime() - startTime - totalPausedTime
                 sendTimeBroadcast(elapsedTime)
-
+                currentRangeRemainTime -= 1000
                 // 심박수 브로드캐스트
                 sendHeartRateBroadcast(currentHeartRate)
             }
@@ -258,6 +259,8 @@ class IntervalService : Service(), SensorEventListener {
         currentRangeSpeed =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.speed!!
 
+        currentRangeRemainTime = currentRangeTime
+
         if (flag)
             sendRangeInfoBroadcast()
 
@@ -336,7 +339,6 @@ class IntervalService : Service(), SensorEventListener {
         requestDto.record.distance = totalDistance
         requestDto.record.time = (elapsedTime / 1000).toDouble()
 
-//        wakeLock?.release()
         isServiceRunning = false
         sensorManager?.unregisterListener(this)
         timerHandler.removeCallbacks(timerRunnable)
@@ -425,6 +427,7 @@ class IntervalService : Service(), SensorEventListener {
         stopForeground(true)
         // 1분 평균 계산 핸들러를 중지합니다.
         oneMinuteHandler.removeCallbacks(oneMinuteRunnable)
+        rangeHandler.removeCallbacks(rangeRunnable)
         sendPauseBroadcast()
     }
 
@@ -437,6 +440,8 @@ class IntervalService : Service(), SensorEventListener {
         startForeground(1, notification)
         Log.d("Check Interval Service", "oneMinuteHandler Delayed ${60000 - elapsedTime % 60000}")
         oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000 - elapsedTime % 60000)
+        Log.d("Check Interval Service", "rangeHandler Delayed $currentRangeRemainTime")
+        rangeHandler.postDelayed(rangeRunnable, currentRangeRemainTime)
         sendPauseBroadcast()
     }
 
