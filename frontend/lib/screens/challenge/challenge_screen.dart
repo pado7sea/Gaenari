@@ -149,7 +149,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
     return Scaffold(
       appBar: LargeAppBar(
         title: "보상",
-        sentence: "업적과 미션을 달성하고 \n보상 받아 강아지를 레벨업하자!",
+        sentence: "업적과 미션을 달성하고 \n강아지를 레벨업하자!",
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -300,7 +300,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
         );
       }
 
-      if (value['achieved'] == true && value['obtainable'] != 0) {
+      if (value['achieved'] == false && value['obtainable'] != 0) {
         completedTrophiesWidgets.add(
           Padding(
             padding: const EdgeInsets.only(bottom: 10),

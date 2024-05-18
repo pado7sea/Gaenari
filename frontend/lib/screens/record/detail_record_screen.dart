@@ -46,7 +46,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   Detail programDetail = Detail();
 
   bool active = false;
-  bool button = true;
+  bool button = false;
+  bool interval = true;
 
   @override
   void initState() {
@@ -58,6 +59,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     } else {
       _recordDateTime = DateTime.now();
     }
+    // getDetail();
   }
 
   void detailRecordList() async {
@@ -114,7 +116,6 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     print('갹ㄴ야ㅐㅓㅁㄴ갸ㅐㅓ ㅑㅐㅔ;ㅁ저ㅐ;');
     print(recordDetail.exerciseId);
     print(recordDetail.program?.programId);
-    print(programDetail.programId);
   }
 
   getDetail() async {
@@ -128,8 +129,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       });
       print('프로그램');
       print(programDetail.usageLog![0].recordId);
-      print(programDetail.program!.intervalInfo!.setCount! *
-          programDetail.program!.intervalInfo!.rangeCount!);
+      print(programDetail.programId);
     } else {
       print('Program ID is null');
     }
@@ -148,6 +148,13 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       gravity: ToastGravity.CENTER,
       backgroundColor: myYellow,
     );
+
+    Navigator.pop(context);
+    Navigator.push(
+        context,
+        NonePageRoute(
+            nextPage: DetailRecordScreen(recordId: recordDetail.exerciseId)));
+
     setState(() {
       button = false;
     });
@@ -188,7 +195,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                     _heart(),
                     recordDetail.trophies!.isNotEmpty
                         ? Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            padding: const EdgeInsets.symmetric(vertical: 25),
                             child: Column(
                               children: List.generate(
                                   recordDetail.trophies!.length, (index) {
@@ -438,46 +445,78 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   }
 
   Widget _graph() {
-    return Container(
-      constraints: BoxConstraints(minHeight: 100),
-      decoration: BoxDecoration(
-          border: Border.all(color: myWhiteGreen, width: 2),
-          borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                Text16(text: '인터벌', bold: true),
-              ],
-            ),
+    return GestureDetector(
+        onTap: () {
+          setState(() {
+            interval = !interval;
+          });
+        },
+        child: Container(
+          constraints: BoxConstraints(minHeight: 100),
+          decoration: BoxDecoration(
+              border: Border.all(color: myWhiteGreen, width: 2),
+              borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    Text16(text: interval ? '인터벌' : '인터벌 목표', bold: true),
+                  ],
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                  child: interval
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: List.generate(
+                              recordDetail
+                                  .program!.intervalInfo!.ranges!.length,
+                              (index) => Expanded(
+                                    child: Container(
+                                      height: recordDetail
+                                              .program!
+                                              .intervalInfo!
+                                              .ranges![index]
+                                              .speed! *
+                                          4,
+                                      margin: EdgeInsets.only(right: 3),
+                                      color: (recordDetail.program?.intervalInfo
+                                                  ?.ranges?[index]?.isRunning ??
+                                              false)
+                                          ? myMainGreen
+                                          : myLightGreen,
+                                    ),
+                                  )))
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: List.generate(
+                              programDetail.program!.intervalInfo!.setCount! *
+                                  programDetail
+                                      .program!.intervalInfo!.rangeCount!,
+                              (index) => Expanded(
+                                    child: Container(
+                                      height: programDetail
+                                              .program!
+                                              .intervalInfo!
+                                              .ranges![index %
+                                                  programDetail
+                                                      .program!
+                                                      .intervalInfo!
+                                                      .rangeCount!]
+                                              .speed! *
+                                          4,
+                                      margin: EdgeInsets.only(right: 3),
+                                      color: Colors.blueAccent,
+                                    ),
+                                  )))),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(
-                    recordDetail.program!.intervalInfo!.ranges!.length,
-                    (index) => Expanded(
-                          child: Container(
-                            height: recordDetail.program!.intervalInfo!
-                                    .ranges![index].speed! *
-                                4,
-                            margin: EdgeInsets.only(right: 3),
-                            color: (recordDetail.program?.intervalInfo
-                                        ?.ranges?[index]?.isRunning ??
-                                    false)
-                                ? myMainGreen
-                                : myLightGreen,
-                          ),
-                        ))),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _pace() {
@@ -505,7 +544,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: List.generate(Pacelist.length, (index) {
@@ -517,11 +556,9 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 }
                 return Expanded(
                   child: Container(
-                    height: height * 2 + 1,
+                    height: (height + 1) * 2.5,
                     margin: EdgeInsets.only(
-                        right: index == Pacelist.length - 1
-                            ? 0
-                            : 3), // 각 콘테이너 사이의 간격 조정, 마지막 아이템 제외
+                        right: 3), // 각 콘테이너 사이의 간격 조정, 마지막 아이템 제외
                     color: myBlue, // 콘테이너 색상 설정
                   ),
                 );
@@ -557,7 +594,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: List.generate(Heartlist.length, (index) {
@@ -568,7 +605,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 }
                 return Expanded(
                   child: Container(
-                    height: height / 2 + 1,
+                    height: (height) / 3 + 1,
                     margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
                     color: myRed, // 콘테이너 색상 설정
                   ),
@@ -593,7 +630,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 20, 20, 20),
+              padding: const EdgeInsets.fromLTRB(30, 20, 20, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -601,7 +638,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                     children: [
                       Text16(text: '  미션', bold: true),
                       IconButton(
-                        icon: Icon(Icons.info_outline), // 정보를 나타내는 아이콘으로 변경 가능
+                        icon: Icon(Icons.info_outline,
+                            color: myGrey), // 정보를 나타내는 아이콘으로 변경 가능
                         onPressed: () {
                           showDialog(
                             context: context, // 현재 컨텍스트를 전달합니다.
@@ -895,7 +933,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 ? SizedBox(height: 0)
                 : ElevatedButton(
                     onPressed: () {
-                      button ? SizedBox() : DetailRecordList();
+                      button ? DetailRecordList() : SizedBox();
                       RewardData();
                     },
                     style: ElevatedButton.styleFrom(
@@ -905,13 +943,11 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      backgroundColor: (recordDetail.attainableCoin == 0 &&
-                              recordDetail.attainableHeart == 0)
-                          ? myGrey
-                          : myYellow, // 조건부로 배경색 설정
+                      backgroundColor:
+                          button ? myYellow : myGrey, // 조건부로 배경색 설정
                     ),
                     child: Text16(
-                      text: button ? '이미 수령한 보상' : '운동 보상 받기',
+                      text: button ? '운동 보상 받기' : '이미 수령한 보상',
                     ),
                   )
           ]),

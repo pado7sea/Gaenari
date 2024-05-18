@@ -35,7 +35,7 @@ class _SettingScreenState extends State<SettingScreen> {
           _nickname(),
           _password(),
           _body(),
-          _notification(),
+          // _notification(),
           _coinHistory(),
           _logout(context),
         ],
