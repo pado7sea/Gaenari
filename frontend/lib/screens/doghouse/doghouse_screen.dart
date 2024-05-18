@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/inventory/my_item.dart';
+import 'package:forsythia/models/pet/pet_heart.dart';
+import 'package:forsythia/models/pet/pet_res.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/inventory/inventory_screen.dart';
 import 'package:forsythia/screens/item/item_screen.dart';
 import 'package:forsythia/service/inventory_service.dart';
+import 'package:forsythia/service/pet_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
@@ -39,7 +44,10 @@ class _DogHouseScreenState extends State<DogHouseScreen>
   int x = 0;
   int y = 0;
   int act = 0;
+  int heart = 1;
   bool left = false;
+  bool go = false;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -55,11 +63,19 @@ class _DogHouseScreenState extends State<DogHouseScreen>
     act = random.nextInt(6);
     x = random.nextInt(6);
     y = random.nextInt(6);
+    _timer = Timer.periodic(Duration(milliseconds: 300), (timer) {
+      setState(() {
+        if (heart > 1) {
+          heart--;
+        }
+      });
+    });
   }
 
   @override
   void dispose() {
     // AnimationController를 dispose하여 메모리 누수를 방지
+    _timer.cancel(); // 타이머 해제
     _controller.dispose();
     super.dispose();
   }
@@ -71,6 +87,18 @@ class _DogHouseScreenState extends State<DogHouseScreen>
       active = true;
       currentImage = "assets/dogs/1_${act}_${my.pet!.id!}.gif";
     });
+  }
+
+  postLove() async {
+    PetHeart petHeart = PetHeart(affection: 1, id: my.pet!.id);
+    await PetService.fetchPetLove(petHeart);
+    setState(() {
+      go = false;
+      my.pet!.affection = my.pet!.affection! + 1;
+    });
+    if (my.pet!.affection! == 100) {
+      getItem();
+    }
   }
 
   Future<void> loadCoin() async {
@@ -93,6 +121,12 @@ class _DogHouseScreenState extends State<DogHouseScreen>
 
   void moveImage() {
     setState(() {
+      if (heart < 10) {
+        heart++;
+      } else if (heart == 10) {
+        go = true;
+        heart = 1;
+      }
       int a = x;
       int b = y;
       x = random.nextInt(6);
@@ -113,6 +147,9 @@ class _DogHouseScreenState extends State<DogHouseScreen>
         currentImage = "assets/dogs/1_${act}_${my.pet!.id!}.gif";
       });
     });
+    if (go) {
+      postLove();
+    }
   }
 
   @override
@@ -194,31 +231,61 @@ class _DogHouseScreenState extends State<DogHouseScreen>
                   GestureDetector(
                     // GestureDetector를 사용하여 이미지를 감싼다
                     onTap: () {
-                      moveImage();
+                      if (!go) {
+                        moveImage();
+                      }
                     },
                     child: Stack(
                       children: <Widget>[
                         AnimatedPositioned(
-                          left: dx[x],
-                          top: dy[y],
-                          duration: Duration(milliseconds: 500),
-                          child: left
-                              ? Transform.flip(
-                                  flipX: true,
-                                  child: Image.asset(
-                                    currentImage,
-                                    width: 200.0 - (50 - y * 10),
-                                    fit: BoxFit.cover,
-                                    filterQuality: FilterQuality.none,
-                                  ),
-                                )
-                              : Image.asset(
-                                  currentImage,
-                                  width: 200.0 - (50 - y * 10),
-                                  fit: BoxFit.cover,
-                                  filterQuality: FilterQuality.none,
+                            left: dx[x],
+                            top: dy[y],
+                            duration: Duration(milliseconds: 500),
+                            child: Column(
+                              children: [
+                                left
+                                    ? Transform.flip(
+                                        flipX: true,
+                                        child: Image.asset(
+                                          currentImage,
+                                          width: 200.0 - (50 - y * 10),
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.none,
+                                        ),
+                                      )
+                                    : Image.asset(
+                                        currentImage,
+                                        width: 200.0 - (50 - y * 10),
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.none,
+                                      ),
+                                SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/dog_tier/tier_${my.pet!.tier}.png",
+                                      width: 18,
+                                      filterQuality: FilterQuality.none,
+                                    ),
+                                    SizedBox(width: 3),
+                                    Text16(
+                                      text: "${my.pet!.name}",
+                                      bold: true,
+                                    ),
+                                  ],
                                 ),
-                        ),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      "assets/color_icons/heart_$heart.png",
+                                      width: 80,
+                                      filterQuality: FilterQuality.none,
+                                      fit: BoxFit.cover,
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
                       ],
                     ),
                   ),
