@@ -27,7 +27,7 @@ class _WatchScreenState extends State<WatchScreen> {
   }
 
   void _generateRandomNumbers() async {
-    Watch watch = await WatchService.fetchWatch();
+    Watch watch = await WatchService.fetchWatch(context);
     print(watch.data!.split("").toList());
     setState(() {
       tokennumber = watch.data!.split("").toList();

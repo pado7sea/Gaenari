@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:forsythia/models/pet/pet_adopt.dart';
 import 'package:forsythia/models/pet/pet_heart.dart';
 import 'package:forsythia/models/pet/pet_res.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:forsythia/screens/login/error_screen.dart';
 
 // 펫 서비스
 class PetService {
@@ -12,9 +14,18 @@ class PetService {
       SecureStorageService();
 
   // 강아지입양
-  static Future<PetRes> fetchPetAdopt(pet) async {
-    return fetchPostBodyData('pet/adopt', pet)
-        .then((data) => PetRes.fromJson(data));
+  static Future<PetRes> fetchPetAdopt(BuildContext context, pet) async {
+    try {
+      return fetchPostBodyData(context, 'pet/adopt', pet)
+          .then((data) => PetRes.fromJson(data));
+    } catch (e) {
+      print('Error fetching Pet Adopt: $e');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+      throw e;
+    }
   }
 
   // 애정도 증가
@@ -49,79 +60,117 @@ class PetService {
   }
 
   // 강아지변경
-  static Future<PetRes> fetchPetPartner(id) async {
-    return fetchPutData('pet/partner/$id')
-        .then((data) => PetRes.fromJson(data));
+  static Future<PetRes> fetchPetPartner(BuildContext context, id) async {
+    try {
+      return fetchPutData(context, 'pet/partner/$id')
+          .then((data) => PetRes.fromJson(data));
+    } catch (e) {
+      print('Error fetching Pet Partner: $e');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+      throw e;
+    }
   }
 
   // 바디있는 포스트요청
   static Future<dynamic> fetchPostBodyData(
-      String endpoint, PetAdopt pet) async {
-    String? token = await secureStorageService.getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/$endpoint'),
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $token',
-      },
-      body: json.encode(pet.toJson()),
-    );
+      BuildContext context, String endpoint, PetAdopt pet) async {
+    try {
+      String? token = await secureStorageService.getToken();
+      final response = await http.post(
+        Uri.parse('$baseUrl/$endpoint'),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token',
+        },
+        body: json.encode(pet.toJson()),
+      );
 
-    if (response.statusCode == 200) {
-      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
-      if (data['status'] == "SUCCESS") {
-        return data;
+      if (response.statusCode == 200) {
+        final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+        if (data['status'] == "SUCCESS") {
+          return data;
+        } else {
+          throw Exception("status : ${data['status']}");
+        }
       } else {
-        throw Exception("status : ${data['status']}");
+        throw Exception('statusCode : ${response.statusCode}');
       }
-    } else {
-      throw Exception('statusCode : ${response.statusCode}');
+    } catch (e) {
+      print('Error fetching Post Body Data: $e');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+      throw e;
     }
   }
 
   // get요청
-  static Future<dynamic> fetchGetData(String endpoint) async {
-    String? token = await secureStorageService.getToken();
-    final response = await http.get(
-      Uri.parse('$baseUrl/$endpoint'),
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $token'
-      },
-    );
+  static Future<dynamic> fetchGetData(
+      BuildContext context, String endpoint) async {
+    try {
+      String? token = await secureStorageService.getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/$endpoint'),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
-      if (data['status'] == "SUCCESS") {
-        return data;
+      if (response.statusCode == 200) {
+        final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+        if (data['status'] == "SUCCESS") {
+          return data;
+        } else {
+          throw Exception('Failed to load data');
+        }
       } else {
         throw Exception('Failed to load data');
       }
-    } else {
-      throw Exception('Failed to load data');
+    } catch (e) {
+      print('Error fetching Get Data: $e');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+      throw e;
     }
   }
 
   // put요청
-  static Future<dynamic> fetchPutData(String endpoint) async {
-    String? token = await secureStorageService.getToken();
-    final response = await http.put(
-      Uri.parse('$baseUrl/$endpoint'),
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $token'
-      },
-    );
+  static Future<dynamic> fetchPutData(
+      BuildContext context, String endpoint) async {
+    try {
+      String? token = await secureStorageService.getToken();
+      final response = await http.put(
+        Uri.parse('$baseUrl/$endpoint'),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
-      if (data['status'] == "SUCCESS") {
-        return data;
+      if (response.statusCode == 200) {
+        final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+        if (data['status'] == "SUCCESS") {
+          return data;
+        } else {
+          throw Exception('Failed to load data');
+        }
       } else {
         throw Exception('Failed to load data');
       }
-    } else {
-      throw Exception('Failed to load data');
+    } catch (e) {
+      print('Error fetching Put Data: $e');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+      throw e;
     }
   }
 }

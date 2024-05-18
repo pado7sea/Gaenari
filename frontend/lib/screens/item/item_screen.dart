@@ -61,7 +61,8 @@ class _ItemScreenState extends State<ItemScreen>
   }
 
   Future<void> getItem() async {
-    ItemPurchase itemPurchase = await InventoryService.fetchItemPurchase();
+    ItemPurchase itemPurchase =
+        await InventoryService.fetchItemPurchase(context);
     setState(() {
       item = itemPurchase.data!;
       name = findItemNameById(item.id!)!;

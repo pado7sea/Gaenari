@@ -179,8 +179,8 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 ElevatedButton(
                     onPressed: () async {
-                      final Check idCheck =
-                          await MemberService.fetchIdCheck(_idcontroller.text);
+                      final Check idCheck = await MemberService.fetchIdCheck(
+                          context, _idcontroller.text);
                       setState(() {
                         if (idCheck.data != null && idCheck.data == false) {
                           check = "사용 가능한 아이디";

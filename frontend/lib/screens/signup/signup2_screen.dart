@@ -157,7 +157,7 @@ class _Signup2ScreenState extends State<Signup2Screen> {
                     onPressed: () async {
                       final Check idCheck =
                           await MemberService.fetchNickNameCheck(
-                              _nicknamecontroller.text);
+                              context, _nicknamecontroller.text);
                       setState(() {
                         if (idCheck.data != null && idCheck.data == false) {
                           check = "사용 가능한 닉네임";

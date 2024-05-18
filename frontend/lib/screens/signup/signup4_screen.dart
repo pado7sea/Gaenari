@@ -93,7 +93,7 @@ class _Signup4ScreenState extends State<Signup4Screen> {
                   fontFamily: 'TheJamsil'),
             ),
             TextSpan(
-              text: '를 선택해주세요 ',
+              text: '를\n선택해주세요 ',
               style: TextStyle(
                   color: myBlack,
                   fontSize: 22,
@@ -142,7 +142,7 @@ class _Signup4ScreenState extends State<Signup4Screen> {
     SignupUser signupUser =
         Provider.of<SignupProvider>(context, listen: false).user;
     print(signupUser.toJson());
-    await MemberService.fetchSignup(signupUser).then((data) {
+    await MemberService.fetchSignup(context, signupUser).then((data) {
       Navigator.of(context).push(SlidePageRoute(nextPage: SignupEndScreen()));
     }).catchError((error) {
       print(error);

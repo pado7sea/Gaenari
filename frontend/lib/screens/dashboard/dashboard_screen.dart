@@ -50,7 +50,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
 
   // 보상있는지 없는지
   _getRewardNotice() async {
-    RewardNotice rewardNotice = await ChallengeService.fetchRewardNotice();
+    RewardNotice rewardNotice =
+        await ChallengeService.fetchRewardNotice(context);
     print(rewardNotice.data!);
     setState(() {
       if (rewardNotice.data! == true) {
@@ -83,7 +84,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
     DateTime now = DateTime.now();
     WeeklyStatisticList weeklyStatisticList =
         await RecordSevice.fetchWeeklyStatisticList(
-            now.year, now.month, now.day);
+            context, now.year, now.month, now.day);
     setState(() {
       weekly = weeklyStatisticList.data!;
       active = true;
@@ -164,7 +165,8 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                 reward
                     ? GestureDetector(
                         onTap: () async {
-                          Reward rewards = await ChallengeService.fetchReward();
+                          Reward rewards =
+                              await ChallengeService.fetchReward(context);
                           print(rewards.data!.coin!);
                           print(rewards.data!.heart!);
                           setState(() {
@@ -259,7 +261,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                               width: double.infinity,
                               padding: EdgeInsets.all(20),
                               margin: EdgeInsets.only(bottom: 16),
-                              decoration: myBoxDecoration,
+                              decoration: myYellowBoxDecoration,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -279,7 +281,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                           width: 30,
                                           height: 30,
                                           fit: BoxFit.cover,
-                                          filterQuality: FilterQuality.high,
+                                          filterQuality: FilterQuality.none,
                                         ),
                                         SizedBox(width: 10),
                                         Image(
@@ -288,7 +290,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                           width: 30,
                                           height: 28,
                                           fit: BoxFit.cover,
-                                          filterQuality: FilterQuality.high,
+                                          filterQuality: FilterQuality.none,
                                         )
                                       ],
                                     ),
@@ -307,7 +309,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                               width: double.infinity,
                               padding: EdgeInsets.all(20),
                               // margin: EdgeInsets.only(bottom: 10),
-                              decoration: myBoxDecoration,
+                              decoration: myWhiteGreenBoxDecoration,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -327,7 +329,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                           width: 27,
                                           height: 34,
                                           fit: BoxFit.cover,
-                                          filterQuality: FilterQuality.high,
+                                          filterQuality: FilterQuality.none,
                                         ),
                                         SizedBox(width: 10),
                                         Image(
@@ -336,7 +338,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                           width: 27,
                                           height: 35,
                                           fit: BoxFit.cover,
-                                          filterQuality: FilterQuality.high,
+                                          filterQuality: FilterQuality.none,
                                         )
                                       ],
                                     ),
@@ -359,7 +361,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                             height: 196,
                             padding: EdgeInsets.all(20),
                             margin: EdgeInsets.only(left: 16),
-                            decoration: myBoxDecoration,
+                            decoration: myBlueBoxDecoration,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -376,7 +378,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                                     width: 85,
                                     height: 120,
                                     fit: BoxFit.cover,
-                                    filterQuality: FilterQuality.high,
+                                    filterQuality: FilterQuality.none,
                                   ),
                                 )
                               ],

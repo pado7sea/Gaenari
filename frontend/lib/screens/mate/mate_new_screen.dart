@@ -37,7 +37,7 @@ class _NewMatePageState extends State<NewMatePage> {
   }
 
   _receive() async {
-    MateList response = await MateService.fetchReceivedMateList();
+    MateList response = await MateService.fetchReceivedMateList(context);
     setState(() {
       list = response.data!;
     });
@@ -76,9 +76,9 @@ class _NewMatePageState extends State<NewMatePage> {
         onTap: () async {
           MateList response;
           if (tapnum == 0) {
-            response = await MateService.fetchReceivedMateList();
+            response = await MateService.fetchReceivedMateList(context);
           } else {
-            response = await MateService.fetchSentMateList();
+            response = await MateService.fetchSentMateList(context);
           }
           setState(() {
             list = response.data!;
@@ -164,7 +164,8 @@ class _NewMatePageState extends State<NewMatePage> {
                                   AcceptForm acceptForm = AcceptForm(
                                       mateId: list[index].mateId,
                                       isAccept: false);
-                                  await MateService.fetchAcceptMate(acceptForm);
+                                  await MateService.fetchAcceptMate(
+                                      context, acceptForm);
                                   _receive();
                                 },
                                 child: Container(
@@ -193,7 +194,8 @@ class _NewMatePageState extends State<NewMatePage> {
                                   AcceptForm acceptForm = AcceptForm(
                                       mateId: list[index].mateId,
                                       isAccept: true);
-                                  await MateService.fetchAcceptMate(acceptForm);
+                                  await MateService.fetchAcceptMate(
+                                      context, acceptForm);
                                   _receive();
                                 },
                                 child: Container(

@@ -44,7 +44,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
   }
 
   getList() async {
-    ProgramList response = await ProgramService.fetchProgramList();
+    ProgramList response = await ProgramService.fetchProgramList(context);
     setState(() {
       alist = response.data!;
       tlist = response.data!.where((e) => e.type == "T").toList();
@@ -440,7 +440,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
                   GestureDetector(
                     onTap: () async {
                       await ProgramService.fetchFavoriteProgram(
-                          list[index].programId);
+                          context, list[index].programId);
                       getList();
                       slidableController.activeState?.close();
                     },
@@ -596,7 +596,8 @@ class _ProgramScreenState extends State<ProgramScreen> {
             SizedBox(width: 16),
             SmallButton(
               onPressed: () async {
-                await ProgramService.fetchDeleteProgram(list[index].programId);
+                await ProgramService.fetchDeleteProgram(
+                    context, list[index].programId);
                 getList();
                 Navigator.of(context).pop();
               },

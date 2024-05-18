@@ -46,8 +46,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   _getSet() async {
-    SetList setList = await InventoryService.fetchSetList();
-    PetList petList = await InventoryService.fetchPetList();
+    SetList setList = await InventoryService.fetchSetList(context);
+    PetList petList = await InventoryService.fetchPetList(context);
     setState(() {
       set = setList.data!;
       pet = petList.data!;
@@ -285,7 +285,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
       onTap: () async {
         SecureStorageService storageService = SecureStorageService();
         LoginInfo? info = await storageService.getLoginInfo();
-        RewardNotice rewardNotice = await ChallengeService.fetchRewardNotice();
+        RewardNotice rewardNotice =
+            await ChallengeService.fetchRewardNotice(context);
         bool reward = false;
         setState(() {
           if (rewardNotice.data! == true) {
@@ -326,8 +327,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                   await storageService.getLoginInfo();
                               PetAdopt petAdopt = PetAdopt(
                                   id: index + 1, name: _petnamecontroller.text);
-                              PetRes petRes =
-                                  await PetService.fetchPetAdopt(petAdopt);
+                              PetRes petRes = await PetService.fetchPetAdopt(
+                                  context, petAdopt);
                               print(petRes.message);
                               setState(() {
                                 pet[index].isHave = true;
@@ -427,7 +428,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                         SmallButton(
                                           onPressed: () async {
                                             await PetService.fetchPetPartner(
-                                                pet[index].pets!.id);
+                                                context, pet[index].pets!.id);
                                             SecureStorageService
                                                 storageService =
                                                 SecureStorageService();

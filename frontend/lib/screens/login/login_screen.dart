@@ -30,7 +30,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     // login 모델 객체 생성
     LoginForm loginInfo = LoginForm(accountId: accountId, password: password);
-    await MemberService.fetchLogin(loginInfo).then((loginUser) {
+    await MemberService.fetchLogin(context, loginInfo).then((loginUser) {
       LoginUser response = loginUser;
       LoginInfo info = response.data!;
       secureStorageService.saveLoginInfo(info);

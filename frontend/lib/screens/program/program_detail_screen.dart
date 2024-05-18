@@ -30,7 +30,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
 
   getDetail() async {
     ProgramDetail response =
-        await ProgramService.fetchProgramDetail(widget.programId);
+        await ProgramService.fetchProgramDetail(context, widget.programId);
     setState(() {
       programDetail = response.data!;
     });
@@ -144,7 +144,8 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
         ),
         GestureDetector(
           onTap: () async {
-            await ProgramService.fetchFavoriteProgram(programDetail.programId);
+            await ProgramService.fetchFavoriteProgram(
+                context, programDetail.programId);
             setState(() {
               programDetail.isFavorite = !programDetail.isFavorite!;
             });
