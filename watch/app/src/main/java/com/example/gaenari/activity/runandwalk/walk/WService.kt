@@ -55,7 +55,7 @@ class WService : Service(), SensorEventListener {
     private var totalPausedTime: Long = 0
     private var lastPauseTime: Long = 0
 
-//    private var wakeLock: PowerManager.WakeLock? = null
+    //    private var wakeLock: PowerManager.WakeLock? = null
     private var isPaused = false
 
     /**
@@ -185,7 +185,7 @@ class WService : Service(), SensorEventListener {
     /**
      * 1분 이전 조기 종료 시 남은 정보 저장
      */
-    private fun remainInfoSave(){
+    private fun remainInfoSave() {
         Log.d("Check Walking Service", "조기 종료 시 평균 값 계산 시작")
         val averageSpeed = if (speedCount > 0) oneMinuteSpeed / speedCount else 0.0
         val averageHeartRate =
@@ -206,7 +206,7 @@ class WService : Service(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         Log.d("Check Walking Service", "HeartRate onSensorChanged")
         if (!isPaused && event.sensor.type == Sensor.TYPE_HEART_RATE) {
-            if(event.values[0] < 40) return
+            if (event.values[0] < 40) return
             currentHeartRate = event.values[0]
             oneMinuteHeartRate += currentHeartRate
             heartRateCount++
@@ -222,7 +222,7 @@ class WService : Service(), SensorEventListener {
 
         /* record 정보 추가 */
         requestDto.record.distance = totalDistance
-        requestDto.record.time = elapsedTime.toDouble()
+        requestDto.record.time = (elapsedTime / 1000).toDouble()
 
 //        wakeLock?.release()
         isServiceRunning = false
@@ -297,14 +297,17 @@ class WService : Service(), SensorEventListener {
     /**
      * 프로그램 종료 브로드 캐스트
      */
-    private fun sendEndProgramBroadcast(){
+    private fun sendEndProgramBroadcast() {
         val intent = Intent("com.example.sibal.EXIT_PROGRAM").apply {
             putExtra("isEnd", true)
             putExtra("totalHeartRateAvg", requestDto.heartrates.average)
             putExtra("totalSpeedAvg", requestDto.speeds.average)
             putExtra("requestDto", requestDto)
         }
-        Log.d("sendEndProgramBroadcast", "sendEndProgramBroadcast: ${requestDto} , ㅎㅇㅎㅇ1 ${requestDto.speeds.average} , ㅎㅇㅎㅇ2 ${requestDto.heartrates.average}")
+        Log.d(
+            "sendEndProgramBroadcast",
+            "sendEndProgramBroadcast: ${requestDto} , ㅎㅇㅎㅇ1 ${requestDto.speeds.average} , ㅎㅇㅎㅇ2 ${requestDto.heartrates.average}"
+        )
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
@@ -332,7 +335,7 @@ class WService : Service(), SensorEventListener {
     /**
      * 일시정지 알림 브로드캐스트
      */
-    private fun sendPauseBroadcast(){
+    private fun sendPauseBroadcast() {
         val intent = Intent("com.example.sibal.PAUSE_PROGRAM").apply {
             putExtra("isPause", isPaused)
         }
@@ -342,15 +345,18 @@ class WService : Service(), SensorEventListener {
     /**
      * Broadcast Receive 등록
      */
-    private fun setupUpdateReceiver(){
+    private fun setupUpdateReceiver() {
         updateReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
                     "com.example.sibal.UPDATE_LOCATION" -> {
-                        if(!isPaused) {
+                        if (!isPaused) {
                             val distance = intent.getDoubleExtra("distance", 0.0)
                             val speed = intent.getDoubleExtra("speed", 0.0)
-                            Log.d("Check Walking Service", "Update Location : dist($distance), speed($speed)")
+                            Log.d(
+                                "Check Walking Service",
+                                "Update Location : dist($distance), speed($speed)"
+                            )
                             // 분 당 속도
                             oneMinuteSpeed += speed
                             speedCount++
