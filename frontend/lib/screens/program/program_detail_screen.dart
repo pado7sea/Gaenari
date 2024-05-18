@@ -48,20 +48,27 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
       body: programDetail.programId != null
           ? SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
                     _title(),
                     SizedBox(height: 30),
                     programDetail.type == "I"
-                        ? SizedBox(
-                            width: double.infinity,
-                            height: 150,
-                            child: _graph())
+                        ? Container(
+                            constraints: BoxConstraints(minHeight: 100),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: myWhiteGreen, width: 2),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: SizedBox(
+                                  width: double.infinity,
+                                  height: 100,
+                                  child: _graph()),
+                            ),
+                          )
                         : SizedBox(
                             height: 0,
                           ),
