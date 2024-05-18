@@ -323,8 +323,8 @@ class TimeTargetService : Service(), SensorEventListener {
         isPaused = false
         isServiceRunning = true
         startForeground(1, notification)
-        // 1분 평균 계산 핸들러를 다시 시작합니다.
-        oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000)
+        Log.d("Check Interval Service", "oneMinuteHandler Delayed ${60000 - elapsedTime % 60000}")
+        oneMinuteHandler.postDelayed(oneMinuteRunnable, 60000 - elapsedTime % 60000)
         sendPauseBroadcast()
     }
 
