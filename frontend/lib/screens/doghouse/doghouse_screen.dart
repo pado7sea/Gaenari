@@ -81,7 +81,7 @@ class _DogHouseScreenState extends State<DogHouseScreen>
   }
 
   getItem() async {
-    MyItem myItem = await InventoryService.fetchMyItem();
+    MyItem myItem = await InventoryService.fetchMyItem(context);
     setState(() {
       my = myItem.data!;
       active = true;

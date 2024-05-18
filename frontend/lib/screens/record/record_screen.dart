@@ -45,9 +45,9 @@ class _RecordScreenState extends State<RecordScreen> {
     StatisticList statisticList;
 
     recordList = await RecordSevice.fetchMonthlyRecordList(
-        _focusedDay!.year, _focusedDay!.month);
+        context, _focusedDay!.year, _focusedDay!.month);
     statisticList = await RecordSevice.fetchMonthlyStatisticList(
-        _focusedDay!.year, _focusedDay!.month);
+        context, _focusedDay!.year, _focusedDay!.month);
     setState(() {
       monthly = recordList.data!;
       statistic = statisticList.data!;

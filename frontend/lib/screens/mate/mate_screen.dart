@@ -51,7 +51,7 @@ class _MatePageState extends State<MatePage> {
   }
 
   getList() async {
-    MateList response = await MateService.fetchMateList();
+    MateList response = await MateService.fetchMateList(context);
     setState(() {
       list = response.data!;
     });
@@ -293,7 +293,8 @@ class _MatePageState extends State<MatePage> {
             ),
             SmallButton(
               onPressed: () async {
-                await MateService.fetchDeleteMate(list[index].memberId);
+                await MateService.fetchDeleteMate(
+                    context, list[index].memberId);
                 getList();
                 // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:forsythia/models/users/login_user.dart';
 
@@ -7,31 +6,54 @@ class SecureStorageService {
   final _storage = FlutterSecureStorage();
 
   Future<void> saveToken(String accessToken) async {
-    await _storage.write(key: 'accessToken', value: accessToken);
+    try {
+      await _storage.write(key: 'accessToken', value: accessToken);
+    } catch (e) {
+      print('Error saving token: $e');
+      throw e;
+    }
   }
 
   Future<void> saveLoginInfo(LoginInfo info) async {
-    String jsonString =
-        jsonEncode(info.toJson()); // LoginInfo 객체를 JSON 스트링으로 변환
-    await _storage.write(key: 'info', value: jsonString); // 변환한 JSON 스트링을 저장
+    try {
+      String jsonString = jsonEncode(info.toJson());
+      await _storage.write(key: 'info', value: jsonString);
+    } catch (e) {
+      print('Error saving login info: $e');
+      throw e;
+    }
   }
 
   Future<String?> getToken() async {
-    return await _storage.read(key: 'accessToken');
+    try {
+      return await _storage.read(key: 'accessToken');
+    } catch (e) {
+      print('Error getting token: $e');
+      throw e;
+    }
   }
 
   Future<LoginInfo?> getLoginInfo() async {
-    String? jsonString = await _storage.read(key: 'info'); // 저장된 JSON 스트링 읽어오기
-    if (jsonString != null) {
-      Map<String, dynamic> jsonMap = jsonDecode(jsonString); // JSON 스트링을 맵으로 변환
-      return LoginInfo.fromJson(jsonMap); // 맵을 LoginInfo 객체로 변환해서 반환
+    try {
+      String? jsonString = await _storage.read(key: 'info');
+      if (jsonString != null) {
+        Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+        return LoginInfo.fromJson(jsonMap);
+      }
+      return null;
+    } catch (e) {
+      print('Error getting login info: $e');
+      throw e;
     }
-    return null; // 만약 아무것도 저장되어 있지 않으면 null 반환
   }
 
   Future<void> deleteToken() async {
-    //삭제
-    await _storage.delete(key: 'accessToken');
-    await _storage.delete(key: 'info');
+    try {
+      await _storage.delete(key: 'accessToken');
+      await _storage.delete(key: 'info');
+    } catch (e) {
+      print('Error deleting token: $e');
+      throw e;
+    }
   }
 }

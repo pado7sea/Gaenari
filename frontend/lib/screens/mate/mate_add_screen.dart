@@ -50,7 +50,7 @@ class _AddMatePageState extends State<AddMatePage> {
             child: MateSearchBar(
               onSearch: (text) async {
                 SearchMateList response =
-                    await MateService.fetchSearchMateList(text);
+                    await MateService.fetchSearchMateList(context, text);
                 setState(() {
                   search = true;
                   list = response.data!;
@@ -66,7 +66,7 @@ class _AddMatePageState extends State<AddMatePage> {
   }
 
   _mateAdd(index) async {
-    await MateService.fetchAddMate(list[index].memberId);
+    await MateService.fetchAddMate(context, list[index].memberId);
     Fluttertoast.showToast(
       msg: '${list[index].nickName}님에게 친구요청을 보냈어요!',
       toastLength: Toast.LENGTH_SHORT,

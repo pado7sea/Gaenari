@@ -146,7 +146,7 @@ class _EditPasswordState extends State<EditPassword> {
                   onPressed: () async {
                     final PasswordCheck nowpasswordCheck =
                         await MemberService.fetchNowPassWord(
-                            _nowpasswordcontroller.text);
+                            context, _nowpasswordcontroller.text);
                     setState(() {
                       if (nowpasswordCheck.data == 1) {
                         check = "비밀번호 확인완료";
@@ -292,7 +292,7 @@ class _EditPasswordState extends State<EditPassword> {
 
   void _fetcheditpassword() async {
     try {
-      await MemberService.fetchEditPassWord(_passwordcontroller.text);
+      await MemberService.fetchEditPassWord(context, _passwordcontroller.text);
 
       Navigator.of(context).pop();
     } catch (error) {

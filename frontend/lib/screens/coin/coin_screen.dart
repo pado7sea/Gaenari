@@ -34,7 +34,8 @@ class _CoinScreenState extends State<CoinScreen> {
     int year = selectedMonth.year;
     int month = selectedMonth.month;
     MonthlyCoinRecord monthlyCoinRecord;
-    monthlyCoinRecord = await CoinService.fetchMonthlyCoinRecord(year, month);
+    monthlyCoinRecord =
+        await CoinService.fetchMonthlyCoinRecord(context, year, month);
     setState(() {
       coinRecord = monthlyCoinRecord.data!;
       active = true;

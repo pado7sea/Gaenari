@@ -44,8 +44,8 @@ class _ChallengePageState extends State<ChallengeScreen> {
     Mission mission;
     Trophy trophy;
 
-    mission = await ChallengeService.fetchMission();
-    trophy = await ChallengeService.fetchTrophy();
+    mission = await ChallengeService.fetchMission(context);
+    trophy = await ChallengeService.fetchTrophy(context);
 
     setState(() {
       if (trophy.data != null) {
@@ -681,7 +681,7 @@ class _ButtonState extends State<Button> {
         ? ElevatedButton(
             onPressed: () async {
               Reward reward = await ChallengeService.fetchRewardChallenge(
-                  widget.challengeId);
+                  context, widget.challengeId);
               print(reward.data!.coin!);
               print(reward.data!.heart!);
               SecureStorageService storageService = SecureStorageService();
@@ -802,8 +802,8 @@ class _MissionBtnState extends State<MissionBtn> {
             setState(() {
               active = false;
             });
-            Reward reward =
-                await ChallengeService.fetchRewardChallenge(widget.challengeId);
+            Reward reward = await ChallengeService.fetchRewardChallenge(
+                context, widget.challengeId);
             print(reward.data!.coin!);
             print(reward.data!.heart!);
             SecureStorageService storageService = SecureStorageService();

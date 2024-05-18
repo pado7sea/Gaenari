@@ -30,7 +30,8 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
   }
 
   getDetail() async {
-    ItemList response = await InventoryService.fetchItemList(widget.setId + 1);
+    ItemList response =
+        await InventoryService.fetchItemList(context, widget.setId + 1);
     setState(() {
       setDetail = response.data!;
     });
@@ -226,7 +227,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
                   SmallButton(
                     onPressed: () async {
                       await InventoryService.fetchChangeItem(
-                          setDetail.items![index].category!, id);
+                          context, setDetail.items![index].category!, id);
                       setState(() {
                         setDetail.items![index].isEquip = true;
                       });

@@ -254,7 +254,7 @@ class _BodyinfoScreenState extends State<BodyinfoScreen> {
       String jsonData = jsonEncode(requestData);
 
       // 신체정보 업데이트 요청 보내기
-      await MemberService.fetchEditBodyInfo(jsonData);
+      await MemberService.fetchEditBodyInfo(context, jsonData);
 
       // 프로바이더에 업데이트된 닉네임 반영
       LoginInfoProvider loginInfoProvider =

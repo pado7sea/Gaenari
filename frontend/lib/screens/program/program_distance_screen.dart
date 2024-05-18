@@ -125,7 +125,7 @@ class _AddDistanceProgramPageState extends State<AddDistanceProgramPage> {
               programTitle: _programName.text,
               programType: "D",
             );
-            await ProgramService.fetchProgramAdd(program);
+            await ProgramService.fetchProgramAdd(context, program);
             Navigator.pop(context, "update");
           }
         },

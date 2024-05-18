@@ -77,7 +77,8 @@ class _MateDogHouseScreenState extends State<MateDogHouseScreen>
   }
 
   getItem() async {
-    MateHome myItem = await InventoryService.fetchMateHome(widget.memberId);
+    MateHome myItem =
+        await InventoryService.fetchMateHome(context, widget.memberId);
     setState(() {
       my = myItem.data!;
       active = true;

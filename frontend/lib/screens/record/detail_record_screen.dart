@@ -58,7 +58,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   void detailRecordList() async {
     DetailRecordList recordList;
 
-    recordList = await RecordSevice.fetchDetailRecordDetail(widget.recordId);
+    recordList =
+        await RecordSevice.fetchDetailRecordDetail(context, widget.recordId);
     setState(() {
       active = true;
 
@@ -102,8 +103,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   }
 
   void RewardData() async {
-    Reward reward =
-        await ChallengeService.fetchRewardRecord(recordDetail.exerciseId);
+    Reward reward = await ChallengeService.fetchRewardRecord(
+        context, recordDetail.exerciseId);
     SecureStorageService storageService = SecureStorageService();
     LoginInfo? info = await storageService.getLoginInfo();
     info?.coin = (info.coin! + (reward.data!.coin!));

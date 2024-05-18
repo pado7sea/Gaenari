@@ -156,7 +156,7 @@ class _EditNickNameState extends State<EditNickName> {
                   onPressed: () async {
                     final Check idCheck =
                         await MemberService.fetchNickNameCheck(
-                            _nicknamecontroller.text);
+                            context, _nicknamecontroller.text);
                     setState(() {
                       if (idCheck.data != null && idCheck.data == false) {
                         check = "사용 가능한 닉네임";
@@ -187,7 +187,7 @@ class _EditNickNameState extends State<EditNickName> {
 
     try {
       // 닉네임 업데이트 요청 보내기
-      await MemberService.fetchEditNickName(newNickname);
+      await MemberService.fetchEditNickName(context, newNickname);
 
       // 프로바이더에 업데이트된 닉네임 반영
       info?.nickname = newNickname;
