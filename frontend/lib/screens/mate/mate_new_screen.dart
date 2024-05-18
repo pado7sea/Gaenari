@@ -62,7 +62,12 @@ class _NewMatePageState extends State<NewMatePage> {
           ),
           SizedBox(height: 16),
           list.isEmpty
-              ? Text16(text: "없어용")
+              ? Column(
+                  children: const [
+                    SizedBox(height: 20),
+                    Text16(text: "요청이 없습니다."),
+                  ],
+                )
               : tapbar == 0
                   ? _receivedMates()
                   : _sentMates(),
