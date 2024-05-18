@@ -288,6 +288,18 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   }
 
   Widget _record() {
+    String format(double? num) {
+      if (num == null) {
+        return 'N/A';
+      } else if (num >= 100) {
+        return num.toStringAsFixed(0); // 정수 부분만
+      } else if (num >= 10) {
+        return num.toStringAsFixed(1); // 소수점 첫째 자리까지
+      } else {
+        return num.toStringAsFixed(2); // 소수점 둘째 자리까지
+      }
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -308,9 +320,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 children: [
                   SizedBox(height: 10),
                   Text20(
-                      text: recordDetail.record?.distance?.toStringAsFixed(0) ??
-                          'N/A',
-                      bold: true),
+                      text: format(recordDetail.record?.distance), bold: true),
                   Text12(text: 'km')
                 ],
               ),
@@ -336,10 +346,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 10),
-                  Text20(
-                      text:
-                          recordDetail.record?.cal?.toStringAsFixed(0) ?? 'N/A',
-                      bold: true),
+                  Text20(text: format(recordDetail.record?.cal), bold: true),
                   Text12(text: 'kcal')
                 ],
               ),
@@ -366,9 +373,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 children: [
                   SizedBox(height: 10),
                   Text20(
-                      text: (recordDetail.record?.time != null
-                          ? (recordDetail.record!.time! / 60).toStringAsFixed(0)
-                          : 'N/A'),
+                      text: format(recordDetail.record!.time! / 60),
                       bold: true),
                   Text12(text: 'min')
                 ],
