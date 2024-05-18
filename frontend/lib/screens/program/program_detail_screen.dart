@@ -35,6 +35,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
       programDetail = response.data!;
     });
     print(programDetail.usageLog![0].recordId);
+    print(widget.programId);
   }
 
   @override
