@@ -24,6 +24,7 @@ import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.util.PreferencesUtil
+import com.example.gaenari.util.TTSUtil
 
 class TFirstFragment : Fragment() {
     private lateinit var distanceView: TextView
@@ -79,6 +80,7 @@ class TFirstFragment : Fragment() {
         val programTarget = arguments?.getInt("programTarget") ?: 0
         Log.d("first", "onCreateView: ${programTarget}")
         setupUpdateReceiver(programTarget)
+        TTSUtil.speak("시간목표를 시작합니다")
         return view
     }
 
@@ -159,7 +161,7 @@ class TFirstFragment : Fragment() {
         circleProgress.setProgress(progress)
 
 //        distanceView.text = formatTime(remainingTime)
-        timeView.text = String.format("%.2f", distance / 1000)
+        distanceView.text = String.format("%.2f", distance / 1000)
         speedView.text = String.format("%.2f", speed)
     }
 
@@ -212,7 +214,7 @@ class TFirstFragment : Fragment() {
         val totalMillis = programTarget * 1000
         val progress = 100 * (1 - (remainingTime.toFloat() / totalMillis))
         circleProgress.setProgress(progress)
-        distanceView.text = formatTime(remainingTime)
+        timeView.text = formatTime(remainingTime)
     }
 
     private fun formatTime(millis: Long): String {
@@ -233,6 +235,7 @@ class TFirstFragment : Fragment() {
     }
 
     private fun sendResultsAndFinish(context: Context) {
+        TTSUtil.speak("운동을 마쳤습니다")
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val vibrationEffect = VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)

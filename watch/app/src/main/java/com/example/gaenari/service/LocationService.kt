@@ -76,8 +76,13 @@ class LocationService : Service() {
                         "Check Location Service",
                         "Sending Location Info : speed($speed), distance($distance)"
                     )
-                    sendLocationBroadcast(distance, speed)
-                    lastLocation = location
+                    if(speed < 3 || speed >=21){
+                        sendLocationBroadcast(0.0,0.0)
+                    }else {
+                        sendLocationBroadcast(distance, speed)
+//                        sendLocationBroadcast(0.0, 0.0)
+                    }
+                        lastLocation = location
                 }
             } catch (e: Exception) {
                 Log.e("Check Location Service", "Error processing location update: ${e.message}")

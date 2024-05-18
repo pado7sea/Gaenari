@@ -22,6 +22,7 @@ import com.example.gaenari.R
 import com.example.gaenari.activity.result.ResultActivity
 import com.example.gaenari.dto.request.SaveDataRequestDto
 import com.example.gaenari.util.PreferencesUtil
+import com.example.gaenari.util.TTSUtil
 
 class DFirstFragment : Fragment() {
     private lateinit var distanceView: TextView
@@ -72,7 +73,7 @@ class DFirstFragment : Fragment() {
         speedView = view.findViewById(R.id.속력)
         circleProgress = view.findViewById(R.id.circleProgress)
         gifImageView = view.findViewById<pl.droidsonroids.gif.GifImageView>(R.id.gifImageView)
-
+        TTSUtil.speak("거리목표를 시작합니다")
 
         val programTarget = arguments?.getDouble("programTarget") ?: 0
         Log.d("first", "onCreateView: ${programTarget}")
@@ -241,6 +242,7 @@ class DFirstFragment : Fragment() {
     }
 
     private fun sendResultsAndFinish(context: Context) {
+        TTSUtil.speak("운동을 마쳤습니다")
         val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val vibrationEffect =
