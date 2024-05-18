@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- tts사용을 위함 -->
 
     <application
+        android:name=".activity.main.MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
