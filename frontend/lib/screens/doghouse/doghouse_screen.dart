@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/inventory/my_item.dart';
 import 'package:forsythia/models/pet/pet_heart.dart';
-import 'package:forsythia/models/pet/pet_res.dart';
+// import 'package:forsythia/models/pet/pet_res.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/inventory/inventory_screen.dart';
 import 'package:forsythia/screens/item/item_screen.dart';

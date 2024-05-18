@@ -87,6 +87,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
               'obtainable': obtainable!,
               'challengeValue': challengeValue! ~/ 3600,
               'memberValue': memberValue! ~/ 3600,
+              'coin': coin!
             };
           }
         }
@@ -536,7 +537,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
   // 미션 --------------------------------
 
   Widget _mission() {
-    List<Widget> MissionWidgets = [];
+    List<Widget> missionWidgets = [];
     List<Widget> completedMissionWidgets = [];
 
     missionStatus.forEach((key, value) {
@@ -564,7 +565,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
         );
       }
 
-      MissionWidgets.add(Padding(
+      missionWidgets.add(Padding(
         padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
         child: Container(
           decoration: myBorderBoxDecoration,
@@ -612,7 +613,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
             ),
             itemCount: missionStatus.length,
             itemBuilder: (BuildContext context, int index) {
-              return MissionWidgets[index];
+              return missionWidgets[index];
             }));
   }
 }

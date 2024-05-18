@@ -18,7 +18,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Icon(
               Icons.warning_rounded,
               size: 40,

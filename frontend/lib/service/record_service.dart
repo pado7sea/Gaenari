@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/records/record_detail.dart';
@@ -28,7 +30,7 @@ class RecordSevice {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -50,7 +52,7 @@ class RecordSevice {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -66,7 +68,7 @@ class RecordSevice {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -82,7 +84,7 @@ class RecordSevice {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -115,7 +117,7 @@ class RecordSevice {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 }
