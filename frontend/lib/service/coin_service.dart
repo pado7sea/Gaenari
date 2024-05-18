@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:forsythia/models/coins/coin_history.dart';
+import 'package:forsythia/models/coins/coin_love.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,6 +35,37 @@ class CoinService {
       }
     } else {
       throw Exception('Failed to load data');
+    }
+  }
+
+  // 코인 증가
+  static Future<CoinRes> fetchPetLove(coin) async {
+    return fetchPostBodyData('coin', coin)
+        .then((data) => CoinRes.fromJson(data));
+  }
+
+  // 바디있는 포스트요청
+  static Future<dynamic> fetchPostBodyData(
+      String endpoint, CoinLove coin) async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+      body: json.encode(coin.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] == "SUCCESS") {
+        return data;
+      } else {
+        throw Exception("status : ${data['status']}");
+      }
+    } else {
+      throw Exception('statusCode : ${response.statusCode}');
     }
   }
 }
