@@ -205,9 +205,10 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
                 ],
               ),
               SizedBox(height: 20),
+              Text16(text: ' 해당 아이템을', bold: true),
               Text16(
                   text:
-                      ' 해당위치의 아이템을 ${info[setDetail.setId! - 1].item![index].itemName!}으로 변경할까요?',
+                      '${info[setDetail.setId! - 1].item![index].itemName!}으로 변경할까요?',
                   bold: true),
               SizedBox(height: 20),
               Row(

@@ -89,7 +89,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               ),
             ),
             label:
-                '내새끼집', // 혹시 내새끼라 적혀있어서 킹받으셨나요? 그렇다면 성공입니다. 그래서 말인데 여기 이름 뭘로 해야함? 민지님 헬프
+                '강아지집', // 혹시 내새끼라 적혀있어서 킹받으셨나요? 그렇다면 성공입니다. 그래서 말인데 여기 이름 뭘로 해야함? 민지님 헬프
           ),
           BottomNavigationBarItem(
             icon: SizedBox(
