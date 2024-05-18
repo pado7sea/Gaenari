@@ -168,15 +168,7 @@ class IntervalService : Service(), SensorEventListener {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         programData = intent?.getParcelableExtra("programData", FavoriteResponseDto::class.java)
         initService()
-
-        currentRangeTime =
-            programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.time?.toLong()!! * 1000
-        currentRunningType =
-            programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
-//        sendRangeInfoBroadcast()
-        currentRangeSpeed=programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.speed!!
-
-        currentRangeIndex += 1
+        updateNextRangeInfo(false)
 
         rangeHandler.postDelayed(rangeRunnable, currentRangeTime)
 
@@ -255,17 +247,19 @@ class IntervalService : Service(), SensorEventListener {
     /**
      * 다음 인터벌 구간 정보 Update
      */
-    private fun updateNextRangeInfo() {
-        Log.d("Check Interval Service", "Before Update Range Info Index : $currentRangeIndex")
+    private fun updateNextRangeInfo(flag: Boolean) {
+        Log.d("Check Interval Service", "Next Range Info Index : $currentRangeIndex")
 
         /* 다음 구간 정보 */
         currentRangeTime =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.time?.toLong()!! * 1000
         currentRunningType =
             programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.isRunning!!
-        currentRangeSpeed=programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.speed!!
+        currentRangeSpeed =
+            programData?.program?.intervalInfo?.ranges?.get(currentRangeIndex)?.speed!!
 
-        sendRangeInfoBroadcast()
+        if (flag)
+            sendRangeInfoBroadcast()
 
         currentRangeIndex += 1
 
