@@ -57,7 +57,6 @@ class IntervalService : Service(), SensorEventListener {
     private var oneMinuteDistance = 0.0
     private var elapsedTime: Long = 0
 
-    private var gpsUpdateIntervalMillis: Long = 2500
     private var timerIntervalMillis: Long = 1000
 
     // 일시정지 관련 변수

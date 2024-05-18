@@ -31,7 +31,7 @@ class IsecondFragment : Fragment() {
     private val stopTargetTimeMillis = 1500L
 
     companion object{
-        fun ewInstance(): IsecondFragment = IsecondFragment()
+        fun newInstance(): IsecondFragment = IsecondFragment()
     }
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(

@@ -37,12 +37,20 @@ class HomeActivity : AppCompatActivity() {
     //즐겨찾기 데이터를 여기에 담아서 프래그먼트에서 보여줄예정
     private lateinit var sharedViewModel: SharedViewModel
 
+    companion object {
+        var instance: HomeActivity? = null
+
+        fun finishHomeActivity() {
+            instance?.finish()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
         setContentView(R.layout.activity_home)
-        prefs = PreferencesUtil.getEncryptedSharedPreferences(applicationContext)
         getMyPetInfo()
+        prefs = PreferencesUtil.getEncryptedSharedPreferences(applicationContext)
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tabLayout)
 
@@ -87,12 +95,6 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(StepCounterViewModel::class.java)
 
         setupLocationService()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        TTSUtil.initialize(this)
-
     }
 
     private val callback = object : OnBackPressedCallback(true) {
