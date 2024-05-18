@@ -10,7 +10,7 @@ class SecureStorageService {
       await _storage.write(key: 'accessToken', value: accessToken);
     } catch (e) {
       print('Error saving token: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -20,7 +20,7 @@ class SecureStorageService {
       await _storage.write(key: 'info', value: jsonString);
     } catch (e) {
       print('Error saving login info: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -29,7 +29,7 @@ class SecureStorageService {
       return await _storage.read(key: 'accessToken');
     } catch (e) {
       print('Error getting token: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -43,7 +43,7 @@ class SecureStorageService {
       return null;
     } catch (e) {
       print('Error getting login info: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -53,7 +53,7 @@ class SecureStorageService {
       await _storage.delete(key: 'info');
     } catch (e) {
       print('Error deleting token: $e');
-      throw e;
+      rethrow;
     }
   }
 }

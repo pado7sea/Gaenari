@@ -1,13 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/mates/mate_add.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/models/users/login_form.dart';
 import 'package:forsythia/models/users/nickname_check.dart';
 import 'package:forsythia/models/users/password_check.dart';
 import 'package:forsythia/models/users/signup_user.dart';
-import 'package:forsythia/screens/login/error_screen.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
+import 'package:forsythia/theme/color.dart';
 import 'package:http/http.dart' as http;
 
 // MemberService 클래스
@@ -37,12 +40,19 @@ class MemberService {
         throw Exception('statusCode : ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching Id Check: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -66,12 +76,19 @@ class MemberService {
         throw Exception('statusCode : ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching NickName Check: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -98,12 +115,19 @@ class MemberService {
         throw Exception('그냥 잘못함');
       }
     } catch (e) {
-      print('Error fetching Signup: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -123,12 +147,19 @@ class MemberService {
         return LoginUser.fromJson(data);
       });
     } catch (e) {
-      print('Error fetching Login: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -147,19 +178,28 @@ class MemberService {
           return {'data': data, 'response': response};
         } else {
           print(data);
+          print('여기여기여기');
           throw Exception('없음');
         }
       } else {
         print(response.statusCode);
+        print('여기여기야기여기여기여기');
         throw Exception('그냥 잘못함');
       }
     } catch (e) {
-      print('Error fetching Login2: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -170,12 +210,19 @@ class MemberService {
       return fetchPutData(context, 'member/nickname?nickName=$nickname')
           .then((data) => MateAdd.fromJson(data));
     } catch (e) {
-      print('Error fetching Edit NickName: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -203,12 +250,19 @@ class MemberService {
         throw Exception('닉네임수정${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching Put Data: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -219,12 +273,19 @@ class MemberService {
       return fetchBodyInfoPutData(context, 'member/info', jsonData)
           .then((data) => MateAdd.fromJson(data));
     } catch (e) {
-      print('Error fetching Edit Body Info: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -253,12 +314,19 @@ class MemberService {
         throw Exception('신체정보수정${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching Body Info Put Data: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -287,12 +355,19 @@ class MemberService {
         throw Exception('statusCode : ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching Now Password: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -303,12 +378,19 @@ class MemberService {
       return fetchPassWordPutData(context, 'member/password', password)
           .then((data) => MateAdd.fromJson(data));
     } catch (e) {
-      print('Error fetching Edit Password: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -337,12 +419,19 @@ class MemberService {
         throw Exception('비밀번호수정${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching Password Put Data: $e');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      String errorMessage;
+      if (e.toString().contains('Failed host lookup')) {
+        errorMessage = '인터넷 연결이 필요합니다.';
+      } else {
+        errorMessage = '입력을 확인해주세요.';
+      }
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: myYellow,
       );
-      throw e;
+      rethrow;
     }
   }
 }

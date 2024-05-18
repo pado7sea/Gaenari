@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/mates/accept_form.dart';
@@ -27,7 +29,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -42,7 +44,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -57,7 +59,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -72,7 +74,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -87,7 +89,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -102,7 +104,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -136,7 +138,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -169,7 +171,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -202,7 +204,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 
@@ -235,7 +237,7 @@ class MateService {
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
-      throw e;
+      rethrow;
     }
   }
 }
