@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:forsythia/models/coins/coin_love.dart';
 import 'package:forsythia/models/inventory/item_purchase.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/inventory/inventory_info.dart';
 import 'package:forsythia/screens/inventory/inventory_screen.dart';
+import 'package:forsythia/service/coin_service.dart';
 import 'package:forsythia/service/inventory_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
@@ -27,6 +29,7 @@ class _ItemScreenState extends State<ItemScreen>
   Item item = Item();
   String name = "";
   int coin = 0;
+  int count = 0;
   bool active = false;
 
   @override
@@ -141,11 +144,13 @@ class _ItemScreenState extends State<ItemScreen>
       children: [
         TextButton(
           onPressed: () {
-            if (pop) {
-              Navigator.pop(context);
+            if (!active) {
+              if (pop) {
+                Navigator.pop(context);
+              }
+              Navigator.of(context)
+                  .push(SlidePageRoute(nextPage: InventoryScreen()));
             }
-            Navigator.of(context)
-                .push(SlidePageRoute(nextPage: InventoryScreen()));
           },
           child: Row(
             children: const [
@@ -164,26 +169,51 @@ class _ItemScreenState extends State<ItemScreen>
   }
 
   Widget _goldbox() {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return active
-            ? Transform.rotate(
-                angle: _animation.value,
-                child: Image(
+    return GestureDetector(
+      onTap: () async {
+        setState(() {
+          count++;
+        });
+        if (count == 100) {
+          CoinLove coinLove = CoinLove(
+              isIncreased: true, coinTitle: "PETCARE", coinAmount: 100);
+          await CoinService.fetchPetLove(coinLove);
+          SecureStorageService storageService = SecureStorageService();
+          LoginInfo? info = await storageService.getLoginInfo();
+          if (info != null) {
+            info.coin = (info.coin! + 100);
+            storageService.saveLoginInfo(info);
+          }
+          Fluttertoast.showToast(
+            msg: '상자를 100번 클릭하셨군요!   \n 보상으로 100코인을 드립니다.',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: myMainGreen,
+          );
+          loadCoin();
+        }
+      },
+      child: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          return active
+              ? Transform.rotate(
+                  angle: _animation.value,
+                  child: Image(
+                    image: AssetImage('assets/images/goldbox.png'),
+                    width: 250,
+                    height: 250,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : Image(
                   image: AssetImage('assets/images/goldbox.png'),
                   width: 250,
                   height: 250,
                   fit: BoxFit.cover,
-                ),
-              )
-            : Image(
-                image: AssetImage('assets/images/goldbox.png'),
-                width: 250,
-                height: 250,
-                fit: BoxFit.cover,
-              );
-      },
+                );
+        },
+      ),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:forsythia/models/pet/pet_adopt.dart';
+import 'package:forsythia/models/pet/pet_heart.dart';
 import 'package:forsythia/models/pet/pet_res.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +15,37 @@ class PetService {
   static Future<PetRes> fetchPetAdopt(pet) async {
     return fetchPostBodyData('pet/adopt', pet)
         .then((data) => PetRes.fromJson(data));
+  }
+
+  // 애정도 증가
+  static Future<PetRes> fetchPetLove(pet) async {
+    return fetchPostBodyData2('pet/heart', pet)
+        .then((data) => PetRes.fromJson(data));
+  }
+
+  // 바디있는 포스트요청
+  static Future<dynamic> fetchPostBodyData2(
+      String endpoint, PetHeart pet) async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/$endpoint'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token',
+      },
+      body: json.encode(pet.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] == "SUCCESS") {
+        return data;
+      } else {
+        throw Exception("status : ${data['status']}");
+      }
+    } else {
+      throw Exception('statusCode : ${response.statusCode}');
+    }
   }
 
   // 강아지변경
