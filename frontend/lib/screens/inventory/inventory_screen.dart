@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/challenges/reward_notice.dart';
 import 'package:forsythia/models/inventory/item_info.dart';
 import 'package:forsythia/models/inventory/pet_list.dart';
@@ -283,20 +284,30 @@ class _InventoryScreenState extends State<InventoryScreen> {
   Widget _buildDogTile(String itemInfo, int index) {
     return InkWell(
       onTap: () async {
-        SecureStorageService storageService = SecureStorageService();
-        LoginInfo? info = await storageService.getLoginInfo();
         RewardNotice rewardNotice =
             await ChallengeService.fetchRewardNotice(context);
         bool reward = false;
+        int go = 0;
         setState(() {
           if (rewardNotice.data! == true) {
             reward = true;
           } else {
             reward = false;
           }
+          if (!pet[index].isHave!) {
+            if (coin >= 20000) {
+              go = 0;
+            } else {
+              go = 1;
+            }
+          } else if (!pet[index].pets!.isPartner!) {
+            go = 2;
+          } else {
+            go = 3;
+          }
         });
-        print(info?.myPetDto!.id);
-        !pet[index].isHave! && coin >= 20000
+        print(go);
+        go == 0
             ? showModalBottomSheet(
                 isScrollControlled: true,
                 context: context,
@@ -373,7 +384,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   );
                 },
               )
-            : !pet[index].pets!.isPartner!
+            : go == 2
                 ? showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
@@ -495,7 +506,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       );
                     },
                   )
-                : print("dd");
+                : go == 1
+                    ? Fluttertoast.showToast(
+                        msg: '돈이 부족합니다!',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        backgroundColor: myMainGreen,
+                      )
+                    : print("dd");
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
