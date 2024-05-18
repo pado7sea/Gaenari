@@ -321,7 +321,7 @@ class _BodyinfoScreenState extends State<BodyinfoScreen> {
               ),
             ),
             child: Text16(
-              text: '다음',
+              text: '수정 완료',
             ),
           ),
         ],

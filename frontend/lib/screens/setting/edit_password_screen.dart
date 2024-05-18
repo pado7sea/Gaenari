@@ -72,7 +72,7 @@ class _EditPasswordState extends State<EditPassword> {
       text: TextSpan(
         children: const [
           TextSpan(
-            text: '수정할 비밀번호',
+            text: '변경할 비밀번호',
             style: TextStyle(
                 color: myMainGreen,
                 fontSize: 22,
@@ -343,7 +343,7 @@ class _EditPasswordState extends State<EditPassword> {
               ),
             ),
             child: Text16(
-              text: '다음',
+              text: '변경 완료',
             ),
           ),
         ],
