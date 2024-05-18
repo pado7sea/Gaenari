@@ -122,6 +122,8 @@ class _RecordScreenState extends State<RecordScreen> {
     String format(double? num) {
       if (num == null) {
         return 'N/A';
+      } else if (num < 0.1) {
+        return num.toStringAsFixed(0);
       } else if (num >= 100) {
         return num.toStringAsFixed(0); // 정수 부분만
       } else if (num >= 10) {
@@ -131,125 +133,118 @@ class _RecordScreenState extends State<RecordScreen> {
       }
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 총 거리
-                Image(
-                  image: AssetImage('assets/emoji/running.png'),
-                  width: 25,
-                  height: 35,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  width: 75,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 10),
-                        Text20(
-                          text: statistic.dist! >= 999
-                              ? '999'
-                              : format(statistic.dist!),
-                          bold: true,
-                        ),
-                        Text12(text: 'km')
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          children: [
+            // 총 거리
+            Image(
+              image: AssetImage('assets/emoji/running.png'),
+              width: 25,
+              height: 35,
+              fit: BoxFit.cover,
             ),
-          ),
-          Container(
-            width: 2,
-            height: 60,
-            color: myLightGrey,
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 총 칼로리
-                Image(
-                  image: AssetImage('assets/emoji/fire.png'),
-                  width: 25,
-                  height: 30,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  width: 75,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 10),
-                        Text20(text: format(statistic.cal!), bold: true),
-                        Text12(text: 'kcal')
-                      ],
-                    ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(height: 10),
+                  Text20(
+                    text: statistic.dist! >= 9999
+                        ? '9999'
+                        : format(statistic.dist!),
+                    bold: true,
                   ),
-                ),
-              ],
+                  Text12(text: 'km')
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: 2,
-            height: 60,
-            color: myLightGrey,
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 총 시간
-                Image(
-                  image: AssetImage('assets/emoji/clock.png'),
-                  width: 25,
-                  height: 25,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  width: 75,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 10),
-                        Text20(
-                            text:
-                                "${(statistic.time! / 60).floorToDouble().toInt()}",
-                            bold: true),
-                        Text12(
-                          text: "min",
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+          ],
+        ),
+        Container(
+          width: 2,
+          height: 60,
+          color: myLightGrey,
+        ),
+        Row(
+          children: [
+            // 총 칼로리
+            Image(
+              image: AssetImage('assets/emoji/fire.png'),
+              width: 25,
+              height: 30,
+              fit: BoxFit.cover,
             ),
-          )
-        ],
-      ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(height: 10),
+                  Text20(
+                      text: statistic.cal! >= 9999
+                          ? '9999'
+                          : format(statistic.cal!),
+                      bold: true),
+                  Text12(text: 'kcal')
+                ],
+              ),
+            ),
+          ],
+        ),
+        Container(
+          width: 2,
+          height: 60,
+          color: myLightGrey,
+        ),
+        Row(
+          children: [
+            // 총 시간
+            Image(
+              image: AssetImage('assets/emoji/clock.png'),
+              width: 25,
+              height: 25,
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(height: 10),
+                  Text20(
+                      text: "${(statistic.time! / 60).floorToDouble().toInt()}",
+                      bold: true),
+                  Text12(
+                    text: "min",
+                  )
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 
   Widget _calendar() {
+    String format(double? num) {
+      if (num == null) {
+        return 'N/A';
+      } else if (num < 0.1) {
+        return num.toStringAsFixed(0);
+      } else if (num >= 100) {
+        return num.toStringAsFixed(0); // 정수 부분만
+      } else if (num >= 10) {
+        return num.toStringAsFixed(1); // 소수점 첫째 자리까지
+      } else {
+        return num.toStringAsFixed(2); // 소수점 둘째 자리까지
+      }
+    }
+
     return Center(
       child: Column(
         children: [
@@ -336,99 +331,147 @@ class _RecordScreenState extends State<RecordScreen> {
                                       .recordId,
                                 ))),
                             title: Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text12(
-                                        text: monthly
-                                            .exerciseRecords![
-                                                _selectedDay.day - 1]
-                                            .dailyRecords![index]
-                                            .recordDate!
-                                            .split("T")[1]
-                                            .split(".")[0],
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                                child: Stack(
+                                  children: [
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Image(
-                                            image: AssetImage(
-                                                'assets/emoji/running.png'),
-                                            width: 20,
-                                            height: 30,
-                                            fit: BoxFit.cover,
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text12(
+                                                text: monthly
+                                                    .exerciseRecords![
+                                                        _selectedDay.day - 1]
+                                                    .dailyRecords![index]
+                                                    .recordDate!
+                                                    .split("T")[1]
+                                                    .split(".")[0],
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Image(
+                                                    image: AssetImage(
+                                                        'assets/emoji/running.png'),
+                                                    width: 20,
+                                                    height: 30,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Text16(
+                                                      text: monthly
+                                                                  .exerciseRecords![
+                                                                      _selectedDay
+                                                                              .day -
+                                                                          1]
+                                                                  .dailyRecords![
+                                                                      index]
+                                                                  .recordDist! >=
+                                                              9999
+                                                          ? '9999'
+                                                          : format(monthly
+                                                              .exerciseRecords![
+                                                                  _selectedDay
+                                                                          .day -
+                                                                      1]
+                                                              .dailyRecords![
+                                                                  index]
+                                                              .recordDist!),
+                                                      bold: true),
+                                                  Text12(
+                                                      text: ' km', bold: true),
+                                                  SizedBox(width: 15),
+                                                  Container(
+                                                    width: 1,
+                                                    height: 25,
+                                                    color: myBlack,
+                                                  ),
+                                                  SizedBox(width: 15),
+                                                  Image(
+                                                    image: AssetImage(
+                                                        'assets/emoji/fire.png'),
+                                                    width: 20,
+                                                    height: 25,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Text16(
+                                                      text: monthly
+                                                                  .exerciseRecords![
+                                                                      _selectedDay
+                                                                              .day -
+                                                                          1]
+                                                                  .dailyRecords![
+                                                                      index]
+                                                                  .recordCal! >=
+                                                              9999
+                                                          ? '9999'
+                                                          : format(monthly
+                                                              .exerciseRecords![
+                                                                  _selectedDay
+                                                                          .day -
+                                                                      1]
+                                                              .dailyRecords![
+                                                                  index]
+                                                              .recordCal!),
+                                                      bold: true),
+                                                  Text12(
+                                                      text: ' kcal',
+                                                      bold: true),
+                                                  SizedBox(width: 15),
+                                                  Container(
+                                                    width: 1,
+                                                    height: 25,
+                                                    color: myBlack,
+                                                  ),
+                                                  SizedBox(width: 15),
+                                                  Image(
+                                                    image: AssetImage(
+                                                        'assets/emoji/clock.png'),
+                                                    width: 23,
+                                                    height: 23,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  Text16(
+                                                      text:
+                                                          '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! ~/ 60}',
+                                                      bold: true),
+                                                  Text12(
+                                                      text: ' min', bold: true),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(width: 5),
-                                          Text16(
-                                              text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordDist!.toStringAsFixed(1)}',
-                                              bold: true),
-                                          Text12(text: ' km', bold: true),
-                                          SizedBox(width: 15),
-                                          Container(
-                                            width: 1,
-                                            height: 25,
-                                            color: myBlack,
-                                          ),
-                                          SizedBox(width: 15),
-                                          Image(
-                                            image: AssetImage(
-                                                'assets/emoji/fire.png'),
-                                            width: 20,
-                                            height: 25,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text16(
-                                              text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordCal!.toStringAsFixed(1)}',
-                                              bold: true),
-                                          Text12(text: ' kcal', bold: true),
-                                          SizedBox(width: 15),
-                                          Container(
-                                            width: 1,
-                                            height: 25,
-                                            color: myBlack,
-                                          ),
-                                          SizedBox(width: 15),
-                                          Image(
-                                            image: AssetImage(
-                                                'assets/emoji/clock.png'),
-                                            width: 23,
-                                            height: 23,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          SizedBox(width: 5),
-                                          Text16(
-                                              text:
-                                                  '${monthly.exerciseRecords![_selectedDay.day - 1].dailyRecords![index].recordTime! ~/ 60}',
-                                              bold: true),
-                                          Text12(text: ' min', bold: true),
+                                          // 여기에 여분의 공간을 추가하여 common_front.png 아이콘의 오른쪽에 여유를 둡니다.
+                                          SizedBox(width: 60),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                  Image(
-                                    image: AssetImage(
-                                        'assets/icons/common_front.png'),
-                                    width: 20,
-                                    height: 20,
-                                    fit: BoxFit.cover,
-                                    filterQuality: FilterQuality.none,
-                                  ),
-                                ],
-                              ),
-                            )),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      child: Image(
+                                        image: AssetImage(
+                                            'assets/icons/common_front.png'),
+                                        width: 15,
+                                        height: 15,
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.none,
+                                      ),
+                                    ),
+                                  ],
+                                ))),
                       );
                     });
               }),
