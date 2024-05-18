@@ -11,11 +11,13 @@ import com.gaenari.backend.global.exception.feign.ConnectFeignFailException;
 import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import com.gaenari.backend.global.format.response.GenericResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public abstract class ProgramBaseService {
@@ -74,10 +76,15 @@ public abstract class ProgramBaseService {
      */
     protected List<ProgramDetailDto.UsageLogDto> fetchUsageLog(Long programId) {
         ResponseEntity<GenericResponse<List<ProgramDetailDto.UsageLogDto>>> response = recordServiceClient.getUsageLog(programId);
+        if(response.getBody().getStatus().equals("FALLBACK")) {
+            log.error("FALLBACK response: {}", response.getBody().getData());
+        }
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            log.error("Feign 호출 실패: statusCode={}, body={}", response.getStatusCode(), response.getBody());
             throw new ConnectFeignFailException();
         }
         System.out.println(response.getBody());
         return response.getBody().getData();
     }
+
 }

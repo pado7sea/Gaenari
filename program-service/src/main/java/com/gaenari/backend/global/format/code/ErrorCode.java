@@ -25,7 +25,7 @@ public enum ErrorCode {
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     MISSING_PATH_VARIABLE(HttpStatus.BAD_REQUEST, "PathVariable 파라미터가 요청에 포함되지 않았습니다."),
     EMPTY_MEMBER(HttpStatus.NOT_FOUND, "회원 정보가 비어있습니다."),
-    CONNECT_FEIGN_FAIL(HttpStatus.BAD_REQUEST, "Feign Client 연결에 실패했습니다."),
+    CONNECT_FEIGN_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Feign Client 연결에 실패했습니다."),
 
     ACCESS_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "액세스 토큰을 찾을 수 없습니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "새로운 로그인이 필요합니다. 재로그인을 진행해주세요."),
