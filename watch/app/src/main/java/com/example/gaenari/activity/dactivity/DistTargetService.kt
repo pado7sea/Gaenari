@@ -201,7 +201,6 @@ class DistTargetService : Service(), SensorEventListener {
         requestDto.speeds.addSpeed(averageSpeed)
         requestDto.heartrates.average += averageHeartRate
         requestDto.heartrates.addHeartRate(averageHeartRate)
-
     }
 
     override fun onSensorChanged(event: SensorEvent) {
@@ -221,10 +220,10 @@ class DistTargetService : Service(), SensorEventListener {
         requestDto.speeds.average /= requestDto.speeds.arr.size
         requestDto.heartrates.average /= requestDto.heartrates.arr.size
 
+        Log.d("Check Dist Service", "elapsedTime : ${elapsedTime.toDouble()}")
         /* record 정보 추가 */
         requestDto.record.distance = totalDistance
-        Log.d("Check Dist Service", "elapsedTime : ${elapsedTime.toDouble()}")
-//        requestDto.record.time = elapsedTime.toDouble()
+        requestDto.record.time = elapsedTime.toDouble()
 
         wakeLock?.release()
         isServiceRunning = false
@@ -366,7 +365,7 @@ class DistTargetService : Service(), SensorEventListener {
                                 programData?.program?.targetValue!! * 1000 - totalDistance
 
                             if (remainDist <= 0)
-                                sendEndProgramBroadcast()
+                                onDestroy()
 
                             sendGpsBroadcast(
                                 remainDist,

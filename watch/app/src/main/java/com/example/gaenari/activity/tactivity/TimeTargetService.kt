@@ -227,7 +227,7 @@ class TimeTargetService : Service(), SensorEventListener {
 
         /* record 정보 추가 */
         requestDto.record.distance = totalDistance
-//        requestDto.record.time =
+        requestDto.record.time = elapsedTime.toDouble()
 
         wakeLock?.release()
         isServiceRunning = false
