@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/challenges/reward.dart';
+import 'package:forsythia/models/programs/program_detail.dart';
 import 'package:forsythia/models/records/record_detail.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/challenge/challenge_screen.dart';
 import 'package:forsythia/service/challenge_service.dart';
+import 'package:forsythia/service/program_service.dart';
 import 'package:forsythia/service/record_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
@@ -41,13 +43,16 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   late DateTime _recordDateTime;
 
   RecordDetail recordDetail = RecordDetail();
+  Detail programDetail = Detail();
 
   bool active = false;
+  bool button = true;
 
   @override
   void initState() {
     super.initState();
     detailRecordList();
+
     if (recordDetail.date != null) {
       _recordDateTime = DateTime.parse(recordDetail.date!);
     } else {
@@ -61,7 +66,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     recordList =
         await RecordSevice.fetchDetailRecordDetail(context, widget.recordId);
     setState(() {
-      active = true;
+      recordDetail.programType == 'I' ? active = false : active = true;
 
       recordDetail = recordList.data!;
 
@@ -97,9 +102,37 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       } else {
         _recordDateTime = DateTime.now();
       }
+
+      if (recordDetail.attainableCoin != 0 ||
+          recordDetail.attainableHeart != 0) {
+        setState(() {
+          button = true;
+        });
+      }
     });
+    getDetail();
     print('갹ㄴ야ㅐㅓㅁㄴ갸ㅐㅓ ㅑㅐㅔ;ㅁ저ㅐ;');
     print(recordDetail.exerciseId);
+    print(recordDetail.program?.programId);
+    print(programDetail.programId);
+  }
+
+  getDetail() async {
+    final programId = recordDetail.program?.programId;
+    if (programId != null) {
+      ProgramDetail response =
+          await ProgramService.fetchProgramDetail(context, programId);
+      setState(() {
+        active = true;
+        programDetail = response.data!;
+      });
+      print('프로그램');
+      print(programDetail.usageLog![0].recordId);
+      print(programDetail.program!.intervalInfo!.setCount! *
+          programDetail.program!.intervalInfo!.rangeCount!);
+    } else {
+      print('Program ID is null');
+    }
   }
 
   void RewardData() async {
@@ -115,6 +148,9 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       gravity: ToastGravity.CENTER,
       backgroundColor: myYellow,
     );
+    setState(() {
+      button = false;
+    });
   }
 
   @override
@@ -139,6 +175,14 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                     SizedBox(height: 10),
                     _record(),
                     SizedBox(height: 25),
+                    recordDetail.programType == 'I'
+                        ? Column(
+                            children: [
+                              _graph(),
+                              SizedBox(height: 20),
+                            ],
+                          )
+                        : SizedBox(height: 0),
                     _pace(),
                     SizedBox(height: 20),
                     _heart(),
@@ -393,6 +437,49 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     );
   }
 
+  Widget _graph() {
+    return Container(
+      constraints: BoxConstraints(minHeight: 100),
+      decoration: BoxDecoration(
+          border: Border.all(color: myWhiteGreen, width: 2),
+          borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Text16(text: '인터벌', bold: true),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+            child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(
+                    recordDetail.program!.intervalInfo!.ranges!.length,
+                    (index) => Expanded(
+                          child: Container(
+                            height: recordDetail.program!.intervalInfo!
+                                    .ranges![index].speed! *
+                                4,
+                            margin: EdgeInsets.only(right: 3),
+                            color: (recordDetail.program?.intervalInfo
+                                        ?.ranges?[index]?.isRunning ??
+                                    false)
+                                ? myMainGreen
+                                : myLightGreen,
+                          ),
+                        ))),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _pace() {
     return Container(
       constraints: BoxConstraints(minHeight: 100),
@@ -411,7 +498,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 SizedBox(width: 10),
                 Text12(
                   text:
-                      '평균 페이스 ${recordDetail.paces!.average!.toInt() ~/ 60}\'${recordDetail.paces!.average!.toInt() % 60}\'\'',
+                      '평균 페이스 ${recordDetail.paces!.average!.toInt() ~/ 60}\'${(recordDetail.paces!.average! % 60).toString().substring(0, 2)}\'\'',
                   textColor: myGrey,
                 )
               ],
@@ -419,25 +506,26 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(Pacelist.length, (index) {
-                  // 리스트의 값에 따라 높이를 동적으로 설정
-                  double height = (Pacelist[index]! ~/ 60).toDouble();
-                  // height가 100을 초과하는 경우 100으로 설정
-                  if (height > 30) {
-                    height = 30;
-                  }
-                  return Container(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: List.generate(Pacelist.length, (index) {
+                // 리스트의 값에 따라 높이를 동적으로 설정
+                double height = (Pacelist[index]! ~/ 60).toDouble();
+                // height가 100을 초과하는 경우 100으로 설정
+                if (height > 30) {
+                  height = 30;
+                }
+                return Expanded(
+                  child: Container(
                     height: height * 2 + 1,
-                    width: 3,
-                    margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
+                    margin: EdgeInsets.only(
+                        right: index == Pacelist.length - 1
+                            ? 0
+                            : 3), // 각 콘테이너 사이의 간격 조정, 마지막 아이템 제외
                     color: myBlue, // 콘테이너 색상 설정
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
             ),
           )
         ],
@@ -470,24 +558,22 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(Heartlist.length, (index) {
-                  // 리스트의 값에 따라 높이를 동적으로 설정
-                  double height = Heartlist[index]!.toDouble();
-                  if (height > 250) {
-                    height = 250;
-                  }
-                  return Container(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: List.generate(Heartlist.length, (index) {
+                // 리스트의 값에 따라 높이를 동적으로 설정
+                double height = Heartlist[index]!.toDouble();
+                if (height > 250) {
+                  height = 250;
+                }
+                return Expanded(
+                  child: Container(
                     height: height / 2 + 1,
-                    width: 3,
                     margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
                     color: myRed, // 콘테이너 색상 설정
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
             ),
           )
         ],
@@ -805,35 +891,29 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                     ],
                   ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                RewardData();
-                DetailRecordList();
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    NonePageRoute(
-                        nextPage: DetailRecordScreen(
-                            recordId: recordDetail.exerciseId)));
-              },
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                minimumSize: Size(MediaQuery.of(context).size.width - 50, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                backgroundColor: (recordDetail.attainableCoin == 0 &&
-                        recordDetail.attainableHeart == 0)
-                    ? myGrey
-                    : myYellow, // 조건부로 배경색 설정
-              ),
-              child: Text16(
-                text: (recordDetail.attainableCoin == 0 &&
-                        recordDetail.attainableHeart == 0)
-                    ? '이미 수령한 보상'
-                    : '운동 보상 받기',
-              ),
-            )
+            recordDetail.trophies!.isEmpty && recordDetail.missions!.isEmpty
+                ? SizedBox(height: 0)
+                : ElevatedButton(
+                    onPressed: () {
+                      button ? SizedBox() : DetailRecordList();
+                      RewardData();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      minimumSize:
+                          Size(MediaQuery.of(context).size.width - 50, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: (recordDetail.attainableCoin == 0 &&
+                              recordDetail.attainableHeart == 0)
+                          ? myGrey
+                          : myYellow, // 조건부로 배경색 설정
+                    ),
+                    child: Text16(
+                      text: button ? '이미 수령한 보상' : '운동 보상 받기',
+                    ),
+                  )
           ]),
         ));
   }
