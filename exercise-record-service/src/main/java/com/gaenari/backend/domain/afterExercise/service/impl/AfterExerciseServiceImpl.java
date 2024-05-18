@@ -72,6 +72,7 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
   public Long saveExerciseRecord(String accountId, SaveExerciseRecordDto exerciseDto) {
     validateIntervalInfo(exerciseDto);
     Record record = buildRecord(accountId, exerciseDto);
+    sendEndFcmNotice(record);
     recordRepository.save(record);
     return record.getId();
   }
@@ -282,16 +283,49 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
   }
 
   @Override
-  public void sendFcmNotice(String accountId, NoticeInfoDto infoDto) {
-    String date = infoDto.getExerciseDateTime()
-        .format(DateTimeFormatter.ofPattern("MM월 dd일 HH시 mm분"));
-    String content = infoDto.getProgramTitle() + "를 시작했어요!";
+  public void sendStartFcmNotice(String accountId, NoticeInfoDto infoDto) {
+    StringBuilder sb = new StringBuilder();
+    String title = "개나리(개와 나의 리듬)";
+
+    sb.append(infoDto.getExerciseDateTime()
+            .format(DateTimeFormatter.ofPattern("MM월 dd일 HH시 mm분")))
+        .append("\n")
+        .append(infoDto.getProgramTitle())
+        .append("를 시작했다 멍!");
 
     ResponseEntity<GenericResponse<String>> response =
         fcmServiceClient.sendNotice(FcmMessageRequestDto.builder()
             .accountId(accountId)
-            .title(date)
-            .content(content)
+            .title(title)
+            .content(sb.toString())
+            .build());
+    if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+      throw new ConnectFeignFailException();
+    }
+  }
+
+  private void sendEndFcmNotice(Record record){
+    StringBuilder sb = new StringBuilder();
+    String title = "개나리(개와 나의 리듬)";
+
+    int time = record.getTime().intValue();
+    int hour = time / 3600;
+    time %= 3600;
+    int minute = time / 60;
+    time %= 60;
+    if(hour != 0)
+      sb.append(hour).append("시간 ");
+    if(minute != 0)
+      sb.append(minute).append("분 ");
+    if(time != 0)
+      sb.append(time).append("초 ");
+    sb.append("동안 운동을 완료했다 멍!\n 앱을 열어 보상을 확인해라 멍!");
+
+    ResponseEntity<GenericResponse<String>> response =
+        fcmServiceClient.sendNotice(FcmMessageRequestDto.builder()
+            .accountId(record.getAccountId())
+            .title(title)
+            .content(sb.toString())
             .build());
     if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
       throw new ConnectFeignFailException();

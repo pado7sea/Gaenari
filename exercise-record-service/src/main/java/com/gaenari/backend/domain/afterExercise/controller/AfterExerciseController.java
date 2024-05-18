@@ -58,7 +58,7 @@ public class AfterExerciseController {
   public ResponseEntity<?> sendExerciseStartNotice(
       @Parameter(hidden = true) @RequestHeader("User-Info") String accountId,
       @RequestBody NoticeInfoDto noticeInfoDto) {
-      afterExerciseService.sendFcmNotice(accountId, noticeInfoDto);
+      afterExerciseService.sendStartFcmNotice(accountId, noticeInfoDto);
       return response.success();
   }
 

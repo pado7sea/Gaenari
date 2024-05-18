@@ -32,5 +32,5 @@ public interface AfterExerciseService {
      */
     TotalStatisticDto updateExerciseStatistics(String accountId, SaveExerciseRecordDto exerciseDto);
 
-    void sendFcmNotice(String accountId, NoticeInfoDto infoDto);
+    void sendStartFcmNotice(String accountId, NoticeInfoDto infoDto);
 }
