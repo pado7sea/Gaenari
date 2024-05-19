@@ -16,7 +16,7 @@ public class Inventory {
     @Column(name = "inventory_id")
     private Long Id;
 
-    @Column(name = "member_email")
+    @Column(name = "account_id")
     private String accountId;
 
     @ManyToOne(fetch = FetchType.LAZY)
