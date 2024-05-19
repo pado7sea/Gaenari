@@ -93,6 +93,27 @@ class _ItemScreenState extends State<ItemScreen>
     'assets/item_tier/tier_e.png',
     'assets/item_tier/tier_l.png',
   ];
+
+  List<List<Color>> tierColors = [
+    [
+      Colors.grey.withOpacity(0.5),
+      Colors.grey.shade600.withOpacity(0.5),
+    ],
+    [
+      Color(0xff31DAFF).withOpacity(0.7),
+      Color(0xff316BFF).withOpacity(0.7),
+    ],
+    [
+      Color(0xffFFACDE).withOpacity(0.7),
+      Color(0xffCA87FF).withOpacity(0.7),
+    ],
+    [
+      Color(0xffAEECFF).withOpacity(0.7),
+      Color(0xffF4FFAE).withOpacity(0.7),
+      Color(0xffFFD361).withOpacity(0.7),
+      Color(0xffFFA8F6).withOpacity(0.7),
+    ]
+  ];
   int? findItemTierById(int itemId) {
     if (itemId <= 30) {
       return 0;
@@ -100,6 +121,20 @@ class _ItemScreenState extends State<ItemScreen>
       return 1;
     } else {
       return 2;
+    }
+  }
+
+  int? findItemTierColorById(int itemId, bool isHave) {
+    if (isHave) {
+      return 0;
+    } else {
+      if (itemId <= 30) {
+        return 1;
+      } else if (itemId < 42) {
+        return 2;
+      } else {
+        return 3;
+      }
     }
   }
 
@@ -292,15 +327,14 @@ class _ItemScreenState extends State<ItemScreen>
               backgroundColor: myBackground,
               insetPadding: EdgeInsets.fromLTRB(30, 120, 30, 120),
               child: Container(
+                height: 500,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(25)),
                   gradient: LinearGradient(
-                    begin: Alignment.topCenter,
+                    begin: Alignment.topLeft,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.blue.withOpacity(0.5),
-                      Colors.purple.withOpacity(0.5),
-                    ],
+                    colors: tierColors[
+                        findItemTierColorById(item.id!, item.isHave!)!],
                   ),
                 ),
                 child: Column(
