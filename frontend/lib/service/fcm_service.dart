@@ -30,4 +30,24 @@ class FcmService {
       throw Exception('statusCode : ${response.statusCode}');
     }
   }
+
+  Future<void> fetchFcmDelete() async {
+    String? token = await secureStorageService.getToken();
+    final response = await http.delete(
+      Uri.parse('$baseUrl/fcm/delete'),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final dynamic data = json.decode(utf8.decode(response.bodyBytes));
+      if (data['status'] != "SUCCESS") {
+        throw Exception("status : ${data['status']}");
+      }
+    } else {
+      throw Exception('statusCode : ${response.statusCode}');
+    }
+  }
 }

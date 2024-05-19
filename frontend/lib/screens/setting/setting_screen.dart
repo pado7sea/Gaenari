@@ -5,6 +5,7 @@ import 'package:forsythia/screens/setting/edit_bodyinfo_screen.dart';
 import 'package:forsythia/screens/setting/edit_nickname_screen.dart';
 import 'package:forsythia/screens/setting/edit_password_screen.dart';
 import 'package:forsythia/screens/setting/notification_screen.dart';
+import 'package:forsythia/service/fcm_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
@@ -216,6 +217,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               ),
                               SmallButton(
                                 onPressed: () async {
+                                  await FcmService().fetchFcmDelete();
                                   // 1. 로컬 스토리지에서 로그인 정보 삭제
                                   await secureStorageService.deleteToken();
 
