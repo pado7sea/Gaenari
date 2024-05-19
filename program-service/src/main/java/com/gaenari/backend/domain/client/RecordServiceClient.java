@@ -20,7 +20,7 @@ public interface RecordServiceClient {
     ResponseEntity<GenericResponse<List<ProgramDetailDto.UsageLogDto>>> getUsageLog(@PathVariable(name = "programId") Long programId);
 
     default ResponseEntity<GenericResponse<List<ProgramDetailDto.UsageLogDto>>> fallbackForGetUsageLog(Long programId, Throwable t) {
-        // 사용자 친화적인 메시지를 포함한 기본값을 반환
+        logError("getUsageLog", programId, t);
         ProgramDetailDto.UsageLogDto fallbackLog = ProgramDetailDto.UsageLogDto.builder()
                 .recordId(0L)  // 기본값 설정
                 .distance(0.0)
@@ -30,10 +30,16 @@ public interface RecordServiceClient {
                 .cal(0.0)
                 .isFinished(false)
                 .build();
-        GenericResponse<List<ProgramDetailDto.UsageLogDto>> response = new GenericResponse<>();
-        response.setStatus("FALLBACK");
-        response.setMessage(ResponseCode.FALLBACK_SUCCESS.getMessage());
-        response.setData(Collections.singletonList(fallbackLog));
+        GenericResponse<List<ProgramDetailDto.UsageLogDto>> response = GenericResponse.<List<ProgramDetailDto.UsageLogDto>>builder()
+                .status("FALLBACK")
+                .message(ResponseCode.FALLBACK_SUCCESS.getMessage())
+                .data(Collections.singletonList(fallbackLog))
+                .build();
         return ResponseEntity.ok(response);
+    }
+
+    private void logError(String methodName, Long programId, Throwable t) {
+        // 폴백 로그를 찍을 때 사용할 메서드
+        System.err.println(String.format("Fallback method called for %s with programId: %s, error: %s", methodName, programId, t.getMessage()));
     }
 }
