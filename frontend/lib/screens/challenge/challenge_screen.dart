@@ -202,24 +202,24 @@ class _ChallengePageState extends State<ChallengeScreen> {
                   bold: true,
                   textColor: widget.mission ? myGrey : myBlack,
                 ),
-                Column(
-                  children: [
-                    trophyreword.isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: myRed,
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(height: 20)
-                  ],
-                )
+                // Column(
+                //   children: [
+                //     trophyreword.isNotEmpty
+                //         ? Padding(
+                //             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                //             child: Container(
+                //               width: 8,
+                //               height: 8,
+                //               decoration: BoxDecoration(
+                //                 shape: BoxShape.circle,
+                //                 color: myRed,
+                //               ),
+                //             ),
+                //           )
+                //         : Container(),
+                //     SizedBox(height: 20)
+                //   ],
+                // )
               ],
             ),
           ),
@@ -251,24 +251,24 @@ class _ChallengePageState extends State<ChallengeScreen> {
                   bold: true,
                   textColor: widget.mission ? myBlack : myGrey,
                 ),
-                Column(
-                  children: [
-                    missionreword.isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: myRed,
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(height: 20)
-                  ],
-                )
+                // Column(
+                //   children: [
+                //     missionreword.isNotEmpty
+                //         ? Padding(
+                //             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                //             child: Container(
+                //               width: 8,
+                //               height: 8,
+                //               decoration: BoxDecoration(
+                //                 shape: BoxShape.circle,
+                //                 color: myRed,
+                //               ),
+                //             ),
+                //           )
+                //         : Container(),
+                //     SizedBox(height: 20)
+                //   ],
+                // )
               ],
             ),
           ),
