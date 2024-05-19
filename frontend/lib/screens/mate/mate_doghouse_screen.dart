@@ -229,22 +229,41 @@ class _MateDogHouseScreenState extends State<MateDogHouseScreen>
                               left: dx[x],
                               top: dy[y],
                               duration: Duration(milliseconds: 500),
-                              child: left
-                                  ? Transform.flip(
-                                      flipX: true,
-                                      child: Image.asset(
-                                        currentImage,
-                                        width: 200.0 - (50 - y * 10),
-                                        fit: BoxFit.cover,
+                              child: Column(
+                                children: [
+                                  left
+                                      ? Transform.flip(
+                                          flipX: true,
+                                          child: Image.asset(
+                                            currentImage,
+                                            width: 200.0 - (50 - y * 10),
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.none,
+                                          ),
+                                        )
+                                      : Image.asset(
+                                          currentImage,
+                                          width: 200.0 - (50 - y * 10),
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.none,
+                                        ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "assets/dog_tier/tier_${my.pet!.tier}.png",
+                                        width: 18,
                                         filterQuality: FilterQuality.none,
                                       ),
-                                    )
-                                  : Image.asset(
-                                      currentImage,
-                                      width: 200.0 - (50 - y * 10),
-                                      fit: BoxFit.cover,
-                                      filterQuality: FilterQuality.none,
-                                    ),
+                                      SizedBox(width: 3),
+                                      Text16(
+                                        text: "${my.pet!.name}",
+                                        bold: true,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

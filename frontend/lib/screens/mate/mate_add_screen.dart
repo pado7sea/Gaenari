@@ -49,13 +49,15 @@ class _AddMatePageState extends State<AddMatePage> {
             padding: EdgeInsets.symmetric(horizontal: 20), // 검색창 좌우 마진
             child: MateSearchBar(
               onSearch: (text) async {
-                SearchMateList response =
-                    await MateService.fetchSearchMateList(context, text);
-                setState(() {
-                  search = true;
-                  list = response.data!;
-                  searchedText = text;
-                });
+                if (text != "") {
+                  SearchMateList response =
+                      await MateService.fetchSearchMateList(context, text);
+                  setState(() {
+                    search = true;
+                    list = response.data!;
+                    searchedText = text;
+                  });
+                }
               },
             ),
           ),

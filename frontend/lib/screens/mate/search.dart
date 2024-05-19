@@ -42,7 +42,9 @@ class MateSearchBarState extends State<MateSearchBar> {
           SizedBox(width: 8),
           GestureDetector(
             onTap: () {
-              widget.onSearch(_controller.text); // 검색어 전달
+              if (_controller.text != "") {
+                widget.onSearch(_controller.text); // 검색어 전달
+              }
             },
             child: Image.asset(
               "assets/icons/mate_search.png",
