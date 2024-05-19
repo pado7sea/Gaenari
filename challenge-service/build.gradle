@@ -50,6 +50,8 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	// Openfeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// Circuit Breaker Resilience4j
+	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 }
 
 dependencyManagement {
