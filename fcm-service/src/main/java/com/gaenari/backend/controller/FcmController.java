@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Fcm Feign Controller", description = "Fcm Feign Controller API")
+@Tag(name = "Fcm Controller", description = "Fcm Controller API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/fcm")
@@ -35,6 +35,15 @@ public class FcmController {
 
     fcmService.register(requestDto);
     return response.success("Fcm 토큰 저장 완료");
+  }
+
+  @Operation(summary = "Fcm 토큰 삭제", description = "Fcm 토큰 정보 삭제")
+  @DeleteMapping("/delete")
+  @ApiResponse(responseCode = "200", description = "Fcm 토큰 저장 성공")
+  public ResponseEntity<?> deleteToken(
+      @Parameter(hidden = true) @RequestHeader("User-Info") String accountId){
+    fcmService.deleteToken(accountId);
+    return response.success("Fcm 토큰 삭제 완료");
   }
 
   @Operation(summary = "[Feign] 개인 메세지 전송", description = "Fcm을 활용한 개인 메세지 전송")
