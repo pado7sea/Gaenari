@@ -7,10 +7,15 @@ class ImageMove extends StatefulWidget {
   final int id; // id 속성 추가
   final String tier;
   final String name;
+  final bool myhome;
 
   // 생성자에서 id를 받아올 수 있도록 변경
   const ImageMove(
-      {super.key, required this.id, required this.tier, required this.name});
+      {super.key,
+      required this.id,
+      required this.tier,
+      required this.name,
+      this.myhome = true});
   @override
   ImageMoveState createState() => ImageMoveState();
 }
@@ -115,32 +120,35 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
               left: dx[x] - 10,
               top: dy[y] - 40,
               duration: Duration(milliseconds: 500),
-              child: SizedBox(
-                width: 220.0 - (50 - y * 10),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(10.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xffBFC2C8).withOpacity(0.25),
-                                blurRadius: 15,
-                                offset: Offset(0, 10),
+              child: widget.myhome
+                  ? SizedBox(
+                      width: 220.0 - (50 - y * 10),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Color(0xffBFC2C8).withOpacity(0.25),
+                                      blurRadius: 15,
+                                      offset: Offset(0, 10),
+                                    ),
+                                  ]),
+                              child: Text16(
+                                text: text[z],
+                                bold: true,
                               ),
-                            ]),
-                        child: Text16(
-                          text: text[z],
-                          bold: true,
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ))
+                    )
+                  : SizedBox())
         ],
       ),
     );
