@@ -254,5 +254,15 @@ public class RewardServiceImpl implements RewardService {
         }
     }
 
+    // 마이크로 서비스 간 통신을 통해서 모든 운동 기록 보상 수령 여부를 완료로 변경하기
+    @Override
+    public void updateAllRecordObtained(String accountId) {
+        ResponseEntity<GenericResponse<?>> response = recordServiceClient.updateAllRecordObtained(accountId);
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new ConnectFeignFailException();
+        }
+    }
+
+
 
 }
