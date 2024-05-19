@@ -196,7 +196,7 @@ class _ItemScreenState extends State<ItemScreen>
                 height: 20,
                 fit: BoxFit.cover,
               ),
-              Text16(text: '  보관함이동  ', bold: true),
+              Text16(text: '  보관함  ', bold: true),
             ],
           ),
         ),
