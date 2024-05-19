@@ -127,27 +127,17 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
                       child: Column(
                         children: [
                           Center(
-                              child: Container(
-                            child: CustomPaint(
-                              painter: BubblePainter(
-                                  color: Colors.white.withOpacity(0.7)),
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //     color:
-                                  //         Color(0xffBFC2C8).withOpacity(0.25),
-                                  //     blurRadius: 15,
-                                  //     offset: Offset(0, 10),
-                                  //   ),
-                                  // ],
-                                ),
-                                child: Text16(
-                                  text: text[z],
-                                  bold: true,
-                                ),
+                              child: CustomPaint(
+                            painter: BubblePainter(
+                                color: Colors.white.withOpacity(0.7)),
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Text16(
+                                text: text[z],
+                                bold: true,
                               ),
                             ),
                           )),
