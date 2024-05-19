@@ -300,7 +300,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
         );
       }
 
-      if (value['achieved'] == false && value['obtainable'] != 0) {
+      if (value['achieved'] == true && value['obtainable'] != 0) {
         completedTrophiesWidgets.add(
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
