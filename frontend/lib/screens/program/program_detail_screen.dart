@@ -55,20 +55,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                     _title(),
                     SizedBox(height: 30),
                     programDetail.type == "I"
-                        ? Container(
-                            constraints: BoxConstraints(minHeight: 100),
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: myWhiteGreen, width: 2),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: SizedBox(
-                                  width: double.infinity,
-                                  height: 100,
-                                  child: _graph()),
-                            ),
-                          )
+                        ? _graph()
                         : SizedBox(
                             height: 0,
                           ),
@@ -170,37 +157,75 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   }
 
   Widget _graph() {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal, // 리스트뷰를 가로 방향으로 스크롤하도록 설정
-      itemCount: programDetail.program!.intervalInfo!.setCount! *
-          programDetail.program!.intervalInfo!.rangeCount!, // 리스트 아이템 개수
-      itemBuilder: (BuildContext context, int index) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              width: programDetail
-                      .program!
-                      .intervalInfo!
-                      .ranges![index %
-                          programDetail.program!.intervalInfo!.rangeCount!]
-                      .time! /
-                  15, // 각 아이템의 가로 크기
-              height: programDetail
-                      .program!
-                      .intervalInfo!
-                      .ranges![index %
-                          programDetail.program!.intervalInfo!.rangeCount!]
-                      .speed! *
-                  4,
-              color: Colors.blueAccent,
-              margin: EdgeInsets.all(2),
-            ),
-          ],
-        );
-      },
-    );
+    return Container(
+        constraints: BoxConstraints(minHeight: 150),
+        decoration: BoxDecoration(
+            border: Border.all(color: myWhiteGreen, width: 2),
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    Text16(text: '목표', bold: true),
+                  ],
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: List.generate(
+                          programDetail.program!.intervalInfo!.setCount! *
+                              programDetail.program!.intervalInfo!.rangeCount!,
+                          (index) => Expanded(
+                              child: Container(
+                                  height: programDetail
+                                          .program!
+                                          .intervalInfo!
+                                          .ranges![index %
+                                              programDetail.program!
+                                                  .intervalInfo!.rangeCount!]
+                                          .speed! *
+                                      4,
+                                  color: Colors.blueAccent,
+                                  margin: EdgeInsets.only(right: 3))))))
+            ]));
+
+    // ListView.builder(
+    //   scrollDirection: Axis.horizontal, // 리스트뷰를 가로 방향으로 스크롤하도록 설정
+    //   itemCount: programDetail.program!.intervalInfo!.setCount! *
+    //       programDetail.program!.intervalInfo!.rangeCount!, // 리스트 아이템 개수
+    //   itemBuilder: (BuildContext context, int index) {
+    //     return Column(
+    //       crossAxisAlignment: CrossAxisAlignment.end,
+    //       mainAxisAlignment: MainAxisAlignment.end,
+    //       children: [
+    //         Container(
+    //           width: programDetail
+    //                   .program!
+    //                   .intervalInfo!
+    //                   .ranges![index %
+    //                       programDetail.program!.intervalInfo!.rangeCount!]
+    //                   .time! /
+    //               15, // 각 아이템의 가로 크기
+    //           height: programDetail
+    //                   .program!
+    //                   .intervalInfo!
+    //                   .ranges![index %
+    //                       programDetail.program!.intervalInfo!.rangeCount!]
+    //                   .speed! *
+    //               4,
+    //           color: Colors.blueAccent,
+    //           margin: EdgeInsets.all(2),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   Widget _section() {
