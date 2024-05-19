@@ -8,7 +8,7 @@ spring:
     timeout-per-shutdown-phase: 30s
 
   datasource:
-    url: jdbc:mysql://gaenari.kr:30036/my_database?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://gaenari.kr:30036/my_database?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
     username: root
     password: Ssafy123!@
 
