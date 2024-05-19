@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:forsythia/models/inventory/my_item.dart';
 import 'package:forsythia/models/pet/pet_heart.dart';
 // import 'package:forsythia/models/pet/pet_res.dart';
@@ -10,8 +11,10 @@ import 'package:forsythia/screens/item/item_screen.dart';
 import 'package:forsythia/service/inventory_service.dart';
 import 'package:forsythia/service/pet_service.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
+import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
+import 'package:forsythia/widgets/button_widgets.dart';
 import 'package:forsythia/widgets/dog_app_bar.dart';
 import 'package:forsythia/widgets/slide_page_route.dart';
 import 'dart:math';
@@ -87,6 +90,14 @@ class _DogHouseScreenState extends State<DogHouseScreen>
       active = true;
       currentImage = "assets/dogs/1_${act}_${my.pet!.id!}.gif";
     });
+    SecureStorageService storageService = SecureStorageService();
+    LoginInfo? info = await storageService.getLoginInfo();
+    if (info?.myPetDto!.tier! != my.pet!.tier!) {
+      // ignore: use_build_context_synchronously
+      _showmodal(context);
+      info?.myPetDto!.tier = my.pet!.tier!;
+      storageService.saveLoginInfo(info!);
+    }
   }
 
   postLove() async {
@@ -98,7 +109,109 @@ class _DogHouseScreenState extends State<DogHouseScreen>
     });
     if (my.pet!.affection! == 100) {
       getItem();
+      // ignore: use_build_context_synchronously
+      _showmodal(context);
     }
+  }
+
+  List<String> tiers = [
+    'BRONZE',
+    'SILVER',
+    'GOLD',
+    'PLATINUM',
+    'DIAMOND',
+    'MASTER',
+  ];
+
+  void _showmodal(BuildContext parentContext) {
+    showDialog(
+      context: parentContext,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        // dialogContext를 여기서 사용해서 나중에 다시 뽑기 버튼에서 사용해.
+        return Stack(
+          children: [
+            Dialog(
+              backgroundColor: myBackground,
+              insetPadding: EdgeInsets.fromLTRB(50, 200, 50, 200),
+              child: Container(
+                height: 500,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(width: 10),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Image.asset(
+                              'assets/icons/common_close.png',
+                              width: 20.0,
+                              height: 20.0,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text16(
+                              text: "닫기",
+                              bold: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Center(
+                      child: Column(
+                        children: [
+                          Text25(
+                            text: "티어 상승!",
+                            bold: true,
+                          ),
+                          SizedBox(height: 20),
+                          Image.asset(
+                            "assets/dog_tier/tier_${my.pet!.tier!}.png",
+                            width: 120,
+                            fit: BoxFit.contain,
+                            filterQuality: FilterQuality.none,
+                          ),
+                          SizedBox(height: 20),
+                          Text16(
+                            text: "애정을 듬뿍 주어서",
+                            bold: true,
+                          ),
+                          Text16(
+                            text: "${my.pet!.tier!}로 티어가 올랐어요",
+                            bold: true,
+                          ),
+                          SizedBox(height: 40),
+                          SmallButton(
+                            text: "확인",
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            widthPadding: 100,
+                            active: true,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 
   Future<void> loadCoin() async {
