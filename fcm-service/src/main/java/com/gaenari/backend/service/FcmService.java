@@ -52,6 +52,20 @@ public class FcmService {
   }
 
   /**
+   * FCM 토큰을 유저에 매칭해서 DB에서 삭제
+   *
+   * @param accountId
+   */
+  @Transactional
+  public void deleteToken(String accountId){
+    Optional<Fcm> fcm = fcmRepository.findByAccountId(accountId);
+    if(fcm.isEmpty()){
+      throw new FcmTokenNotFoundException();
+    }
+    fcmRepository.delete(fcm.get());
+  }
+
+  /**
    * FcmMessage 전송
    *
    * @param fcmMessage 메세지 dto
