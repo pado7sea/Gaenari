@@ -840,7 +840,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                   Text16(
                     text: recordDetail.trophies![index].type == 'D'
                         ? '누적 ${recordDetail.trophies![index].value}km 달성'
-                        : '누적 ${recordDetail.trophies![index].value}시간 달성',
+                        : '누적 ${(recordDetail.trophies![index].value! ~/ 3600)}시간 달성',
                     bold: true,
                   ),
                   SizedBox(width: 10),
