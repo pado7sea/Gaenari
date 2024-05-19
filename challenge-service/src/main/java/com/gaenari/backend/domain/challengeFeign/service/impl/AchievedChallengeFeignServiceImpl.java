@@ -50,10 +50,18 @@ public class AchievedChallengeFeignServiceImpl implements AchievedChallengeFeign
         // 도전과제 달성 여부 판단
         for (Challenge challenge : challenges) {
             boolean achieved = false;
-            if (challenge.getType() == ChallengeType.T) {
-                achieved = recordDto.getTime() >= challenge.getValue();
-            } else if (challenge.getType() == ChallengeType.D) {
-                achieved = recordDto.getDistance() >= challenge.getValue();
+            if (challenge.getCategory() == ChallengeCategory.MISSION) {
+                if (challenge.getType() == ChallengeType.T) {
+                    achieved = recordDto.getTime() >= challenge.getValue();
+                } else if (challenge.getType() == ChallengeType.D) {
+                    achieved = recordDto.getDistance() >= challenge.getValue();
+                }
+            } else if (challenge.getCategory() == ChallengeCategory.TROPHY) {
+                if (challenge.getType() == ChallengeType.T) {
+                    achieved = recordDto.getStatisticTime() >= challenge.getValue();
+                } else if (challenge.getType() == ChallengeType.D) {
+                    achieved = recordDto.getStatisticDistance() >= challenge.getValue();
+                }
             }
             if (achieved) {
                 // 새로 달성한 도전과제 아이디 리스트에 추가
