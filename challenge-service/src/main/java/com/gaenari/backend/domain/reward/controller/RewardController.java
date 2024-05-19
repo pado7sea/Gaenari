@@ -66,6 +66,9 @@ public class RewardController {
             rewardService.callFeignUpdateCoin(accountId, coin);
             rewardService.callFeignUpdateHeart(accountId, heart);
 
+            // 마이크로 서비스 간 통신을 통해서 해당 회원이 가진 모든 기록의 보상 수령 여부를 완료로 변경하기
+            rewardService.updateAllRecordObtained(accountId);
+
             // 증가한 코인과 애정도를 반환
             return response.success(ResponseCode.REWARD_RECORD_RECEIVE_SUCCESS, RewardDto.builder().accountId(accountId).coin(coin).heart(heart).build());
         }
