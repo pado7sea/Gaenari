@@ -516,34 +516,48 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     : print("dd");
       },
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             decoration: pet[index].pets!.isPartner!
                 ? myYellowBoxDecoration
                 : pet[index].isHave!
-                    ? myActiveBoxDecoration
+                    ? myWhiteGreenBoxDecoration
                     : myBorderBoxDecoration,
             height: 180,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text16(
-                      text: pet[index].pets!.isPartner!
-                          ? "파트너"
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 10,
+                  child: Image.asset(
+                    images[index],
+                    width: double.infinity,
+                    filterQuality: FilterQuality.none,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                    left: 10,
+                    top: 10,
+                    child: Container(
+                      decoration: pet[index].pets!.isPartner!
+                          ? myWhiteGreenBoxDecoration
                           : pet[index].isHave!
-                              ? "보유중"
-                              : "미보유"),
-                ),
-                Image.asset(
-                  images[index],
-                  width: double.infinity,
-                  filterQuality: FilterQuality.none,
-                  fit: BoxFit.cover,
-                ),
+                              ? myWalkBoxDecoration
+                              : myNoneBoxDecoration,
+                      padding: EdgeInsets.all(6),
+                      child: Text12(
+                        text: pet[index].pets!.isPartner!
+                            ? "착용중"
+                            : pet[index].isHave!
+                                ? "보유"
+                                : "미보유",
+                        textColor: pet[index].isHave! ? myBlack : myGrey,
+                      ),
+                    )),
               ],
             ),
           ),
