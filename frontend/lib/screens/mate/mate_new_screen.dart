@@ -183,9 +183,8 @@ class _NewMatePageState extends State<NewMatePage> {
                                     child: Column(children: const [
                                       Image(
                                         image: AssetImage(
-                                            "assets/icons/mate_notfriend.png"),
+                                            "assets/icons/mate_no.png"),
                                         width: 30,
-                                        height: 30,
                                         fit: BoxFit.cover,
                                         filterQuality: FilterQuality.none,
                                       ),
@@ -213,9 +212,8 @@ class _NewMatePageState extends State<NewMatePage> {
                                     child: Column(children: const [
                                       Image(
                                         image: AssetImage(
-                                            "assets/icons/mate_notfriend.png"),
+                                            "assets/icons/mate_yes.png"),
                                         width: 30,
-                                        height: 30,
                                         fit: BoxFit.cover,
                                         filterQuality: FilterQuality.none,
                                       ),
