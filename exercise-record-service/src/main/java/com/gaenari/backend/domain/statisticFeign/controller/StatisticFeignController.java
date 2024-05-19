@@ -2,6 +2,7 @@ package com.gaenari.backend.domain.statisticFeign.controller;
 
 import com.gaenari.backend.domain.statistic.dto.responseDto.TotalStatisticDto;
 import com.gaenari.backend.domain.statistic.service.StatisticService;
+import com.gaenari.backend.global.exception.program.ProgramNotFoundException;
 import com.gaenari.backend.global.format.code.ResponseCode;
 import com.gaenari.backend.global.format.response.ApiResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +35,6 @@ public class StatisticFeignController {
     })
     public ResponseEntity<?> getTotalStatistics(@Parameter(description = "회원 ID") @PathVariable(name = "accountId") String accountId) {
         TotalStatisticDto statistics = statisticService.getTotalStatistics(accountId);
-
         return response.success(ResponseCode.STATISTIC_ALL_FETCHED, statistics);
     }
 
