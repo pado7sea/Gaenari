@@ -92,7 +92,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
       }
       for (var mission in recordDetail.missions!) {
         if (mission.type == 'T') {
-          final value = mission.value as int;
+          final value = (mission.value as int) ~/ 60;
           if (missionTList.containsKey(value)) {
             missionTList[value] = true;
           }
@@ -116,6 +116,8 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     print('갹ㄴ야ㅐㅓㅁㄴ갸ㅐㅓ ㅑㅐㅔ;ㅁ저ㅐ;');
     print(recordDetail.exerciseId);
     print(recordDetail.program?.programId);
+    print(recordDetail.missions?[0].value);
+    print(missionTList);
   }
 
   getDetail() async {
@@ -469,51 +471,106 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-                  child: interval
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: List.generate(
-                              recordDetail
-                                  .program!.intervalInfo!.ranges!.length,
+                padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+                child: interval
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: () {
+                          final firstListCount = recordDetail
+                              .program!.intervalInfo!.ranges!.length;
+                          final secondListCount = programDetail
+                                  .program!.intervalInfo!.setCount! *
+                              programDetail.program!.intervalInfo!.rangeCount!;
+
+                          final maxCount = firstListCount > secondListCount
+                              ? firstListCount
+                              : secondListCount;
+
+                          List<Widget> firstList = List.generate(
+                            firstListCount,
+                            (index) => Expanded(
+                              child: Container(
+                                height: recordDetail.program!.intervalInfo!
+                                        .ranges![index].speed! *
+                                    4,
+                                margin: EdgeInsets.only(right: 3),
+                                color: (recordDetail.program?.intervalInfo
+                                            ?.ranges?[index]?.isRunning ??
+                                        false)
+                                    ? myMainGreen
+                                    : myLightGreen,
+                              ),
+                            ),
+                          );
+
+                          // Add extra containers with height 0 if needed
+                          if (firstListCount < maxCount) {
+                            firstList.addAll(List.generate(
+                              maxCount - firstListCount,
                               (index) => Expanded(
-                                    child: Container(
-                                      height: recordDetail
-                                              .program!
-                                              .intervalInfo!
-                                              .ranges![index]
-                                              .speed! *
-                                          4,
-                                      margin: EdgeInsets.only(right: 3),
-                                      color: (recordDetail.program?.intervalInfo
-                                                  ?.ranges?[index]?.isRunning ??
-                                              false)
-                                          ? myMainGreen
-                                          : myLightGreen,
-                                    ),
-                                  )))
-                      : Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: List.generate(
-                              programDetail.program!.intervalInfo!.setCount! *
-                                  programDetail
-                                      .program!.intervalInfo!.rangeCount!,
+                                child: Container(
+                                  height: 0,
+                                  margin: EdgeInsets.only(right: 3),
+                                  color: Colors
+                                      .transparent, // Use transparent color or any other indication
+                                ),
+                              ),
+                            ));
+                          }
+
+                          return firstList;
+                        }(),
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: () {
+                          final firstListCount = recordDetail
+                              .program!.intervalInfo!.ranges!.length;
+                          final secondListCount = programDetail
+                                  .program!.intervalInfo!.setCount! *
+                              programDetail.program!.intervalInfo!.rangeCount!;
+
+                          final maxCount = firstListCount > secondListCount
+                              ? firstListCount
+                              : secondListCount;
+
+                          List<Widget> secondList = List.generate(
+                            secondListCount,
+                            (index) => Expanded(
+                              child: Container(
+                                height: programDetail
+                                        .program!
+                                        .intervalInfo!
+                                        .ranges![index %
+                                            programDetail.program!.intervalInfo!
+                                                .rangeCount!]
+                                        .speed! *
+                                    4,
+                                margin: EdgeInsets.only(right: 3),
+                                color: Colors.blueAccent,
+                              ),
+                            ),
+                          );
+
+                          // Add extra containers with height 0 if needed
+                          if (secondListCount < maxCount) {
+                            secondList.addAll(List.generate(
+                              maxCount - secondListCount,
                               (index) => Expanded(
-                                    child: Container(
-                                      height: programDetail
-                                              .program!
-                                              .intervalInfo!
-                                              .ranges![index %
-                                                  programDetail
-                                                      .program!
-                                                      .intervalInfo!
-                                                      .rangeCount!]
-                                              .speed! *
-                                          4,
-                                      margin: EdgeInsets.only(right: 3),
-                                      color: Colors.blueAccent,
-                                    ),
-                                  )))),
+                                child: Container(
+                                  height: 0,
+                                  margin: EdgeInsets.only(right: 3),
+                                  color: Colors
+                                      .transparent, // Use transparent color or any other indication
+                                ),
+                              ),
+                            ));
+                          }
+
+                          return secondList;
+                        }(),
+                      ),
+              )
             ],
           ),
         ));
@@ -644,209 +701,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           showDialog(
                             context: context, // 현재 컨텍스트를 전달합니다.
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                titlePadding:
-                                    EdgeInsets.fromLTRB(30, 30, 0, 10),
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(30, 20, 30, 10),
-                                backgroundColor: myBackground,
-                                title: Text('미션 보상'), // 다이얼로그 제목
-                                content: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 30),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Row(
-                                        children: [
-                                          Text16(text: '1KM 달성 : 100  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  2  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text16(text: '3KM 달성 : 200  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  3  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text16(text: '5KM 달성 : 100  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  5  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text16(text: '10KM 달성 : 700  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  10  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text16(text: '10분 달성 : 100  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  2  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text16(text: '30분 달성 : 200  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  3  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text16(text: '60분 달성 : 100  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  5  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Text16(text: '100분 달성 : 700  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_coin.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality:
-                                                  FilterQuality.high),
-                                          Text16(text: '  10  '),
-                                          Image(
-                                              image: AssetImage(
-                                                  'assets/color_icons/icon_love.png'),
-                                              width: 18,
-                                              height: 18,
-                                              fit: BoxFit.cover,
-                                              filterQuality: FilterQuality.high)
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(); // 다이얼로그 닫기
-                                      },
-                                      child: Text16(
-                                        text: '닫기',
-                                        textColor: myBlack,
-                                      ) // 닫기 버튼 텍스트
-                                      ),
-                                ],
-                              );
+                              return _popup();
                             },
                           );
                         },
@@ -912,7 +767,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                         width: 18,
                         height: 18,
                         fit: BoxFit.cover,
-                        filterQuality: FilterQuality.high,
+                        filterQuality: FilterQuality.none,
                       ),
                       SizedBox(width: 10),
                       Text16(
@@ -922,7 +777,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                         width: 18,
                         height: 18,
                         fit: BoxFit.cover,
-                        filterQuality: FilterQuality.high,
+                        filterQuality: FilterQuality.none,
                       ),
                       SizedBox(width: 5),
                       Text16(text: '를 받을 수 있어요!', bold: true),
@@ -1000,6 +855,185 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             ),
           ),
         ));
+  }
+
+  Widget _popup() {
+    return AlertDialog(
+      titlePadding: EdgeInsets.fromLTRB(30, 30, 0, 10),
+      contentPadding: EdgeInsets.fromLTRB(30, 20, 30, 10),
+      backgroundColor: myBackground,
+      title: Text('미션 보상'), // 다이얼로그 제목
+      content: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              children: [
+                Text16(text: '1KM 달성 : 100  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  2  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text16(text: '3KM 달성 : 200  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  3  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text16(text: '5KM 달성 : 100  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  5  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text16(text: '10KM 달성 : 700  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  10  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text16(text: '10분 달성 : 100  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  2  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text16(text: '30분 달성 : 200  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  3  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text16(text: '60분 달성 : 100  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  5  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text16(text: '100분 달성 : 700  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_coin.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none),
+                Text16(text: '  10  '),
+                Image(
+                    image: AssetImage('assets/color_icons/icon_love.png'),
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none)
+              ],
+            )
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // 다이얼로그 닫기
+            },
+            child: Text16(
+              text: '닫기',
+              textColor: myBlack,
+            ) // 닫기 버튼 텍스트
+            ),
+      ],
+    );
   }
 }
 

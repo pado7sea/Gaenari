@@ -202,24 +202,24 @@ class _ChallengePageState extends State<ChallengeScreen> {
                   bold: true,
                   textColor: widget.mission ? myGrey : myBlack,
                 ),
-                Column(
-                  children: [
-                    trophyreword.isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: myRed,
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(height: 20)
-                  ],
-                )
+                // Column(
+                //   children: [
+                //     trophyreword.isNotEmpty
+                //         ? Padding(
+                //             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                //             child: Container(
+                //               width: 8,
+                //               height: 8,
+                //               decoration: BoxDecoration(
+                //                 shape: BoxShape.circle,
+                //                 color: myRed,
+                //               ),
+                //             ),
+                //           )
+                //         : Container(),
+                //     SizedBox(height: 20)
+                //   ],
+                // )
               ],
             ),
           ),
@@ -251,24 +251,24 @@ class _ChallengePageState extends State<ChallengeScreen> {
                   bold: true,
                   textColor: widget.mission ? myBlack : myGrey,
                 ),
-                Column(
-                  children: [
-                    missionreword.isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: myRed,
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(height: 20)
-                  ],
-                )
+                // Column(
+                //   children: [
+                //     missionreword.isNotEmpty
+                //         ? Padding(
+                //             padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                //             child: Container(
+                //               width: 8,
+                //               height: 8,
+                //               decoration: BoxDecoration(
+                //                 shape: BoxShape.circle,
+                //                 color: myRed,
+                //               ),
+                //             ),
+                //           )
+                //         : Container(),
+                //     SizedBox(height: 20)
+                //   ],
+                // )
               ],
             ),
           ),
@@ -404,7 +404,7 @@ class _ChallengePageState extends State<ChallengeScreen> {
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-            _notCompleteWidth = constraints.maxWidth;
+            _notCompleteWidth = constraints.minWidth - 10;
             return Container(
               width: MediaQuery.of(context).size.width - 60,
               decoration: myBorderBoxDecoration,
@@ -749,17 +749,17 @@ class _ButtonState extends State<Button> {
         : Container(
             alignment: Alignment.centerRight,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text16(
-                    text: widget.memberValue.toString() +
-                        (widget.type == 'D' ? 'km/' : '시간/'),
-                    textColor: myGrey,
-                    bold: true),
-                Text12(
-                    text: widget.challengeValue.toString() +
-                        (widget.type == 'D' ? 'km' : '시간'),
-                    textColor: myGrey,
-                    bold: true),
+                Text(
+                  '${widget.memberValue.toString() + (widget.type == 'D' ? 'km/' : '시간/')}',
+                  style: TextStyle(color: myGrey, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${widget.challengeValue.toString() + (widget.type == 'D' ? 'km' : '시간')}',
+                  style: TextStyle(
+                      color: myGrey, fontWeight: FontWeight.bold, fontSize: 10),
+                ),
                 SizedBox(width: 10)
               ],
             ));

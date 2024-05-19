@@ -149,32 +149,34 @@ class _EditNickNameState extends State<EditNickName> {
           SizedBox(
             height: 10,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                  onPressed: () async {
-                    final Check idCheck =
-                        await MemberService.fetchNickNameCheck(
-                            context, _nicknamecontroller.text);
-                    setState(() {
-                      if (idCheck.data != null && idCheck.data == false) {
-                        check = "사용 가능한 닉네임";
-                      } else {
-                        check = "중복된 닉네임";
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: myLightYellow,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text12(text: check == "" ? '닉네임 중복검사' : check))
-            ],
-          )
+          _nicknamecontroller.text.length >= 2
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () async {
+                          final Check idCheck =
+                              await MemberService.fetchNickNameCheck(
+                                  context, _nicknamecontroller.text);
+                          setState(() {
+                            if (idCheck.data != null && idCheck.data == false) {
+                              check = "사용 가능한 닉네임";
+                            } else {
+                              check = "중복된 닉네임";
+                            }
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: myLightYellow,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text12(text: check == "" ? '닉네임 중복검사' : check))
+                  ],
+                )
+              : SizedBox()
         ],
       ),
     );
