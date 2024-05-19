@@ -168,11 +168,22 @@ class _CoinScreenState extends State<CoinScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text16(
-                              text: coinRecord
-                                  .memberCoinRecordList![index].coinTitle
-                                  .toString(),
-                              bold: true),
+                          if (coinRecord
+                                  .memberCoinRecordList![index].coinTitle ==
+                              'REWARD')
+                            Text16(text: '보상', bold: true)
+                          else if (coinRecord
+                                  .memberCoinRecordList![index].coinTitle ==
+                              'PETCARE')
+                            Text16(text: '코인보너스', bold: true)
+                          else if (coinRecord
+                                  .memberCoinRecordList![index].coinTitle ==
+                              'PET_PURCHASE')
+                            Text16(text: '강아지 입양', bold: true)
+                          else if (coinRecord
+                                  .memberCoinRecordList![index].coinTitle ==
+                              'ITEM_PURCHASE')
+                            Text16(text: '아이템 구매', bold: true),
                           if (coinRecord
                                   .memberCoinRecordList![index].isIncreased ==
                               true)
