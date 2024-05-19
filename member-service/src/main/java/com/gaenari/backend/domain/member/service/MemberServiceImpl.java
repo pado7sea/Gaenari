@@ -35,15 +35,24 @@ import java.time.Duration;
 
 
 @Service
-@RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl extends MemberBaseService implements MemberService{
     private final BCryptPasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
     private final MyPetRepository myPetRepository;
-    private final CoinRepository coinRepository;
-    private final InventoryServiceClient inventoryServiceClient;
-    private final CircuitBreakerFactory circuitBreakerFactory;
+    public MemberServiceImpl(
+            BCryptPasswordEncoder passwordEncoder,
+            MemberRepository memberRepository,
+            DogRepository dogRepository,
+            MyPetRepository myPetRepository,
+            InventoryServiceClient inventoryServiceClient
+    ) {
+        super(inventoryServiceClient); // 상위 클래스 생성자 호출
+        this.passwordEncoder = passwordEncoder;
+        this.memberRepository = memberRepository;
+        this.dogRepository = dogRepository;
+        this.myPetRepository = myPetRepository;
+    }
 
     @Override // 회원가입
     public SignupResponse createMember(SignupRequestDto requestDto) {
@@ -78,15 +87,7 @@ public class MemberServiceImpl implements MemberService{
         MyPet registMyPet = myPetRepository.save(myPet);
 
         // 기본 아이템 생성
-//        GenericResponse<?> createItemRes = inventoryServiceClient.createNormalItems(requestDto.getAccountId()).getBody();
-//        if(!createItemRes.getStatus().equals("SUCCESS")){
-//            throw new ConnectFeignFailException();
-//        }
-
-        // 써킷브레이커
-        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitBreaker");
-        GenericResponse<?> createItemRes = circuitBreaker.run(()->inventoryServiceClient.createNormalItems(requestDto.getAccountId()).getBody(),
-                throwable -> new GenericResponse<>());
+        feignCreateNormalItems(requestDto.getAccountId());
 
         // LocalDateTime을 String으로 변경
         LocalDateTime changeTime = registMyPet.getChangeTime();
@@ -159,10 +160,7 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.delete(mem);
 
         // 회원 아이템 삭제
-        GenericResponse<?> deleteItemRes = inventoryServiceClient.deleteItems(accountId).getBody();
-        if(!deleteItemRes.getStatus().equals("SUCCESS")){
-            throw new ConnectFeignFailException();
-        }
+        feignDeleteItems(accountId);
     }
 
     @Override // 회원 닉네임 변경
