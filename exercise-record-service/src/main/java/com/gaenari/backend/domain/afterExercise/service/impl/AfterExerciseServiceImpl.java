@@ -161,8 +161,8 @@ public class AfterExerciseServiceImpl implements AfterExerciseService {
           .recordId(null)
           .distance(exerciseDto.getRecord().getDistance())
           .time(exerciseDto.getRecord().getTime())
-          .statisticDistance(statisticDistance)
-          .statisticTime(statisticTime)
+          .statisticDistance(statisticDistance + exerciseDto.getRecord().getDistance())
+          .statisticTime(statisticTime + exerciseDto.getRecord().getTime())
           .build();
 
       // 마이크로 서비스간 통신을 통해 도전과제(아이디) 가져오기
