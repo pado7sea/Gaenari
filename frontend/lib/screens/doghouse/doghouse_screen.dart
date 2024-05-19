@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forsythia/models/inventory/my_item.dart';
 import 'package:forsythia/models/pet/pet_heart.dart';
-// import 'package:forsythia/models/pet/pet_res.dart';
 import 'package:forsythia/models/users/login_user.dart';
 import 'package:forsythia/screens/inventory/inventory_screen.dart';
 import 'package:forsythia/screens/item/item_screen.dart';
@@ -66,7 +65,7 @@ class _DogHouseScreenState extends State<DogHouseScreen>
     act = random.nextInt(6);
     x = random.nextInt(6);
     y = random.nextInt(6);
-    _timer = Timer.periodic(Duration(milliseconds: 300), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 3000), (timer) {
       setState(() {
         if (heart > 1) {
           heart--;
@@ -101,6 +100,14 @@ class _DogHouseScreenState extends State<DogHouseScreen>
   }
 
   postLove() async {
+    if (my.pet!.affection! != 100) {
+      Fluttertoast.showToast(
+        msg: '${my.pet!.name}와(과) 놀아줘서 애정도가 1 올랐어요!',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: myMainGreen,
+      );
+    }
     PetHeart petHeart = PetHeart(affection: 1, id: my.pet!.id);
     await PetService.fetchPetLove(petHeart);
     setState(() {
