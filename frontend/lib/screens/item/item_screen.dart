@@ -327,7 +327,7 @@ class _ItemScreenState extends State<ItemScreen>
               backgroundColor: myBackground,
               insetPadding: EdgeInsets.fromLTRB(30, 120, 30, 120),
               child: Container(
-                height: 500,
+                height: 550,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(25)),
                   gradient: LinearGradient(
