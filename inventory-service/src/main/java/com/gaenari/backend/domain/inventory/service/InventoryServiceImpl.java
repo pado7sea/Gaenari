@@ -317,7 +317,7 @@ public class InventoryServiceImpl extends InventoryBaseService implements Invent
         // 기본 아이템(1~6번)은 안나오도록
         int randomIndex = 0;
         if(accountId.equals("b204")){
-            randomIndex = 33; // 시연 계정에서는 싸피 로고가 나오게끔
+            randomIndex = 32; // 시연 계정에서는 싸피 로고가 나오게끔
         }else {
             randomIndex = 7 + random.nextInt(itemList.size() - 7);
         }
