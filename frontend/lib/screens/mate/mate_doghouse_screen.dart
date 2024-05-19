@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:forsythia/models/inventory/mate_home.dart';
+import 'package:forsythia/models/users/login_user.dart';
+import 'package:forsythia/screens/doghouse/move_dog.dart';
 import 'package:forsythia/service/inventory_service.dart';
+import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'dart:math';
@@ -40,7 +43,9 @@ class _MateDogHouseScreenState extends State<MateDogHouseScreen>
   int y = 0;
   int act = 0;
   bool left = false;
-
+  int myDogId = 0;
+  String myDogName = "";
+  String myDogTier = "";
   @override
   void initState() {
     super.initState();
@@ -50,10 +55,21 @@ class _MateDogHouseScreenState extends State<MateDogHouseScreen>
       duration: Duration(milliseconds: 500),
     );
     // 초기 이미지를 설정
+    getMydog();
     getItem();
     act = random.nextInt(6);
     x = random.nextInt(6);
     y = random.nextInt(6);
+  }
+
+  getMydog() async {
+    SecureStorageService storageService = SecureStorageService();
+    LoginInfo? loginInfo = await storageService.getLoginInfo();
+    setState(() {
+      myDogId = loginInfo!.myPetDto!.id!;
+      myDogName = loginInfo!.myPetDto!.name!;
+      myDogTier = loginInfo!.myPetDto!.tier!;
+    });
   }
 
   List<String> dogbreeds = [
@@ -218,6 +234,12 @@ class _MateDogHouseScreenState extends State<MateDogHouseScreen>
                           fit: BoxFit.cover,
                         ),
                       ),
+                      ImageMove(
+                        id: myDogId,
+                        tier: myDogTier,
+                        name: myDogName,
+                        myhome: false,
+                      ),
                       GestureDetector(
                         // GestureDetector를 사용하여 이미지를 감싼다
                         onTap: () {
@@ -306,7 +328,7 @@ class _MateDogHouseScreenState extends State<MateDogHouseScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text16(
-                                  text: "${widget.memberName}님의 아이템  ",
+                                  text: "${widget.memberName}님의 아이템 티어 ",
                                   bold: true),
                               SizedBox(height: 3),
                               Row(
