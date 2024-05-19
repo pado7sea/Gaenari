@@ -39,6 +39,12 @@ public interface RecordServiceClient {
     ResponseEntity<GenericResponse<?>> updateRecordObtained(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId,
                                                             @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId);
 
+    // 모든 운동 기록의 보상 수령 여부 업데이트
+    @PutMapping("/record/feign/obtain/{accountId}")
+    @CircuitBreaker(name = "exercise-record-service-circuit-breaker", fallbackMethod = "fallbackForUpdateAllRecordObtained")
+    ResponseEntity<GenericResponse<?>> updateAllRecordObtained(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId);
+
+
     default ResponseEntity<GenericResponse<TotalStatisticDto>> fallbackForGetAllStatistics(String accountId, Throwable t) {
         logError("getAllStatistics", accountId, null, t);
         TotalStatisticDto fallbackStatistic = TotalStatisticDto.builder()
@@ -87,8 +93,23 @@ public interface RecordServiceClient {
         return ResponseEntity.ok(response);
     }
 
+    default ResponseEntity<GenericResponse<?>> fallbackForUpdateAllRecordObtained(String accountId, Throwable t) {
+        logError("updateRecordObtained", accountId, t);
+        GenericResponse<?> response = GenericResponse.builder()
+                .status("FALLBACK")
+                .message(ResponseCode.FALLBACK_SUCCESS.getMessage())
+                .data(null)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     private void logError(String methodName, String accountId, Long recordId, Throwable t) {
         // 폴백 로그를 찍을 때 사용할 메서드
         System.err.println(String.format("Fallback method called for %s with accountId: %s and recordId: %s, error: %s", methodName, accountId, recordId, t.getMessage()));
+    }
+
+    private void logError(String methodName, String accountId, Throwable t) {
+        // 폴백 로그를 찍을 때 사용할 메서드
+        System.err.println(String.format("Fallback method called for %s with accountId: %s, error: %s", methodName, accountId, t.getMessage()));
     }
 }

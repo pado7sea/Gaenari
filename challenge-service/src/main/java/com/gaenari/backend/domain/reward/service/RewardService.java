@@ -98,5 +98,12 @@ public interface RewardService {
      */
     void updateRecordObtained(String accountId, Long recordId);
 
+    /**
+     * 마이크로 서비스 간 통신을 통해 지정된 회원의 모든 운동기록을 보상 수령 완료로 업데이트한다.
+     *
+     * @param accountId String 형태로, 애정도를 업데이트할 회원의 고유 식별자.
+     */
+    void updateAllRecordObtained(String accountId);
+
 }
 
