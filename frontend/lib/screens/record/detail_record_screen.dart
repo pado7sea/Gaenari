@@ -36,7 +36,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   Map<int, bool> missionTList = {
     10: false,
     30: false,
-    50: false,
+    60: false,
     100: false,
   };
 
@@ -594,7 +594,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 SizedBox(width: 10),
                 Text12(
                   text:
-                      '평균 페이스 ${recordDetail.paces!.average!.toInt() ~/ 60}\'${(recordDetail.paces!.average! % 60).toString().substring(0, 2)}\'\'',
+                      '평균 페이스 ${(recordDetail.paces!.average! / 60).toString().substring(0, 2)}\'${(recordDetail.paces!.average! / 60).toString().substring(3, 5)}\'\'',
                   textColor: myGrey,
                 )
               ],
@@ -662,7 +662,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 }
                 return Expanded(
                   child: Container(
-                    height: (height) / 3 + 1,
+                    height: (height - 40) / 2.5 + 1,
                     margin: EdgeInsets.only(right: 3), // 각 콘테이너 사이의 간격 조정
                     color: myRed, // 콘테이너 색상 설정
                   ),
@@ -764,7 +764,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                           bold: true),
                       Image(
                         image: AssetImage('assets/color_icons/icon_love.png'),
-                        width: 18,
+                        width: 20,
                         height: 18,
                         fit: BoxFit.cover,
                         filterQuality: FilterQuality.none,
@@ -880,7 +880,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  2  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)
@@ -899,7 +899,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  3  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)
@@ -908,7 +908,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             SizedBox(height: 10),
             Row(
               children: [
-                Text16(text: '5KM 달성 : 100  '),
+                Text16(text: '5KM 달성 : 500  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_coin.png'),
                     width: 18,
@@ -918,7 +918,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  5  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)
@@ -937,7 +937,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  10  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)
@@ -956,7 +956,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  2  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)
@@ -975,7 +975,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  3  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)
@@ -984,7 +984,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
             SizedBox(height: 10),
             Row(
               children: [
-                Text16(text: '60분 달성 : 100  '),
+                Text16(text: '60분 달성 : 500  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_coin.png'),
                     width: 18,
@@ -994,7 +994,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  5  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)
@@ -1013,7 +1013,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '  10  '),
                 Image(
                     image: AssetImage('assets/color_icons/icon_love.png'),
-                    width: 18,
+                    width: 20,
                     height: 18,
                     fit: BoxFit.cover,
                     filterQuality: FilterQuality.none)

@@ -162,75 +162,75 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                reward
-                    ? GestureDetector(
-                        onTap: () async {
-                          Reward rewards =
-                              await ChallengeService.fetchReward(context);
-                          print(rewards.data!.coin!);
-                          print(rewards.data!.heart!);
-                          setState(() {
-                            reward = false;
-                          });
-                          SecureStorageService storageService =
-                              SecureStorageService();
-                          LoginInfo? info = await storageService.getLoginInfo();
-                          info?.coin = (info.coin! + (rewards.data!.coin!));
-                          storageService.saveLoginInfo(info!);
-                          Fluttertoast.showToast(
-                            msg:
-                                '${rewards.data!.coin!}개의 코인과 \n ${rewards.data!.heart!}의 애정도를 얻었어요!',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            backgroundColor: myYellow,
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: myLightYellow, // 배경색
-                            borderRadius:
-                                BorderRadius.circular(15), // 박스의 모서리를 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xffBFC2C8)
-                                    .withOpacity(0.25), // 그림자 색 (투명도 25%)
-                                blurRadius: 15, // 그림자 흐림 정도
-                                offset: Offset(0, 10), // 그림자의 위치 (x, y)
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(width: 10),
-                              Image.asset(
-                                "assets/emoji/bell.png",
-                                width: 30,
-                                height: 30,
-                              ),
-                              SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text16(
-                                    text: "아직 받지않은 보상이 있어요!",
-                                    bold: true,
-                                  ),
-                                  SizedBox(height: 3),
-                                  Text12(
-                                    text: "코인과 애정도를 받으세요.",
-                                    textColor: myGrey,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ))
-                    : SizedBox(
-                        height: 0,
-                      ),
+                // reward
+                //     ? GestureDetector(
+                //         onTap: () async {
+                //           Reward rewards =
+                //               await ChallengeService.fetchReward(context);
+                //           print(rewards.data!.coin!);
+                //           print(rewards.data!.heart!);
+                //           setState(() {
+                //             reward = false;
+                //           });
+                //           SecureStorageService storageService =
+                //               SecureStorageService();
+                //           LoginInfo? info = await storageService.getLoginInfo();
+                //           info?.coin = (info.coin! + (rewards.data!.coin!));
+                //           storageService.saveLoginInfo(info!);
+                //           Fluttertoast.showToast(
+                //             msg:
+                //                 '${rewards.data!.coin!}개의 코인과 \n ${rewards.data!.heart!}의 애정도를 얻었어요!',
+                //             toastLength: Toast.LENGTH_SHORT,
+                //             gravity: ToastGravity.CENTER,
+                //             backgroundColor: myYellow,
+                //           );
+                //         },
+                //         child: Container(
+                //           width: double.infinity,
+                //           padding: EdgeInsets.all(10),
+                //           margin: EdgeInsets.only(bottom: 16),
+                //           decoration: BoxDecoration(
+                //             color: myLightYellow, // 배경색
+                //             borderRadius:
+                //                 BorderRadius.circular(15), // 박스의 모서리를 둥글게
+                //             boxShadow: [
+                //               BoxShadow(
+                //                 color: Color(0xffBFC2C8)
+                //                     .withOpacity(0.25), // 그림자 색 (투명도 25%)
+                //                 blurRadius: 15, // 그림자 흐림 정도
+                //                 offset: Offset(0, 10), // 그림자의 위치 (x, y)
+                //               ),
+                //             ],
+                //           ),
+                //           child: Row(
+                //             children: [
+                //               SizedBox(width: 10),
+                //               Image.asset(
+                //                 "assets/emoji/bell.png",
+                //                 width: 30,
+                //                 height: 30,
+                //               ),
+                //               SizedBox(width: 20),
+                //               Column(
+                //                 crossAxisAlignment: CrossAxisAlignment.start,
+                //                 children: const [
+                //                   Text16(
+                //                     text: "아직 받지않은 보상이 있어요!",
+                //                     bold: true,
+                //                   ),
+                //                   SizedBox(height: 3),
+                //                   Text12(
+                //                     text: "코인과 애정도를 받으세요.",
+                //                     textColor: myGrey,
+                //                   )
+                //                 ],
+                //               ),
+                //             ],
+                //           ),
+                //         ))
+                //     : SizedBox(
+                //         height: 0,
+                //       ),
                 WeeklyStatisticsWidget(
                   weekly: weekly, // 주간 통계 데이터
                 ),
