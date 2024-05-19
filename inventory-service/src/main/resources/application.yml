@@ -40,13 +40,66 @@ springdoc:
   default-produces-media-type: application/json
 
 feign:
-  member-service:
-    url: http://localhost:8081
-  inventory-service:
-    url: http://localhost:8084
-  program-service:
-    url: http://localhost:8085
-  exercise-record-service:
-    url: http://localhost:8086
-  challenge-service:
-    url: http://localhost:8088
+  url:
+    member-service: http://localhost:8081
+    inventory-service: http://localhost:8084
+    program-service: http://localhost:8085
+    exercise-record-service: http://localhost:8086
+    challenge-service: http://localhost:8088
+
+  circuitbreaker:
+    enabled: true
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        failure-rate-threshold: 50 # 실패율 임계값 설정 (50%)
+        slow-call-rate-threshold: 80 # slowCall 발생 시 서버 스레드 점유로 인해 장애가 생길 수 있으므로 기본값(100)보다 조금 작게 설정
+        slow-call-duration-threshold: 5s # 위와 같은 이유로 5초를 slowCall로 판단함. 해당 값은 TimeLimiter의 timeoutDuration보다 작아야 함
+        register-health-indicator: true # 회로 차단기의 상태를 헬스 인디케이터(Health Indicator)로 등록할지 여부
+        wait-duration-in-open-state: 10s # HALF_OPEN 상태로 빨리 전환되어 장애가 복구 될 수 있도록 기본값(60s)보다 작게 설정
+        automaticTransitionFromOpenToHalfOpenEnabled: true # OPEN 상태가 10초 지속되면 HALFOPEN 상태로 변경
+        sliding-window-type: COUNT_BASED # 윈도우 타입: COUNT_BASED 또는 TIME_BASED
+        sliding-window-size: 100 # 최근 100번의 호출을 분석하여 결정
+        minimum-number-of-calls: 10 # 최소 호출 횟수, 이 수를 넘어야 통계가 적용됨
+    instances:
+      default:
+        baseConfig: default
+      member-service-circuit-breaker:
+        baseConfig: default
+      inventory-service-circuit-breaker:
+        baseConfig: default
+      program-service-circuit-breaker:
+        baseConfig: default
+      exercise-record-service-circuit-breaker:
+        baseConfig: default
+      challenge-service-circuit-breaker:
+        baseConfig: default
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 6s # slowCallDurationThreshold보다는 크게 설정되어야 함
+        cancelRunningFuture: true
+    instances:
+      default:
+        baseConfig: default
+      member-service-circuit-breaker:
+        baseConfig: default
+      inventory-service-circuit-breaker:
+        baseConfig: default
+      program-service-circuit-breaker:
+        baseConfig: default
+      exercise-record-service-circuit-breaker:
+        baseConfig: default
+      challenge-service-circuit-breaker:
+        baseConfig: default
+
+
+logging:
+  level:
+    root: INFO
+    com.gaenari.backend: DEBUG
+    org.springframework.cloud.netflix.eureka: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor // final로 선언된 필드 생성자
 public enum ResponseCode {
+    // 전역
+    FALLBACK_SUCCESS(HttpStatus.OK, "서킷 브레이커가 활성화되어 폴백 로직이 실행됩니다."),
 
     // 회원(Member)
     MEMBER_SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입이 정상적으로 완료되었습니다."),
