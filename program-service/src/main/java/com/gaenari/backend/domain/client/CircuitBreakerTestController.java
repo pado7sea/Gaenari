@@ -1,4 +1,4 @@
-package com.gaenari.backend.domain.program.controller;
+package com.gaenari.backend.domain.client;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
