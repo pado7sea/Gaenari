@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.fragment.app.Fragment
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,13 +43,34 @@ class ThirdFragment : Fragment() {
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(recyclerView)
 
-        // ViewModel 초기화 및 데이터 구독
-        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        updateFavorite()
+        rebutton.setOnClickListener {
+            (activity as? HomeActivity)?.getFavoriteProgram()
+            // 데이터 변경 감지
+            sharedViewModel.favoritePrograms.observe(viewLifecycleOwner) { programs ->
+                if (programs.isNotEmpty()) {
+                    updateProgramDetails(programs[0])
+                }
+            }
+            updateFavorite()
+        }
+
+
+        return view
+    }
+
+    private fun updateFavorite() {
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         sharedViewModel.favoritePrograms.observe(viewLifecycleOwner) { programs ->
-            // 어댑터를 업데이트합니다.
             recyclerView.adapter = ProgramAdapter(programs, requireContext())
 
-            // 아이템 스크롤 리스너 추가
+            // 데이터가 업데이트된 후 첫 번째 프로그램 세부 정보 갱신
+            if (programs.isNotEmpty()) {
+                updateProgramDetails(programs[0])
+            }
+
+            // 기존의 ScrollListener를 제거하고 새로운 ScrollListener 추가
+            recyclerView.clearOnScrollListeners()
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -61,7 +83,7 @@ class ThirdFragment : Fragment() {
                         val totalItemCount = layoutManager.itemCount
 
                         val scrollProgress = (firstVisiblePosition.toFloat() / (totalItemCount - 1) * 100).toInt()
-                        val progressBar = view.findViewById<ProgressBar>(R.id.verticalProgressBar)
+                        val progressBar = view?.findViewById<ProgressBar>(R.id.verticalProgressBar)!!
                         progressBar.progress = scrollProgress
 
                         // 중앙에 있는 아이템의 상세 정보 업데이트
@@ -70,11 +92,6 @@ class ThirdFragment : Fragment() {
                 }
             })
         }
-        rebutton.setOnClickListener {
-            (activity as? HomeActivity)?.getFavoriteProgram()
-        }
-
-        return view
     }
 
     private fun updateProgramDetails(program: FavoriteResponseDto) {
@@ -95,10 +112,15 @@ class ThirdFragment : Fragment() {
             else -> 9f // 또는 기본값
         }
 
-        programTitle.text = programType
-        programDetails.text = programDetailsText
-        // programDetails.textSize = convertSpToPx(programTextSize, requireContext())
+        view?.let {
+            programTitle.text = programType
+            programDetails.text = programDetailsText
+            // 로그 추가
+            Log.d("ThirdFragment", "Program Type: $programType, Program Details: $programDetailsText")
+            // programDetails.textSize = convertSpToPx(programTextSize, requireContext())
+        }
     }
+
 
     private fun convertSpToPx(sp: Float, context: Context): Float {
         return sp * context.resources.displayMetrics.scaledDensity
