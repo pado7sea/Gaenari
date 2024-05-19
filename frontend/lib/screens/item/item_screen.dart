@@ -210,7 +210,7 @@ class _ItemScreenState extends State<ItemScreen>
         setState(() {
           count++;
         });
-        if (count == 100) {
+        if (count == 50) {
           CoinLove coinLove = CoinLove(
               isIncreased: true, coinTitle: "PETCARE", coinAmount: 100);
           await CoinService.fetchPetLove(coinLove);
@@ -221,7 +221,7 @@ class _ItemScreenState extends State<ItemScreen>
             storageService.saveLoginInfo(info);
           }
           Fluttertoast.showToast(
-            msg: '상자를 100번 클릭하셨군요!   \n 보상으로 100코인을 드립니다.',
+            msg: '상자를 50번 클릭하셨군요!   \n 보상으로 100코인을 드립니다.',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             backgroundColor: myMainGreen,

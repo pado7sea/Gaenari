@@ -116,8 +116,6 @@ class _DogHouseScreenState extends State<DogHouseScreen>
     });
     if (my.pet!.affection! == 100) {
       getItem();
-      // ignore: use_build_context_synchronously
-      _showmodal(context);
     }
   }
 
@@ -140,9 +138,9 @@ class _DogHouseScreenState extends State<DogHouseScreen>
           children: [
             Dialog(
               backgroundColor: myBackground,
-              insetPadding: EdgeInsets.fromLTRB(50, 200, 50, 200),
+              insetPadding: EdgeInsets.fromLTRB(50, 170, 50, 170),
               child: Container(
-                height: 500,
+                height: 550,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(25)),
                 ),
@@ -199,7 +197,7 @@ class _DogHouseScreenState extends State<DogHouseScreen>
                             text: "${my.pet!.tier!}로 티어가 올랐어요",
                             bold: true,
                           ),
-                          SizedBox(height: 40),
+                          SizedBox(height: 30),
                           SmallButton(
                             text: "확인",
                             onPressed: () {
