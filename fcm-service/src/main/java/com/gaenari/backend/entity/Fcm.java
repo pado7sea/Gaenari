@@ -22,10 +22,14 @@ public class Fcm {
   private Long id;
 
   @NotNull
-  @Column(name = "member_id")
-  private String memberId;
+  @Column(name = "account_id")
+  private String accountId;
 
   @NotNull
   @Column(name = "fcm_token")
   private String fcmToken;
+
+  public void updateToken(String newToken){
+    this.fcmToken = newToken;
+  }
 }
