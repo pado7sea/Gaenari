@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "737275153991",
+    "project_id": "gaenari-2f283",
+    "storage_bucket": "gaenari-2f283.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737275153991:android:94861bb999d927e81b2b62",
+        "android_client_info": {
+          "package_name": "com.example.forsythia.forsythia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACuBDBdT0lqRWc99WIo2JURdPvMlH_nFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

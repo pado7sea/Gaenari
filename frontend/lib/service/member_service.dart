@@ -11,6 +11,7 @@ import 'package:forsythia/models/users/password_check.dart';
 import 'package:forsythia/models/users/signup_user.dart';
 import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
+import 'package:forsythia/service/fcm_service.dart';
 import 'package:http/http.dart' as http;
 
 // MemberService 클래스
@@ -144,6 +145,7 @@ class MemberService {
         if (token != null) {
           secureStorageService.saveToken(token);
         }
+        FcmService().fetchFcmSave();
         return LoginUser.fromJson(data);
       });
     } catch (e) {
