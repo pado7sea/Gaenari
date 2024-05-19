@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:forsythia/theme/text.dart';
+import 'package:forsythia/widgets/bubbel.dart';
 
 class ImageMove extends StatefulWidget {
   final int id; // id 속성 추가
@@ -40,7 +41,7 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
     "뭐라고요?\n고양이가 더 좋다구요?",
     "주인님!!\n산책가요!!",
     "뛰고싶어요!!\n주인님!",
-    "오늘도 함께 달려요!\n다그닥 다그닥",
+    "오늘도 함께 달려요!\n멍 멍!",
     "주인님이랑 하는\n산책이 젤 좋아요!"
   ];
 
@@ -87,18 +88,18 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
                         flipX: true,
                         child: Image.asset(
                           _currentImage,
-                          width: 200.0 - (50 - y * 10),
+                          width: 240.0 - (50 - y * 10),
                           fit: BoxFit.cover,
                           filterQuality: FilterQuality.none,
                         ),
                       )
                     : Image.asset(
                         _currentImage,
-                        width: 200.0 - (50 - y * 10),
+                        width: 240.0 - (50 - y * 10),
                         fit: BoxFit.cover,
                         filterQuality: FilterQuality.none,
                       ),
-                SizedBox(height: 5),
+                SizedBox(height: 8),
                 Row(
                   children: [
                     Image.asset(
@@ -122,29 +123,34 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
               duration: Duration(milliseconds: 500),
               child: widget.myhome
                   ? SizedBox(
-                      width: 220.0 - (50 - y * 10),
+                      width: 240.0 - (50 - y * 10),
                       child: Column(
                         children: [
                           Center(
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.3),
+                              child: Container(
+                            child: CustomPaint(
+                              painter: BubblePainter(
+                                  color: Colors.white.withOpacity(0.7)),
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          Color(0xffBFC2C8).withOpacity(0.25),
-                                      blurRadius: 15,
-                                      offset: Offset(0, 10),
-                                    ),
-                                  ]),
-                              child: Text16(
-                                text: text[z],
-                                bold: true,
+                                  // boxShadow: [
+                                  //   BoxShadow(
+                                  //     color:
+                                  //         Color(0xffBFC2C8).withOpacity(0.25),
+                                  //     blurRadius: 15,
+                                  //     offset: Offset(0, 10),
+                                  //   ),
+                                  // ],
+                                ),
+                                child: Text16(
+                                  text: text[z],
+                                  bold: true,
+                                ),
                               ),
                             ),
-                          ),
+                          )),
                         ],
                       ),
                     )
