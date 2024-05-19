@@ -106,10 +106,10 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                 SizedBox(width: 10),
                 Container(
                   decoration: programDetail.type == "T"
-                      ? myActiveBoxDecoration
+                      ? myGreenBoxDecoration
                       : programDetail.type == "D"
-                          ? myYellowBoxDecoration
-                          : myRedBoxDecoration,
+                          ? myNoneYellowBoxDecoration
+                          : myNoneRedBoxDecoration,
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 2, 10, 2),
                     child: Text12(
