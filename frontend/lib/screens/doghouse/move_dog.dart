@@ -23,12 +23,21 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
   late String _currentImage;
   // 이미지가 움직이는 중인지 여부를 나타내는 변수
   Random random = Random();
-  List<double> dx = [10, 50, 100, 150, 200, 250];
+  List<double> dx = [10, 50, 100, 150, 200, 230];
   List<double> dy = [110, 140, 210, 280, 350, 370];
   int x = 0;
   int y = 0;
+  int z = 0;
   int act = 0;
   bool left = false;
+  List<String> text = [
+    "주인님이\n너무 좋아요!",
+    "뭐라고요?\n고양이가 더 좋다구요?",
+    "주인님!!\n산책가요!!",
+    "뛰고싶어요!!\n주인님!",
+    "오늘도 함께 달려요!\n다그닥 다그닥",
+    "주인님이랑 하는\n산책이 젤 좋아요!"
+  ];
 
   @override
   void initState() {
@@ -102,6 +111,36 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
               ],
             ),
           ),
+          AnimatedPositioned(
+              left: dx[x] - 10,
+              top: dy[y] - 40,
+              duration: Duration(milliseconds: 500),
+              child: SizedBox(
+                width: 220.0 - (50 - y * 10),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xffBFC2C8).withOpacity(0.25),
+                                blurRadius: 15,
+                                offset: Offset(0, 10),
+                              ),
+                            ]),
+                        child: Text16(
+                          text: text[z],
+                          bold: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ))
         ],
       ),
     );
@@ -114,6 +153,7 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
       int b = y;
       x = random.nextInt(6);
       y = random.nextInt(6);
+      z = random.nextInt(6);
       if ((a - x).abs() + (b - y).abs() > 4 || (b - y).abs() > 2) {
         _currentImage = "assets/dogs/1_${widget.id}.gif";
       } else {
