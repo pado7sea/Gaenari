@@ -17,8 +17,7 @@ import com.gaenari.backend.domain.mypet.entity.Tier;
 import com.gaenari.backend.domain.mypet.repository.DogRepository;
 import com.gaenari.backend.domain.mypet.repository.MyPetRepository;
 import com.gaenari.backend.global.exception.member.*;
-import com.gaenari.backend.global.format.response.GenericResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -28,13 +27,26 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
-public class MyPetServiceImpl implements MyPetService{
+public class MyPetServiceImpl extends MyPetBaseService implements MyPetService{
     private final CoinService coinService;
     private final MemberRepository memberRepository;
     private final DogRepository dogRepository;
     private final MyPetRepository myPetRepository;
-    private final ChallengeServiceClient challengeServiceClient;
+
+    public MyPetServiceImpl(
+            CoinService coinService,
+            MemberRepository memberRepository,
+            DogRepository dogRepository,
+            MyPetRepository myPetRepository,
+            ChallengeServiceClient challengeServiceClient
+    ) {
+        super(challengeServiceClient); // 상위 클래스 생성자 호출
+        this.coinService = coinService;
+        this.memberRepository = memberRepository;
+        this.dogRepository = dogRepository;
+        this.myPetRepository = myPetRepository;
+    }
+
     @Override // 반려견 입양
     public void adopt(String accountId, Adopt adopt) {
         Member member = memberRepository.findByAccountId(accountId);
@@ -88,11 +100,7 @@ public class MyPetServiceImpl implements MyPetService{
     public void changePartner(String accountId, Long dogId) {
         Member member = memberRepository.findByAccountId(accountId);
         // 받지 않은 보상이 있는지 확인
-        GenericResponse<?> getRewardRes = challengeServiceClient.isGetReward(accountId).getBody();
-        if(!getRewardRes.getStatus().equals("SUCCESS")){
-            throw new ExistRewardException();
-        }
-        boolean reward = (boolean) getRewardRes.getData();
+        boolean reward = feignIsGetReward(accountId);
         if(reward){
             throw new ExistRewardException();
         }
