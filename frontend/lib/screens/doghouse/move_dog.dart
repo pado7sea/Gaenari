@@ -123,7 +123,7 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
               duration: Duration(milliseconds: 500),
               child: widget.myhome
                   ? SizedBox(
-                      width: 240.0 - (50 - y * 10),
+                      width: 220,
                       child: Column(
                         children: [
                           Center(
