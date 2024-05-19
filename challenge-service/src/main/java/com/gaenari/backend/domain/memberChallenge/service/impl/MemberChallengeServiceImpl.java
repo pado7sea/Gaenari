@@ -92,24 +92,6 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
         }).toList();
     }
 
-    // 회원 달성 업적 조회
-    @Override
-    public List<MemberTrophyDto> getMemberTrophies(String accountId) {
-        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByAccountId(accountId);
-        return memberChallenges.stream()
-                .map(this::mapToMemberTrophyDto)
-                .toList();
-    }
-
-    // 회원 달성 미션 조회
-    @Override
-    public List<MemberMissionDto> getMemberMissions(String accountId) {
-        List<MemberChallenge> memberChallenges = memberChallengeRepository.findByAccountId(accountId);
-        return memberChallenges.stream()
-                .map(this::mapToMemberMissionDto)
-                .toList();
-    }
-
     // 회원 도전과제 업데이트
     @Override
     public void updateMemberChallenge(String accountId, Integer challengeId) {
@@ -146,34 +128,6 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
         memberChallenge.updateObtainable(0);
     }
 
-    private MemberTrophyDto mapToMemberTrophyDto(MemberChallenge memberChallenge) {
-        Challenge challenge = memberChallenge.getChallenge();
-
-        // 마이크로 서비스 간 통신을 통해 누적 기록 가져오기
-        TotalStatisticDto statisticDto = fetchAllStatistics(memberChallenge.getAccountId());
-
-        double memberValue = 0.0;
-
-        // 회원 달성 수치는 목표 수치를 넘지 않음
-        if (memberChallenge.getIsAchieved() || memberValue > challenge.getValue()) memberValue = challenge.getValue();
-
-        if (challenge.getType() == ChallengeType.D && statisticDto != null) {
-            memberValue = statisticDto.getDist();
-        } else if (challenge.getType() == ChallengeType.T && statisticDto != null) {
-            memberValue = statisticDto.getTime();
-        }
-
-        return MemberTrophyDto.builder()
-                .challengeId(challenge.getId())
-                .type(challenge.getType())
-                .challengeValue(challenge.getValue())
-                .coin(challenge.getCoin() * memberChallenge.getObtainable()) // 도전과제 코인 금액 * 획득하지 않은 보상 개수
-                .isAchieved(memberChallenge.getIsAchieved())
-                .memberValue(memberValue)
-                .obtainable(memberChallenge.getObtainable())
-                .build();
-    }
-
     // 마이크로 서비스 간 통신을 통해 누적 기록 가져오기
     private TotalStatisticDto fetchAllStatistics(String accountId) {
         ResponseEntity<GenericResponse<TotalStatisticDto>> response = recordServiceClient.getAllStatistics(accountId);
@@ -181,20 +135,6 @@ public class MemberChallengeServiceImpl implements MemberChallengeService {
             throw new ConnectFeignFailException();
         }
         return response.getBody().getData();
-    }
-
-    private MemberMissionDto mapToMemberMissionDto(MemberChallenge memberChallenge) {
-        Challenge challenge = memberChallenge.getChallenge();
-
-        return MemberMissionDto.builder()
-                .challengeId(challenge.getId())
-                .type(challenge.getType())
-                .challengeValue(challenge.getValue())
-                .coin(challenge.getCoin() * memberChallenge.getObtainable())
-                .heart(challenge.getHeart() * memberChallenge.getObtainable())
-                .count(memberChallenge.getCount())
-                .obtainable(memberChallenge.getObtainable())
-                .build();
     }
 
 }
