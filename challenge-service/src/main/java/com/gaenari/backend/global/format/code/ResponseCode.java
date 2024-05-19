@@ -8,10 +8,13 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ResponseCode {
 
+    /* 폴백 */
+    FALLBACK_SUCCESS(HttpStatus.OK, "서킷 브레이커가 활성화되어 폴백 로직이 실행됩니다."),
+
     /* 운동 기록 저장 */
     EXERCISE_RECORD_SAVE_SUCCESS(HttpStatus.CREATED, "운동 기록이 정상적으로 저장되었습니다."),
 
-    /* 기록(Record) */
+    /* 기록 */
     RECORD_ALL_FETCHED(HttpStatus.OK, "전체 기록이 성공적으로 조회되었습니다."),
     RECORD_MONTH_FETCHED(HttpStatus.OK, "월간 기록이 성공적으로 조회되었습니다."),
     RECORD_WEEK_FETCHED(HttpStatus.OK, "주간 기록이 성공적으로 조회되었습니다."),
