@@ -238,122 +238,100 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
   }
 
   Widget _monthrecord() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 총 거리
-                Image(
-                  image: AssetImage('assets/emoji/running.png'),
-                  width: 25,
-                  height: 35,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  width: 75,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 10),
-                        Text20(
-                            text: programDetail.totalRecord!.distance!
-                                .toStringAsFixed(0),
-                            bold: true),
-                        Text12(text: 'km')
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 총 거리
+            Image(
+              image: AssetImage('assets/emoji/running.png'),
+              width: 25,
+              height: 35,
+              fit: BoxFit.cover,
             ),
-          ),
-          Container(
-            width: 2,
-            height: 60,
-            color: myLightGrey,
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 총 칼로리
-                Image(
-                  image: AssetImage('assets/emoji/fire.png'),
-                  width: 25,
-                  height: 30,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  width: 75,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 10),
-                        Text20(
-                            text: programDetail.totalRecord!.cal!
-                                .toStringAsFixed(0),
-                            bold: true),
-                        Text12(text: 'kcal')
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(height: 10),
+                  Text20(
+                      text: programDetail.totalRecord!.distance!
+                          .toStringAsFixed(0),
+                      bold: true),
+                  Text12(text: 'km')
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: 2,
-            height: 60,
-            color: myLightGrey,
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 총 시간
-                Image(
-                  image: AssetImage('assets/emoji/clock.png'),
-                  width: 25,
-                  height: 25,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  width: 75,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(height: 10),
-                        Text20(
-                            text:
-                                "${(programDetail.totalRecord!.time! / 60).floorToDouble().toInt()}",
-                            bold: true),
-                        Text12(
-                          text: "min",
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+          ],
+        ),
+        Container(
+          width: 2,
+          height: 60,
+          color: myLightGrey,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 총 칼로리
+            Image(
+              image: AssetImage('assets/emoji/fire.png'),
+              width: 25,
+              height: 30,
+              fit: BoxFit.cover,
             ),
-          )
-        ],
-      ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(height: 10),
+                  Text20(
+                      text: programDetail.totalRecord!.cal!.toStringAsFixed(0),
+                      bold: true),
+                  Text12(text: 'kcal')
+                ],
+              ),
+            ),
+          ],
+        ),
+        Container(
+          width: 2,
+          height: 60,
+          color: myLightGrey,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 총 시간
+            Image(
+              image: AssetImage('assets/emoji/clock.png'),
+              width: 25,
+              height: 25,
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(height: 10),
+                  Text20(
+                      text:
+                          "${(programDetail.totalRecord!.time! / 60).floorToDouble().toInt()}",
+                      bold: true),
+                  Text12(
+                    text: "min",
+                  )
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 
