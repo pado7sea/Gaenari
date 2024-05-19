@@ -1,5 +1,8 @@
+import 'package:forsythia/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/rendering.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:forsythia/provider/footer_provider.dart';
 import 'package:forsythia/provider/login_info_provider.dart';
@@ -15,15 +18,77 @@ import 'package:forsythia/service/secure_storage_service.dart';
 import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/widgets/footer.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+}
+
+@pragma('vm:entry-point')
+void backgroundHandler(NotificationResponse details) {}
+
+void initializeNotification() async {
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(const AndroidNotificationChannel(
+          'high_importance_channel', 'high_importance_notification',
+          importance: Importance.max));
+
+  await flutterLocalNotificationsPlugin.initialize(
+    const InitializationSettings(
+      android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+      iOS: DarwinInitializationSettings(),
+    ),
+    onDidReceiveNotificationResponse: (details) {},
+    onDidReceiveBackgroundNotificationResponse: backgroundHandler,
+  );
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    RemoteNotification? notification = message.notification;
+
+    if (notification != null) {
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'high_importance_channel',
+              'high_importance_notification',
+              importance: Importance.max,
+            ),
+            iOS: DarwinNotificationDetails(),
+          ),
+          payload: message.data['test_paremeter1']);
+
+      print("수신자 측 메시지 수신");
+    }
+  });
+
+  RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+
+  if (message != null) {}
+}
 
 void main() async {
   // debugPaintSizeEnabled = true;
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진과 위젯 트리 바인딩
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  initializeNotification();
+
   // await dotenv.load(fileName: ".env"); // .env 파일 로드
 
   // 로그인 정보 가져오기
@@ -32,7 +97,6 @@ void main() async {
 
   // 초기 위치 설정
   String initialLocation = loginInfo != null ? '/home' : '/welcome';
-
   runApp(MyApp(initialLocation: initialLocation));
 }
 
@@ -56,6 +120,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    _requestNotificationPermissions(); // 알림 권한 요청
     _router = GoRouter(
       debugLogDiagnostics: true,
       initialLocation: initialLocation, // 초기 위치 설정
@@ -75,6 +140,36 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
     );
+  }
+
+  void _requestNotificationPermissions() async {
+    await Permission.notification.request();
+    //알림 권한 요청
+    // if ((status.isDenied || status.isPermanentlyDenied) && mounted) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     showDialog(
+    //       // 알림 권한이 거부되었을 경우 다이얼로그 출력
+    //       context: context,
+    //       builder: (context) => AlertDialog(
+    //         title: Text('알림 권한이 거부되었습니다.'),
+    //         content: Text('알림을 받으려면 앱 설정에서 권한을 허용해야 합니다.'),
+    //         actions: <Widget>[
+    //           TextButton(
+    //             child: Text('설정'), //다이얼로그 버튼의 죄측 텍스트
+    //             onPressed: () {
+    //               Navigator.of(context).pop();
+    //               openAppSettings(); //설정 클릭시 권한설정 화면으로 이동
+    //             },
+    //           ),
+    //           TextButton(
+    //             child: Text('취소'), //다이얼로그 버튼의 우측 텍스트
+    //             onPressed: () => Navigator.of(context).pop(), //다이얼로그 닫기
+    //           ),
+    //         ],
+    //       ),
+    //     );
+    //   });
+    // }
   }
 
   @override
