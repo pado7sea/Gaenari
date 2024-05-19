@@ -436,31 +436,31 @@ class DashBoardScreenState extends State<DashBoardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(
-            flex: 1, // 첫 번째 Flexible에는 1의 비율을 할당합니다.
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xffBFC2C8).withOpacity(0.25),
-                      blurRadius: 15,
-                      offset: Offset(0, 10),
-                    ),
-                  ]),
-              margin: EdgeInsets.fromLTRB(20, 60, 0, 0),
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Text(
-                '$nickName님, 반가워요! \n오늘도 운동 시작해 볼까요?',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  height: 1.7,
-                ),
-              ),
-            ),
-          ),
+          // Flexible(
+          //   flex: 1, // 첫 번째 Flexible에는 1의 비율을 할당합니다.
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //         color: Colors.white.withOpacity(0.3),
+          //         borderRadius: BorderRadius.circular(10.0),
+          //         boxShadow: [
+          //           BoxShadow(
+          //             color: Color(0xffBFC2C8).withOpacity(0.25),
+          //             blurRadius: 15,
+          //             offset: Offset(0, 10),
+          //           ),
+          //         ]),
+          //     margin: EdgeInsets.fromLTRB(20, 60, 0, 0),
+          //     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+          //     child: Text(
+          //       '$nickName님, 반가워요! \n오늘도 운동 시작해 볼까요?',
+          //       style: TextStyle(
+          //         fontSize: 20,
+          //         fontWeight: FontWeight.bold,
+          //         height: 1.7,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Flexible(
             flex: 3, // 두 번째 Flexible에는 3의 비율을 할당합니다. 적절한 비율을 조정해주십시오.
             child: SizedBox(
