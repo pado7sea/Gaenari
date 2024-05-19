@@ -124,7 +124,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
                                               "assets/item/$id.png",
                                               width: double.infinity,
                                               height: 90,
-                                              fit: BoxFit.fitWidth,
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ),
@@ -196,7 +196,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
                     width: 100,
                     height: 100,
                     filterQuality: FilterQuality.none,
-                    fit: BoxFit.fitHeight,
+                    fit: BoxFit.contain,
                   ),
                   SizedBox(width: 10),
                   Text25(

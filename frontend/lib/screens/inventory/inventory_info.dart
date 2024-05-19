@@ -27,9 +27,9 @@ List<ItemInfo> info = [
   }),
   ItemInfo.fromJson({
     "setId": 3,
-    "setName": "삭막도시",
+    "setName": "삭막한도시",
     "item": [
-      {"itemId": 13, "itemName": "건물벽지", "category": "Wall"},
+      {"itemId": 13, "itemName": "삭막한아파트", "category": "Wall"},
       {"itemId": 14, "itemName": "길바닥", "category": "Floor"},
       {"itemId": 15, "itemName": "박스&신문지", "category": "Rug"},
       {"itemId": 16, "itemName": "통조림", "category": "Bowl"},
@@ -79,7 +79,7 @@ List<ItemInfo> info = [
     "item": [
       {"itemId": 37, "itemName": "엑스포다리", "category": "Wall"},
       {"itemId": 38, "itemName": "자전거길", "category": "Floor"},
-      {"itemId": 39, "itemName": "타슈", "category": "Rug"},
+      {"itemId": 39, "itemName": "타슈자전거", "category": "Rug"},
       {"itemId": 40, "itemName": "노랑밥그릇", "category": "Bowl"},
       {"itemId": 41, "itemName": "노랑돗자리", "category": "Cushion"},
       {"itemId": 42, "itemName": "꿈돌이인형", "category": "Toy"}
@@ -89,7 +89,7 @@ List<ItemInfo> info = [
     "setId": 8,
     "setName": "피크닉동산",
     "item": [
-      {"itemId": 43, "itemName": "하늘하늘벽지", "category": "Wall"},
+      {"itemId": 43, "itemName": "푸른하늘", "category": "Wall"},
       {"itemId": 44, "itemName": "따스한잔디밭", "category": "Floor"},
       {"itemId": 45, "itemName": "피크닉돗자리", "category": "Rug"},
       {"itemId": 46, "itemName": "피그닉상자", "category": "Bowl"},
