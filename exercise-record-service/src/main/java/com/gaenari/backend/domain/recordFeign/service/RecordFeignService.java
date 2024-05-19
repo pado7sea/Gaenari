@@ -31,4 +31,10 @@ public interface RecordFeignService {
      */
     void updateRecordObtained(String accountId, Long recordId);
 
+    /**
+     * 특정 회원의 모든 운동 기록 도전과제 보상 수령 여부를 완료로 변경합니다.
+     *
+     * @param accountId 회원의 식별자입니다.
+     */
+    void updateAllRecordObtained(String accountId);
 }
