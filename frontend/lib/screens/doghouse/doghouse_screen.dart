@@ -288,7 +288,8 @@ class _DogHouseScreenState extends State<DogHouseScreen>
                 children: [
                   Positioned(
                     left: 0,
-                    top: 0,
+                    top: -3, // 오류 나면 0으로 바꾸기
+
                     child: Image.asset(
                       "assets/item/${findIdByCategory(my.items, "Wall")}.png",
                       width: MediaQuery.of(context).size.width,
@@ -408,7 +409,7 @@ class _DogHouseScreenState extends State<DogHouseScreen>
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -481,7 +482,7 @@ class _DogHouseScreenState extends State<DogHouseScreen>
         GestureDetector(
           onTap: () {
             Navigator.of(context)
-                .push(SlidePageRoute(nextPage: InventoryScreen()))
+                .push(SlidePageRoute(nextPage: ItemScreen()))
                 .then((result) {
               // 돌아올 때 데이터를 수신하고 처리
               if (result == "update") {

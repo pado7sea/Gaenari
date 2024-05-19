@@ -551,7 +551,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       padding: EdgeInsets.all(6),
                       child: Text12(
                         text: pet[index].pets!.isPartner!
-                            ? "착용중"
+                            ? "파트너"
                             : pet[index].isHave!
                                 ? "보유"
                                 : "미보유",
