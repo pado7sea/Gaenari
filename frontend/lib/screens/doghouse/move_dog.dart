@@ -1,12 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:forsythia/theme/text.dart';
 
 class ImageMove extends StatefulWidget {
   final int id; // id 속성 추가
+  final String tier;
+  final String name;
 
   // 생성자에서 id를 받아올 수 있도록 변경
-  const ImageMove({super.key, required this.id});
+  const ImageMove(
+      {super.key, required this.id, required this.tier, required this.name});
   @override
   ImageMoveState createState() => ImageMoveState();
 }
@@ -62,22 +66,41 @@ class ImageMoveState extends State<ImageMove> with TickerProviderStateMixin {
             left: dx[x],
             top: dy[y],
             duration: Duration(milliseconds: 500),
-            child: left
-                ? Transform.flip(
-                    flipX: true,
-                    child: Image.asset(
-                      _currentImage,
-                      width: 200.0 - (50 - y * 10),
-                      fit: BoxFit.cover,
+            child: Column(
+              children: [
+                left
+                    ? Transform.flip(
+                        flipX: true,
+                        child: Image.asset(
+                          _currentImage,
+                          width: 200.0 - (50 - y * 10),
+                          fit: BoxFit.cover,
+                          filterQuality: FilterQuality.none,
+                        ),
+                      )
+                    : Image.asset(
+                        _currentImage,
+                        width: 200.0 - (50 - y * 10),
+                        fit: BoxFit.cover,
+                        filterQuality: FilterQuality.none,
+                      ),
+                SizedBox(height: 5),
+                Row(
+                  children: [
+                    Image.asset(
+                      "assets/dog_tier/tier_${widget.tier}.png",
+                      width: 18,
                       filterQuality: FilterQuality.none,
                     ),
-                  )
-                : Image.asset(
-                    _currentImage,
-                    width: 200.0 - (50 - y * 10),
-                    fit: BoxFit.cover,
-                    filterQuality: FilterQuality.none,
-                  ),
+                    SizedBox(width: 3),
+                    Text16(
+                      text: widget.name,
+                      bold: true,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

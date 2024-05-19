@@ -466,7 +466,12 @@ class DashBoardScreenState extends State<DashBoardScreen> {
             child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                child: Stack(children: [ImageMove(id: info!.myPetDto!.id!)])),
+                child: Stack(children: [
+                  ImageMove(
+                      id: info!.myPetDto!.id!,
+                      tier: info!.myPetDto!.tier!,
+                      name: info!.myPetDto!.name!)
+                ])),
           ),
         ],
       ),
