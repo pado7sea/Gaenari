@@ -25,20 +25,24 @@ import java.util.List;
 import java.util.Random;
 
 @Service
-@RequiredArgsConstructor
-public class InventoryServiceImpl implements InventoryService{
+public class InventoryServiceImpl extends InventoryBaseService implements InventoryService{
     private final ItemRepository itemRepository;
     private final InventoryRepository inventoryRepository;
-    private final MemberServiceClient memberServiceClient;
+    public InventoryServiceImpl(
+            ItemRepository itemRepository,
+            InventoryRepository inventoryRepository,
+            MemberServiceClient memberServiceClient
+    ){
+        super(memberServiceClient);
+        this.inventoryRepository = inventoryRepository;
+        this.itemRepository = itemRepository;
+
+    }
 
     @Override // [Feign] 회원 이메일 조회
     public String getMateAccountId(Long memberId) {
-        GenericResponse<?> getEmailRes = memberServiceClient.getMateAccountId(memberId).getBody();
-        if(!getEmailRes.getStatus().equals("SUCCESS")){
-            throw new ConnectFeignFailException();
-        }
-        String mateEmail = getEmailRes.getData().toString();
-        return mateEmail;
+        String mateAccountId = feignGetMateAccountId(memberId);
+        return mateAccountId;
     }
 
     @Override // 회원가입시 기본 아이템 생성
@@ -148,11 +152,7 @@ public class InventoryServiceImpl implements InventoryService{
     @Override // 나의 보관함 펫 조회
     public List<MyInventoryPets> getMyPets(String accountId) {
         // 회원이 가지고 있는 펫 조회
-        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(accountId).getBody();
-        if(!getPetsRes.getStatus().equals("SUCCESS")){
-            throw new ConnectFeignFailException();
-        }
-        List<Pets> res = getPetsRes.getData();
+        List<Pets> res = feignGetPets(accountId);
         List<MyInventoryPets> myInventoryItemsList = new ArrayList<>();
         for(int i=1; i<=10; i++){
             Pets resPets = null;
@@ -178,8 +178,7 @@ public class InventoryServiceImpl implements InventoryService{
                         .build();
             }else{
                 // 강아지 가격 조회
-                GenericResponse<?> getDogPriceRes = memberServiceClient.getDogPrice(i).getBody();
-                int dogPrice = Integer.parseInt(getDogPriceRes.getData().toString());
+                int dogPrice = feignGetDogPrice(i);
                 resPets = Pets.builder()
                         .id((long)i)
                         .name(null)
@@ -217,11 +216,7 @@ public class InventoryServiceImpl implements InventoryService{
     @Override // 회원 적용 아이템(펫, 아이템) 조회
     public MyEquipItems getEquipItems(String accountId) {
         // 회원이 가지고 있는 펫 조회
-        GenericResponse<List<Pets>> getPetsRes = memberServiceClient.getPets(accountId).getBody();
-        if(!getPetsRes.getStatus().equals("SUCCESS")){
-            throw new ConnectFeignFailException();
-        }
-        List<Pets> res = getPetsRes.getData();
+        List<Pets> res = feignGetPets(accountId);
         // 회원 파트너 반려견 조회
         FriendPet friendPet = null;
         for(Pets pet : res){
@@ -303,8 +298,7 @@ public class InventoryServiceImpl implements InventoryService{
     @Override // 아이템 랜덤 구매
     public Items randomItem(String accountId) {
         // 기존 코인 조회후, 아이템 구매가 가능한지 확인
-        GenericResponse<?> getCoinRes = memberServiceClient.getMemberCoin(accountId).getBody();
-        int haveCoin = Integer.parseInt(getCoinRes.getData().toString());
+        int haveCoin = feignGetMemberCoin(accountId);
         if(haveCoin < 1000){
             throw new NotEnoughCoinException();
         }
@@ -315,10 +309,7 @@ public class InventoryServiceImpl implements InventoryService{
                 .coinAmount(1000)
                 .isIncreased(false)
                 .build();
-        GenericResponse<?> updateCoinRes = memberServiceClient.updateCoin(memberCoin).getBody();
-        if(!updateCoinRes.getStatus().equals("SUCCESS")){
-            throw new ConnectFeignFailException();
-        }
+        feignUpdateCoin(memberCoin);
         // 모든 아이템 다 가져오기
         List<Item> itemList = itemRepository.findAll();
         // 랜덤으로 아이템 선택

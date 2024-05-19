@@ -47,6 +47,8 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper:2.4.4'
 	// Feign Client
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// CircuitBreaker - Resilience4j
+	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 }
 
 dependencyManagement {
