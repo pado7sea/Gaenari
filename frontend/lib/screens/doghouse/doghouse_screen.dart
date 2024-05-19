@@ -431,77 +431,98 @@ class _DogHouseScreenState extends State<DogHouseScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          decoration: myBoxDecoration,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(SlidePageRoute(nextPage: InventoryScreen()))
-                      .then((result) {
-                    // 돌아올 때 데이터를 수신하고 처리
-                    if (result == "update") {
-                      // 리스트 업데이트 메서드 호출
-                      getItem();
-                      loadCoin();
-                    } else {
-                      getItem();
-                      loadCoin();
-                    }
-                  });
-                },
-                child: Row(
-                  mainAxisSize:
-                      MainAxisSize.min, // Row의 가로 길이를 내부 요소만큼만 차지하도록 설정
-                  children: const [
-                    Image(
-                      image: AssetImage('assets/icons/doghouse_drawer.png'),
-                      width: 30,
-                      height: 30,
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                    ),
-                    SizedBox(width: 5),
-                    Text16(text: '보관함')
-                  ],
-                )),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .push(SlidePageRoute(nextPage: InventoryScreen()))
+                .then((result) {
+              // 돌아올 때 데이터를 수신하고 처리
+              if (result == "update") {
+                // 리스트 업데이트 메서드 호출
+                getItem();
+                loadCoin();
+              } else {
+                getItem();
+                loadCoin();
+              }
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.65),
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xffBFC2C8).withOpacity(0.25),
+                    blurRadius: 15,
+                    offset: Offset(0, 10),
+                  ),
+                ]),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min, // Row의 가로 길이를 내부 요소만큼만 차지하도록 설정
+                children: const [
+                  Image(
+                    image: AssetImage('assets/icons/doghouse_drawer.png'),
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none,
+                  ),
+                  SizedBox(width: 5),
+                  Text16(text: '보관함')
+                ],
+              ),
+            ),
           ),
         ),
         SizedBox(height: 15),
-        Container(
-            decoration: myBoxDecoration,
-            child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(SlidePageRoute(nextPage: ItemScreen()))
-                          .then((result) {
-                        // 돌아올 때 데이터를 수신하고 처리
-                        if (result == "update") {
-                          // 리스트 업데이트 메서드 호출
-                          getItem();
-                          loadCoin();
-                          print("sddsfsdf");
-                        }
-                      });
-                    },
-                    child: Row(
-                      mainAxisSize:
-                          MainAxisSize.min, // Row의 가로 길이를 내부 요소만큼만 차지하도록 설정
-                      children: const [
-                        Image(
-                          image: AssetImage('assets/icons/doghouse_random.png'),
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.cover,
-                          filterQuality: FilterQuality.none,
-                        ),
-                        SizedBox(width: 5),
-                        Text16(text: '뽑기')
-                      ],
-                    )))),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .push(SlidePageRoute(nextPage: InventoryScreen()))
+                .then((result) {
+              // 돌아올 때 데이터를 수신하고 처리
+              if (result == "update") {
+                // 리스트 업데이트 메서드 호출
+                getItem();
+                loadCoin();
+              } else {
+                getItem();
+                loadCoin();
+              }
+            });
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.65),
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xffBFC2C8).withOpacity(0.25),
+                      blurRadius: 15,
+                      offset: Offset(0, 10),
+                    ),
+                  ]),
+              child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisSize:
+                        MainAxisSize.min, // Row의 가로 길이를 내부 요소만큼만 차지하도록 설정
+                    children: const [
+                      Image(
+                        image: AssetImage('assets/icons/doghouse_random.png'),
+                        width: 30,
+                        height: 30,
+                        fit: BoxFit.cover,
+                        filterQuality: FilterQuality.none,
+                      ),
+                      SizedBox(width: 5),
+                      Text16(text: '뽑기')
+                    ],
+                  ))),
+        ),
       ],
     );
   }
