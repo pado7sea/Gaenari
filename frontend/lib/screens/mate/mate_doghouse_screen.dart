@@ -67,8 +67,8 @@ class _MateDogHouseScreenState extends State<MateDogHouseScreen>
     LoginInfo? loginInfo = await storageService.getLoginInfo();
     setState(() {
       myDogId = loginInfo!.myPetDto!.id!;
-      myDogName = loginInfo!.myPetDto!.name!;
-      myDogTier = loginInfo!.myPetDto!.tier!;
+      myDogName = loginInfo.myPetDto!.name!;
+      myDogTier = loginInfo.myPetDto!.tier!;
     });
   }
 
