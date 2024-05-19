@@ -126,18 +126,24 @@ public class ProgramServiceImpl extends ProgramBaseService implements ProgramSer
         // 마이크로 서비스간 통신을 통해 운동 기록 정보 가져오기
         List<ProgramDetailDto.UsageLogDto> usageLogDtos = fetchUsageLog(program.getId());
 
-        // 운동 프로그램 총 사용 통계
-        DoubleSummaryStatistics summary = usageLogDtos.stream()
-                .mapToDouble(ProgramDetailDto.UsageLogDto::getDistance)
-                .summaryStatistics();
+        double totalDistance = 0;
+        double totalTime = 0;
+        double totalCal = 0;
 
-        // 운동 프로그램 완주 횟수
+        for (ProgramDetailDto.UsageLogDto log : usageLogDtos) {
+            totalDistance += log.getDistance();
+            totalTime += log.getTime();
+            totalCal += log.getCal();
+        }
+
+        // 운동 프로그램 총 사용 통계
         ProgramDetailDto.TotalRecordDto totalRecordDto = ProgramDetailDto.TotalRecordDto.builder()
-                .distance(summary.getSum())
-                .time(summary.getSum())
-                .cal(summary.getSum())
+                .distance(totalDistance)
+                .time(totalTime)
+                .cal(totalCal)
                 .build();
 
+        // 운동 프로그램 완주 횟수
         int finishedCount = (int) usageLogDtos.stream()
                 .filter(ProgramDetailDto.UsageLogDto::getIsFinished)
                 .count();
