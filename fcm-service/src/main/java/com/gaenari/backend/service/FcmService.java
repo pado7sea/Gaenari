@@ -13,7 +13,9 @@ import com.google.firebase.messaging.Notification;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -28,15 +30,25 @@ public class FcmService {
    *
    * @param requestDto FcmRegisterRequestDto
    */
+  @Transactional
   public void register(FcmRegisterRequestDto requestDto) {
     if (fcmRepository.existsByFcmToken(requestDto.getFcmToken())) {
       throw new AlreadyRegisterTokenException();
     }
 
-    fcmRepository.save(Fcm.builder()
-        .memberId(requestDto.getAccountId())
-        .fcmToken(requestDto.getFcmToken())
-        .build());
+    Optional<Fcm> fcm = fcmRepository.findByAccountId(requestDto.getAccountId());
+    /* 회원에 대한 신규 토큰 */
+    if (fcm.isEmpty()) {
+      fcmRepository.save(Fcm.builder()
+          .accountId(requestDto.getAccountId())
+          .fcmToken(requestDto.getFcmToken())
+          .build());
+    }
+    /* 기존 토큰 업데이트 */
+    else {
+      fcm.get().updateToken(requestDto.getFcmToken());
+      fcmRepository.save(fcm.get());
+    }
   }
 
   /**
@@ -46,7 +58,9 @@ public class FcmService {
    * @throws FirebaseMessagingException 예외
    */
   public void sendNotice(FcmMessageRequestDto fcmMessage) throws FirebaseMessagingException {
-    Optional<Fcm> fcm = fcmRepository.findByMemberId(fcmMessage.getAccountId());
+    log.debug("fcmMessageRequestDto : {}", fcmMessage);
+
+    Optional<Fcm> fcm = fcmRepository.findByAccountId(fcmMessage.getAccountId());
 
     if (fcm.isEmpty()) {
       throw new FcmTokenNotFoundException();
@@ -65,4 +79,5 @@ public class FcmService {
 
     firebaseMessaging.send(message);
   }
+
 }
