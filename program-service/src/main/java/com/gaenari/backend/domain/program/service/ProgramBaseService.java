@@ -76,9 +76,6 @@ public abstract class ProgramBaseService {
      */
     protected List<ProgramDetailDto.UsageLogDto> fetchUsageLog(Long programId) {
         ResponseEntity<GenericResponse<List<ProgramDetailDto.UsageLogDto>>> response = recordServiceClient.getUsageLog(programId);
-        if(response.getBody().getStatus().equals("FALLBACK")) {
-            log.error("FALLBACK response: {}", response.getBody().getData());
-        }
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             log.error("Feign 호출 실패: statusCode={}, body={}", response.getStatusCode(), response.getBody());
             throw new ConnectFeignFailException();
