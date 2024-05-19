@@ -42,4 +42,11 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
      */
     Record findByAccountIdAndId(String accountId, Long recordId);
 
+    /**
+     * 특정 회원의 보상을 아직 수령하지 않은 운동 기록을 조회합니다.
+     *
+     * @param accountId 회원의 식별자입니다.
+     * @return 지정된 회원의 운동 기록 목록을 반환합니다.
+     */
+    List<Record> findByAccountIdAndIsObtainedFalse(String accountId);
 }

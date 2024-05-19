@@ -49,12 +49,19 @@ public class RecordFeignController {
 
         return response.success(ResponseCode.RECORD_CHALLENGE_FETCHED, challengeIds);
     }
-    
+
     @Operation(summary = "[Feign] 운동 기록의 보상 수령 여부 업데이트", description = "운동 기록의 보상 수령 여부를 완료로 변경")
     @PutMapping("/obtain/{accountId}/{recordId}")
     ResponseEntity<?> updateRecordObtained(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId,
-                                                            @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId){
-        recordFeignService.updateRecordObtained(accountId,recordId);
+                                           @Parameter(name = "운동 기록 ID") @PathVariable(name = "recordId") Long recordId) {
+        recordFeignService.updateRecordObtained(accountId, recordId);
+        return response.success(ResponseCode.RECORD_OBTAIN_UPDATED);
+    }
+
+    @Operation(summary = "[Feign] 모든 운동 기록의 보상 수령 여부 업데이트", description = "운동 기록의 보상 수령 여부를 완료로 변경")
+    @PutMapping("/obtain/{accountId}")
+    ResponseEntity<?> updateRecordObtained(@Parameter(name = "회원 ID") @PathVariable(name = "accountId") String accountId) {
+        recordFeignService.updateAllRecordObtained(accountId);
         return response.success(ResponseCode.RECORD_OBTAIN_UPDATED);
     }
 

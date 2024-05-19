@@ -57,7 +57,7 @@ public class RecordFeignServiceImpl implements RecordFeignService {
     }
 
     @Override
-    public void updateRecordObtained(String accountId, Long recordId){
+    public void updateRecordObtained(String accountId, Long recordId) {
         // 레코드 ID로 레코드 엔티티를 조회
         Record record = recordRepository.findByAccountIdAndId(accountId, recordId);
 
@@ -66,6 +66,21 @@ public class RecordFeignServiceImpl implements RecordFeignService {
 
         // 변경 사항을 저장
         recordRepository.save(record);
+    }
+
+    @Override
+    public void updateAllRecordObtained(String accountId) {
+        // 아직 보상이 수령 완료 되지 않은 기록들을 조회
+        List<Record> records = recordRepository.findByAccountIdAndIsObtainedFalse(accountId);
+
+        // 각 레코드의 isObtained 값을 true로 설정
+        for (Record record : records) {
+            record.updateObtained(true);
+
+            // 변경 사항을 저장
+            recordRepository.save(record);
+        }
+
     }
 
 }
