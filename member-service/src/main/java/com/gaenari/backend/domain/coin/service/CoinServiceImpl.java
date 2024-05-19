@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +95,10 @@ public class CoinServiceImpl implements CoinService {
 
         // 코인 내역 테이블에 변동 정보가 저장되어야함
         LocalDate currentDate = LocalDate.now();
-        LocalTime currentTime = LocalTime.now().withNano(0); // 시,분,초만 저장
+
+        ZoneId zoneId = ZoneId.of("Asia/Seoul");
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
+        LocalTime currentTime = zonedDateTime.toLocalTime().withNano(0);
 
         // 현재 날짜의 년, 월, 일을 각각 저장
         int year = currentDate.getYear();
