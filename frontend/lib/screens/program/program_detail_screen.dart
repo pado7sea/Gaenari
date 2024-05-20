@@ -260,7 +260,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                   SizedBox(height: 10),
                   Text20(
                       text: programDetail.totalRecord!.distance!
-                          .toStringAsFixed(0),
+                          .toStringAsFixed(1),
                       bold: true),
                   Text12(text: 'km')
                 ],
@@ -335,6 +335,15 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
     );
   }
 
+  String formatPace(double pace) {
+    String paceString = (pace / 60).toStringAsFixed(2);
+    List<String> parts = paceString.split('.'); // 소수점 기준으로 분리
+    String minutes = parts[0].padLeft(2, '0'); // 분 부분을 2자리로 맞춤
+    String seconds =
+        parts.length > 1 ? parts[1].padRight(2, '0') : '00'; // 초 부분을 2자리로 맞춤
+    return '$minutes\'$seconds\'\'';
+  }
+
   Widget _list() {
     return ListView.builder(
         shrinkWrap: true,
@@ -370,7 +379,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                           children: [
                             Text12(
                               text:
-                                  "${programDetail.usageLog![index].distance!.toInt().toString()}km",
+                                  "${programDetail.usageLog![index].distance!.toStringAsFixed(1)}km",
                               bold: true,
                               textColor: myBlue,
                             ),
@@ -391,7 +400,7 @@ class _ProgramDetailScreenState extends State<ProgramDetailScreen> {
                             _section(),
                             Text12(
                               text:
-                                  "${(programDetail.usageLog![index].averagePace! / 60).floorToDouble().toInt().toString()}'${(programDetail.usageLog![index].averagePace! % 60).floorToDouble().toInt().toString()}''/km",
+                                  '${formatPace(programDetail.usageLog![index].averagePace!)}',
                               bold: true,
                               textColor: myMainGreen,
                             ),
