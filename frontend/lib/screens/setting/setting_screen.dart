@@ -177,7 +177,7 @@ class _SettingScreenState extends State<SettingScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text16(
-            text: 'v 1.0.0',
+            text: 'v 1.0.4',
             textColor: myGrey,
             bold: true,
           ),
