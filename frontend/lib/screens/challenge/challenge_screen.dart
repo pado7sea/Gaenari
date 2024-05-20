@@ -10,6 +10,7 @@ import 'package:forsythia/theme/color.dart';
 import 'package:forsythia/theme/text.dart';
 import 'package:forsythia/widgets/box_dacoration.dart';
 import 'package:forsythia/widgets/large_app_bar.dart';
+import 'package:forsythia/widgets/none_animation_route.dart';
 
 class ChallengeScreen extends StatefulWidget {
   bool mission;
@@ -683,8 +684,6 @@ class _ButtonState extends State<Button> {
             onPressed: () async {
               Reward reward = await ChallengeService.fetchRewardChallenge(
                   context, widget.challengeId);
-              print(reward.data!.coin!);
-              print(reward.data!.heart!);
               SecureStorageService storageService = SecureStorageService();
               LoginInfo? info = await storageService.getLoginInfo();
               info?.coin = (info.coin! + (reward.data!.coin!));
@@ -696,13 +695,13 @@ class _ButtonState extends State<Button> {
                 gravity: ToastGravity.CENTER,
                 backgroundColor: myYellow,
               );
-              // Navigator.pop(context, "update");
-              // Navigator.push(
-              //     context,
-              //     NonePageRoute(
-              //         nextPage: ChallengeScreen(
-              //       mission: false,
-              //     )));
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  NonePageRoute(
+                      nextPage: ChallengeScreen(
+                    mission: false,
+                  )));
             },
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.zero,
