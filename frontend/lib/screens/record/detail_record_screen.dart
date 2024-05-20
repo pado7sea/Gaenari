@@ -580,6 +580,15 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
         ));
   }
 
+  String formatPace(double pace) {
+    String paceString = (pace / 60).toStringAsFixed(2);
+    List<String> parts = paceString.split('.'); // 소수점 기준으로 분리
+    String minutes = parts[0].padLeft(2, '0'); // 분 부분을 2자리로 맞춤
+    String seconds =
+        parts.length > 1 ? parts[1].padRight(2, '0') : '00'; // 초 부분을 2자리로 맞춤
+    return '$minutes\'$seconds\'\'';
+  }
+
   Widget _pace() {
     return Container(
       constraints: BoxConstraints(minHeight: 100),
@@ -597,8 +606,7 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
                 Text16(text: '페이스', bold: true),
                 SizedBox(width: 10),
                 Text12(
-                  text:
-                      '평균 페이스 ${(recordDetail.paces!.average! / 60).toString().substring(0, 2)}\'${(recordDetail.paces!.average! / 60).toString().substring(3, 5)}\'\'',
+                  text: '평균 페이스 ${formatPace(recordDetail.paces!.average!)}',
                   textColor: myGrey,
                 )
               ],

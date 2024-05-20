@@ -474,13 +474,59 @@ class _RecordScreenState extends State<RecordScreen> {
                                     ),
                                     Positioned(
                                       right: 0,
-                                      child: Image(
-                                        image: AssetImage(
-                                            'assets/icons/common_front.png'),
-                                        width: 15,
-                                        height: 15,
-                                        fit: BoxFit.cover,
-                                        filterQuality: FilterQuality.none,
+                                      child: Row(
+                                        children: [
+                                          if (monthly
+                                                  .exerciseRecords![
+                                                      _selectedDay.day - 1]
+                                                  .dailyRecords![index]
+                                                  .exerciseType ==
+                                              'W')
+                                            Text12(text: '자유걷기'),
+                                          if (monthly
+                                                  .exerciseRecords![
+                                                      _selectedDay.day - 1]
+                                                  .dailyRecords![index]
+                                                  .exerciseType ==
+                                              'R')
+                                            Text12(text: '자유달리기'),
+                                          if (monthly
+                                                  .exerciseRecords![
+                                                      _selectedDay.day - 1]
+                                                  .dailyRecords![index]
+                                                  .exerciseType ==
+                                              'P')
+                                            if (monthly
+                                                    .exerciseRecords![
+                                                        _selectedDay.day - 1]
+                                                    .dailyRecords![index]
+                                                    .programType ==
+                                                'I')
+                                              Text12(text: '인터벌'),
+                                          if (monthly
+                                                  .exerciseRecords![
+                                                      _selectedDay.day - 1]
+                                                  .dailyRecords![index]
+                                                  .programType ==
+                                              'T')
+                                            Text12(text: '거리목표'),
+                                          if (monthly
+                                                  .exerciseRecords![
+                                                      _selectedDay.day - 1]
+                                                  .dailyRecords![index]
+                                                  .programType ==
+                                              'D')
+                                            Text12(text: '시간목표'),
+                                          SizedBox(width: 10),
+                                          Image(
+                                            image: AssetImage(
+                                                'assets/icons/common_front.png'),
+                                            width: 15,
+                                            height: 15,
+                                            fit: BoxFit.cover,
+                                            filterQuality: FilterQuality.none,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
