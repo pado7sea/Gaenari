@@ -112,7 +112,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                         collapsed: _collapsed(),
                         body: _backgroundWidget(nickName),
                         minHeight: 50,
-                        maxHeight: MediaQuery.of(context).size.height - 250,
+                        // maxHeight: MediaQuery.of(context).size.height - 250,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20)),
@@ -123,7 +123,7 @@ class DashBoardScreenState extends State<DashBoardScreen> {
                         collapsed: _collapsed(),
                         body: _backgroundWidget(nickName),
                         minHeight: 50,
-                        maxHeight: MediaQuery.of(context).size.height - 320,
+                        // maxHeight: MediaQuery.of(context).size.height - 320,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20)),
