@@ -297,9 +297,11 @@ class _RecordScreenState extends State<RecordScreen> {
                 },
                 onDaySelected: _onDaySelected,
                 onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                  _onDaySelected(focusedDay, focusedDay);
-                  monthlyRecordList();
+                  setState(() {
+                    _focusedDay = focusedDay;
+                    _onDaySelected(focusedDay, focusedDay);
+                    monthlyRecordList();
+                  });
                 },
                 eventLoader: _getEventsForDay,
                 pageJumpingEnabled: true,
@@ -315,6 +317,16 @@ class _RecordScreenState extends State<RecordScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: value.length,
                     itemBuilder: (context, index) {
+                      // 인덱스가 유효한지 확인
+                      if (_selectedDay.day - 1 >=
+                          monthly.exerciseRecords!.length) {
+                        return Container();
+                      }
+                      if (index >=
+                          monthly.exerciseRecords![_selectedDay.day - 1]
+                              .dailyRecords!.length) {
+                        return Container();
+                      }
                       return Container(
                         margin: EdgeInsets.symmetric(vertical: 5),
                         decoration: BoxDecoration(
@@ -322,14 +334,15 @@ class _RecordScreenState extends State<RecordScreen> {
                             borderRadius: BorderRadius.circular(10)),
                         child: ListTile(
                             contentPadding: EdgeInsets.all(0),
-                            onTap: () =>
-                                Navigator.of(context).push(SlidePageRoute(
-                                    nextPage: DetailRecordScreen(
-                                  recordId: monthly
-                                      .exerciseRecords![_selectedDay.day - 1]
-                                      .dailyRecords![index]
-                                      .recordId,
-                                ))),
+                            onTap: () {
+                              Navigator.of(context).push(SlidePageRoute(
+                                  nextPage: DetailRecordScreen(
+                                recordId: monthly
+                                    .exerciseRecords![_selectedDay.day - 1]
+                                    .dailyRecords![index]
+                                    .recordId,
+                              )));
+                            },
                             title: Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 8, 16, 8),

@@ -114,10 +114,6 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
     });
     getDetail();
     print('갹ㄴ야ㅐㅓㅁㄴ갸ㅐㅓ ㅑㅐㅔ;ㅁ저ㅐ;');
-    print(recordDetail.exerciseId);
-    print(recordDetail.program?.programId);
-    print(recordDetail.missions?[0].value);
-    print(missionTList);
   }
 
   getDetail() async {
@@ -447,6 +443,14 @@ class _DetailRecordScreenState extends State<DetailRecordScreen> {
   }
 
   Widget _graph() {
+    if (programDetail == null ||
+        programDetail!.program == null ||
+        programDetail!.program!.intervalInfo == null ||
+        recordDetail == null ||
+        recordDetail!.program == null ||
+        recordDetail!.program!.intervalInfo == null) {
+      return Center(child: Text('No program details available'));
+    }
     return GestureDetector(
         onTap: () {
           setState(() {
