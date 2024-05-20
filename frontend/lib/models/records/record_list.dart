@@ -87,6 +87,8 @@ class ExerciseRecords {
 class DailyRecords {
   int? recordId;
   String? recordDate;
+  String? exerciseType;
+  String? programType;
   double? recordTime;
   double? recordDist;
   double? recordPace;
@@ -95,6 +97,8 @@ class DailyRecords {
   DailyRecords(
       {this.recordId,
       this.recordDate,
+      this.exerciseType,
+      this.programType,
       this.recordTime,
       this.recordDist,
       this.recordPace,
@@ -103,6 +107,8 @@ class DailyRecords {
   DailyRecords.fromJson(Map<String, dynamic> json) {
     recordId = json['recordId'];
     recordDate = json['recordDate'];
+    exerciseType = json['exerciseType'];
+    programType = json['programType'];
     recordTime = json['recordTime'];
     recordDist = json['recordDist'];
     recordPace = json['recordPace'];
@@ -113,6 +119,8 @@ class DailyRecords {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['recordId'] = recordId;
     data['recordDate'] = recordDate;
+    data['exerciseType'] = exerciseType;
+    data['programType'] = programType;
     data['recordTime'] = recordTime;
     data['recordDist'] = recordDist;
     data['recordPace'] = recordPace;
