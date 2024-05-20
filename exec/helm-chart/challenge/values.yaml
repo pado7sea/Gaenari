@@ -1,0 +1,9 @@
+challenge:
+  enabled: true
+  replicas: 1
+  ports:
+    - name: challenge
+      port: 80
+      targetPort: 8088
+  image:
+    repository: xinxe/gaenari-challenge

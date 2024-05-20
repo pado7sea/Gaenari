@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fcm-deployment
+spec:
+  replicas: {{ .Values.fcm.replicas }}
+  selector:
+    matchLabels:
+      app: fcm
+  template:
+    metadata:
+      labels:
+        app: fcm
+    spec:
+      containers:
+      - name: fcm
+        image: {{ .Values.fcm.image.repository }}:{{ .Chart.AppVersion }}
+        env:
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: fcm-app-secrets
+                key: database.username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: fcm-app-secrets
+                key: database.password
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: fcm-app-secrets
+                key: database.url
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: fcm-app-secrets
+                key: database.port
+          - name: DATABASE_USER_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: fcm-app-secrets
+                key: database.dbName
+        ports:
+          - containerPort: {{ (index .Values.fcm.ports 0).port }}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: member-service
+spec:
+  selector:
+    app: member
+  ports:
+    - protocol: TCP
+      port: {{ (index .Values.member.ports 0).port }}
+      targetPort: {{ (index .Values.member.ports 0).targetPort }}
+  type: ClusterIP

@@ -1,0 +1,9 @@
+fcm:
+  enabled: true
+  replicas: 1
+  ports:
+    - name: fcm
+      port: 80
+      targetPort: 8089
+  image:
+    repository: xinxe/gaenari-fcm

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: program-deployment
+spec:
+  replicas: {{ .Values.program.replicas }}
+  selector:
+    matchLabels:
+      app: program
+  template:
+    metadata:
+      labels:
+        app: program
+    spec:
+      containers:
+      - name: program
+        image: {{ .Values.program.image.repository }}:{{ .Chart.AppVersion }}
+        env:
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: program-app-secrets
+                key: database.username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: program-app-secrets
+                key: database.password
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: program-app-secrets
+                key: database.url
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: program-app-secrets
+                key: database.port
+          - name: DATABASE_USER_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: program-app-secrets
+                key: database.dbName
+        ports:
+          - containerPort: {{ (index .Values.program.ports 0).port }}

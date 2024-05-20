@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: challenge-deployment
+spec:
+  replicas: {{ .Values.challenge.replicas }}
+  selector:
+    matchLabels:
+      app: challenge
+  template:
+    metadata:
+      labels:
+        app: challenge
+    spec:
+      containers:
+      - name: challenge
+        image: {{ .Values.challenge.image.repository }}:{{ .Chart.AppVersion }}
+        env:
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: challenge-app-secrets
+                key: database.username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: challenge-app-secrets
+                key: database.password
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: challenge-app-secrets
+                key: database.url
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: challenge-app-secrets
+                key: database.port
+          - name: DATABASE_USER_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: challenge-app-secrets
+                key: database.dbName
+        ports:
+          - containerPort: {{ (index .Values.challenge.ports 0).port }}
