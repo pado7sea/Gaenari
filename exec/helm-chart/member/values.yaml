@@ -1,0 +1,9 @@
+member:
+  enabled: true
+  replicas: 1
+  ports:
+    - name: member
+      port: 80
+      targetPort: 8081
+  image:
+    repository: xinxe/gaenari-member

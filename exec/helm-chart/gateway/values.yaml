@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: xinxe/gaenari-gateway
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: ""
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "5M"
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: api.gaenari.kr
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: gateway-ingress-tls
+      hosts:
+        - api.gaenari.kr
