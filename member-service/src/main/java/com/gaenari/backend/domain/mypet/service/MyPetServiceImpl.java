@@ -59,33 +59,6 @@ public class MyPetServiceImpl extends MyPetBaseService implements MyPetService{
                 throw new AlreadyHavePetException();
             }
         }
-        // 회원 코인 감소
-        int haveCoin = member.getCoin() - dog.getPrice();
-        if(haveCoin < 0){
-            throw new LackCoinException();
-        }
-        Member updateCoin = Member.builder()
-                .Id(member.getId())
-                .accountId(member.getAccountId())
-                .password(member.getPassword())
-                .nickname(member.getNickname())
-                .birthday(member.getBirthday())
-                .gender(member.getGender())
-                .height(member.getHeight())
-                .weight(member.getWeight())
-                .coin(haveCoin) // 변경
-                .device(member.getDevice())
-                .myPetList(member.getMyPetList())
-                .build();
-        memberRepository.save(updateCoin);
-        // 새로운 반려견 등록
-        MyPet myPet = MyPet.builder()
-                .member(member)
-                .dog(dog)
-                .name(adopt.getName())
-                .isPartner(false)
-                .build();
-        myPetRepository.save(myPet);
         // 코인 내역 테이블에 변동 정보 저장
         MemberCoin memberCoin = MemberCoin.builder()
                 .accountId(accountId)
@@ -94,6 +67,14 @@ public class MyPetServiceImpl extends MyPetBaseService implements MyPetService{
                 .coinAmount(dog.getPrice())
                 .build();
         coinService.updateCoin(memberCoin);
+        // 새로운 반려견 등록
+        MyPet myPet = MyPet.builder()
+                .member(member)
+                .dog(dog)
+                .name(adopt.getName())
+                .isPartner(false)
+                .build();
+        myPetRepository.save(myPet);
     }
 
     @Override // 파트너 반려견 변경
