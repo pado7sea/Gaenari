@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1772ac7e-47dc-4bb8-b329-a45335041743" name="Changes" comment=":fire: hotfix: exerciseRecord lowercase로 변경">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="1772ac7e-47dc-4bb8-b329-a45335041743" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/member-service/src/main/java/com/gaenari/backend/global/config/SwaggerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/resources/application-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/resources/application-prod.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/src/main/java/com/gaenari/backend/domain/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/src/main/java/com/gaenari/backend/domain/member/controller/MemberController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/src/main/resources/application-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/src/main/resources/application-prod.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/member-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/member-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,7 +20,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="ExternalProjectsData">
-    <projectState path="$PROJECT_DIR$/gateway-service">
+    <projectState path="$PROJECT_DIR$/member-service">
       <ProjectState />
     </projectState>
   </component>
@@ -38,15 +40,11 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="deploy/be/gateway" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -62,17 +60,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Gradle.Build gateway-service.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
+    "Gradle.Build member-service.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.GatewayServiceApplication.executor": "Run",
+    "Spring Boot.MemberServiceApplication.executor": "Run",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "feat/be/swagger",
+    "git-widget-placeholder": "dev/be/member",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -82,15 +76,14 @@
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "show.migrate.to.gradle.popup": "false",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="GatewayServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="MemberServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="gateway-service.main" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.gaenari.gatewayservice.GatewayServiceApplication" />
+      <module name="member-service.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.gaenari.backend.MemberServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -112,9 +105,6 @@
       <option name="presentableId" value="Default" />
       <updated>1713855341162</updated>
       <workItem from="1713855342272" duration="3000" />
-      <workItem from="1714003317364" duration="462000" />
-      <workItem from="1714091961108" duration="10000" />
-      <workItem from="1714352313946" duration="12221000" />
     </task>
     <servers />
   </component>
@@ -132,7 +122,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feat/be/swagger" />
+                        <option value="dev/be/member" />
                       </list>
                     </value>
                   </entry>
@@ -143,5 +133,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
