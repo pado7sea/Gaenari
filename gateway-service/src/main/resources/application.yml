@@ -1,0 +1,87 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone : http://localhost:8761/eureka
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: '*'
+            allow-credentials: true
+            allowedHeaders: '*'
+            exposedHeaders: '*'
+            allowedMethods:
+              - POST
+              - GET
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user-service/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/user-service/(?<segment>.*), /user-service/$\{segment}
+        - id: inventory-service
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/inventory-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/inventory-service/(?<segment>.*), /inventory-service/$\{segment}
+        - id: program-service
+          uri: lb://PROGRAM-SERVICE
+          predicates:
+            - Path=/api/program-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/program-service/(?<segment>.*), /program-service/$\{segment}
+        - id: exercise-record-service
+          uri: lb://EXERCISE-RECORD-SERVICE
+          predicates:
+            - Path=/api/exercise-record-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/exercise-record-service/(?<segment>.*), /exercise-record-service/$\{segment}
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
+            - Path=/api/challenge-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/challenge-service/(?<segment>.*), /challenge-service/$\{segment}
