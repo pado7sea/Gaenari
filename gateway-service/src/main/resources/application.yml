@@ -1,0 +1,165 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone : http://localhost:8761/eureka
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOriginPatterns: '*'
+            allow-credentials: true
+            allowedHeaders: '*'
+            exposedHeaders: '*'
+            allowedMethods:
+              - POST
+              - GET
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+      routes:
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/api/member-service/login/**, /api/member-service/members/**, /api/member-service/logout/**, /api/member-service/v3/api-docs/**, /api/member-service/health_check, /api/member-service/dupl/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
+
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/api/member-service/watch/**
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
+
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/api/member-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/member-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+
+        - id: inventory-service
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/inventory-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
+
+        - id: inventory-service
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/inventory-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/inventory-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
+
+        - id: program-service
+          uri: lb://PROGRAM-SERVICE
+          predicates:
+            - Path=/api/program-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/program-service/(?<segment>.*), /$\{segment}
+
+        - id: program-service
+          uri: lb://PROGRAM-SERVICE
+          predicates:
+            - Path=/api/program-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/program-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
+
+        - id: exercise-record-service
+          uri: lb://EXERCISE-RECORD-SERVICE
+          predicates:
+            - Path=/api/exercise-record-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
+        - id: exercise-record-service
+          uri: lb://EXERCISE-RECORD-SERVICE
+          predicates:
+            - Path=/api/exercise-record-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/exercise-record-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
+            - Path=/api/challenge-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
+        - id: challenge-service
+          uri: lb://CHALLENGE-SERVICE
+          predicates:
+            - Path=/api/challenge-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/challenge-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
+        - id: fcm-service
+          uri: lb://FCM-SERVICE
+          predicates:
+            - Path=/api/fcm-service/v3/api-docs/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/fcm-service/(?<path>.*), /$\{path}
+        - id: fcm-service
+          uri: lb://FCM-SERVICE
+          predicates:
+            - Path=/api/fcm-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/api/fcm-service/(?<path>.*), /$\{path}
+            - AuthorizationHeaderFilter
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    urls[0]:
+      name: 멤버 서비스
+      url: http://localhost:8080/api/member-service/v3/api-docs
+    urls[1]:
+      name: 프로그램 서비스
+      url: http://localhost:8080/api/program-service/v3/api-docs
+    urls[2]:
+      name: 운동 기록 서비스
+      url: http://localhost:8080/api/exercise-record-service/v3/api-docs
+    urls[3]:
+      name: 도전과제 서비스
+      url: http://localhost:8080/api/challenge-service/v3/api-docs
+    urls[4]:
+      name: 인벤토리 서비스
+      url: http://localhost:8080/api/inventory-service/v3/api-docs
+    urls[5]:
+      name: FCM 서비스
+      url: http://localhost:8080/api/fcm-service/v3/api-docs
+token:
+  expiration_time: 86400000 # 60*60*24*1000
+  secret: member_token_dskjlhfahgiuohauiorheoaihishsodjsafpofjdoadspdoiajfsoisajfdio # 임의의 값
