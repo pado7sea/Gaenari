@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">개나리</string>
+    <string name="title_activity_two_color">TwoColorAct</string>
+    <string name="btn_start">시작</string>
+    <string name="btn_restart">초기화</string>
+    <string name="btn_pause">일시정지</string>
+    <string name="btn_add_todo">할 일 추가하기</string>
+    <string name="title">개나리</string>
+    <string name="exercise1">운동1</string>
+    <string name="exercise2">운동2</string>
+    <string name="exercise3">운동3</string>
+    <string name="exercise4">운동4</string>
+    <string name="exercise5">운동5</string>
+    <string name="exercise6">운동6</string>
+    <string name="exercise7">운동7</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FF5722" />  <!-- 스크롤 바 색상 -->
+    <corners android:radius="8dp" />  <!-- 곡선 모양 -->
+    <size android:width="10dp" android:height="40dp" />  <!-- 스크롤 바의 너비와 높이 -->
+</shape>
