@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: xinxe/gaenari-discovery
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8761
+
+ingress:
+  enabled: true
+  className: ""
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "5M"
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: eureka.gaenari.kr
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: discovery-ingress-tls
+      hosts:
+        - eureka.gaenari.kr

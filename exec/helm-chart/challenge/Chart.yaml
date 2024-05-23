@@ -1,0 +1,9 @@
+apiVersion: v2
+name: challenge
+description: Challenge's Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: 24
+maintainers:
+  - name: Jaesin Lee
+    email: jaesin463@gmail.com

@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    # 자주 사용하는 이메일 주소 지정
+    email: jaesin463@gmail.com
+    # ACME서버 지정(ACME란, 도메인의 소유권을 자동으로 검증, 발급, 갱신해주는 프로토콜이다. 아래는 ACME 프로토콜을 가장 널리 사용하는 Letsencrypt의 ACME서버 URL이다.)
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # ACME서버와의 통신에 사용되는 ACME계정의 Private Key를 저장할  Secret 이름지정
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          # Ingress Controller Class 지정
+          class: nginx

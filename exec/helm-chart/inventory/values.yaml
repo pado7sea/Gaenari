@@ -1,0 +1,9 @@
+inventory:
+  enabled: true
+  replicas: 1
+  ports:
+    - name: inventory
+      port: 80
+      targetPort: 8084
+  image:
+    repository: xinxe/gaenari-inventory

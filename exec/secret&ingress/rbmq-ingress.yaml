@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+   name: rabbitmq
+   namespace: rabbitmq
+   annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      cert-manager.io/cluster-issuer: letsencrypt
+spec:
+   tls:
+   - hosts:
+     - rabbitmq.gaenari.kr
+     secretName: rabbitmq-ingress-tls
+   rules:
+   - host: rabbitmq.gaenari.kr
+     http:
+       paths:
+       - pathType: Prefix
+         path: /
+         backend:
+            service:
+               name: rabbitmq
+               port:
+                  number: 15672 

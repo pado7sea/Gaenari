@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+   name: sonarqube
+   namespace: sonarqube
+   annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      cert-manager.io/cluster-issuer: letsencrypt
+spec:
+   tls:
+   - hosts:
+     - sonarqube.gaenari.kr
+     secretName: sonarqube-ingress-tls
+   rules:
+   - host: sonarqube.gaenari.kr
+     http:
+       paths:
+       - pathType: Prefix
+         path: /
+         backend:
+            service:
+               name: sonarqube
+               port:
+                  number: 80

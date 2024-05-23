@@ -1,0 +1,9 @@
+exerciseRecord:
+  enabled: true
+  replicas: 1
+  ports:
+    - name: exercise-record
+      port: 80
+      targetPort: 8086
+  image:
+    repository: xinxe/gaenari-exercise-record

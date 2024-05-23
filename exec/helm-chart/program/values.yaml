@@ -1,0 +1,9 @@
+program:
+  enabled: true
+  replicas: 1
+  ports:
+    - name: program
+      port: 80
+      targetPort: 8085
+  image:
+    repository: xinxe/gaenari-program

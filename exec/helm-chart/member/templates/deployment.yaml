@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: member-deployment
+spec:
+  replicas: {{ .Values.member.replicas }}
+  selector:
+    matchLabels:
+      app: member
+  template:
+    metadata:
+      labels:
+        app: member
+    spec:
+      containers:
+      - name: member
+        image: {{ .Values.member.image.repository }}:{{ .Chart.AppVersion }}
+        env:
+          - name: DATABASE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: member-app-secrets
+                key: database.username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: member-app-secrets
+                key: database.password
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: member-app-secrets
+                key: database.url
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: member-app-secrets
+                key: database.port
+          - name: DATABASE_USER_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: member-app-secrets
+                key: database.dbName
+          - name: SECRET_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: member-app-secrets
+                key: secret.token
+        ports:
+          - containerPort: {{ (index .Values.member.ports 0).port }}
+        volumeMounts:
+          - name: tz-seoul
+            mountPath: /etc/localtime
+      volumes:
+        - name: tz-seoul
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Seoul
